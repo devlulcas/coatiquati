@@ -6,7 +6,7 @@
 	export let data: PageServerData;
 </script>
 
-<main class="container mx-auto">
+<main class="mx-auto">
 	<h1 class="flex items-center gap-2 text-2xl font-bold text-gray-900 my-4">
 		<Map />
 		<span>Trilhas</span>
