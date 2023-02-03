@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const contentTypes = ['text', 'image', 'video', 'code', 'quote', 'link'] as const;
+export const contentTypes = ['text', 'image', 'video', 'code', 'quote', 'link'] as const;
 
 export type ContentType = (typeof contentTypes)[number];
 
@@ -21,3 +21,7 @@ export const breadcrumbSchema = z.object({
 		})
 	)
 });
+
+export function isContentType(v: string): v is ContentType {
+  return contentTypes.includes(v as ContentType);
+}

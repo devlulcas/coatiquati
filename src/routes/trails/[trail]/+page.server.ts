@@ -6,7 +6,7 @@ export const load: PageServerLoad = async (ctx) => {
 
 	const getTrailBySlugService = new GetTrailBySlugService();
 
-	const data = await getTrailBySlugService.execute(ctx.params.slug);
+	const data = await getTrailBySlugService.execute(ctx.params.trail);
 
 	return data;
 };
