@@ -41,8 +41,9 @@
 </script>
 
 <li class="item before:bg-gray-300 after:bg-gray-300">
-	<div
-		class="flex flex-col gap-2 p-4 border-2 border-gray-300 bg-white rounded-lg shadow-md hover:shadow-lg"
+	<button
+		on:click
+		class="w-full flex flex-col gap-2 p-4 border-2 border-gray-300 bg-white rounded-lg shadow-md hover:shadow-lg"
 	>
 		<h2>
 			{breadcrumb.title}
@@ -61,7 +62,7 @@
 				{/if}
 			{/each}
 		</ul>
-	</div>
+	</button>
 </li>
 
 <style lang="postcss">
