@@ -27,7 +27,7 @@
 		</button>
 	</form>
 
-	<ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+	<ul class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
 		{#each data.trails as trail}
 			<li>
 				<TrailCard data={trail} />

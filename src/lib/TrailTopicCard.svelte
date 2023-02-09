@@ -40,60 +40,54 @@
 	};
 </script>
 
-<li class="item before:bg-gray-500">
-	<a href="/trails/{trailSlug}/{breadcrumb.slug}">
-		<div class="flex flex-col gap-2 p-4 bg-white rounded-lg shadow-md hover:shadow-lg">
-			<h2>
-				{breadcrumb.title}
-			</h2>
+<li class="item before:bg-gray-300 after:bg-gray-300">
+	<div
+		class="flex flex-col gap-2 p-4 border-2 border-gray-300 bg-white rounded-lg shadow-md hover:shadow-lg"
+	>
+		<h2>
+			{breadcrumb.title}
+		</h2>
 
-			<p>
-				{breadcrumb.description}
-			</p>
+		<p>
+			{breadcrumb.description}
+		</p>
 
-			<ul class="flex flex-row gap-2">
-				{#each breadcrumb.availableContent as content}
-					{#if isContentType(content)}
-						<li title={contentLegends[content].label}>
-							<svelte:component
-								this={contentLegends[content].icon}
-								size={18}
-								class="inline-block"
-							/>
-						</li>
-					{/if}
-				{/each}
-			</ul>
-		</div>
-	</a>
+		<ul class="flex flex-row gap-2">
+			{#each breadcrumb.availableContent as content}
+				{#if isContentType(content)}
+					<li title={contentLegends[content].label}>
+						<svelte:component this={contentLegends[content].icon} size={18} class="inline-block" />
+					</li>
+				{/if}
+			{/each}
+		</ul>
+	</div>
 </li>
 
 <style lang="postcss">
 	.item {
-		border-left: 5px solid #ccc;
 		padding-left: 1rem;
 		padding-top: 1rem;
 		padding-bottom: 1rem;
 		position: relative;
 
-		&:first-child {
-			padding-top: 0;
-		}
-
-		&:last-child {
-			padding-bottom: 0;
-		}
-
 		&::before {
+			content: '';
+			position: absolute;
+			width: 5px;
+			height: 100%;
+			top: 50%;
+			transform: translateY(-50%) translateX(-500%);
+		}
+
+		&::after {
 			content: '';
 			position: absolute;
 			width: 15px;
 			height: 15px;
 			border-radius: 50%;
-
 			top: 50%;
-			left: -0.65%;
-			transform: translateY(-50%);
+			transform: translateY(-50%) translateX(-200%);
 		}
 	}
 </style>

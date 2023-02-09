@@ -1,4 +1,4 @@
-<header class="z-50 fixed flex h-10 w-full items-center justify-between p-2 text-gray-900 bg-gray-100 bg-opacity-75 backdrop-blur-xl">
+<header class="z-50 fixed flex h-[var(--header-height)] w-full items-center justify-between p-2 text-gray-900 bg-gray-100 bg-opacity-75 backdrop-blur-xl">
 	<a href="/" class="flex items-center">Coati</a>
 
   <nav>
