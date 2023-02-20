@@ -13,7 +13,7 @@
 >
 	<section class="h-full flex flex-col">
 		<h2 class="text-xl font-bold text-gray-900 my-4">Sobre a trilha</h2>
-		<p class="text-gray-700">{trail.description}</p>
+		<p class="text-gray-700">{trail.description} - {breadcrumb.title}</p>
 
 		<Carousel>
 			{#each breadcrumb.availableContent as content}

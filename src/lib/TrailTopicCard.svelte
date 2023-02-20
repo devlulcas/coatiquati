@@ -41,8 +41,7 @@
 </script>
 
 <li class="item before:bg-gray-300 after:bg-gray-300">
-	<button
-		on:click
+	<div
 		class="w-full flex flex-col gap-2 p-4 border-2 border-gray-300 bg-white rounded-lg shadow-md hover:shadow-lg"
 	>
 		<h2>
@@ -53,16 +52,27 @@
 			{breadcrumb.description}
 		</p>
 
-		<ul class="flex flex-row gap-2">
-			{#each breadcrumb.availableContent as content}
-				{#if isContentType(content)}
-					<li title={contentLegends[content].label}>
-						<svelte:component this={contentLegends[content].icon} size={18} class="inline-block" />
-					</li>
-				{/if}
-			{/each}
-		</ul>
-	</button>
+		<div class="flex justify-between items-center">
+			<ul class="flex flex-row gap-2">
+				{#each breadcrumb.availableContent as content}
+					{#if isContentType(content)}
+						<li title={contentLegends[content].label}>
+							<svelte:component
+								this={contentLegends[content].icon}
+								size={18}
+								class="inline-block"
+							/>
+						</li>
+					{/if}
+				{/each}
+			</ul>
+
+			<button
+				class="border-2 border-gray-300 hover:bg-gray-200 text-gray-500 font-bold py-2 px-3 rounded"
+				on:click>Ver mais</button
+			>
+		</div>
+	</div>
 </li>
 
 <style lang="postcss">
