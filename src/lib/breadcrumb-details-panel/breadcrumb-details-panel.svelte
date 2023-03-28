@@ -1,8 +1,7 @@
 <script lang="ts">
 	import type { Breadcrumb } from '$src/types/breadcrumbs';
 	import type { Trail } from '$src/types/trails';
-	import { Carousel } from './Carousel';
-	import CarouselItem from './Carousel/CarouselItem.svelte';
+	import { Carousel } from '../carousel';
 
 	export let trail: Trail;
 	export let breadcrumb: Breadcrumb;
@@ -15,13 +14,13 @@
 		<h2 class="text-xl font-bold text-gray-900 my-4">Sobre a trilha</h2>
 		<p class="text-gray-700">{trail.description} - {breadcrumb.title}</p>
 
-		<Carousel>
+		<Carousel.Container>
 			{#each breadcrumb.availableContent as content}
-				<CarouselItem>
+				<Carousel.Item>
 					{content}
-				</CarouselItem>
+				</Carousel.Item>
 			{/each}
-		</Carousel>
+		</Carousel.Container>
 	</section>
 
 	<a

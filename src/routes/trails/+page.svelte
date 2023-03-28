@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TrailCard from '$lib/TrailCard.svelte';
+	import { TrailCard } from '$lib/trail-card';
 	import type { PageServerData } from './$types';
 	import { Map, Search } from 'lucide-svelte';
 

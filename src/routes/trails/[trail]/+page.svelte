@@ -1,13 +1,13 @@
 <script lang="ts">
-	import BreadcrumbDetailsPanel from '$lib/BreadcrumbDetailsPanel.svelte';
-	import TrailTopicCard from '$lib/TrailTopicCard.svelte';
+	import { BreadcrumbDetailsPanel } from '$lib/breadcrumb-details-panel/';
+	import { TrailCrumbCard } from '$lib/trail-crumb-card';
 	import { Dialog, DialogOverlay } from '@rgossiaux/svelte-headlessui';
 	import { Pin, X } from 'lucide-svelte';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
 
-	let isOpen = true;
+	let isOpen = false;
 	let selectedBreadcrumb = data.breadcrumbs[0];
 </script>
 
@@ -16,12 +16,12 @@
 		<div class="w-full md:w-1/2">
 			<h1 class="flex items-center gap-2 text-2xl font-bold text-gray-900 my-4">
 				<Pin />
-				<span>Trilhas</span>
+				<span>Trilha {data.trail.title}</span>
 			</h1>
 
 			<ul class="flex flex-col">
 				{#each data.breadcrumbs as breadcrumb}
-					<TrailTopicCard
+					<TrailCrumbCard
 						on:click={() => {
 							selectedBreadcrumb = breadcrumb;
 
@@ -37,7 +37,7 @@
 		</div>
 
 		<div class="hidden md:block w-1/2 relative">
-			<div class="trail-details ">
+			<div class="trail-details">
 				<BreadcrumbDetailsPanel trail={data.trail} breadcrumb={selectedBreadcrumb} />
 
 				<Dialog
