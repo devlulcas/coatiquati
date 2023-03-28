@@ -1,23 +1,8 @@
-import type { ContentPreview, ContentType } from './content.repository';
-
-export type Crumb = {
-	id: string;
-	title: string;
-	description: string;
-	contentTypeAvailable: ContentType[];
-	contents: ContentPreview[];
-	trailId: string;
-};
-
-export type CrumbPreview = Omit<Crumb, 'contents'>;
-
-export type CreatableCrumb = Omit<Crumb, 'id' | 'contents'>;
-
-export type UpdatableCrumb = Partial<Omit<Crumb, 'contents'>>;
+import type { CreatableCrumb, Crumb, CrumbPreview, UpdatableCrumb } from "$src/entities/crumbs.entity";
 
 export interface CrumbRepositoryInterface {
-	get: (id: string) => Promise<Crumb>;
-	getByTrailId: (trailId: string) => Promise<CrumbPreview[]>;
+	findById: (id: string) => Promise<Crumb>;
+	findByTrailId: (trailId: string) => Promise<CrumbPreview[]>;
 	create: (crumb: CreatableCrumb) => Promise<Crumb>;
 	update: (crumb: UpdatableCrumb) => Promise<Crumb>;
 	delete: (id: string) => Promise<void>;
@@ -26,26 +11,26 @@ export interface CrumbRepositoryInterface {
 export class MockCrumbRepository implements CrumbRepositoryInterface {
 	private crumbs: Crumb[] = [];
 
-	async get(id: string): Promise<Crumb> {
+	async findById(id: string): Promise<Crumb> {
 		const crumb = this.crumbs.find((crumb) => crumb.id === id);
-		if (!crumb) {
+		
+    if (!crumb) {
 			throw new Error('Crumb not found');
 		}
+
 		return crumb;
 	}
 
-	async getByTrailId(trailId: string): Promise<CrumbPreview[]> {
+	async findByTrailId(trailId: string): Promise<CrumbPreview[]> {
 		const filteredCrumbs = this.crumbs.filter((crumb) => crumb.trailId === trailId);
 
-		return filteredCrumbs.map((crumb) => {
-			return {
-				id: crumb.id,
-				title: crumb.title,
-				description: crumb.description,
-				contentTypeAvailable: crumb.contentTypeAvailable,
-				trailId: crumb.trailId
-			};
-		});
+		return filteredCrumbs.map((crumb) => ({
+      id: crumb.id,
+      title: crumb.title,
+      description: crumb.description,
+      contentTypeAvailable: crumb.contentTypeAvailable,
+      trailId: crumb.trailId
+    }));
 	}
 
 	async create(crumb: CreatableCrumb): Promise<Crumb> {
@@ -79,9 +64,11 @@ export class MockCrumbRepository implements CrumbRepositoryInterface {
 
 	async delete(id: string): Promise<void> {
 		const index = this.crumbs.findIndex((c) => c.id === id);
-		if (index === -1) {
+		
+    if (index === -1) {
 			throw new Error('Crumb not found');
 		}
+
 		this.crumbs.splice(index, 1);
 	}
 }
