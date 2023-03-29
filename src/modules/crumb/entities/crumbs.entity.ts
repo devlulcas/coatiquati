@@ -1,4 +1,4 @@
-import type { ContentPreview, ContentType } from './content.entity';
+import type { ContentPreview, ContentType } from '$src/modules/content/entities/content.entity';
 
 export type Crumb = {
 	id: string;

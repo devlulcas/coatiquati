@@ -1,20 +1,13 @@
-import type { CreatableTrail, Trail, TrailPreview, UpdatableTrail } from "$src/entities/trail.entity";
-
-export interface TrailRepositoryInterface {
-	findById: (id: string) => Promise<Trail>;
-	findAll: () => Promise<TrailPreview[]>;
-	create: (trail: CreatableTrail) => Promise<Trail>;
-	update: (trail: UpdatableTrail) => Promise<Trail>;
-	delete: (id: string) => Promise<void>;
-}
+import type { CreatableTrail, Trail, TrailPreview, UpdatableTrail } from '../entities/trail.entity';
+import type { TrailRepositoryInterface } from './trail.repository';
 
 export class MockTrailRepository implements TrailRepositoryInterface {
 	private trails: Trail[] = [];
 
 	async findById(id: string): Promise<Trail> {
 		const trail = this.trails.find((trail) => trail.id === id);
-		
-    if (!trail) {
+
+		if (!trail) {
 			throw new Error('Trail not found');
 		}
 
@@ -23,13 +16,13 @@ export class MockTrailRepository implements TrailRepositoryInterface {
 
 	async findAll(): Promise<TrailPreview[]> {
 		return this.trails.map((trail) => ({
-      id: trail.id,
-      title: trail.title,
-      description: trail.description,
-      picture: trail.picture,
-      author: trail.author,
-      crumbCount: trail.crumbCount
-    }));
+			id: trail.id,
+			title: trail.title,
+			description: trail.description,
+			picture: trail.picture,
+			author: trail.author,
+			crumbCount: trail.crumbCount
+		}));
 	}
 
 	async create(trail: CreatableTrail): Promise<Trail> {
@@ -46,9 +39,9 @@ export class MockTrailRepository implements TrailRepositoryInterface {
 	}
 
 	async update(trail: UpdatableTrail): Promise<Trail> {
-    if (!trail.id) {
-      throw new Error('No id provided');
-    }
+		if (!trail.id) {
+			throw new Error('No id provided');
+		}
 
 		const trailToUpdate = await this.findById(trail.id);
 
@@ -61,7 +54,7 @@ export class MockTrailRepository implements TrailRepositoryInterface {
 			if (trail.id === updatedTrail.id) {
 				return updatedTrail;
 			}
-      
+
 			return trail;
 		});
 

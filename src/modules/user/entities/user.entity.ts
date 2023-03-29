@@ -8,8 +8,6 @@ export type User = {
   updatedAt: Date;
 };
 
-export type UserPreview = Omit<User, 'password'>;
-
 export type CreatableUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
 
 export type UpdatableUser = Partial<Omit<User, 'createdAt' | 'updatedAt'>>;

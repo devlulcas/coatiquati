@@ -1,4 +1,4 @@
-import type { CrumbPreview } from './crumbs.entity';
+import type { CrumbPreview } from "$src/modules/crumb/entities/crumbs.entity";
 
 export type Trail = {
 	id: string;

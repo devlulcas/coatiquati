@@ -1,20 +1,18 @@
-import type { CreatableCrumb, Crumb, CrumbPreview, UpdatableCrumb } from "$src/entities/crumbs.entity";
-
-export interface CrumbRepositoryInterface {
-	findById: (id: string) => Promise<Crumb>;
-	findByTrailId: (trailId: string) => Promise<CrumbPreview[]>;
-	create: (crumb: CreatableCrumb) => Promise<Crumb>;
-	update: (crumb: UpdatableCrumb) => Promise<Crumb>;
-	delete: (id: string) => Promise<void>;
-}
+import type {
+  CreatableCrumb,
+  Crumb,
+  CrumbPreview,
+  UpdatableCrumb
+} from '../entities/crumbs.entity';
+import type { CrumbRepositoryInterface } from './crumbs.repository';
 
 export class MockCrumbRepository implements CrumbRepositoryInterface {
 	private crumbs: Crumb[] = [];
 
 	async findById(id: string): Promise<Crumb> {
 		const crumb = this.crumbs.find((crumb) => crumb.id === id);
-		
-    if (!crumb) {
+
+		if (!crumb) {
 			throw new Error('Crumb not found');
 		}
 
@@ -25,12 +23,12 @@ export class MockCrumbRepository implements CrumbRepositoryInterface {
 		const filteredCrumbs = this.crumbs.filter((crumb) => crumb.trailId === trailId);
 
 		return filteredCrumbs.map((crumb) => ({
-      id: crumb.id,
-      title: crumb.title,
-      description: crumb.description,
-      contentTypeAvailable: crumb.contentTypeAvailable,
-      trailId: crumb.trailId
-    }));
+			id: crumb.id,
+			title: crumb.title,
+			description: crumb.description,
+			contentTypeAvailable: crumb.contentTypeAvailable,
+			trailId: crumb.trailId
+		}));
 	}
 
 	async create(crumb: CreatableCrumb): Promise<Crumb> {
@@ -64,8 +62,8 @@ export class MockCrumbRepository implements CrumbRepositoryInterface {
 
 	async delete(id: string): Promise<void> {
 		const index = this.crumbs.findIndex((c) => c.id === id);
-		
-    if (index === -1) {
+
+		if (index === -1) {
 			throw new Error('Crumb not found');
 		}
 
