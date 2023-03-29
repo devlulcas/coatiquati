@@ -1,3 +1,5 @@
+import type { Breadcrumb } from "$src/types/breadcrumbs";
+
 export function createBreadcrumbPreview(id: number): Breadcrumb {
 	return {
 		id,
