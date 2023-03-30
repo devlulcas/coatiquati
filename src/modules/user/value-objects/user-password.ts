@@ -10,6 +10,10 @@ export class UserPassword {
 		this.isHashed = isHashed;
 	}
 
+  get password(): string {
+    return this.value;
+  }
+
 	/**
 	 * Hashes this password
 	 */
