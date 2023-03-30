@@ -8,6 +8,7 @@ export type Trail = {
 	author: string;
 	crumbs: CrumbPreview[];
 	crumbCount: number;
+  slug: string;
 };
 
 export type TrailPreview = Omit<Trail, 'crumbs'>;

@@ -1,4 +1,6 @@
+import type { Pagination } from '$src/shared/types/pagination';
 import type { CreatableTrail, Trail, TrailPreview, UpdatableTrail } from '../entities/trail.entity';
+import { TrailMapper } from '../mappers/trail.mapper';
 import type { TrailRepositoryInterface } from './trail.repository';
 
 export class MockTrailRepository implements TrailRepositoryInterface {
@@ -14,15 +16,9 @@ export class MockTrailRepository implements TrailRepositoryInterface {
 		return trail;
 	}
 
-	async findAll(): Promise<TrailPreview[]> {
-		return this.trails.map((trail) => ({
-			id: trail.id,
-			title: trail.title,
-			description: trail.description,
-			picture: trail.picture,
-			author: trail.author,
-			crumbCount: trail.crumbCount
-		}));
+	async findAll(pagination: Pagination): Promise<TrailPreview[]> {
+    const trails = this.trails.slice(pagination.offset, pagination.offset + pagination.limit);
+    return TrailMapper.toDTOList(trails);
 	}
 
 	async create(trail: CreatableTrail): Promise<Trail> {
