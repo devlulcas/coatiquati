@@ -1,11 +1,11 @@
 import type { UserWithoutPasswordDTO } from "../dtos/user.dto";
-import type { CreatableUser, User } from "../entities/user.entity";
+import type { CreatableUser } from "../entities/user.entity";
 import { UserMapper } from "../mappers/user.mapper";
 import type { UserRepositoryInterface } from "../repositories/user.repository";
 import { UserEmail } from "../value-objects/user-email";
 import { UserPassword } from "../value-objects/user-password";
 
-export class CreateUser {
+export class SignUp {
   constructor(private userRepository: UserRepositoryInterface) {}
 
   async execute(data: CreatableUser): Promise<UserWithoutPasswordDTO> {
