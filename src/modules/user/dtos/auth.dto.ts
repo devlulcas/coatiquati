@@ -8,7 +8,6 @@ export type Payload = {
 
 export type SignInDTO = {
   token: JWTToken;
-  refreshToken: JWTToken;
 }
 
 export type UserSignInDTO =  Pick<User, 'email' | 'password'>;

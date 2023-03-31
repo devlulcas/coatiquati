@@ -33,13 +33,8 @@ export class SignIn {
 			id: user.id
 		});
 
-		const refreshToken = await this.authService.generateRefreshToken({
-			id: user.id
-		});
-
 		return {
-			token,
-			refreshToken
+			token
 		};
 	}
 }

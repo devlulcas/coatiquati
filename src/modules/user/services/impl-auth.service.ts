@@ -1,8 +1,8 @@
 import { JWT_KEY } from '$env/static/private';
 import { importPKCS8, jwtVerify, SignJWT } from 'jose';
+import { nanoid } from 'nanoid';
 import type { JWTToken, Payload } from '../dtos/auth.dto';
 import type { AuthServiceProviderInterface } from './auth.service';
-import { nanoid } from 'nanoid';
 
 export class ImplAuthServiceProvider implements AuthServiceProviderInterface {
 	private alg = 'RS256';
@@ -30,20 +30,5 @@ export class ImplAuthServiceProvider implements AuthServiceProviderInterface {
 		} catch (error) {
 			throw new Error('Expired or invalid token');
 		}
-	}
-
-	public async generateRefreshToken(payload: Payload): Promise<JWTToken> {
-    console.log('generateRefreshToken', payload);
-		throw new Error('Method not implemented.');
-	}
-
-	public async verifyRefreshToken(token: JWTToken): Promise<Payload> {
-		console.log('verifyRefreshToken', token);
-		throw new Error('Method not implemented.');
-	}
-
-	public async clearUserAuthData(userId: string): Promise<void> {
-		console.log('clearUserAuthData', userId);
-		throw new Error('Method not implemented.');
 	}
 }
