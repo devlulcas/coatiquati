@@ -1,35 +1,39 @@
-import { SignJWT } from "jose";
-import type { JWTToken, Payload } from "../dtos/auth.dto";
-import type { AuthServiceProviderInterface } from "./auth.service";
-import { nanoid } from "nanoid";
+import { JWT_KEY } from '$env/static/private';
+import { importPKCS8, jwtVerify, SignJWT } from 'jose';
+import type { JWTToken, Payload } from '../dtos/auth.dto';
+import type { AuthServiceProviderInterface } from './auth.service';
+import { nanoid } from 'nanoid';
 
-export class ImplAuthServiceProvider implements AuthServiceProviderInterface  {
-  public async generateToken(payload: Payload): Promise<JWTToken> {
-    if (!payload) {
-      throw new Error("Payload is required");
-    }
-  
-    const token = await new SignJWT(payload)
-      .setProtectedHeader({ alg: "HS256" })
-      .setJti(nanoid())
-      .setIssuedAt()
-      .setExpirationTime("1h")
-      .sign();
-  
+export class ImplAuthServiceProvider implements AuthServiceProviderInterface {
+	private alg = 'RS256';
+	private pkcs8 = JWT_KEY;
 
+	public async generateToken(payload: Payload): Promise<JWTToken> {
+		const privateKey = await importPKCS8(this.pkcs8, this.alg);
 
+		const jwt = await new SignJWT(payload)
+			.setProtectedHeader({ alg: this.alg })
+			.setIssuedAt()
+			.setJti(nanoid())
+			.setExpirationTime('2h')
+			.sign(privateKey);
 
-		console.log('generateToken', payload);
-		throw new Error('Method not implemented.');
+		return jwt;
 	}
 
 	public async verifyToken(token: JWTToken): Promise<Payload> {
-		console.log('verifyToken', token);
-		throw new Error('Method not implemented.');
+		const key = await importPKCS8(this.pkcs8, this.alg);
+
+		try {
+			const verified = await jwtVerify(token, key);
+			return verified.payload as Payload;
+		} catch (error) {
+			throw new Error('Expired or invalid token');
+		}
 	}
 
 	public async generateRefreshToken(payload: Payload): Promise<JWTToken> {
-		console.log('generateRefreshToken', payload);
+    console.log('generateRefreshToken', payload);
 		throw new Error('Method not implemented.');
 	}
 
