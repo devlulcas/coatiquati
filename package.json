@@ -40,7 +40,9 @@
 	"dependencies": {
 		"bcryptjs": "^2.4.3",
 		"embla-carousel-svelte": "^7.1.0",
+		"jose": "^4.13.1",
 		"lucide-svelte": "^0.129.0",
+		"nanoid": "^4.0.2",
 		"zod": "^3.21.4"
 	}
 }
