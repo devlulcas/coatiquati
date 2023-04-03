@@ -42,15 +42,13 @@ export class ImplAuthServiceProvider implements AuthServiceProviderInterface {
 			throw new Error('Invalid token');
 		}
 
+    const refresh = this.redisClient.client.get(payload.id)
+
+    if (!refresh) {
+      throw new Error('Invalid refresh token');
+    }
+
 		return payload;
-	}
-
-	public async refreshToken(refreshToken: JWTToken, token: JWTToken): Promise<JWTToken> {
-		const payload = await this.verifyToken(token);
-
-		const refreshTokenPayload = await this.verifyRefreshToken(refreshToken);
-    
-		return encodeJWT(payload, '5m');
 	}
 
 	public async invalidateToken(token: JWTToken): Promise<void> {
