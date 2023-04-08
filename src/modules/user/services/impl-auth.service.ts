@@ -1,6 +1,5 @@
 import type { JWTToken, Payload } from '../dtos/auth.dto';
 import { decodeJWT, encodeJWT } from '../infra/jwt';
-import { RedisClient } from '../infra/redis-client';
 import type { AuthServiceProviderInterface } from './auth.service';
 
 function isPayload(data: unknown): data is Payload {
@@ -11,12 +10,6 @@ function isPayload(data: unknown): data is Payload {
 }
 
 export class ImplAuthServiceProvider implements AuthServiceProviderInterface {
-	private redisClient: RedisClient;
-
-	constructor() {
-		this.redisClient = new RedisClient();
-	}
-
 	public async generateToken(payload: Payload): Promise<JWTToken> {
 		return encodeJWT(payload, '5m');
 	}
@@ -29,30 +22,5 @@ export class ImplAuthServiceProvider implements AuthServiceProviderInterface {
 		}
 
 		return payload;
-	}
-
-	public async generateRefreshToken(payload: Payload): Promise<JWTToken> {
-		return encodeJWT(payload, '1y');
-	}
-
-	public async verifyRefreshToken(token: JWTToken): Promise<Payload> {
-		const payload = await decodeJWT(token);
-
-		if (!isPayload(payload)) {
-			throw new Error('Invalid token');
-		}
-
-    const refresh = this.redisClient.client.get(payload.id)
-
-    if (!refresh) {
-      throw new Error('Invalid refresh token');
-    }
-
-		return payload;
-	}
-
-	public async invalidateToken(token: JWTToken): Promise<void> {
-		console.log('invalidateToken', token);
-		// TODO
 	}
 }

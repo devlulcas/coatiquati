@@ -15,7 +15,5 @@ export class SignOut {
     if (!user) {
       throw new Error('User not found');
     }
-
-    await this.authService.invalidateToken(token);
   }
 }

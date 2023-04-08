@@ -1,5 +1,4 @@
 import type { UpdateUserDataDTO, UserWithoutPasswordDTO } from '../dtos/user.dto';
-import type { User } from '../entities/user.entity';
 import { UserMapper } from '../mappers/user.mapper';
 import type { UserRepositoryInterface } from '../repositories/user.repository';
 
