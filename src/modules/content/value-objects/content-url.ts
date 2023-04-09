@@ -1,21 +1,20 @@
 import { z } from 'zod';
+import type { UrlContentType } from '../entities/content.entity';
 
-const typeByExtension = {
+const typeByExtension: Record<UrlContentType, string[]> = {
 	video: ['mp4', 'webm', 'ogg'],
 	image: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'avif', 'bmp', 'ico'],
 	audio: ['mp3', 'wav', 'ogg', 'aac', 'm4a', 'wma', 'opus'],
 	document: ['pdf']
 };
 
-export type ContentUrlType = keyof typeof typeByExtension | 'other';
-
 export class ContentUrl {
 	private value: {
 		url: URL;
-		type: ContentUrlType;
+		type: UrlContentType;
 	};
 
-	private constructor(url: URL, type: ContentUrlType) {
+	private constructor(url: URL, type: UrlContentType) {
 		this.value = {
 			url,
 			type
@@ -26,11 +25,11 @@ export class ContentUrl {
 		return this.value.url.toString();
 	}
 
-	get type(): ContentUrlType {
+	get type(): UrlContentType {
 		return this.value.type;
 	}
 
-	private static determinateType(url: URL): ContentUrlType {
+	private static determinateType(url: URL): UrlContentType {
 		if (url.hostname === 'www.youtube.com') {
 			return 'video';
 		}
@@ -38,17 +37,17 @@ export class ContentUrl {
 		const extension = url.pathname.split('.').pop();
 
 		if (!extension) {
-			return 'other';
+			throw new Error('Invalid URL');
 		}
-
+    
 		for (const [type, extensions] of Object.entries(typeByExtension)) {
 			if (extensions.includes(extension)) {
 				// Confia
-				return type as ContentUrlType;
+				return type as UrlContentType;
 			}
 		}
 
-		return 'other';
+    throw new Error('Invalid URL');
 	}
 
 	/**

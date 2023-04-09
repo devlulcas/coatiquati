@@ -1,8 +1,14 @@
-import type { ContentUrlType } from '../value-objects/content-url';
+export const UrlContentTypes = ['video', 'image', 'audio', 'document'] as const;
 
-export type TextContent = 'rich_text' | 'markdown' | 'html';
+export const TextContentTypes = ['rich_text', 'markdown' , 'html'] as const;
 
-export type ContentType = TextContent | ContentUrlType;
+export const ContentTypes = [...UrlContentTypes, ...TextContentTypes] as const;
+
+export type UrlContentType = typeof UrlContentTypes[number];
+
+export type TextContent = typeof TextContentTypes[number];
+
+export type ContentType = typeof ContentTypes[number];
 
 export type Content = {
 	id: string;
