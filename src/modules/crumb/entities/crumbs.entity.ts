@@ -11,6 +11,6 @@ export type Crumb = {
 
 export type CrumbPreview = Omit<Crumb, 'contents'>;
 
-export type CreatableCrumb = Omit<Crumb, 'id' | 'contents'>;
+export type CreatableCrumb = Omit<Crumb, 'id' | 'contents' | 'contentTypeAvailable'>;
 
 export type UpdatableCrumb = Partial<Omit<Crumb, 'contents'>>;

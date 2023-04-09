@@ -13,7 +13,7 @@ export class CreateCrumb {
 		const trail = await this.trailRepository.findById(data.trailId);
 
 		if (!trail) {
-			return null;
+			throw new Error('No trail found');
 		}
 
 		const createdCrumb = await this.crumbRepository.create(data);

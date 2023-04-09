@@ -35,7 +35,8 @@ export class MockCrumbRepository implements CrumbRepositoryInterface {
 		const newCrumb = {
 			id: Math.random().toString(36),
 			...crumb,
-			contents: []
+			contents: [],
+      contentTypeAvailable: []
 		};
 
 		this.crumbs.push(newCrumb);

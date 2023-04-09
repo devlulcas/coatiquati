@@ -1,13 +1,29 @@
-import type { Content, ContentPreview, CreatableContent } from "../entities/content.entity";
-import type { ContentRepositoryInterface } from "./content.repository";
+import type {
+	Content,
+	ContentPreview,
+	ContentWithoutUnprocessedBody,
+	CreatableContent
+} from '../entities/content.entity';
+import { ContentMapper } from '../mappers/content';
+import type { ContentRepositoryInterface } from './content.repository';
 
 export class MockContentRepository implements ContentRepositoryInterface {
 	private contents: Content[] = [];
 
-	async findById(id: string): Promise<Content> {
+	async findById(id: string): Promise<ContentWithoutUnprocessedBody> {
 		const content = this.contents.find((content) => content.id === id);
-		
-    if (!content) {
+
+		if (!content) {
+			throw new Error('Content not found');
+		}
+
+		return ContentMapper.toContentWithoutUnprocessedBody(content);
+	}
+
+	async findRawById(id: string): Promise<Content> {
+		const content = this.contents.find((content) => content.id === id);
+
+		if (!content) {
 			throw new Error('Content not found');
 		}
 
@@ -18,11 +34,11 @@ export class MockContentRepository implements ContentRepositoryInterface {
 		const filteredContent = this.contents.filter((content) => content.crumbId === crumbId);
 
 		return filteredContent.map((content) => ({
-      id: content.id,
-      title: content.title,
-      type: content.type,
-      crumbId: content.crumbId
-    }));
+			id: content.id,
+			title: content.title,
+			type: content.type,
+			crumbId: content.crumbId
+		}));
 	}
 
 	async create(content: CreatableContent): Promise<Content> {
@@ -38,23 +54,23 @@ export class MockContentRepository implements ContentRepositoryInterface {
 
 	async update(content: Content): Promise<Content> {
 		const index = this.contents.findIndex((c) => c.id === content.id);
-	
-    if (index === -1) {
+
+		if (index === -1) {
 			throw new Error('Content not found');
 		}
-	
-    this.contents[index] = content;
-	
-    return content;
+
+		this.contents[index] = content;
+
+		return content;
 	}
 
 	async delete(id: string): Promise<void> {
 		const index = this.contents.findIndex((c) => c.id === id);
-	
-    if (index === -1) {
+
+		if (index === -1) {
 			throw new Error('Content not found');
 		}
-	
-    this.contents.splice(index, 1);
+
+		this.contents.splice(index, 1);
 	}
 }
