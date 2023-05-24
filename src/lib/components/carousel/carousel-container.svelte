@@ -1,20 +1,12 @@
-<script>
-	// @ts-nocheck
-
+<script lang="ts">
 	import emblaCarouselSvelte from 'embla-carousel-svelte';
 
-	let emblaApi;
-
-	const emblaConfig = {
+	const emblaConfig: any = {
 		options: { loop: false }
-	};
-
-	const onInit = (event) => {
-		emblaApi = event.detail;
 	};
 </script>
 
-<div data-carousel="embla" use:emblaCarouselSvelte={emblaConfig} on:init={onInit}>
+<div data-carousel="embla" use:emblaCarouselSvelte={emblaConfig}>
 	<div data-carousel="embla__container" {...$$props}>
 		<slot />
 	</div>

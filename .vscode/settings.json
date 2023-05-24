@@ -1,8 +1,12 @@
 {
-  "cSpell.words": [
-    "dtos",
-    "lucia",
-    "micromark",
-    "sqlite"
-  ]
+	"cSpell.words": ["dtos", "embla", "lucia", "micromark", "sqlite"],
+	"cSpell.language": "en,pt-BR",
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"[svelte]": {
+		"editor.defaultFormatter": "svelte.svelte-vscode"
+	}
 }

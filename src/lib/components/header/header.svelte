@@ -1,6 +1,7 @@
 <script>
 	import { enhance } from '$app/forms';
 	import { BrainIcon } from 'lucide-svelte';
+
 	export let isLoggedIn = false;
 </script>
 
@@ -19,7 +20,7 @@
 				<button type="submit">Sair</button>
 			</form>
 
-      <a href="/profile" class="p-2">Perfil</a>
+			<a href="/profile" class="p-2">Perfil</a>
 		{:else}
 			<a href="/sign-in" class="p-2">Entrar</a>
 		{/if}

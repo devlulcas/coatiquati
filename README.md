@@ -1,42 +1,21 @@
-# NOTAS
+# COATI 🦝
 
-- [Command Pattern](https://refactoring.guru/design-patterns/command)
+## Sobre o projeto
 
-# create-svelte
+O projeto consiste em um sistema de compartilhamento de conhecimento. Professores podem criar trilhas sobre um determinado assunto e alunos, professores e pessoas interessadas podem seguir essas trilhas e aprender sobre o assunto. O professor passa primeiro, criando tópicos (migalhas) e adicionando conteúdo a eles. Depois, os alunos podem seguir essas trilhas, aprender sobre o assunto e deixar suas próprias migalhas. Dessa forma o conhecimento é compartilhado e todos podem aprender e ensinar.
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+## Tecnologias utilizadas
 
-## Creating a project
+- [Node.js](https://nodejs.org/en/)
+- [SvelteKit](https://kit.svelte.dev/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Prisma](https://www.prisma.io/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Vite](https://vitejs.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [DockerCompose](https://docs.docker.com/compose/)
+- [Docker](https://www.docker.com/)
+- [Mailgun](https://www.mailgun.com/)
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
