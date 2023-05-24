@@ -1,18 +1,25 @@
 <script lang="ts">
+	import '$lib/assets/styles/global.css';
+	import { Blob } from '$lib/components/blob';
 	import { Header } from '$lib/components/header';
-	import '../assets/styles/global.css';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
 </script>
 
-<div class="fixed inset-0 bg-black select-none pointer-events-none">
+<div
+	class="fixed inset-0 select-none pointer-events-none bg-gradient-to-r from-black via-neutral-800 to-black"
+>
 	<div
-		class="w-7/12 aspect-square rounded-full absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-gradient-to-t from-fuchsia-600 to-pink-600"
+		class="w-7/12 aspect-square rounded-full absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-600 via-fuchsia-600 to-pink-600"
 	/>
+
+	<Blob />
 </div>
 
-<div class="grainy backdrop-blur-2xl relative w-screen min-h-screen overflow-x-hidden text-white">
+<div
+	class="grainy backdrop-blur-2xl relative max-w-[100vw] min-h-screen overflow-x-hidden text-white"
+>
 	<Header isLoggedIn={!!data.user?.id} />
 
 	<slot />
