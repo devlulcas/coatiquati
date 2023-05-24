@@ -1,8 +1,5 @@
-import type {
-	Content,
-	ContentPreview,
-	ContentWithoutUnprocessedBody
-} from '../entities/content.entity';
+import type { ContentPreview, ContentWithoutUnprocessedBody } from '../dtos/content.dto';
+import type { Content } from '../entities/content.entity';
 
 export class ContentMapper {
 	public static toContentWithoutUnprocessedBody(content: Content): ContentWithoutUnprocessedBody {

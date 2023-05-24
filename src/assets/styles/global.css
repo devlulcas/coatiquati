@@ -3,5 +3,6 @@
 @tailwind utilities;
 
 :root {
-  --header-height: 3rem;
+	--header-height: 3rem;
+	--safe-screen-height: calc(100vh - var(--header-height) - 2rem);
 }

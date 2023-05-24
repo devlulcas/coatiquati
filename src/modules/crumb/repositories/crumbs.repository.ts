@@ -1,9 +1,5 @@
-import type {
-  CreatableCrumb,
-  Crumb,
-  CrumbPreview,
-  UpdatableCrumb
-} from '../entities/crumbs.entity';
+import type { CreatableCrumb, CrumbPreview, UpdatableCrumb } from '../dtos/crumbs.dto';
+import type { Crumb } from '../entities/crumbs.entity';
 
 export interface CrumbRepositoryInterface {
 	findById: (id: string) => Promise<Crumb>;

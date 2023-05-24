@@ -1,4 +1,5 @@
-import type { Trail, UpdatableTrail } from '../entities/trail.entity';
+import type { UpdatableTrail } from '../dtos/trail.dto';
+import type { Trail } from '../entities/trail.entity';
 import type { TrailRepositoryInterface } from '../repositories/trail.repository';
 
 export class UpdateTrail {

@@ -1,5 +1,5 @@
-import { Pagination, type PaginationInputDTO } from '$src/shared/types/pagination';
-import type { TrailPreview } from '../entities/trail.entity';
+import { Pagination, type PaginationInputDTO } from '$lib/types/pagination';
+import type { TrailPreview } from '../dtos/trail.dto';
 import type { TrailRepositoryInterface } from '../repositories/trail.repository';
 
 export class GetTrails {

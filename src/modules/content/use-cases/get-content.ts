@@ -1,4 +1,4 @@
-import type { ContentWithoutUnprocessedBody } from "../entities/content.entity";
+import type { ContentWithoutUnprocessedBody } from "../dtos/content.dto";
 import type { ContentRepositoryInterface } from "../repositories/content.repository";
 
 export class GetContent {

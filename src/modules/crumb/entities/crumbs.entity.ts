@@ -1,4 +1,5 @@
-import type { ContentPreview, ContentType } from '$src/modules/content/entities/content.entity';
+import type { ContentPreview } from '$src/modules/content/dtos/content.dto';
+import type { ContentType } from '$src/modules/content/entities/content.entity';
 
 export type Crumb = {
 	id: string;
@@ -8,9 +9,3 @@ export type Crumb = {
 	contents: ContentPreview[];
 	trailId: string;
 };
-
-export type CrumbPreview = Omit<Crumb, 'contents'>;
-
-export type CreatableCrumb = Omit<Crumb, 'id' | 'contents' | 'contentTypeAvailable'>;
-
-export type UpdatableCrumb = Partial<Omit<Crumb, 'contents'>>;

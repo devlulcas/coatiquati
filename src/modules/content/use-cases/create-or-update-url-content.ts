@@ -1,4 +1,4 @@
-import type { ContentWithUnprocessedBody, CreatableContent } from '../entities/content.entity';
+import type { ContentWithUnprocessedBody, CreatableContent } from '../dtos/content.dto';
 import type { ContentRepositoryInterface } from '../repositories/content.repository';
 import { ContentUrl } from '../value-objects/content-url';
 

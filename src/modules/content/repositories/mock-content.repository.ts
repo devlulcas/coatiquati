@@ -1,9 +1,5 @@
-import type {
-	Content,
-	ContentPreview,
-	ContentWithoutUnprocessedBody,
-	CreatableContent
-} from '../entities/content.entity';
+import type { ContentPreview, ContentWithoutUnprocessedBody, CreatableContent } from '../dtos/content.dto';
+import type { Content } from '../entities/content.entity';
 import { ContentMapper } from '../mappers/content';
 import type { ContentRepositoryInterface } from './content.repository';
 

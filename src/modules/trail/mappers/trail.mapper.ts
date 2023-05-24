@@ -1,4 +1,5 @@
-import type { Trail, TrailPreview } from "../entities/trail.entity";
+import type { TrailPreview } from "../dtos/trail.dto";
+import type { Trail } from "../entities/trail.entity";
 
 export class TrailMapper {
   static toDTO(trail: Trail): TrailPreview {

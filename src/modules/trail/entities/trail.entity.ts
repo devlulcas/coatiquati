@@ -11,8 +11,3 @@ export type Trail = {
   slug: string;
 };
 
-export type TrailPreview = Omit<Trail, 'crumbs'>;
-
-export type CreatableTrail = Omit<Trail, 'id' | 'crumbs' | 'crumbCount'>;
-
-export type UpdatableTrail = Partial<Omit<Trail, 'crumbs' | 'crumbCount'>>;

@@ -1,10 +1,10 @@
-import type { CreatableUser, UpdatableUser, User } from '../entities/user.entity';
+import type { ResultType } from '$lib/types/result';
+import type { User } from '../entities/user.entity';
 
-export interface UserRepositoryInterface {
-	findByEmail(email: string): Promise<User>;
-	create(user: CreatableUser): Promise<User>;
-	update(user: UpdatableUser): Promise<User>;
-	delete(userId: string): Promise<User>;
-	findById(id: string): Promise<User>;
-	findAll(): Promise<User[]>;
+export interface UserRepository {
+	findByEmail(email: string): Promise<ResultType<User>>;
+	update(user: Partial<User>): Promise<ResultType<User>>;
+	delete(userId: string): Promise<ResultType<User>>;
+	findById(id: string): Promise<ResultType<User>>;
+	findAll(): Promise<ResultType<User[]>>;
 }

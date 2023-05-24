@@ -1,17 +1,11 @@
-import type { UserWithoutPasswordDTO } from "../dtos/user.dto";
-import { UserMapper } from "../mappers/user.mapper";
-import type { UserRepositoryInterface } from "../repositories/user.repository";
+import type { ResultType } from '$lib/types/result';
+import type { User } from '../entities/user.entity';
+import type { UserRepository } from '../repositories/user.repository';
 
 export class GetUserProfile {
-  constructor(private userRepository: UserRepositoryInterface) {}
+	constructor(private userRepository: UserRepository) {}
 
-  async execute(id: string): Promise<UserWithoutPasswordDTO> {
-    const user = await this.userRepository.findById(id);
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    return UserMapper.toDTO(user);
-  }
+	async execute(id: string): Promise<ResultType<User>> {
+		return this.userRepository.findById(id);
+	}
 }

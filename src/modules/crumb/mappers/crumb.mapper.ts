@@ -1,5 +1,5 @@
-import type { Crumb, CrumbPreview } from "../entities/crumbs.entity";
-
+import type { CrumbPreview } from '../dtos/crumbs.dto';
+import type { Crumb } from "../entities/crumbs.entity";
 export class CrumbMapper {
   public static toDTO(crumb: Crumb): CrumbPreview {
     return {

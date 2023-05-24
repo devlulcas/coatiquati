@@ -1,4 +1,4 @@
-import type { ContentWithUnprocessedBody, CreatableContent } from '../entities/content.entity';
+import type { ContentWithUnprocessedBody, CreatableContent } from '../dtos/content.dto';
 import type { ContentRepositoryInterface } from '../repositories/content.repository';
 import { micromark } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';

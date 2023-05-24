@@ -1,2 +1,13 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import type { PageData } from './$types';
+
+	export let data: PageData;
+
+	const providerAuthorizationUrl = '/api/oauth?provider=google';
+</script>
+
+<a href={providerAuthorizationUrl}>Sign in with provider</a>
+
+<pre class="code">
+  {JSON.stringify(data.user, null, 2)}
+</pre>

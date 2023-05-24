@@ -1,13 +1,3 @@
-export type User = {
-  id: string;
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+import type { AuthUser } from '@prisma/client';
 
-export type CreatableUser = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
-
-export type UpdatableUser = Partial<Omit<User, 'createdAt' | 'updatedAt'>>;
+export type User = AuthUser;

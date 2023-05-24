@@ -1,5 +1,6 @@
-import type { Pagination } from '$src/shared/types/pagination';
-import type { CreatableTrail, Trail, TrailPreview, UpdatableTrail } from '../entities/trail.entity';
+import type { Pagination } from '$lib/types/pagination';
+import type { CreatableTrail, TrailPreview, UpdatableTrail } from '../dtos/trail.dto';
+import type { Trail } from '../entities/trail.entity';
 import { TrailMapper } from '../mappers/trail.mapper';
 import type { TrailRepositoryInterface } from './trail.repository';
 
