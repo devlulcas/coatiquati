@@ -17,11 +17,11 @@
 	<Blob />
 </div>
 
-<div
-	class="grainy backdrop-blur-2xl relative max-w-[100vw] min-h-screen overflow-x-hidden text-white"
->
-	<Header isLoggedIn={!!data.user?.id} />
+<Header user={data.user} />
 
+<div
+	class="grainy backdrop-blur-2xl relative max-w-[100vw] min-h-[--safe-screen-height] overflow-x-hidden text-white"
+>
 	<slot />
 </div>
 

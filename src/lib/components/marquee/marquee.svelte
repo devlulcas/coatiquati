@@ -22,7 +22,7 @@
 		animation: marquee 20s linear infinite;
 		bottom: 0;
 		left: 0;
-		position: absolute;
+		position: fixed;
 		width: 100%;
 		overflow-x: hidden;
 		background: linear-gradient(

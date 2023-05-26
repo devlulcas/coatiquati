@@ -30,10 +30,17 @@
 		effect.reset(window.innerWidth, window.innerHeight);
 	}
 
+	function animate(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+		requestAnimationFrame(() => animate(canvas, ctx));
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		effect.update();
+		effect.draw(ctx);
+	}
+
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
 
-		if (!ctx) return;
+		if (!canvas || !ctx) return;
 
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
@@ -44,15 +51,7 @@
 
 		effect.init(50);
 
-		function animate() {
-			if (!ctx) return;
-			requestAnimationFrame(animate);
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			effect.update();
-			effect.draw(ctx);
-		}
-
-		animate();
+		animate(canvas, ctx);
 	});
 </script>
 
@@ -83,5 +82,11 @@
 <style lang="postcss">
 	canvas {
 		filter: url(#blob-blur);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		canvas {
+			display: none;
+		}
 	}
 </style>

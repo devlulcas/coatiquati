@@ -4,5 +4,46 @@
 
 :root {
 	--header-height: 3rem;
-	--safe-screen-height: calc(100vh - var(--header-height) - 2rem);
+	--safe-screen-height: calc(100vh - var(--header-height));
+
+	scroll-behavior: smooth;
+
+	scroll-padding-top: var(--header-height);
+}
+
+.lc-wrapper {
+	display: grid;
+	grid-template-columns: 1fr min(120ch, calc(100% - 24px)) 1fr;
+	grid-column-gap: 5px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+.lc-wrapper > * {
+	grid-column: 2;
+}
+
+.lc-full-bleed {
+	width: 100%;
+	grid-column: 1 / -1;
+}
+
+.lc-full-view {
+	min-height: var(--safe-screen-height);
+}
+
+::-webkit-scrollbar {
+	width: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+	@apply bg-white;
+}
+
+::-webkit-scrollbar-thumb {
+	@apply bg-purple-800;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	@apply bg-purple-500;
 }
