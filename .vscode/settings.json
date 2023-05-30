@@ -8,5 +8,15 @@
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[svelte]": {
 		"editor.defaultFormatter": "svelte.svelte-vscode"
-	}
+	},
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"driver": "PostgreSQL",
+			"name": "coati",
+			"group": "tcc",
+			"connectString": "postgresql://postgres:postgres@localhost:5432/db-coati"
+		}
+	]
 }
