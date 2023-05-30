@@ -4,7 +4,7 @@ import { validateSignInWithUsername } from '$src/modules/user/validations/sign-i
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { PrismaUserRepository } from '$src/modules/user/repositories/prisma-user.repository';
-import { MailgunEmailClient } from '$lib/server/mail';
+import { emailClient } from '$lib/server/mail';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -30,7 +30,7 @@ export const actions: Actions = {
 		const signInWithUsername = new SignInWithUsername(
 			new LuciaAuthService(),
 			new PrismaUserRepository(),
-			new MailgunEmailClient()
+			emailClient
 		);
 
 		const session = await signInWithUsername.execute(dataResult.data);
