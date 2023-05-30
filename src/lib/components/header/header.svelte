@@ -44,7 +44,7 @@
 		<a href="/trails" class="p-2">Conhecer trilhas</a>
 
 		{#if user}
-			<form use:enhance method="post" action="/api/sign-out">
+			<form use:enhance method="POST" action="/sign-out">
 				<button type="submit">Sair</button>
 			</form>
 
