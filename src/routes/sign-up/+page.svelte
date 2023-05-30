@@ -18,14 +18,18 @@
 		method="post"
 		use:enhance
 	>
-		<Input type="text" label="Nome de usuário" id="username" name="username" />
+		<div class="flex gap-2">
+			<Input type="text" label="Nome de usuário" id="username" name="username" />
+			<Input type="text" label="Nome" id="name" name="name" />
+		</div>
+
 		<Input type="email" label="E-mail" id="email" name="email" />
 		<Input type="password" label="Senha" id="password" name="password" />
 
 		<Button type="submit">Entrar</Button>
 	</form>
 
-	{#if form?.message}
+	{#if form}
 		<Badge>
 			{form.message}
 		</Badge>

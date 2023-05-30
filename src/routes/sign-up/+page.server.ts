@@ -23,7 +23,7 @@ export const actions: Actions = {
 		});
 
 		if (dataResult.error) {
-			return fail(400, {
+			throw fail(400, {
 				message: dataResult.error.message
 			});
 		}
@@ -42,5 +42,7 @@ export const actions: Actions = {
 		}
 
 		locals.auth.setSession(sessionResult.data);
+
+		throw redirect(302, '/');
 	}
 };

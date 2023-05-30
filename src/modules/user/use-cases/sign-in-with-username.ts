@@ -2,8 +2,9 @@ import type { ResultType } from '$lib/types/result';
 import type { Session } from 'lucia-auth';
 import type { SignInWithUsernameDTO } from '../dtos/sign-in-with-username.dto';
 import type { AuthService } from '../services/auth.service';
-import type { EmailClient } from '$lib/server/mail';
 import type { UserRepository } from '../repositories/user.repository';
+import type { EmailClient } from '$src/modules/email/infra/email-client';
+import { welcomeMail } from '$src/modules/email/templates/welcome';
 
 export class SignInWithUsername {
 	constructor(
@@ -28,10 +29,7 @@ export class SignInWithUsername {
 		await this.mailClient.sendEmail({
 			to: userResult.data.email,
 			subject: 'Bem vindo de volta ao Coati!',
-			body: `
-        <h1>Olá ${userResult.data.name}!</h1>
-        <p>É um prazer tê-lo de volta ao Coati!</p>
-      `
+			body: welcomeMail({ username: userResult.data.username })
 		});
 
 		return sessionResult;
