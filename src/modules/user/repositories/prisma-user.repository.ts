@@ -1,7 +1,8 @@
 import { prisma } from '$lib/server/prisma';
+import { calculatePagination } from '$lib/types/pagination';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import type { User } from '../entities/user.entity';
-import type { UserRepository } from './user.repository';
+import type { FindManyUsersParams, UserRepository } from './user.repository';
 
 export class PrismaUserRepository implements UserRepository {
 	async findByEmail(email: string): Promise<ResultType<User>> {
@@ -55,8 +56,21 @@ export class PrismaUserRepository implements UserRepository {
 		return Ok(user);
 	}
 
-	async findAll(): Promise<ResultType<User[]>> {
-		const users = await prisma.authUser.findMany();
+	async findMany(params: FindManyUsersParams): Promise<ResultType<User[]>> {
+		const pagination = calculatePagination(params.pagination);
+
+		const users = await prisma.authUser.findMany({
+			skip: pagination.skip,
+			take: pagination.take,
+			where: {
+				username: params.username,
+				email: params.email,
+				roles: {
+					hasSome: params.role
+				}
+			}
+		});
+
 		return Ok(users);
 	}
 }
