@@ -50,7 +50,7 @@
 
 			<a href="/profile" class="p-2">Olá {user.username}</a>
 
-			{#if userRolesHasRole(user.roles, Roles.ADMIN)}
+			{#if userRolesHasRole(Roles.ADMIN, user.roles)}
 				<a href="/admin" class="p-2">Painel administrativo</a>
 			{/if}
 		{:else}
@@ -63,7 +63,7 @@
 	<nav class="flex flex-col gap-2">
 		<a href="/trails" class="nav-item">Conhecer trilhas</a>
 
-		{#if user && userRolesHasRole(user.roles, Roles.ADMIN)}
+		{#if user && userRolesHasRole(Roles.ADMIN, user.roles)}
 			<a href="/admin" class="nav-item">Painel administrativo</a>
 		{/if}
 

@@ -7,6 +7,6 @@ export const roles = Object.freeze(Object.values(Roles));
 
 export type Role = (typeof roles)[number];
 
-export function userRolesHasRole(userRoles: string[], role: Role) {
-	return userRoles.includes(role);
+export function userRolesHasRole(role: Role, userRoles?: string[]) {
+	return userRoles?.includes(role);
 }

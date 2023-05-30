@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		throw redirect(302, '/login');
 	}
 
-	if (!userRolesHasRole(user.data.roles, Roles.ADMIN)) {
+	if (!userRolesHasRole(Roles.ADMIN, user.data.roles)) {
 		throw redirect(302, '/login');
 	}
 
