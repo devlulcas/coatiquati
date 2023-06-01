@@ -1,4 +1,4 @@
-import { auth } from '$lib/server/auth';
+import { auth, googleAuth } from '$lib/server/auth';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import { Prisma } from '@prisma/client';
 import { LuciaError, type Session } from 'lucia-auth';
@@ -7,8 +7,46 @@ import { Roles } from '../constants/user-roles';
 import type { SignInWithUsernameDTO } from '../dtos/sign-in-with-username.dto';
 import type { SignUpWithUsernameDTO } from '../dtos/sign-up-with-username.dto';
 import type { AuthService } from './auth.service';
+import type { SignInWithOAuthProviderDTO } from '../dtos/sign-in-with-oauth-provider.dto';
 
 export class LuciaAuthService implements AuthService {
+	/**
+	 * Cria uma sessão para o usuário usando o código do Github.
+	 */
+	async signInWithGithub(code: string): Promise<ResultType<Session>> {
+		throw new Error('Method not implemented.' + code);
+	}
+
+	/**
+	 * Cria uma sessão para o usuário usando o código do Google.
+	 */
+	async signInWithGoogle(code: string): Promise<ResultType<Session>> {
+		try {
+			const { existingUser, providerUser, createUser } = await googleAuth.validateCallback(code);
+
+			const getUser = async () => {
+				if (existingUser) return existingUser;
+
+				// O Google não fornece um endereço de e-mail, então vamos fingir que é isso mesmo
+				return createUser({
+					username: providerUser.name,
+					roles: [Roles.USER],
+					email: providerUser.email || providerUser.sub + '@google.com',
+					name: providerUser.name
+				});
+			};
+
+			const user = await getUser();
+
+			const session = await auth.createSession(user.id);
+
+			return Ok(session);
+		} catch (error) {
+			console.log(error);
+			return Fail('Erro ao entrar.');
+		}
+	}
+
 	/**
 	 * Inválida a sessão atual do usuário.
 	 */

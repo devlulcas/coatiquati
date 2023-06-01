@@ -19,6 +19,7 @@ export const auth = lucia({
 
 export type Auth = typeof auth;
 
+export const GOOGLE_OAUTH_STATE_COOKIE_NAME = 'google-oauth-state';
 export const googleAuth = google(auth, {
 	clientId: GOOGLE_CLIENT_ID,
 	clientSecret: GOOGLE_CLIENT_SECRET,
