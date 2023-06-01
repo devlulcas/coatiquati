@@ -52,9 +52,6 @@ devDependencies:
   '@playwright/test':
     specifier: ^1.34.3
     version: 1.34.3
-  '@rgossiaux/svelte-headlessui':
-    specifier: ^1.0.2
-    version: 1.0.2(svelte@3.59.1)
   '@sveltejs/adapter-auto':
     specifier: ^2.1.0
     version: 2.1.0(@sveltejs/kit@1.20.0)
@@ -100,6 +97,9 @@ devDependencies:
   svelte-check:
     specifier: ^3.4.3
     version: 3.4.3(postcss@8.4.24)(svelte@3.59.1)
+  sveltekit-superforms:
+    specifier: 1.0.0-rc.1
+    version: 1.0.0-rc.1(@sveltejs/kit@1.20.0)(svelte@3.59.1)(zod@3.21.4)
   tailwindcss:
     specifier: ^3.3.2
     version: 3.3.2
@@ -502,14 +502,6 @@ packages:
   /@prisma/engines@4.14.1:
     resolution: {integrity: sha512-APqFddPVHYmWNKqc+5J5SqrLFfOghKOLZxobmguDUacxOwdEutLsbXPVhNnpFDmuQWQFbXmrTTPoRrrF6B1MWA==}
     requiresBuild: true
-
-  /@rgossiaux/svelte-headlessui@1.0.2(svelte@3.59.1):
-    resolution: {integrity: sha512-sauopYTSivhzXe1kAvgawkhyYJcQlK8Li3p0d2OtcCIVprOzdbard5lbqWB4xHDv83zAobt2mR08oizO2poHLQ==}
-    peerDependencies:
-      svelte: ^3.44.0
-    dependencies:
-      svelte: 3.59.1
-    dev: true
 
   /@sveltejs/adapter-auto@2.1.0(@sveltejs/kit@1.20.0):
     resolution: {integrity: sha512-o2pZCfATFtA/Gw/BB0Xm7k4EYaekXxaPGER3xGSY3FvzFJGTlJlZjBseaXwYSM94lZ0HniOjTokN3cWaLX6fow==}
@@ -2657,6 +2649,18 @@ packages:
     resolution: {integrity: sha512-pKj8fEBmqf6mq3/NfrB9SLtcJcUvjYSWyePlfCqN9gujLB25RitWK8PvFzlwim6hD/We35KbPlRteuA6rnPGcQ==}
     engines: {node: '>= 8'}
 
+  /sveltekit-superforms@1.0.0-rc.1(@sveltejs/kit@1.20.0)(svelte@3.59.1)(zod@3.21.4):
+    resolution: {integrity: sha512-UvTN5d1IeAYKz8LFCVPiVmf8xTUnXmyRd3qRR6O+nk4xPZOQGWZIIqiTYaLurq1gzUJ9E6azaYatjJoyKgFKjA==}
+    peerDependencies:
+      '@sveltejs/kit': 1.x
+      svelte: 3.x
+      zod: 3.x
+    dependencies:
+      '@sveltejs/kit': 1.20.0(svelte@3.59.1)(vite@4.3.9)
+      svelte: 3.59.1
+      zod: 3.21.4
+    dev: true
+
   /tailwindcss@3.3.2:
     resolution: {integrity: sha512-9jPkMiIBXvPc2KywkraqsUfbfj+dHDb+JPWtSJa9MLFdrPyazI7q6WX2sUrm7R9eVR7qqv3Pas7EvQFzxKnI6w==}
     engines: {node: '>=14.0.0'}
@@ -3007,4 +3011,3 @@ packages:
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
-    dev: false
