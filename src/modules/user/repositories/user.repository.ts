@@ -1,12 +1,12 @@
+import type { Nullish } from '$lib/types/nullish';
 import type { Pagination } from '$lib/types/pagination';
 import type { ResultType } from '$lib/types/result';
 import type { User } from '../entities/user.entity';
 
 export type FindManyUsersParams = {
-	pagination: Pagination;
-	role?: string;
-	username?: string;
-	email?: string;
+	role?: Nullish<string>;
+	username?: Nullish<string>;
+	email?: Nullish<string>;
 };
 
 export interface UserRepository {
@@ -14,5 +14,5 @@ export interface UserRepository {
 	update(user: Partial<User>): Promise<ResultType<User>>;
 	delete(userId: string): Promise<ResultType<User>>;
 	findById(id: string): Promise<ResultType<User>>;
-	findMany(params: FindManyUsersParams): Promise<ResultType<User[]>>;
+	findMany(params: FindManyUsersParams, pagination: Pagination): Promise<ResultType<User[]>>;
 }

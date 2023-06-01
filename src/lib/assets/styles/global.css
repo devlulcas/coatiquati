@@ -32,6 +32,14 @@
 	min-height: var(--safe-screen-height);
 }
 
+.lc-box {
+	border-radius: 0.2rem;
+	border: 2px solid rgba(255, 255, 255, 0.25);
+	background-color: rgba(255, 255, 255, 0.75);
+	color: #000;
+	padding: 0.5rem;
+}
+
 ::-webkit-scrollbar {
 	width: 0.5rem;
 }

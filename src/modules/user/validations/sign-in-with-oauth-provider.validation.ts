@@ -1,4 +1,4 @@
-import type { Optional } from '$lib/types/optional';
+import type { Nullish } from '$lib/types/nullish';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import { compactZodError } from '$lib/utils/compact-zod-error';
 import {
@@ -7,7 +7,7 @@ import {
 } from '../dtos/sign-in-with-oauth-provider.dto';
 
 export function validateSignInWithOAuthProvider(
-	data: Optional<SignInWithOAuthProviderDTO>
+	data: Nullish<SignInWithOAuthProviderDTO>
 ): ResultType<SignInWithOAuthProviderDTO> {
 	const result = signInWithOAuthProviderSchema.safeParse(data);
 

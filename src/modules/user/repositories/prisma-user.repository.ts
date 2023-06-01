@@ -1,5 +1,5 @@
 import { prisma } from '$lib/server/prisma';
-import { calculatePagination } from '$lib/types/pagination';
+import { calculatePagination, type Pagination } from '$lib/types/pagination';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import type { User } from '../entities/user.entity';
 import type { FindManyUsersParams, UserRepository } from './user.repository';
@@ -56,18 +56,18 @@ export class PrismaUserRepository implements UserRepository {
 		return Ok(user);
 	}
 
-	async findMany(params: FindManyUsersParams): Promise<ResultType<User[]>> {
-		const pagination = calculatePagination(params.pagination);
+	async findMany(params: FindManyUsersParams, pagination: Pagination): Promise<ResultType<User[]>> {
+		const correctPagination = calculatePagination(pagination);
+		console.log(params);
+		console.log(correctPagination);
 
 		const users = await prisma.authUser.findMany({
-			skip: pagination.skip,
-			take: pagination.take,
+			skip: correctPagination.skip,
+			take: correctPagination.take,
 			where: {
-				username: params.username,
-				email: params.email,
-				roles: {
-					hasSome: params.role
-				}
+				username: params.username ?? undefined,
+				email: params.email ?? undefined,
+				roles: params.role ? { has: params.role } : undefined
 			}
 		});
 

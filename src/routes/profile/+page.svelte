@@ -7,7 +7,7 @@
 	const hat = userRolesHasRole('ADMIN', data.user?.roles) ? 'hat-fedora' : 'winter-hat';
 </script>
 
-<main class="p-10 bg-black/25">
+<main class="p-10 bg-black/25 text-white">
 	<div class="flex gap-2">
 		<picture class="relative">
 			<img

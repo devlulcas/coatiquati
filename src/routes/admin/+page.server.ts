@@ -1,12 +1,13 @@
 import { Roles, userRolesHasRole } from '$src/modules/user/constants/user-roles';
+import { listUsersSchema } from '$src/modules/user/dtos/list-users.dto';
 import { PrismaUserRepository } from '$src/modules/user/repositories/prisma-user.repository';
 import { GetUserProfile } from '$src/modules/user/use-cases/get-user-profile';
 import { ListUsers } from '$src/modules/user/use-cases/list-users';
-import { validateListUsersDTOSchema } from '$src/modules/user/validations/list-users.validation';
-import { type Actions, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
 	const session = await locals.auth.validateUser();
 
 	if (session.user === null) {
@@ -27,53 +28,13 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 	const listUsers = new ListUsers(new PrismaUserRepository());
 
-	const admins = await listUsers.execute({
-		role: Roles.ADMIN
-	});
+	const form = await superValidate(url.searchParams, listUsersSchema);
+
+	const users = await listUsers.execute(form.data);
 
 	return {
-		admins: admins.data
+		form,
+		currentUser: user.data,
+		users: users.data ?? []
 	};
 };
-
-export const actions = {
-	listUsers: async ({ locals, url }) => {
-		const session = await locals.auth.validateUser();
-
-		if (session.user === null) {
-			throw redirect(302, '/login');
-		}
-
-		const listUsers = new ListUsers(new PrismaUserRepository());
-
-		const params = validateListUsersDTOSchema({
-			pagination: {
-				page: url.searchParams.get('page'),
-				limit: url.searchParams.get('limit')
-			},
-			role: url.searchParams.get('role'),
-			username: url.searchParams.get('username'),
-			email: url.searchParams.get('email')
-		});
-
-		if (params.error) {
-			return {
-				users: [],
-				error: params.error.message
-			};
-		}
-
-		const users = await listUsers.execute(params.data);
-
-		if (users.error) {
-			return {
-				users: [],
-				error: users.error.message
-			};
-		}
-
-		return {
-			users: users.data
-		};
-	}
-} satisfies Actions;

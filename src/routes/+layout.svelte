@@ -20,7 +20,7 @@
 <Header user={data.user} />
 
 <div
-	class="grainy backdrop-blur-2xl relative max-w-[100vw] min-h-[--safe-screen-height] overflow-x-hidden text-white"
+	class="grainy backdrop-blur-2xl relative max-w-[100vw] min-h-[--safe-screen-height] overflow-x-hidden"
 >
 	<slot />
 </div>

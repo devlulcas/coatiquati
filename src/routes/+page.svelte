@@ -4,8 +4,8 @@
 	import { Footprints } from 'lucide-svelte';
 </script>
 
-<div class="px-2 pt-12 max-w-5xl mx-auto">
-	<h1 class="text-5xl lg:text-8xl font-black text-white">Coati! Aprenda mais ensinando.</h1>
+<div class="px-2 pt-12 max-w-5xl mx-auto text-white">
+	<h1 class="text-5xl lg:text-8xl font-black">Coati! Aprenda mais ensinando.</h1>
 
 	<p class="font-medium mt-2 max-w-2xl">
 		<strong>Coati</strong> é uma plataforma de ensino colaborativo, onde você pode aprender e ensinar
