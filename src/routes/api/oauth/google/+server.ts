@@ -20,11 +20,12 @@ export const GET: RequestHandler = async (request) => {
 				return existingUser;
 			}
 
+			// Google doesn't provide an email address, so we'll just fake it
 			return createUser({
 				username: providerUser.name,
 				roles: [Roles.USER],
-        email: providerUser.email,
-        name: providerUser.name
+				email: providerUser.email || providerUser.sub + '@google.com',
+				name: providerUser.name
 			});
 		};
 
@@ -34,6 +35,7 @@ export const GET: RequestHandler = async (request) => {
 
 		request.locals.auth.setSession(session);
 	} catch (error) {
+		console.log(error);
 		return new Response(null, {
 			status: 500
 		});
