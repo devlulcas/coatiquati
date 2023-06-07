@@ -44,6 +44,7 @@
 		"@lucia-auth/oauth": "^1.1.1",
 		"@lucia-auth/sveltekit": "^0.6.11",
 		"@prisma/client": "^4.14.1",
+		"class-variance-authority": "^0.6.0",
 		"clsx": "^1.2.1",
 		"embla-carousel-svelte": "8.0.0-rc03",
 		"form-data": "^4.0.0",

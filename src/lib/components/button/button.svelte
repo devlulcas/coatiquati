@@ -1,19 +1,41 @@
 <script lang="ts">
 	import { cn } from '$lib/utils/cn';
+	import type { VariantProps } from 'class-variance-authority';
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
+	import { buttonVariants } from './button.variants';
 
-	export let variant: 'primary' | 'secondary' = 'primary';
+	type BaseElementProps = {
+		variant?: VariantProps<typeof buttonVariants>['variant'];
+		size?: VariantProps<typeof buttonVariants>['size'];
+		class?: string;
+		type?: HTMLButtonAttributes['type'];
+		href?: HTMLAnchorAttributes['href'];
+	};
+
+	export let type: BaseElementProps['type'] = 'button';
+
+	export let href: BaseElementProps['href'] = undefined;
+
+	export let size: BaseElementProps['size'] = 'default';
+
+	export let variant: BaseElementProps['variant'] = 'default';
+
+	let className: BaseElementProps['class'] = undefined;
+	export { className as class };
 </script>
 
-<button
+<svelte:element
+	this={href ? 'a' : 'button'}
+	type={href ? undefined : type}
+	{href}
+	class={cn(buttonVariants({ variant, size, className }))}
 	{...$$restProps}
-	class={cn(
-		'py-2 px-3 rounded-md text-md flex items-center justify-center w-fit gap-2',
-		{
-			'bg-purple-800 text-white': variant === 'primary',
-			'bg-white text-purple-800': variant === 'secondary'
-		},
-		$$restProps.class
-	)}
+	on:click
+	on:change
+	on:keydown
+	on:keyup
+	on:mouseenter
+	on:mouseleave
 >
 	<slot />
-</button>
+</svelte:element>
