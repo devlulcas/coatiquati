@@ -33,7 +33,7 @@
 }
 
 .lc-box {
-	border-radius: 0.2rem;
+	border-radius: 0.375rem;
 	border: 2px solid rgba(255, 255, 255, 0.25);
 	background-color: rgba(255, 255, 255, 0.75);
 	color: #000;
