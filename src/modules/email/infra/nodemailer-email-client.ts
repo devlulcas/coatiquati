@@ -2,6 +2,7 @@ import { MAIL_FROM } from '$env/static/private';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import nodemailer from 'nodemailer';
 import type { EmailClient, Mail } from './email-client';
+import { log } from '$lib/server/log';
 
 type NodemailerOptions = {
 	host: string;
@@ -35,10 +36,9 @@ export class NodemailerEmailClient implements EmailClient {
 				html: mail.body
 			});
 
-			console.log(info);
 			return Ok(info.messageId);
 		} catch (error) {
-			console.error(error);
+			log.error({ error }, 'Error sending email');
 			return Fail('Falha ao enviar email');
 		}
 	}

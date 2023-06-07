@@ -7,7 +7,6 @@ import { Roles } from '../constants/user-roles';
 import type { SignInWithUsernameDTO } from '../dtos/sign-in-with-username.dto';
 import type { SignUpWithUsernameDTO } from '../dtos/sign-up-with-username.dto';
 import type { AuthService } from './auth.service';
-import type { SignInWithOAuthProviderDTO } from '../dtos/sign-in-with-oauth-provider.dto';
 
 export class LuciaAuthService implements AuthService {
 	/**

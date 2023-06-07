@@ -5,6 +5,7 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { PrismaUserRepository } from '$src/modules/user/repositories/prisma-user.repository';
 import { emailClient } from '$lib/server/mail';
+import { log } from '$lib/server/log';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -33,14 +34,18 @@ export const actions: Actions = {
 			emailClient
 		);
 
-		const session = await signInWithUsername.execute(dataResult.data);
+		const sessionResult = await signInWithUsername.execute(dataResult.data);
 
-		if (session.error) {
+		if (sessionResult.error) {
+			log.error({ error: sessionResult.error }, 'Error signing in with username');
+
 			return fail(400, {
-				message: session.error.message
+				message: sessionResult.error.message
 			});
 		}
 
-		locals.auth.setSession(session.data);
+		log.info({ user: sessionResult.data.userId }, 'User signed in with username');
+
+		locals.auth.setSession(sessionResult.data);
 	}
 };

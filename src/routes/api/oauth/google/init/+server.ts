@@ -1,4 +1,5 @@
 import { GOOGLE_OAUTH_STATE_COOKIE_NAME, googleAuth } from '$lib/server/auth';
+import { log } from '$lib/server/log';
 
 import type { RequestHandler } from './$types';
 
@@ -9,6 +10,8 @@ export const GET: RequestHandler = async (request) => {
 		path: '/',
 		maxAge: 60 * 60 * 24 * 7 // 1 week
 	});
+
+	log.info({ url }, 'Redirecting to Google OAuth');
 
 	return new Response(null, {
 		status: 302,

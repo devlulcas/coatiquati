@@ -4,6 +4,7 @@ import { SignUpWithUsername } from '$src/modules/user/use-cases/sign-up-with-use
 import { validateSignUpWithUsername } from '$src/modules/user/validations/sign-up-with-username.validation';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { log } from '$lib/server/log';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -36,12 +37,16 @@ export const actions: Actions = {
 		const sessionResult = await signUpWithUsername.execute(dataResult.data);
 
 		if (sessionResult.error) {
+			log.error({ error: sessionResult.error }, 'Error signing up with username');
+
 			return fail(400, {
 				message: sessionResult.error.message
 			});
 		}
 
 		locals.auth.setSession(sessionResult.data);
+
+		log.info({ user: sessionResult.data.userId }, 'User signed in with username');
 
 		throw redirect(302, '/');
 	}
