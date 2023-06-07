@@ -12,28 +12,29 @@
 	<SignInWithGoogle />
 
 	<p class="m-2">ou</p>
+	<div class="min-w-[300px] max-w-3xl">
+		<form
+			class="border-[1px] px-8 py-10 w-full flex flex-col gap-4 bg-white/10 rounded-md"
+			method="post"
+			use:enhance
+		>
+			<div class="flex gap-2">
+				<Input type="text" label="Nome de usuário" id="username" name="username" />
+				<Input type="text" label="Nome" id="name" name="name" />
+			</div>
 
-	<form
-		class="border-[1px] px-8 py-10 min-w-[300px] max-w-3xl flex flex-col gap-4 bg-white/10 rounded-md"
-		method="post"
-		use:enhance
-	>
-		<div class="flex gap-2">
-			<Input type="text" label="Nome de usuário" id="username" name="username" />
-			<Input type="text" label="Nome" id="name" name="name" />
-		</div>
+			<Input type="email" label="E-mail" id="email" name="email" />
+			<Input type="password" label="Senha" id="password" name="password" />
 
-		<Input type="email" label="E-mail" id="email" name="email" />
-		<Input type="password" label="Senha" id="password" name="password" />
+			<Button type="submit">Entrar</Button>
+		</form>
 
-		<Button type="submit">Entrar</Button>
-	</form>
-
-	{#if form}
-		<Badge>
-			{form.message}
-		</Badge>
-	{/if}
+		{#if form}
+			<Badge class="mt-4">
+				{form.message}
+			</Badge>
+		{/if}
+	</div>
 
 	<a href="/sign-in" class="mt-10">Já possui uma conta? Entre clicando aqui</a>
 </div>

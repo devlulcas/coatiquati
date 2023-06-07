@@ -13,22 +13,24 @@
 
 	<p class="m-2">ou</p>
 
-	<form
-		class="border-[1px] px-8 py-10 min-w-[300px] max-w-3xl flex flex-col gap-4 bg-white/10 rounded-md"
-		method="post"
-		use:enhance
-	>
-		<Input type="text" label="Nome de usuário" id="username" name="username" />
-		<Input type="password" label="Senha" id="password" name="password" />
+	<div class="min-w-[300px] max-w-3xl">
+		<form
+			class="border-[1px] px-8 py-10 w-full flex flex-col gap-4 bg-white/10 rounded-md"
+			method="post"
+			use:enhance
+		>
+			<Input type="text" label="Nome de usuário" id="username" name="username" />
+			<Input type="password" label="Senha" id="password" name="password" />
 
-		<Button type="submit">Entrar</Button>
-	</form>
+			<Button type="submit">Entrar</Button>
+		</form>
 
-	{#if form?.message}
-		<Badge>
-			{form.message}
-		</Badge>
-	{/if}
+		{#if form?.message}
+			<Badge class="mt-4">
+				{form.message}
+			</Badge>
+		{/if}
+	</div>
 
 	<a href="/sign-up" class="mt-10">Ainda não tem uma conta? Se cadastre clicando aqui</a>
 </div>
