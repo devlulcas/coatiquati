@@ -5,17 +5,19 @@
 	import { UserCard } from '$lib/components/user-card';
 	import { RotateCcw, Search } from 'lucide-svelte';
 	import type { PageServerData } from './$types';
-	import { superForm } from 'sveltekit-superforms/client';
+	import { fly } from 'svelte/transition';
 
 	export let data: PageServerData;
-
-	const { form, errors, constraints, enhance, submitting, reset } = superForm(data.form);
 </script>
 
 <AdminSection title="Membros">
-	<form method="GET" action="?/" use:enhance class="lc-box flex gap-2 my-4 items-end">
+	<form
+		method="GET"
+		action="/admin"
+		data-sveltekit-keepfocus
+		class="lc-box flex gap-2 my-4 items-end"
+	>
 		<Input
-			errors={$errors.username}
 			placeholder="Buscar por nome"
 			variant="opaque"
 			id="username"
@@ -23,8 +25,6 @@
 			name="username"
 			type="text"
 			containerClassname="flex-1"
-			bind:value={$form.username}
-			{...$constraints.username}
 		/>
 
 		<label class="p-2 text-md flex gap-2 accent-purple-800">
@@ -37,28 +37,25 @@
 			<span> Moderador </span>
 		</label>
 
-		<Button variant="secondary" on:click={() => reset()} disabled={$submitting} type="reset">
+		<Button data-sveltekit-keepfocus href="/admin" variant="secondary">
 			Limpar
 			<RotateCcw size={18} />
 		</Button>
 
-		<Button variant="primary" type="submit">
-			{#if $submitting}
-				Buscando...
-			{:else}
-				Buscar
-			{/if}
-
+		<Button type="submit">
+			Buscar
 			<Search size={18} />
 		</Button>
 	</form>
 
 	{#if data.users}
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1">
+		<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-1">
 			{#each data.users as user}
-				<UserCard {user} isCurrentUser={user.id === data.currentUser.id} />
+				<li in:fly={{ duration: 300, x: 50 }} out:fly={{ duration: 300, x: 50 }}>
+					<UserCard {user} isCurrentUser={user.id === data.currentUser.id} />
+				</li>
 			{/each}
-		</div>
+		</ul>
 	{/if}
 </AdminSection>
 
