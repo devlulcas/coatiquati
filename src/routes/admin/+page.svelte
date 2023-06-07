@@ -8,6 +8,13 @@
 	import { fly } from 'svelte/transition';
 
 	export let data: PageServerData;
+
+	const stats = [
+		{ label: 'Trilhas', value: 23 },
+		{ label: 'Usuários', value: 2000 },
+		{ label: 'Administradores', value: 12 },
+		{ label: 'Categorias', value: 6 }
+	];
 </script>
 
 <AdminSection title="Membros">
@@ -60,11 +67,30 @@
 </AdminSection>
 
 <AdminSection title="Gerenciar conteúdo">
-	<form class="lc-box flex flex-col gap-4" method="POST" action="/createTrail">
-		<h2 class="text-2xl font-bold">Criar trilha</h2>
-		<Input variant="opaque" id="title" label="Título" name="title" />
-		<Input variant="opaque" id="description" label="Descrição" name="description" />
-		<Input variant="opaque" id="image" label="Imagem" name="image" />
-		<Button type="submit">Criar</Button>
-	</form>
+	<nav class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2" aria-label="Gerenciar conteúdo">
+		<a class="lc-box flex items-center justify-center w-fill aspect-square" href="/trails">
+			Gerenciar trilhas
+		</a>
+		<a class="lc-box flex items-center justify-center w-fill aspect-square" href="/categories">
+			Gerenciar categorias
+		</a>
+		<a class="lc-box flex items-center justify-center w-fill aspect-square" href="/seo">
+			Gerenciar página - CEO
+		</a>
+	</nav>
+</AdminSection>
+
+<AdminSection title="Estátisticas">
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+		<div class="grid grid-cols-2 gap-2">
+			{#each stats as stat}
+				<article class="lc-box aspect-square flex flex-col">
+					<h3 class="text-xl font-bold truncate">{stat.label}</h3>
+					<p class="text-3xl font-bold self-end mt-auto">{stat.value}</p>
+				</article>
+			{/each}
+		</div>
+	</div>
+
+	<a class="lc-box mt-2 flex items-center justify-center w-fill" href="/logs?page=2">Ver mais</a>
 </AdminSection>
