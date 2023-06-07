@@ -18,11 +18,18 @@
 		info: BadgeInfo,
 		success: Smile
 	}[is];
+
+	let className: string | undefined | null = undefined;
+	export { className as class };
 </script>
 
 <p
 	transition:fade={{ duration: 1000 }}
-	class={cn('text-white w-full p-2 rounded-md flex items-center gap-2 font-semibold', colorScheme)}
+	class={cn(
+		'text-white w-full p-2 rounded-md flex items-center gap-2 font-semibold',
+		colorScheme,
+		className
+	)}
 >
 	<svelte:component this={icon} />
 	<slot />
