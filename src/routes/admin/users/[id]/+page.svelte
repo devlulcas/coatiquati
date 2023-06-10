@@ -42,7 +42,7 @@
 
 	<form method="POST" class="mt-4 flex gap-2 w-full">
 		{#if data.user.roles.includes('admin')}
-			<Badge is="warning">
+			<Badge variant="warning">
 				Atenção: este usuário é um administrador e tem acesso a todas as funcionalidades do sistema.
 				<Button
 					class="min-w-fit ml-auto hover:bg-white hover:text-orange-500"
@@ -54,7 +54,7 @@
 				</Button>
 			</Badge>
 		{:else}
-			<Badge is="info">
+			<Badge variant="info">
 				Atenção: usuário sem permissões de administrador.
 				<Button
 					class="min-w-fit ml-auto hover:bg-white hover:text-blue-500"

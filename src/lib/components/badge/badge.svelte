@@ -1,36 +1,33 @@
 <script lang="ts">
 	import { cn } from '$lib/utils/cn';
+	import type { VariantProps } from 'class-variance-authority';
 	import { AlertTriangle, BadgeInfo, Smile } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
+	import { badgeVariants } from './badge.variants';
 
-	export let is: 'error' | 'warning' | 'info' | 'success' = 'error';
+	type BaseElementProps = {
+		variant?: VariantProps<typeof badgeVariants>['variant'];
+		size?: VariantProps<typeof badgeVariants>['size'];
+		class?: string;
+	};
 
-	const colorScheme = {
-		error: 'bg-red-500/75',
-		warning: 'bg-yellow-500/75',
-		info: 'bg-blue-500/75',
-		success: 'bg-green-500/75'
-	}[is];
+	export let size: BaseElementProps['size'] = 'default';
+
+	export let variant: BaseElementProps['variant'] = 'default';
+
+	let className: BaseElementProps['class'] = undefined;
+	export { className as class };
 
 	let icon = {
+		default: Smile,
 		error: AlertTriangle,
 		warning: AlertTriangle,
 		info: BadgeInfo,
 		success: Smile
-	}[is];
-
-	let className: string | undefined | null = undefined;
-	export { className as class };
+	}[variant ?? 'default'];
 </script>
 
-<p
-	transition:fade={{ duration: 1000 }}
-	class={cn(
-		'text-white w-full p-2 rounded-md flex items-center gap-2 font-semibold',
-		colorScheme,
-		className
-	)}
->
+<p transition:fade={{ duration: 1000 }} class={cn(badgeVariants({ variant, size, className }))}>
 	<svelte:component this={icon} />
 	<slot />
 </p>

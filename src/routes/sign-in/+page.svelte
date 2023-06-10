@@ -26,7 +26,7 @@
 		</form>
 
 		{#if form?.message}
-			<Badge class="mt-4">
+			<Badge variant="error" class="mt-4">
 				{form.message}
 			</Badge>
 		{/if}
