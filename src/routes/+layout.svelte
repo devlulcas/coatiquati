@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '$lib/assets/styles/global.css';
+	import '$lib/assets/styles/global.postcss';
 	import { Blob } from '$lib/components/blob';
 	import { Header } from '$lib/components/header';
 	import type { LayoutData } from './$types';
