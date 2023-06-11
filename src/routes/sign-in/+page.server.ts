@@ -6,11 +6,20 @@ import type { PageServerLoad } from './$types';
 import { PrismaUserRepository } from '$src/modules/user/repositories/prisma-user.repository';
 import { emailClient } from '$lib/server/mail';
 import { log } from '$lib/server/log';
+import { getRedirectReasonFromURL } from '$lib/utils/redirect-url';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
 	const session = await locals.auth.validate();
-	if (session) throw redirect(302, '/');
-	return {};
+
+	const redirectData = getRedirectReasonFromURL(url);
+
+	if (session) {
+		throw redirect(302, redirectData?.redirectTo ?? '/');
+	}
+
+	return {
+		redirectData
+	};
 };
 
 export const actions: Actions = {

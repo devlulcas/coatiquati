@@ -1,22 +1,23 @@
+import { redirectToSignIn } from '$lib/utils/redirect-url';
 import { PrismaUserRepository } from '$src/modules/user/repositories/prisma-user.repository';
-import { error, type ServerLoad } from '@sveltejs/kit';
+import { GetUserProfile } from '$src/modules/user/use-cases/get-user-profile';
+import { fail, type ServerLoad } from '@sveltejs/kit';
 
-export const load: ServerLoad = async ({ locals }) => {
+export const load: ServerLoad = async ({ locals, url }) => {
 	const session = await locals.auth.validate();
 
 	if (!session) {
-		throw error(401, 'Unauthorized');
+		throw redirectToSignIn(url.pathname);
 	}
 
-	const userRepository = new PrismaUserRepository();
+	const getUserProfile = new GetUserProfile(new PrismaUserRepository());
 
-	const userResult = await userRepository.findById(session.userId);
+	const userResult = await getUserProfile.execute(session.userId);
 
 	if (userResult.error) {
-		return {
-			status: 500,
-			error: new Error('Internal Server Error')
-		};
+		throw fail(404, {
+			message: userResult.error.message
+		});
 	}
 
 	return {
