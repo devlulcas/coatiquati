@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Image } from '$lib/components/image';
 	import { userRolesHasRole } from '$src/modules/user/constants/user-roles';
 	import type { PageServerData } from './$types';
 
@@ -16,10 +17,12 @@
 				alt={hat}
 			/>
 
-			<img
+			<Image
+				width={96}
+				height={96}
 				class="w-24 h-24 rounded-full"
-				src={'https://api.dicebear.com/6.x/notionists-neutral/svg' + '?seed=' + data.user?.id}
-				alt={data.user?.username}
+				src={data.user.avatar}
+				alt={data.user.username}
 			/>
 		</picture>
 

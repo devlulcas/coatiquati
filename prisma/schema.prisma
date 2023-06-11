@@ -26,6 +26,8 @@ model AuthUser {
   name     String?
   email    String   @unique
   roles    String[]
+  active   Boolean  @default(true)
+  avatar   String   @default("no_profile_picture.webp")
 
   @@map("auth_user")
 }
