@@ -3,9 +3,10 @@
 	import { Button } from '$lib/components/button';
 	import { Input } from '$lib/components/input';
 	import { UserCard } from '$lib/components/user-card';
-	import { RotateCcw, Search } from 'lucide-svelte';
+	import { Boxes, Footprints, Layout, RotateCcw, Search } from 'lucide-svelte';
 	import type { PageServerData } from './$types';
 	import { fly } from 'svelte/transition';
+	import { RadioButton } from '$lib/components/radio-button';
 
 	export let data: PageServerData;
 
@@ -22,7 +23,7 @@
 		method="GET"
 		action="/admin"
 		data-sveltekit-keepfocus
-		class="lc-box flex gap-2 my-4 items-end"
+		class="lc-box flex flex-col lg:flex-row gap-2 mb-2 lg:items-end"
 	>
 		<Input
 			placeholder="Buscar por nome"
@@ -34,19 +35,13 @@
 			containerClassname="flex-1"
 		/>
 
-		<label class="p-2 text-md flex gap-2 accent-purple-800">
-			<input type="radio" id="role" name="role" value="USER" />
-			<span>Usuário</span>
-		</label>
+		<div class="flex gap-2">
+			<RadioButton name="role" id="role-user" value="USER" label="Usuário" />
+			<RadioButton name="role" id="role-admin" value="ADMIN" label="Moderador" />
+		</div>
 
-		<label class="p-2 text-md flex gap-2 accent-purple-800">
-			<input type="radio" id="role" name="role" value="ADMIN" />
-			<span> Moderador </span>
-		</label>
-
-		<Button data-sveltekit-keepfocus href="/admin" variant="secondary">
+		<Button icon={RotateCcw} data-sveltekit-keepfocus href="/admin" variant="secondary">
 			Limpar
-			<RotateCcw size={18} />
 		</Button>
 
 		<Button type="submit">
@@ -64,24 +59,40 @@
 			{/each}
 		</ul>
 	{/if}
+
+	{#if data.users.length === 0}
+		<p class="text-center">Nenhum usuário encontrado</p>
+	{/if}
 </AdminSection>
 
 <AdminSection title="Gerenciar conteúdo">
 	<nav class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2" aria-label="Gerenciar conteúdo">
-		<a class="lc-box flex items-center justify-center w-fill aspect-square" href="/trails">
+		<a
+			class="lc-box flex flex-col gap-2 items-center justify-center w-fill aspect-square"
+			href="/admin/trails"
+		>
 			Gerenciar trilhas
+			<Footprints size={48} />
 		</a>
-		<a class="lc-box flex items-center justify-center w-fill aspect-square" href="/categories">
+		<a
+			class="lc-box flex flex-col gap-2 items-center justify-center w-fill aspect-square"
+			href="/admin/categories"
+		>
 			Gerenciar categorias
+			<Boxes size={48} />
 		</a>
-		<a class="lc-box flex items-center justify-center w-fill aspect-square" href="/seo">
+		<a
+			class="lc-box flex flex-col gap-2 items-center justify-center w-fill aspect-square"
+			href="/admin/seo"
+		>
 			Gerenciar página - CEO
+			<Layout size={48} />
 		</a>
 	</nav>
 </AdminSection>
 
 <AdminSection title="Estátisticas">
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+	<div class="grid grid-cols-1 md:grid-cols-3 gap-2">
 		<div class="grid grid-cols-2 gap-2">
 			{#each stats as stat}
 				<article class="lc-box aspect-square flex flex-col">
@@ -89,6 +100,17 @@
 					<p class="text-3xl font-bold self-end mt-auto">{stat.value}</p>
 				</article>
 			{/each}
+		</div>
+
+		<div class="lc-box flex flex-col col-span-2">
+			<h3 class="text-xl font-bold truncate">Últimos usuários</h3>
+			<ul class="flex flex-col gap-2 mt-2">
+				{#each data.users.slice(0, 5) as user}
+					<li class="flex gap-2">
+						<span>{user.username}</span>
+					</li>
+				{/each}
+			</ul>
 		</div>
 	</div>
 
