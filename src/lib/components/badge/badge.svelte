@@ -2,7 +2,6 @@
 	import { cn } from '$lib/utils/cn';
 	import type { VariantProps } from 'class-variance-authority';
 	import { AlertTriangle, BadgeInfo, Smile } from 'lucide-svelte';
-	import { fade } from 'svelte/transition';
 	import { badgeVariants } from './badge.variants';
 
 	type BaseElementProps = {
@@ -27,7 +26,7 @@
 	}[variant ?? 'default'];
 </script>
 
-<p transition:fade={{ duration: 1000 }} class={cn(badgeVariants({ variant, size, className }))}>
+<p class={cn(badgeVariants({ variant, size, className }))}>
 	<svelte:component this={icon} />
 	<slot />
 </p>
