@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { cn } from '$lib/utils/cn';
+	import type { Icon } from '$lib/types/icon';
 	import type { VariantProps } from 'class-variance-authority';
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 	import { buttonVariants } from './button.variants';
@@ -20,6 +21,8 @@
 
 	export let variant: BaseElementProps['variant'] = 'default';
 
+	export let icon: Icon | undefined = undefined;
+
 	let className: BaseElementProps['class'] = undefined;
 	export { className as class };
 </script>
@@ -38,4 +41,7 @@
 	on:mouseleave
 >
 	<slot />
+	{#if icon}
+		<svelte:component this={icon} size={18} />
+	{/if}
 </svelte:element>
