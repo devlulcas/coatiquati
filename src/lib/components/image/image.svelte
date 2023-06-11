@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { Nullish } from '$lib/types/nullish';
 	import { cn } from '$lib/utils/cn';
 
 	const defaultPlaceholder =
@@ -11,13 +10,19 @@
 	export let height: string | number;
 	export let loading: 'lazy' | 'eager' = 'lazy';
 	export let placeholder: string = defaultPlaceholder;
-	let className: Nullish<string>;
+	export let style: string | null | undefined = null;
+	export let imageClass: string | null | undefined = null;
+
+	let className: string | null | undefined;
 	export { className as class };
 
 	let isLoading = true;
 </script>
 
-<div style="background-image: url({placeholder})" class={cn(isLoading && 'image', className)}>
+<div
+	style="background-image: url({placeholder}); {style}"
+	class={cn(isLoading && 'image', 'overflow-hidden', className)}
+>
 	<img
 		on:load={() => (isLoading = false)}
 		{loading}
@@ -25,7 +30,8 @@
 		{alt}
 		{width}
 		{height}
-		class="h-full object-cover"
+		class={cn('h-full object-cover', imageClass)}
+		{...$$restProps}
 	/>
 </div>
 
