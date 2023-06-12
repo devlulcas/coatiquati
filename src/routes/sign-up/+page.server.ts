@@ -8,6 +8,7 @@ import { SignUpWithUsername } from '$src/modules/user/use-cases/sign-up-with-use
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
+import { validateSignUpWithUsername } from '$src/modules/user/validations/sign-up-with-username.validation';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -27,13 +28,23 @@ export const actions: Actions = {
 			});
 		}
 
+		const dataResult = validateSignUpWithUsername(form.data);
+
+		if (dataResult.error) {
+			form.message = dataResult.error.message;
+
+			return fail(400, {
+				form
+			});
+		}
+
 		const signUpWithUsername = new SignUpWithUsername(
 			new PrismaUserRepository(),
 			new LuciaAuthService(),
 			emailClient
 		);
 
-		const sessionResult = await signUpWithUsername.execute(form.data);
+		const sessionResult = await signUpWithUsername.execute(dataResult.data);
 
 		if (sessionResult.error) {
 			log.error({ error: sessionResult.error }, 'Error signing in with username');
