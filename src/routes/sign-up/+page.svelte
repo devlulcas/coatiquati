@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Badge from '$lib/components/badge/badge.svelte';
-	import Button from '$lib/components/button/button.svelte';
-	import Input from '$lib/components/input/input.svelte';
-	import SignInWithGoogle from '$lib/components/sign-in-with-google/sign-in-with-google.svelte';
+	import { Badge } from '$lib/components/badge';
+	import { Button } from '$lib/components/button';
+	import { InputContainer } from '$lib/components/input-container';
+	import { SignInWithGoogle } from '$lib/components/sign-in-with-google';
 
 	export let form: { message?: string };
 </script>
@@ -14,17 +14,27 @@
 	<p class="m-2">ou</p>
 	<div class="min-w-[300px] max-w-3xl">
 		<form
-			class="border-[1px] px-8 py-10 w-full flex flex-col gap-4 bg-white/10 rounded-md"
+			class="border px-8 py-10 w-full flex flex-col gap-4 bg-white/10 rounded-md"
 			method="post"
 			use:enhance
 		>
-			<div class="flex gap-2">
-				<Input type="text" label="Nome de usuário" id="username" name="username" />
-				<Input type="text" label="Nome" id="name" name="name" />
+			<div class="flex flex-col lg:flex-row gap-2">
+				<InputContainer let:inputClassName label="Nome de usuário" id="username">
+					<input class={inputClassName} type="text" id="username" name="username" />
+				</InputContainer>
+
+				<InputContainer let:inputClassName label="Nome" id="name">
+					<input class={inputClassName} type="text" id="name" name="name" />
+				</InputContainer>
 			</div>
 
-			<Input type="email" label="E-mail" id="email" name="email" />
-			<Input type="password" label="Senha" id="password" name="password" />
+			<InputContainer let:inputClassName label="E-mail" id="email">
+				<input class={inputClassName} type="email" id="email" name="email" />
+			</InputContainer>
+
+			<InputContainer let:inputClassName label="Senha" id="password">
+				<input class={inputClassName} type="password" id="password" name="password" />
+			</InputContainer>
 
 			<Button type="submit">Entrar</Button>
 		</form>

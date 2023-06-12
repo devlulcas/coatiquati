@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { AdminSection } from '$lib/components/admin-section';
 	import { Button } from '$lib/components/button';
-	import { Input } from '$lib/components/input';
+	import { InputContainer } from '$lib/components/input-container';
 	import { UserCard } from '$lib/components/user-card';
 	import { Boxes, Footprints, Layout, RotateCcw, Search } from 'lucide-svelte';
 	import type { PageServerData } from './$types';
@@ -25,15 +25,21 @@
 		data-sveltekit-keepfocus
 		class="lc-box flex flex-col lg:flex-row gap-2 mb-2 lg:items-end"
 	>
-		<Input
-			placeholder="Buscar por nome"
-			variant="opaque"
+		<InputContainer
 			id="username"
+			variant="opaque"
 			label="Nome de usuário"
-			name="username"
-			type="text"
 			containerClassname="flex-1"
-		/>
+			let:inputClassName
+		>
+			<input
+				class={inputClassName}
+				id="username"
+				name="username"
+				type="text"
+				placeholder="Buscar por nome"
+			/>
+		</InputContainer>
 
 		<div class="flex gap-2">
 			<RadioButton name="role" id="role-user" value="USER" label="Usuário" />
