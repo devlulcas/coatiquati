@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { TrailPreview } from '$src/modules/trail/dtos/trail.dto';
 	import { ArrowRightIcon, Edit } from 'lucide-svelte';
 	import { AvatarGroup } from '../avatar-group';
 	import { Button } from '../button';
 	import { Image } from '../image';
+	import type { TrailPreview } from '$src/modules/trail/dtos/trail-preview.dto';
 
 	export let trail: TrailPreview;
 
