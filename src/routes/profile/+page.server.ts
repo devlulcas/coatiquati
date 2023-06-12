@@ -1,26 +1,23 @@
 import { redirectToSignIn } from '$lib/utils/redirect-url';
-import { PrismaUserRepository } from '$src/modules/user/repositories/prisma-user.repository';
-import { GetUserProfile } from '$src/modules/user/use-cases/get-user-profile';
-import { fail, type ServerLoad } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
-export const load: ServerLoad = async ({ locals, url }) => {
+export const load: PageServerLoad = async ({ locals, url, parent }) => {
 	const session = await locals.auth.validate();
 
 	if (!session) {
 		throw redirectToSignIn(url.pathname);
 	}
 
-	const getUserProfile = new GetUserProfile(new PrismaUserRepository());
+	const parentData = await parent();
 
-	const userResult = await getUserProfile.execute(session.userId);
-
-	if (userResult.error) {
+	if (parentData.user === null) {
 		throw fail(404, {
-			message: userResult.error.message
+			message: 'Usuário não encontrado'
 		});
 	}
 
 	return {
-		user: userResult.data
+		user: parentData.user
 	};
 };
