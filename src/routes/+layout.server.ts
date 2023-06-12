@@ -1,4 +1,5 @@
 import { PrismaUserRepository } from '$src/modules/user/repositories/prisma-user.repository';
+import { GetUserProfile } from '$src/modules/user/use-cases/get-user-profile';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
@@ -10,17 +11,17 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		};
 	}
 
-	const userRepository = new PrismaUserRepository();
+	const getUserProfile = new GetUserProfile(new PrismaUserRepository());
 
-	const user = await userRepository.findById(session.user.id);
+	const userResult = await getUserProfile.execute(session.user.id);
 
-	if (user.error) {
+	if (userResult.error) {
 		return {
 			user: null
 		};
 	}
 
 	return {
-		user: user.data
+		user: userResult.data
 	};
 };
