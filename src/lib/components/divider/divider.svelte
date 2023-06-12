@@ -3,4 +3,4 @@
 	export let spaceY = 6;
 </script>
 
-<div class="border-[1px] border-white/25 mx-{spaceX} my-{spaceY}" />
+<div class="border border-white/25 mx-{spaceX} my-{spaceY}" />

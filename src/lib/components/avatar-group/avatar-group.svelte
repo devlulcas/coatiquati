@@ -26,7 +26,7 @@
 			class={cn(
 				'transition-all duration-300 ease-in-out',
 				'hover:scale-110 hover:rotate-12',
-				'h-10 w-10 object-cover rounded-full border-[1px] border-white/25 bg-white/75',
+				'h-10 w-10 object-cover rounded-full border border-white/25 bg-white/75',
 				index == 0 ? 'ml-0' : '-ml-2'
 			)}
 		/>
