@@ -3,7 +3,7 @@ import { signUpWithUsernameSchema } from './sign-up-with-username.dto';
 
 export const updateUserPasswordSchema = z.object({
 	id: z.string({
-		required_error: 'O id é obrigatório.'
+		required_error: 'o id é obrigatório'
 	}),
 	email: signUpWithUsernameSchema.shape.email
 });
