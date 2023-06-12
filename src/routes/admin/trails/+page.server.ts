@@ -34,6 +34,13 @@ export const load: ServerLoad = async (event) => {
 
 export const actions: Actions = {
 	createTrail: async ({ request }) => {
+		const trail = {
+			title: '',
+			description: '',
+			image: '',
+			author: ''
+		};
+
 		return {};
 	}
 };

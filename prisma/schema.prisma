@@ -28,6 +28,8 @@ model AuthUser {
   roles    String[]
   active   Boolean  @default(true)
   avatar   String   @default("no_profile_picture.webp")
+  crumbs   Crumb[]
+  trail    Trail[]
 
   @@map("auth_user")
 }
@@ -53,4 +55,33 @@ model AuthKey {
 
   @@index([user_id])
   @@map("auth_key")
+}
+
+model Trail {
+  id           String     @unique @default(uuid())
+  title        String
+  description  String
+  image        String
+  imageAlt     String
+  slug         String     @unique
+  crumbs       Crumb[]
+  contributors AuthUser[]
+
+  @@map("trail")
+}
+
+model Crumb {
+  id          String   @unique @default(uuid())
+  title       String
+  description String
+  image       String
+  imageAlt    String
+  trailId     String
+  trail       Trail    @relation(references: [id], fields: [trailId])
+  authorId    String
+  author      AuthUser @relation(references: [id], fields: [authorId])
+  slug        String   @unique
+
+  @@index([trailId])
+  @@map("crumb")
 }
