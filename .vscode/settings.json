@@ -18,5 +18,8 @@
 			"group": "tcc",
 			"connectString": "postgresql://postgres:postgres@localhost:5432/db-coati"
 		}
-	]
+	],
+	"[prisma]": {
+		"editor.defaultFormatter": "Prisma.prisma"
+	}
 }
