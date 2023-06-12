@@ -56,6 +56,7 @@
 		"nanoid": "^4.0.2",
 		"nodemailer": "^6.9.3",
 		"pino": "^8.14.1",
+		"svelte-droplet": "^0.3.0",
 		"tailwind-merge": "^1.12.0",
 		"zod": "^3.21.4"
 	}

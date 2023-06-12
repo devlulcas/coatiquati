@@ -53,6 +53,9 @@ dependencies:
   pino:
     specifier: ^8.14.1
     version: 8.14.1
+  svelte-droplet:
+    specifier: ^0.3.0
+    version: 0.3.0
   tailwind-merge:
     specifier: ^1.12.0
     version: 1.12.0
@@ -2832,6 +2835,10 @@ packages:
       - stylus
       - sugarss
     dev: true
+
+  /svelte-droplet@0.3.0:
+    resolution: {integrity: sha512-/IYTsqJjn8JlVip0qlucJCs28ckXyOEutQJpPLqY9+CK83N+VXNIlWSQR5K8tdhuNBD0wM0WVLqfSYNK/Xoeiw==}
+    dev: false
 
   /svelte-hmr@0.15.2(svelte@3.59.1):
     resolution: {integrity: sha512-q/bAruCvFLwvNbeE1x3n37TYFb3mTBJ6TrCq6p2CoFbSTNhDE9oAtEfpy+wmc9So8AG0Tja+X0/mJzX9tSfvIg==}
