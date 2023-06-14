@@ -1,18 +1,13 @@
 import { config } from 'dotenv';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import pg from 'pg';
 
 config();
 
-// Por algum motivo, o import direto do módulo não funciona
-// talvez seja por causa do ESM, talvez seja por causa do TSX sendo usado para executar o script
-// ao invés do ESBUILD
-// TODO: Investigar o motivo do import direto não funcionar
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import PG from 'pg/lib/index.js';
+const { Client } = pg;
 
-const client = new PG.Client({
+const client = new Client({
 	connectionString: process.env.DATABASE_URL
 });
 
