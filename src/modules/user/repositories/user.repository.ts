@@ -11,8 +11,6 @@ export type FindManyUsersParams = {
 
 export interface UserRepository {
 	findByEmail(email: string): Promise<ResultType<User>>;
-	update(user: Partial<User>): Promise<ResultType<User>>;
-	delete(userId: string): Promise<ResultType<User>>;
 	findById(id: string): Promise<ResultType<User>>;
 	findMany(params: FindManyUsersParams, pagination: Pagination): Promise<ResultType<User[]>>;
 }

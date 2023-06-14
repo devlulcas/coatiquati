@@ -6,8 +6,8 @@ export type Pagination = {
 };
 
 export function calculatePagination(pagination: Nullish<Pagination>): {
-	skip: number;
-	take: number;
+	offset: number;
+	limit: number;
 } {
 	const { page, limit } = pagination;
 
@@ -15,7 +15,7 @@ export function calculatePagination(pagination: Nullish<Pagination>): {
 	const parsedLimit = limit ? parseInt(limit.toString()) : 10;
 
 	return {
-		skip: (parsedPage - 1) * parsedLimit,
-		take: parsedLimit
+		offset: (parsedPage - 1) * parsedLimit,
+		limit: parsedLimit
 	};
 }

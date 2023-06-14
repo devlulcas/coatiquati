@@ -2,7 +2,7 @@ import { log } from '$lib/server/log';
 import { compactZodValidationErrors } from '$lib/utils/compact-zod-error';
 import { getRedirectReasonFromURL } from '$lib/utils/redirect-url';
 import { signInWithUsernameSchema } from '$src/modules/user/dtos/sign-in-with-username.dto';
-import { PrismaUserRepository } from '$src/modules/user/repositories/prisma-user.repository';
+import { PostgresUserRepository } from '$src/modules/user/repositories/postgres-user.repository';
 import { LuciaAuthService } from '$src/modules/user/services/lucia-auth.service';
 import { SignInWithUsername } from '$src/modules/user/use-cases/sign-in-with-username';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
@@ -40,7 +40,7 @@ export const actions: Actions = {
 
 		const signInWithUsername = new SignInWithUsername(
 			new LuciaAuthService(),
-			new PrismaUserRepository()
+			new PostgresUserRepository()
 		);
 
 		const sessionResult = await signInWithUsername.execute(form.data);

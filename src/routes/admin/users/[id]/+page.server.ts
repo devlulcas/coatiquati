@@ -1,4 +1,4 @@
-import { PrismaUserRepository } from '$src/modules/user/repositories/prisma-user.repository';
+import { PrismaUserRepository } from '$src/modules/user/repositories/postgres-user.repository';
 import { GetUserProfile } from '$src/modules/user/use-cases/get-user-profile';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';

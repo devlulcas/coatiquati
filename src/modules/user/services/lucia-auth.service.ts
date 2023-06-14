@@ -1,6 +1,5 @@
 import { auth, googleAuth } from '$lib/server/auth';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
-import { Prisma } from '@prisma/client';
 import { LuciaError, type Session } from 'lucia-auth';
 import { AuthProviders } from '../constants/auth-providers';
 import { Roles } from '../constants/user-roles';
@@ -104,14 +103,6 @@ export class LuciaAuthService implements AuthService {
 
 			return Ok(session);
 		} catch (error) {
-			if (
-				error instanceof Prisma.PrismaClientKnownRequestError &&
-				error.code === 'P2002' &&
-				error.message?.includes('username')
-			) {
-				return Fail('Nome de usuário já cadastrado.');
-			}
-
 			if (error instanceof LuciaError && error.message === 'AUTH_DUPLICATE_KEY_ID') {
 				return Fail('Nome de usuário já cadastrado.');
 			}

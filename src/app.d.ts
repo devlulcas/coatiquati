@@ -7,9 +7,6 @@ declare global {
 			auth: import('lucia-auth').AuthRequest;
 		}
 	}
-
-	// eslint-disable-next-line no-var
-	var prisma: PrismaClient;
 }
 
 /// <reference types="lucia-auth" />
