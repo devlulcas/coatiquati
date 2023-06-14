@@ -5,17 +5,19 @@
 
 	export let data: PageServerData;
 
-	const hat = userRolesHasRole('ADMIN', data.user?.roles) ? 'hat-fedora' : 'winter-hat';
+	const hat = userRolesHasRole('ADMIN', data.user?.roles) ? 'hat-fedora' : null;
 </script>
 
 <main class="p-10 bg-black/25 text-white">
 	<div class="flex gap-2">
 		<picture class="relative">
-			<img
-				class="w-14 h-14 absolute -top-9 rotate-[30deg] -right-4 invert"
-				src={hat + '.svg'}
-				alt={hat}
-			/>
+			{#if hat}
+				<img
+					class="w-14 h-14 absolute -top-9 rotate-[30deg] -right-4 invert"
+					src={hat + '.svg'}
+					alt={hat}
+				/>
+			{/if}
 
 			<Image
 				width={96}
