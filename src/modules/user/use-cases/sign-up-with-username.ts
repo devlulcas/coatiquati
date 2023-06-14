@@ -1,10 +1,10 @@
+import { welcomeMail } from '$lib/assets/email-templates/welcome';
+import type { EmailClient } from '$lib/server/email';
 import { Fail, type ResultType } from '$lib/types/result';
 import type { Session } from 'lucia-auth';
 import type { SignUpWithUsernameDTO } from '../dtos/sign-up-with-username.dto';
 import type { UserRepository } from '../repositories/user.repository';
 import type { AuthService } from '../services/auth.service';
-import type { EmailClient } from '$src/modules/email/infra/email-client';
-import { welcomeMail } from '$src/modules/email/templates/welcome';
 
 export class SignUpWithUsername {
 	constructor(

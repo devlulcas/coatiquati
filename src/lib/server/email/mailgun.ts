@@ -5,7 +5,7 @@ import Mailgun from 'mailgun.js';
 import type Client from 'mailgun.js/client';
 import type { EmailClient, Mail } from './email-client';
 
-export class MailgunEmailClient implements EmailClient {
+export class MailgunEmailClientStrategy implements EmailClient {
 	private mg: Client | undefined;
 	private mailgunApiKey: string;
 	private mailgunDomain: string;

@@ -1,6 +1,6 @@
+import type { ImageUploaderClient } from '$lib/server/image-upload';
 import type { ResultType } from '$lib/types/result';
 import { slugify } from '$lib/utils/slugify';
-import type { ImageUploaderClient } from '$src/modules/image-upload/infra/image-uploader-client';
 import type { CreateTrailDTO } from '../dtos/create-trail.dto';
 import type { TrailPreview } from '../dtos/trail-preview.dto';
 import type { TrailRepository } from '../repositories/trail.repository';

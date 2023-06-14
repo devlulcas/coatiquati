@@ -12,7 +12,7 @@ type NodemailerOptions = {
 	pass: string;
 };
 
-export class NodemailerEmailClient implements EmailClient {
+export class NodemailerEmailClientStrategy implements EmailClient {
 	private transporter: nodemailer.Transporter;
 
 	constructor(options: NodemailerOptions) {

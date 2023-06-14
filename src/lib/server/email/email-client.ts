@@ -6,6 +6,6 @@ export type Mail = {
 	body: string;
 };
 
-export interface EmailClient {
+export type EmailClient = {
 	sendEmail(mail: Mail): Promise<ResultType<string | undefined>>;
-}
+};
