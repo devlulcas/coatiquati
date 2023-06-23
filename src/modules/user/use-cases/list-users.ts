@@ -7,9 +7,6 @@ export class ListUsers {
 	constructor(private userRepository: UserRepository) {}
 
 	async execute(data: ListUsersDTO): Promise<ResultType<User[]>> {
-		return this.userRepository.findMany(data, {
-			limit: data.limit,
-			page: data.page
-		});
+		return this.userRepository.findMany(data);
 	}
 }

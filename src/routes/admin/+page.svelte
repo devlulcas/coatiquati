@@ -7,6 +7,7 @@
 	import type { PageServerData } from './$types';
 	import { fly } from 'svelte/transition';
 	import { RadioButton } from '$lib/components/radio-button';
+	import { Badge } from '$lib/components/badge';
 
 	export let data: PageServerData;
 
@@ -46,9 +47,7 @@
 			<RadioButton name="role" id="role-admin" value="ADMIN" label="Moderador" />
 		</div>
 
-		<Button icon={RotateCcw} data-sveltekit-keepfocus href="/admin" variant="secondary">
-			Limpar
-		</Button>
+		<Button icon={RotateCcw} type="reset" variant="secondary">Limpar</Button>
 
 		<Button type="submit">
 			Buscar
@@ -67,7 +66,7 @@
 	{/if}
 
 	{#if data.users.length === 0}
-		<p class="text-center">Nenhum usuário encontrado</p>
+		<Badge variant="warning">Nenhum usuário encontrado</Badge>
 	{/if}
 </AdminSection>
 

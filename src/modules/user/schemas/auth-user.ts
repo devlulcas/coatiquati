@@ -1,5 +1,5 @@
 import type { InferModel } from 'drizzle-orm';
-import { bigint, boolean, index, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { bigint, boolean, index, integer, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
 
 export type AuthUser = InferModel<typeof authUser>;
 
@@ -12,6 +12,7 @@ export const authUser = pgTable(
 		email: text('email').notNull(),
 		roles: text('roles').array().default(['USER']).notNull(),
 		active: boolean('active').default(true).notNull(),
+		banVotes: integer('ban_votes').default(0).notNull(),
 		avatar: text('avatar').default('no_profile_picture.webp').notNull()
 	},
 	(table) => {
