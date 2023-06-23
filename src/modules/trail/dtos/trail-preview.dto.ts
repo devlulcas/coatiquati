@@ -1,4 +1,4 @@
-import type { Image } from '$lib/components/image';
+import type { Image } from '$lib/types/image';
 import type { User } from '../../user/entities/user.entity';
 
 type Contributor = Pick<User, 'id' | 'username' | 'avatar'>;

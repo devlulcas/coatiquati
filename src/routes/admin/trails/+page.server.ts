@@ -1,6 +1,6 @@
 import type { ServerLoad } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import type { TrailPreview } from '$src/modules/trail/dtos/trail.dto';
+import type { TrailPreview } from '$src/modules/trail/dtos/trail-preview.dto';
 
 const trails = Array<TrailPreview>(10).fill({
 	id: '1',
@@ -10,13 +10,9 @@ const trails = Array<TrailPreview>(10).fill({
 	description:
 		'Aprenda a programar com JavaScript de forma funcional, utilizando programação assíncrona e muito mais.',
 	contributors: Array(3).fill({
-		username: 'Contribuidor Mock',
-		image: {
-			url: 'https://picsum.photos/50/50',
-			alt: 'Imagem do contribuidor 1',
-			width: 50,
-			height: 50
-		}
+		id: 1,
+		username: 'random',
+		avatar: 'https://picsum.photos/50/50'
 	}),
 	image: {
 		url: 'https://picsum.photos/300/300',
