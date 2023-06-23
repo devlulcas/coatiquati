@@ -2,10 +2,13 @@
 	import '$lib/assets/styles/global.postcss';
 	import { Blob } from '$lib/components/blob';
 	import { Header } from '$lib/components/header';
+  import { NavigationProgress } from '$lib/components/navigation-progress';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
 </script>
+
+<NavigationProgress/>
 
 <div
 	class="fixed inset-0 select-none pointer-events-none bg-gradient-to-r from-black via-neutral-800 to-black"
