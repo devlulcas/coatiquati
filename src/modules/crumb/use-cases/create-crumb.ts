@@ -1,4 +1,4 @@
-import type { TrailRepositoryInterface } from '$src/modules/trail/repositories/trail.repository';
+import type { TrailRepositoryInterface } from '$modules/trail/repositories/trail.repository';
 import type { CreatableCrumb, CrumbPreview } from '../dtos/crumbs.dto';
 import { CrumbMapper } from '../mappers/crumb.mapper';
 import type { CrumbRepositoryInterface } from '../repositories/crumbs.repository';

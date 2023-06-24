@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Image } from '$lib/components/image';
-	import { userRolesHasRole } from '$src/modules/user/constants/user-roles';
+	import { userRolesHasRole } from '$modules/user/constants/user-roles';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;

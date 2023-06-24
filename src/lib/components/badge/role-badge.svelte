@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Roles } from '$src/modules/user/constants/user-roles';
+	import { Roles } from '$modules/user/constants/user-roles';
 
 	export let role: string;
 	export let isCurrentUser = false;

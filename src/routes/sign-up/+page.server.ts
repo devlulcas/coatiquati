@@ -1,14 +1,14 @@
 import { log } from '$lib/server/log';
 import { emailClient } from '$lib/server/email';
 import { compactZodValidationErrors } from '$lib/utils/compact-zod-error';
-import { signUpWithUsernameSchema } from '$src/modules/user/dtos/sign-up-with-username.dto';
-import { PostgresUserRepository } from '$src/modules/user/repositories/postgres-user.repository';
-import { LuciaAuthService } from '$src/modules/user/services/lucia-auth.service';
-import { SignUpWithUsername } from '$src/modules/user/use-cases/sign-up-with-username';
+import { signUpWithUsernameSchema } from '$modules/user/dtos/sign-up-with-username.dto';
+import { PostgresUserRepository } from '$modules/user/repositories/postgres-user.repository';
+import { LuciaAuthService } from '$modules/user/services/lucia-auth.service';
+import { SignUpWithUsername } from '$modules/user/use-cases/sign-up-with-username';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
-import { validateSignUpWithUsername } from '$src/modules/user/validations/sign-up-with-username.validation';
+import { validateSignUpWithUsername } from '$modules/user/validations/sign-up-with-username.validation';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();

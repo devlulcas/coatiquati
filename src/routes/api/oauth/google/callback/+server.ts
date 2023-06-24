@@ -1,6 +1,6 @@
 import { GOOGLE_OAUTH_STATE_COOKIE_NAME } from '$lib/server/auth';
-import { LuciaAuthService } from '$src/modules/user/services/lucia-auth.service';
-import { validateSignInWithOAuthProvider } from '$src/modules/user/validations/sign-in-with-oauth-provider.validation';
+import { LuciaAuthService } from '$modules/user/services/lucia-auth.service';
+import { validateSignInWithOAuthProvider } from '$modules/user/validations/sign-in-with-oauth-provider.validation';
 import { redirect } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { log } from '$lib/server/log';

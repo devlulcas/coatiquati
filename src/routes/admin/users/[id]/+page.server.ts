@@ -1,9 +1,9 @@
 import { redirectToSignIn } from '$lib/utils/redirect-url';
-import { PostgresBanRegistryRepository } from '$src/modules/ban/repositories/postgres-ban-registry.repository';
-import { BanUser } from '$src/modules/ban/use-cases/ban-user';
-import { Roles, userRolesHasRole } from '$src/modules/user/constants/user-roles';
-import { PostgresUserRepository } from '$src/modules/user/repositories/postgres-user.repository';
-import { GetUserProfile } from '$src/modules/user/use-cases/get-user-profile';
+import { PostgresBanRegistryRepository } from '$modules/ban/repositories/postgres-ban-registry.repository';
+import { BanUser } from '$modules/ban/use-cases/ban-user';
+import { Roles, userRolesHasRole } from '$modules/user/constants/user-roles';
+import { PostgresUserRepository } from '$modules/user/repositories/postgres-user.repository';
+import { GetUserProfile } from '$modules/user/use-cases/get-user-profile';
 import { error } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 

@@ -1,5 +1,5 @@
 import type { ResultType } from '$lib/types/result';
-import type { BanRegistry, NewBanRegistry } from '$src/modules/ban/schemas/ban-registry';
+import type { BanRegistry, NewBanRegistry } from '$modules/ban/schemas/ban-registry';
 
 export interface BanRegistryRepository {
 	findById(id: number): Promise<ResultType<BanRegistry>>;

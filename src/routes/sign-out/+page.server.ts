@@ -1,5 +1,5 @@
-import { LuciaAuthService } from '$src/modules/user/services/lucia-auth.service';
-import { SignOut } from '$src/modules/user/use-cases/sign-out';
+import { LuciaAuthService } from '$modules/user/services/lucia-auth.service';
+import { SignOut } from '$modules/user/use-cases/sign-out';
 import { redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import { log } from '$lib/server/log';

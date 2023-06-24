@@ -1,7 +1,7 @@
 import { redirectToSignIn } from '$lib/utils/redirect-url';
-import { listUsersSchema } from '$src/modules/user/dtos/list-users.dto';
-import { PostgresUserRepository } from '$src/modules/user/repositories/postgres-user.repository';
-import { ListUsers } from '$src/modules/user/use-cases/list-users';
+import { listUsersSchema } from '$modules/user/dtos/list-users.dto';
+import { PostgresUserRepository } from '$modules/user/repositories/postgres-user.repository';
+import { ListUsers } from '$modules/user/use-cases/list-users';
 import { superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
 

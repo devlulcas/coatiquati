@@ -1,5 +1,5 @@
-import type { ContentPreview } from '$src/modules/content/dtos/content.dto';
-import type { ContentType } from '$src/modules/content/entities/content.entity';
+import type { ContentPreview } from '$modules/content/dtos/content.dto';
+import type { ContentType } from '$modules/content/entities/content.entity';
 
 export type Crumb = {
 	id: string;

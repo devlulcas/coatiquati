@@ -1,4 +1,4 @@
-import type { User } from '$src/modules/user/entities/user.entity';
+import type { User } from '$modules/user/entities/user.entity';
 import type { BanRegistry } from '../schemas/ban-registry';
 
 export type BanDTO = {

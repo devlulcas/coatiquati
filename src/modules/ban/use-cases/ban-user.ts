@@ -1,9 +1,9 @@
 import { Fail, Ok, type ResultType } from '$lib/types/result';
-import type { BanDTO } from '$src/modules/ban/dtos/ban.dto';
-import type { BanRegistryRepository } from '$src/modules/ban/repositories/ban-registry.repository';
-import type { NewBanRegistry } from '$src/modules/ban/schemas/ban-registry';
-import { Roles, userRolesHasRole } from '$src/modules/user/constants/user-roles';
-import type { UserRepository } from '$src/modules/user/repositories/user.repository';
+import type { BanDTO } from '$modules/ban/dtos/ban.dto';
+import type { BanRegistryRepository } from '$modules/ban/repositories/ban-registry.repository';
+import type { NewBanRegistry } from '$modules/ban/schemas/ban-registry';
+import { Roles, userRolesHasRole } from '$modules/user/constants/user-roles';
+import type { UserRepository } from '$modules/user/repositories/user.repository';
 
 export class BanUser {
 	constructor(

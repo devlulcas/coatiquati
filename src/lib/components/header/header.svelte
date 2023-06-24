@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Roles, userRolesHasRole } from '$src/modules/user/constants/user-roles';
-	import type { User } from '$src/modules/user/entities/user.entity';
+	import { Roles, userRolesHasRole } from '$modules/user/constants/user-roles';
+	import type { User } from '$modules/user/entities/user.entity';
 	import { BrainIcon } from 'lucide-svelte';
 
 	export let user: User | null = null;

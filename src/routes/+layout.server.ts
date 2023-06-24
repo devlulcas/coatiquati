@@ -1,5 +1,5 @@
-import { PostgresUserRepository } from '$src/modules/user/repositories/postgres-user.repository';
-import { GetUserProfile } from '$src/modules/user/use-cases/get-user-profile';
+import { PostgresUserRepository } from '$modules/user/repositories/postgres-user.repository';
+import { GetUserProfile } from '$modules/user/use-cases/get-user-profile';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ locals }) => {

@@ -1,6 +1,6 @@
 import type { ServerLoad } from '@sveltejs/kit';
 import type { Actions } from './$types';
-import type { TrailPreview } from '$src/modules/trail/dtos/trail-preview.dto';
+import type { TrailPreview } from '$modules/trail/dtos/trail-preview.dto';
 
 const trails = Array<TrailPreview>(10).fill({
 	id: '1',

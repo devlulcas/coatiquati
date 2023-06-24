@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { User } from '$src/modules/user/entities/user.entity';
+	import type { User } from '$modules/user/entities/user.entity';
 	import { Edit } from 'lucide-svelte';
 	import { RoleBadge } from '../badge';
 	import { Divider } from '../divider';
