@@ -1,0 +1,11 @@
+export function formDataToObject(formData: FormData) {
+	const entries = formData.entries();
+
+	const data: Record<string, unknown> = {};
+
+	for (const [key, value] of entries) {
+		data[key] = value;
+	}
+
+	return data;
+}

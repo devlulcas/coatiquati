@@ -1,6 +1,7 @@
-import type { ServerLoad } from '@sveltejs/kit';
-import type { Actions } from './$types';
 import type { TrailPreview } from '$modules/trail/dtos/trail-preview.dto';
+import { validateCreateNewTrail } from '$modules/trail/validations/create-new-trail.validation';
+import { fail, type ServerLoad } from '@sveltejs/kit';
+import type { Actions } from './$types';
 
 const trails = Array<TrailPreview>(10).fill({
 	id: '1',
@@ -22,7 +23,7 @@ const trails = Array<TrailPreview>(10).fill({
 	}
 });
 
-export const load: ServerLoad = async (event) => {
+export const load: ServerLoad = async () => {
 	return {
 		trails
 	};
@@ -30,12 +31,11 @@ export const load: ServerLoad = async (event) => {
 
 export const actions: Actions = {
 	createTrail: async ({ request }) => {
-		const trail = {
-			title: '',
-			description: '',
-			image: '',
-			author: ''
-		};
+		const validationResult = await validateCreateNewTrail(request);
+
+		if (validationResult.error) {
+			return fail(400, { message: validationResult.error.message });
+		}
 
 		return {};
 	}

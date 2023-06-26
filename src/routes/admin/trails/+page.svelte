@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { AdminSection } from '$lib/components/admin-section';
 	import { Button } from '$lib/components/button';
 	import { InputContainer } from '$lib/components/input-container';
@@ -9,8 +10,8 @@
 
 	export let data;
 
-	let title: string;
-	let description: string;
+	export let form;
+
 	let acceptedFile: { preview: string; file: File } | null = null;
 
 	function handleFiles(files: File[]) {
@@ -29,24 +30,40 @@
 </script>
 
 <AdminSection title="Gerenciar conteúdo">
-	<form class="lc-box flex flex-col gap-4" method="POST" action="?/createTrail">
+	<form
+		use:enhance
+		enctype="multipart/form-data"
+		method="POST"
+		action="?/createTrail"
+		class="lc-box flex flex-col gap-4"
+	>
 		<h2 class="text-2xl font-bold">Criar trilha</h2>
+
 		<InputContainer id="title" let:inputClassName variant="opaque" label="Título">
-			<input id="title" class={inputClassName} bind:value={title} name="title" type="text" />
+			<input id="title" class={inputClassName} name="title" type="text" />
 		</InputContainer>
 
 		<InputContainer let:inputClassName id="description" variant="opaque" label="Descrição">
 			<textarea
 				id="description"
 				class={cn(inputClassName, 'resize-none')}
-				bind:value={description}
 				name="description"
 				rows={3}
 			/>
 		</InputContainer>
 
+		<InputContainer
+			let:inputClassName
+			id="imageAlt"
+			variant="opaque"
+			label="Texto alternativo da imagem"
+		>
+			<input id="imageAlt" class={inputClassName} name="imageAlt" type="text" />
+		</InputContainer>
+
 		<div class="bg-white/95 p-4 rounded-md flex flex-col gap-2">
 			<FileDrop
+				name="image"
 				max={1}
 				acceptedMimes={['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml']}
 				{handleFiles}
@@ -73,6 +90,13 @@
 				/>
 			{/if}
 		</div>
+
+		{#if form}
+			<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+				<strong class="font-bold">Ops!</strong>
+				<span class="block sm:inline">{JSON.stringify(form, null, 2)}</span>
+			</div>
+		{/if}
 
 		<Button type="submit">Criar</Button>
 	</form>
