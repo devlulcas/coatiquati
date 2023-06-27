@@ -1,5 +1,7 @@
+import { formDataToObject } from '$lib/utils/convert-form-data';
+import { omit } from '$lib/utils/omit';
+import { createTrailSchema } from '$modules/trail/dtos/create-trail.dto';
 import type { TrailPreview } from '$modules/trail/dtos/trail-preview.dto';
-import { validateCreateNewTrail } from '$modules/trail/validations/create-new-trail.validation';
 import { fail, type ServerLoad } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -31,12 +33,26 @@ export const load: ServerLoad = async () => {
 
 export const actions: Actions = {
 	createTrail: async ({ request }) => {
-		const validationResult = await validateCreateNewTrail(request);
+		const formData = await request.formData();
 
-		if (validationResult.error) {
-			return fail(400, { message: validationResult.error.message });
+		const data = formDataToObject(formData);
+
+		const result = createTrailSchema.safeParse(data);
+
+		if (!result.success) {
+			return fail(400, {
+				message: 'Falha ao criar nova trilha',
+				errors: result.error.flatten().fieldErrors,
+				data: omit(data, 'image')
+			});
 		}
 
-		return {};
+		console.log('result', result);
+
+		return {
+			message: 'Sucesso ao criar nova trilha',
+			errors: null,
+			data: omit(data, 'image')
+		};
 	}
 };

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { AdminSection } from '$lib/components/admin-section';
+	import { Badge } from '$lib/components/badge/index.js';
 	import { Button } from '$lib/components/button';
 	import { InputContainer } from '$lib/components/input-container';
 	import { TrailCard } from '$lib/components/trail-card';
@@ -39,12 +40,31 @@
 	>
 		<h2 class="text-2xl font-bold">Criar trilha</h2>
 
-		<InputContainer id="title" let:inputClassName variant="opaque" label="Título">
-			<input id="title" class={inputClassName} name="title" type="text" />
+		<InputContainer
+			errors={form?.errors?.title}
+			id="title"
+			let:inputClassName
+			variant="opaque"
+			label="Título"
+		>
+			<input
+				value={form?.data?.title ?? ''}
+				id="title"
+				class={inputClassName}
+				name="title"
+				type="text"
+			/>
 		</InputContainer>
 
-		<InputContainer let:inputClassName id="description" variant="opaque" label="Descrição">
+		<InputContainer
+			errors={form?.errors?.description}
+			let:inputClassName
+			id="description"
+			variant="opaque"
+			label="Descrição"
+		>
 			<textarea
+				value={form?.data?.description ?? ''}
 				id="description"
 				class={cn(inputClassName, 'resize-none')}
 				name="description"
@@ -53,15 +73,28 @@
 		</InputContainer>
 
 		<InputContainer
+			errors={form?.errors?.imageAlt}
 			let:inputClassName
 			id="imageAlt"
 			variant="opaque"
 			label="Texto alternativo da imagem"
 		>
-			<input id="imageAlt" class={inputClassName} name="imageAlt" type="text" />
+			<input
+				value={form?.data?.imageAlt ?? ''}
+				id="imageAlt"
+				class={inputClassName}
+				name="imageAlt"
+				type="text"
+			/>
 		</InputContainer>
 
 		<div class="bg-white/95 p-4 rounded-md flex flex-col gap-2">
+			{#if form?.errors?.image}
+				<Badge variant="error" class="text-sm">
+					{form?.errors?.image[0]}
+				</Badge>
+			{/if}
+
 			<FileDrop
 				name="image"
 				max={1}
@@ -90,13 +123,6 @@
 				/>
 			{/if}
 		</div>
-
-		{#if form}
-			<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-				<strong class="font-bold">Ops!</strong>
-				<span class="block sm:inline">{JSON.stringify(form, null, 2)}</span>
-			</div>
-		{/if}
 
 		<Button type="submit">Criar</Button>
 	</form>

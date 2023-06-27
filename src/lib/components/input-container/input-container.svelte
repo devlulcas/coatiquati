@@ -10,7 +10,7 @@
 	export let label: string;
 	export let variant: InputVariant = 'default';
 	export let labelVariant: LabelVariant = variant;
-	export let errors: string[] = [];
+	export let errors: string[] | null | undefined = [];
 	export let required = false;
 	export let labelClassname = '';
 	export let containerClassname = '';
@@ -29,13 +29,15 @@
 		{#if required}
 			<span class="text-red-600">*</span>
 		{/if}
-
-		{#if errors.length}
-			<p class={cn('text-red-600', errorClassname)}>
-				{new Intl.ListFormat('pt-BR', { style: 'long', type: 'conjunction' }).format(errors)}
-			</p>
-		{/if}
 	</label>
 
 	<slot inputClassName={inputClassname} />
+
+	{#if errors?.length}
+		<p
+			class={cn('text-red-100 uppercase p-1 text-xs font-bold bg-red-500 rounded', errorClassname)}
+		>
+			{new Intl.ListFormat('pt-BR', { style: 'long', type: 'conjunction' }).format(errors)}
+		</p>
+	{/if}
 </div>
