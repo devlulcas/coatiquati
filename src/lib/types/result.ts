@@ -13,7 +13,7 @@ export const Ok = <T>(data: T): ResultType<T> => ({
 	error: null
 });
 
-export const Fail = <T>(error: Error |  string): ResultType<T> => ({
+export const Fail = <T>(error: Error | string): ResultType<T> => ({
 	data: null,
 	error: error instanceof Error ? error : new Error(error)
 });
