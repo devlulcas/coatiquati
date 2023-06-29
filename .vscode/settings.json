@@ -1,5 +1,14 @@
 {
-	"cSpell.words": ["dtos", "embla", "ilike", "lucia", "micromark", "postgres", "sqlite"],
+	"cSpell.words": [
+		"cloudinary",
+		"dtos",
+		"embla",
+		"ilike",
+		"lucia",
+		"micromark",
+		"postgres",
+		"sqlite"
+	],
 	"cSpell.language": "en,pt-BR",
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": true

@@ -11,8 +11,9 @@ export type FindManyTrailsParams = {
 	slug?: string;
 };
 
-export type NewTrail = CreateTrailDTO & {
+export type NewTrail = Omit<CreateTrailDTO, 'image'> & {
 	slug: string;
+	image: string;
 };
 
 export interface TrailRepository {

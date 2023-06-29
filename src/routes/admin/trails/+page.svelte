@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import { AdminSection } from '$lib/components/admin-section';
 	import { Badge } from '$lib/components/badge/index.js';
 	import { Button } from '$lib/components/button';
@@ -8,12 +7,21 @@
 	import { UploadedImage } from '$lib/components/uploaded-image';
 	import { cn } from '$lib/utils/cn';
 	import { FileDrop } from 'svelte-droplet';
+	import { superForm } from 'sveltekit-superforms/client';
 
 	export let data;
 
 	export let form;
 
+	const { form: sForm, errors, enhance, constraints, submitting } = superForm(data.form);
+
 	let acceptedFile: { preview: string; file: File } | null = null;
+
+	$: {
+		if (form && form.imageUploadError?.length) {
+			acceptedFile = null;
+		}
+	}
 
 	function handleFiles(files: File[]) {
 		const reader = new FileReader();
@@ -41,14 +49,15 @@
 		<h2 class="text-2xl font-bold">Criar trilha</h2>
 
 		<InputContainer
-			errors={form?.errors?.title}
+			errors={$errors.title}
 			id="title"
 			let:inputClassName
 			variant="opaque"
 			label="Título"
 		>
 			<input
-				value={form?.data?.title ?? ''}
+				{...$constraints.title}
+				bind:value={$sForm.title}
 				id="title"
 				class={inputClassName}
 				name="title"
@@ -57,14 +66,15 @@
 		</InputContainer>
 
 		<InputContainer
-			errors={form?.errors?.description}
+			errors={$errors.description}
 			let:inputClassName
 			id="description"
 			variant="opaque"
 			label="Descrição"
 		>
 			<textarea
-				value={form?.data?.description ?? ''}
+				{...$constraints.description}
+				bind:value={$sForm.description}
 				id="description"
 				class={cn(inputClassName, 'resize-none')}
 				name="description"
@@ -73,14 +83,15 @@
 		</InputContainer>
 
 		<InputContainer
-			errors={form?.errors?.imageAlt}
+			errors={$errors.imageAlt}
 			let:inputClassName
 			id="imageAlt"
 			variant="opaque"
 			label="Texto alternativo da imagem"
 		>
 			<input
-				value={form?.data?.imageAlt ?? ''}
+				{...$constraints.imageAlt}
+				bind:value={$sForm.imageAlt}
 				id="imageAlt"
 				class={inputClassName}
 				name="imageAlt"
@@ -89,10 +100,12 @@
 		</InputContainer>
 
 		<div class="bg-white/95 p-4 rounded-md flex flex-col gap-2">
-			{#if form?.errors?.image}
-				<Badge variant="error" class="text-sm">
-					{form?.errors?.image[0]}
-				</Badge>
+			{#if form?.imageUploadError}
+				{#each form.imageUploadError as error}
+					<Badge variant="error" class="text-sm">
+						{error}
+					</Badge>
+				{/each}
 			{/if}
 
 			<FileDrop
@@ -124,7 +137,7 @@
 			{/if}
 		</div>
 
-		<Button type="submit">Criar</Button>
+		<Button loading={$submitting} type="submit">Criar</Button>
 	</form>
 </AdminSection>
 

@@ -1,19 +1,24 @@
-import type { ImageUploaderClient } from '$lib/server/image-upload';
+import type { ImageService } from '$lib/server/image';
+import { log } from '$lib/server/log';
 import type { ResultType } from '$lib/types/result';
 import { slugify } from '$lib/utils/slugify';
+import type { CreateTrailDTO } from '../dtos/create-trail.dto';
 import type { TrailPreview } from '../dtos/trail-preview.dto';
-import type { NewTrail, TrailRepository } from '../repositories/trail.repository';
+import type { TrailRepository } from '../repositories/trail.repository';
 
 export class CreateTrail {
 	constructor(
 		private trailRepository: TrailRepository,
-		private imageUploaderClient: ImageUploaderClient
+		private imageUploaderClient: ImageService
 	) {}
 
-	async execute(data: Omit<NewTrail, 'slug'>): Promise<ResultType<TrailPreview>> {
+	async execute(data: CreateTrailDTO): Promise<ResultType<TrailPreview>> {
 		const slug = slugify(data.title);
 
-		const imageUploadResult = await this.imageUploaderClient.uploadImage(data.image);
+		const imageUploadResult = await this.imageUploaderClient.uploadImage(data.image, {
+			width: 600,
+			height: 600
+		});
 
 		if (imageUploadResult.error) {
 			return imageUploadResult;
@@ -27,6 +32,10 @@ export class CreateTrail {
 			description: data.description,
 			slug
 		});
+
+		if (createdTrail.error) {
+			log.error(createdTrail.error);
+		}
 
 		return createdTrail;
 	}

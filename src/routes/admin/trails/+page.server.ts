@@ -1,8 +1,9 @@
+import { CloudinaryImageService } from '$lib/server/image';
 import { formDataToObject } from '$lib/utils/convert-form-data';
-import { omit } from '$lib/utils/omit';
 import { createTrailSchema } from '$modules/trail/dtos/create-trail.dto';
 import type { TrailPreview } from '$modules/trail/dtos/trail-preview.dto';
 import { fail, type ServerLoad } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms/server';
 import type { Actions } from './$types';
 
 const trails = Array<TrailPreview>(10).fill({
@@ -26,7 +27,10 @@ const trails = Array<TrailPreview>(10).fill({
 });
 
 export const load: ServerLoad = async () => {
+	const form = await superValidate(createTrailSchema.omit({ image: true }));
+
 	return {
+		form,
 		trails
 	};
 };
@@ -35,24 +39,50 @@ export const actions: Actions = {
 	createTrail: async ({ request }) => {
 		const formData = await request.formData();
 
-		const data = formDataToObject(formData);
+		const form = await superValidate(formData, createTrailSchema.omit({ image: true }));
 
-		const result = createTrailSchema.safeParse(data);
-
-		if (!result.success) {
+		if (!form.valid) {
 			return fail(400, {
-				message: 'Falha ao criar nova trilha',
-				errors: result.error.flatten().fieldErrors,
-				data: omit(data, 'image')
+				form,
+				imageUploadError: null
 			});
 		}
 
-		console.log('result', result);
+		console.log(form.data);
+
+		const imageValidation = createTrailSchema
+			.pick({ image: true })
+			.safeParse(formDataToObject(formData));
+
+		if (!imageValidation.success) {
+			return fail(400, {
+				form,
+				imageUploadError: imageValidation.error.flatten().fieldErrors.image
+			});
+		}
+
+		const data = {
+			...form.data,
+			image: imageValidation.data.image
+		};
+
+		const imageService = new CloudinaryImageService();
+
+		const url = await imageService.uploadImage(data.image, {
+			width: 600,
+			height: 600
+		});
+
+		if (url.error) {
+			return fail(400, {
+				form,
+				imageUploadError: [url.error.message]
+			});
+		}
 
 		return {
-			message: 'Sucesso ao criar nova trilha',
-			errors: null,
-			data: omit(data, 'image')
+			form,
+			url: url.data
 		};
 	}
 };
