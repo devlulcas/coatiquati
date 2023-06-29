@@ -25,28 +25,28 @@ Essas são provavelmente as tecnologias mais notáveis do projeto, mas existem o
 
 ### Passo a passo
 
-1. Clone o repositório
+0. Clone o repositório
 
-```bash
-git clone
-```
+   ```bash
+   git clone
+   ```
 
-2. Entre na pasta do projeto
+1. Entre na pasta do projeto
 
-```bash
-cd coati
-```
+   ```bash
+   cd coati
+   ```
 
-3. Crie um arquivo `.env` na raiz do projeto e copie o conteúdo do arquivo `.env.example` para ele
+2. Crie um arquivo `.env` na raiz do projeto e copie o conteúdo do arquivo `.env.example` para ele
 
-```bash
-cp .env.example .env
-```
+   ```bash
+   cp .env.example .env
+   ```
 
-4. Rode o comando `docker-compose up` para subir os containers do projeto
+3. Rode o comando `docker-compose up` para subir os containers do projeto
 
-```bash
-docker-compose up
-```
+   ```bash
+   docker-compose up
+   ```
 
-5. Acesse o endereço `localhost:3000` no seu navegador
+4. Acesse o endereço `localhost:3000` no seu navegador
