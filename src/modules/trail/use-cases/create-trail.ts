@@ -1,7 +1,7 @@
-import type { ImageService } from '$lib/server/image';
 import { log } from '$lib/server/log';
 import type { ResultType } from '$lib/types/result';
 import { slugify } from '$lib/utils/slugify';
+import type { ImageService } from '$modules/image/services';
 import type { CreateTrailDTO } from '../dtos/create-trail.dto';
 import type { TrailPreview } from '../dtos/trail-preview.dto';
 import type { TrailRepository } from '../repositories/trail.repository';

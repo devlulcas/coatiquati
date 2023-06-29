@@ -1,5 +1,5 @@
-import { CloudinaryImageService } from '$lib/server/image';
 import { formDataToObject } from '$lib/utils/convert-form-data';
+import { CloudinaryImageService } from '$modules/image/services';
 import { createTrailSchema } from '$modules/trail/dtos/create-trail.dto';
 import type { TrailPreview } from '$modules/trail/dtos/trail-preview.dto';
 import { fail, type ServerLoad } from '@sveltejs/kit';

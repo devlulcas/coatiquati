@@ -3,10 +3,10 @@ import {
 	CLOUDINARY_API_SECRET,
 	CLOUDINARY_CLOUD_NAME
 } from '$env/static/private';
+import { log } from '$lib/server/log';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import cloudinary from 'cloudinary';
 import { nanoid } from 'nanoid';
-import { log } from '../log';
 import type { ImageProperties, ImageService } from './image-service';
 export type { ImageService } from './image-service';
 
