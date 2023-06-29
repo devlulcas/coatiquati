@@ -6,7 +6,7 @@
 
 	export let data;
 
-	const { form, errors, enhance, constraints } = superForm(data.form);
+	const { form, errors, enhance, constraints, submitting } = superForm(data.form);
 </script>
 
 <div class="flex flex-col items-center justify-center text-white h-[--safe-screen-height]">
@@ -70,7 +70,7 @@
 				/>
 			</InputContainer>
 
-			<Button type="submit">Entrar</Button>
+			<Button type="submit" loading={$submitting}>Entrar</Button>
 		</form>
 	</div>
 
