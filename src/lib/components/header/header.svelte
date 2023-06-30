@@ -3,26 +3,10 @@
 	import { Roles, userRolesHasRole } from '$modules/user/constants/user-roles';
 	import type { User } from '$modules/user/entities/user.entity';
 	import { BrainIcon } from 'lucide-svelte';
+	import Dialog from './dialog.svelte';
+	import NavItem from './nav-item.svelte';
 
 	export let user: User | null = null;
-
-	let dialog: HTMLDialogElement;
-
-	function backdropClick(event: MouseEvent) {
-		event.target === dialog && closeModal();
-	}
-
-	function closeModal() {
-		dialog.close();
-
-		dialog.removeEventListener('click', backdropClick);
-	}
-
-	function openModal() {
-		dialog.showModal();
-
-		dialog.addEventListener('click', backdropClick);
-	}
 </script>
 
 <header
@@ -32,13 +16,25 @@
 		<BrainIcon class="w-8 h-8 text-white/80 fill-white" />
 	</a>
 
-	<button on:click={openModal} class="block md:hidden">
-		<span class="sr-only">Abrir menu</span>
+	<Dialog>
+		<nav class="flex flex-col gap-4">
+			<NavItem href="/trails">Conhecer trilhas</NavItem>
 
-		<span class="block w-6 h-[2px] bg-white/50 rounded-full mb-1" />
-		<span class="block w-6 h-[2px] bg-white/50 rounded-full mb-1" />
-		<span class="block w-6 h-[2px] bg-white/50 rounded-full mb-1" />
-	</button>
+			{#if user && userRolesHasRole(Roles.ADMIN, user.roles)}
+				<NavItem href="/admin">Painel administrativo</NavItem>
+			{/if}
+
+			{#if user}
+				<NavItem href="/profile">Olá {user.username}</NavItem>
+
+				<form use:enhance method="post" action="/api/sign-out">
+					<NavItem>Sair</NavItem>
+				</form>
+			{:else}
+				<NavItem href="/sign-in">Entrar</NavItem>
+			{/if}
+		</nav>
+	</Dialog>
 
 	<nav class="hidden md:flex items-center gap-4">
 		<a href="/trails" class="p-2">Conhecer trilhas</a>
@@ -58,62 +54,3 @@
 		{/if}
 	</nav>
 </header>
-
-<dialog bind:this={dialog}>
-	<nav class="flex flex-col gap-2">
-		<a href="/trails" class="nav-item">Conhecer trilhas</a>
-
-		{#if user && userRolesHasRole(Roles.ADMIN, user.roles)}
-			<a href="/admin" class="nav-item">Painel administrativo</a>
-		{/if}
-
-		{#if user}
-			<a href="/profile" class="nav-item">Olá {user.username}</a>
-
-			<form use:enhance method="post" action="/api/sign-out">
-				<button class="nav-item" type="submit">Sair</button>
-			</form>
-		{:else}
-			<a href="/sign-in" class="nav-item">Entrar</a>
-		{/if}
-	</nav>
-</dialog>
-
-<style lang="postcss">
-	@keyframes fade-in {
-		from {
-			opacity: 0;
-		}
-
-		to {
-			opacity: 1;
-		}
-	}
-
-	.nav-item {
-		padding: 0.75rem 1rem;
-		max-width: 100%;
-		text-align: start;
-		border-radius: 5px;
-		color: hsl(0deg 0% 100% / 0.9);
-		width: 100%;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		border: 1px solid hsl(0deg 0% 95% / 0.15);
-	}
-
-	dialog {
-		border: 1px solid hsl(0deg 0% 95% / 0.15);
-		border-radius: 5px;
-		background-color: hsl(0deg 0% 0% / 0.5);
-		margin-bottom: 5%;
-		animation: fade-in 0.5s ease-in-out;
-	}
-
-	::backdrop {
-		animation: fade-in 0.3s ease-in-out;
-		backdrop-filter: blur(10px);
-		background-color: rgba(0, 0, 0, 0.779);
-	}
-</style>
