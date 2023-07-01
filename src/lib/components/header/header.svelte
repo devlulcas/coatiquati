@@ -17,7 +17,7 @@
 	</a>
 
 	<Dialog>
-		<nav class="flex flex-col gap-4">
+		<nav class="flex flex-col gap-3 p-3 z-50">
 			<NavItem href="/trails">Conhecer trilhas</NavItem>
 
 			{#if user && userRolesHasRole(Roles.ADMIN, user.roles)}
