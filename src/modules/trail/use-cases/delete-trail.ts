@@ -1,20 +1,20 @@
-import type { TrailRepositoryInterface } from '../repositories/trail.repository';
+import { log } from '$lib/server/log';
+import type { ResultType } from '$lib/types/result';
+import type { TrailRepository } from '../repositories/trail.repository';
+import type { Trail } from '../schemas/trail';
 
 export class DeleteTrail {
-	constructor(private trailRepository: TrailRepositoryInterface) {}
+	constructor(private trailRepository: TrailRepository) {}
 
-	async execute(id: string): Promise<string> {
-		const trail = await this.trailRepository.findById(id);
+	async execute(id: string): Promise<ResultType<Trail>> {
+		const deletedTrailResult = await this.trailRepository.update({ id, active: false });
 
-		if (!trail) {
-			throw new Error('No trail found');
+		if (deletedTrailResult.error) {
+			log.error(deletedTrailResult.error, `Error deleting trail ${id}`);
+		} else {
+			log.info(deletedTrailResult.data, `Deleted trail ${id}`);
 		}
 
-		try {
-			await this.trailRepository.delete(trail.id);
-			return `Trail "${trail.title}" with id "${trail.id}" deleted successfully`;
-		} catch (e) {
-			throw new Error('Error deleting trail');
-		}
+		return deletedTrailResult;
 	}
 }

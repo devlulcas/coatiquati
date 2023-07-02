@@ -3,17 +3,16 @@ import type { BanDTO } from '$modules/ban/dtos/ban.dto';
 import type { BanRegistryRepository } from '$modules/ban/repositories/ban-registry.repository';
 import { Roles, userRolesHasRole } from '$modules/user/constants/user-roles';
 import type { UserRepository } from '$modules/user/repositories/user.repository';
+import type { AuthUserId } from '$modules/user/schemas/auth-user';
+import type { BanRegistryId } from '../schemas/ban-registry';
 
 type ConfirmBanUserDTO = {
-	banRegistryId: number;
-	secondAdminId: string;
+	banRegistryId: BanRegistryId;
+	secondAdminId: AuthUserId;
 };
 
 export class ConfirmBanUser {
-	constructor(
-		private userRepository: UserRepository,
-		private banRegistryRepository: BanRegistryRepository
-	) {}
+	constructor(private userRepository: UserRepository, private banRegistryRepository: BanRegistryRepository) {}
 
 	async execute(data: ConfirmBanUserDTO): Promise<ResultType<BanDTO>> {
 		const banRegistry = await this.banRegistryRepository.findById(data.banRegistryId);

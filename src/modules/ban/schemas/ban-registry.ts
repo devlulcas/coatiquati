@@ -1,13 +1,15 @@
 import type { InferModel } from 'drizzle-orm';
-import { pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { authUser } from '../../user/schemas/auth-user';
 
 export type BanRegistry = InferModel<typeof banRegistry>;
 
 export type NewBanRegistry = InferModel<typeof banRegistry, 'insert'>;
 
+export type BanRegistryId = BanRegistry['id'];
+
 export const banRegistry = pgTable('ban_registry', {
-	id: serial('id').primaryKey(),
+	id: uuid('id').primaryKey(),
 	userId: text('user_id')
 		.references(() => authUser.id, {
 			onDelete: 'cascade',

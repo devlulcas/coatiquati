@@ -1,11 +1,11 @@
 import type { ResultType } from '$lib/types/result';
-import type { User } from '../entities/user.entity';
 import type { UserRepository } from '../repositories/user.repository';
+import type { AuthUser, AuthUserId } from '../schemas/auth-user';
 
 export class GetUserProfile {
 	constructor(private userRepository: UserRepository) {}
 
-	async execute(id: string): Promise<ResultType<User>> {
+	async execute(id: AuthUserId): Promise<ResultType<AuthUser>> {
 		return this.userRepository.findById(id);
 	}
 }

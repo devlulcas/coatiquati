@@ -1,13 +1,6 @@
-import type { CrumbPreview } from "$src/modules/crumb/entities/crumbs.entity";
+import type { Contributor } from '$modules/user/entities/contributor.entity';
+import type { Trail as TrailSchema } from '../schemas/trail';
 
-export type Trail = {
-	id: string;
-	title: string;
-	description: string;
-	picture: string;
-	author: string;
-	crumbs: CrumbPreview[];
-	crumbCount: number;
-  slug: string;
+export type Trail = Omit<TrailSchema, 'searchVector'> & {
+	contributors: Contributor[];
 };
-

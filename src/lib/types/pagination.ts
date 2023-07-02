@@ -1,21 +1,29 @@
-import type { Nullish } from './nullish';
+import { z } from 'zod';
 
-export type Pagination = {
-	limit: number;
-	page: number;
+const errors = {
+	invalidPage: 'a página deve ser um número inteiro positivo',
+	invalidLimit: 'o limite deve ser um número inteiro positivo'
 };
 
-export function calculatePagination(pagination: Nullish<Pagination>): {
-	offset: number;
+export const paginationSchemaShape = {
+	page: z.coerce.number({ invalid_type_error: errors.invalidPage }).int().positive().nullish(),
+	limit: z.coerce.number({ invalid_type_error: errors.invalidLimit }).int().positive().nullish()
+};
+
+export const paginationSchema = z.object(paginationSchemaShape);
+
+export type Pagination = z.infer<typeof paginationSchema>;
+
+export type PaginationOutput = {
+	page: number;
 	limit: number;
-} {
-	const { page, limit } = pagination;
+	total: number;
+};
 
-	const parsedPage = page ? parseInt(page.toString()) : 1;
-	const parsedLimit = limit ? parseInt(limit.toString()) : 10;
+export function getLimitAndOffset(pagination: Pagination): { limit: number; offset: number } {
+	const limit = pagination.limit ?? 10;
+	const page = pagination.page ?? 1;
+	const offset = (page - 1) * limit;
 
-	return {
-		offset: (parsedPage - 1) * parsedLimit,
-		limit: parsedLimit
-	};
+	return { limit, offset };
 }

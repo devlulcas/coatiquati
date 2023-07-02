@@ -1,19 +1,33 @@
-import { Pagination, type PaginationInputDTO } from '$lib/types/pagination';
-import type { TrailPreview } from '../dtos/trail.dto';
-import type { TrailRepositoryInterface } from '../repositories/trail.repository';
+import { log } from '$lib/server/log';
+import { Ok, type ResultType } from '$lib/types/result';
+import { trailPreviewThumbnail } from '../constants/trail-preview-thumbnail';
+import type { GetTrailsDTO } from '../dtos/get-trails.dto';
+import type { TrailPreview } from '../dtos/trail-preview.dto';
+import type { TrailRepository } from '../repositories/trail.repository';
 
 export class GetTrails {
-	constructor(private trailRepository: TrailRepositoryInterface) {}
+	constructor(private trailRepository: TrailRepository) {}
 
-	async execute(pagination: PaginationInputDTO): Promise<TrailPreview[]> {
-		const databasePagination = Pagination.create(pagination.limit, pagination.page);
+	async execute(data: GetTrailsDTO = {}): Promise<ResultType<TrailPreview[]>> {
+		const trailPreviewsResult = await this.trailRepository.findMany(data);
 
-		const trails = await this.trailRepository.findAll(databasePagination);
-
-		if (!trails) {
-			throw new Error('No trails found');
+		if (trailPreviewsResult.error) {
+			log.error(trailPreviewsResult.error, `Error getting trails`);
+			return trailPreviewsResult;
 		}
 
-		return trails;
+		const previews: TrailPreview[] = trailPreviewsResult.data.map((trail) => ({
+			...trail,
+			thumbnail: {
+				url: trail.thumbnail,
+				alt: trail.thumbnailDescription,
+				height: trailPreviewThumbnail.height,
+				width: trailPreviewThumbnail.width
+			},
+			updatedAt: trail.updatedAt.toISOString(),
+			slug: `/trails/${trail.id}`
+		}));
+
+		return Ok(previews);
 	}
 }

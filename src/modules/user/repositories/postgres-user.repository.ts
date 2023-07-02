@@ -1,14 +1,13 @@
 import { db } from '$lib/server/db';
-import { calculatePagination } from '$lib/types/pagination';
+import { getLimitAndOffset } from '$lib/types/pagination';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import { and, eq, ilike, inArray } from 'drizzle-orm';
 import type { ListUsersDTO } from '../dtos/list-users.dto';
-import type { User } from '../entities/user.entity';
-import { authUser } from '../schemas/auth-user';
+import { authUser, type AuthUser, type AuthUserId } from '../schemas/auth-user';
 import type { UserRepository } from './user.repository';
 
 export class PostgresUserRepository implements UserRepository {
-	async findByEmail(email: string): Promise<ResultType<User>> {
+	async findByEmail(email: string): Promise<ResultType<AuthUser>> {
 		const users = await db.select().from(authUser).where(eq(authUser.email, email));
 
 		const user = users[0];
@@ -20,7 +19,7 @@ export class PostgresUserRepository implements UserRepository {
 		return Ok(user);
 	}
 
-	async findById(id: string): Promise<ResultType<User>> {
+	async findById(id: AuthUserId): Promise<ResultType<AuthUser>> {
 		const users = await db.select().from(authUser).where(eq(authUser.id, id));
 
 		const user = users[0];
@@ -32,11 +31,8 @@ export class PostgresUserRepository implements UserRepository {
 		return Ok(user);
 	}
 
-	async findMany(params: ListUsersDTO): Promise<ResultType<User[]>> {
-		const { limit, offset } = calculatePagination({
-			page: params.page,
-			limit: params.limit
-		});
+	async findMany(params: ListUsersDTO): Promise<ResultType<AuthUser[]>> {
+		const { limit, offset } = getLimitAndOffset(params);
 
 		const permittedRoles: string[] = typeof params.role === 'string' ? [params.role] : [];
 		const username = `%${params.username}%`;
@@ -59,7 +55,7 @@ export class PostgresUserRepository implements UserRepository {
 		return Ok(users ?? []);
 	}
 
-	async update(id: string, data: Partial<User>): Promise<ResultType<User>> {
+	async update(id: AuthUserId, data: Partial<AuthUser>): Promise<ResultType<AuthUser>> {
 		const users = await db.select().from(authUser).where(eq(authUser.id, id));
 
 		const user = users[0];

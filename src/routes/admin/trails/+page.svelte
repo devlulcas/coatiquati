@@ -18,7 +18,7 @@
 	let acceptedFile: { preview: string; file: File } | null = null;
 
 	$: {
-		if (form && form.imageUploadError?.length) {
+		if (form && form.thumbnailUploadError?.length) {
 			acceptedFile = null;
 		}
 	}
@@ -48,13 +48,7 @@
 	>
 		<h2 class="text-2xl font-bold">Criar trilha</h2>
 
-		<InputContainer
-			errors={$errors.title}
-			id="title"
-			let:inputClassName
-			variant="opaque"
-			label="Título"
-		>
+		<InputContainer errors={$errors.title} id="title" let:inputClassName variant="opaque" label="Título">
 			<input
 				{...$constraints.title}
 				bind:value={$sForm.title}
@@ -65,13 +59,7 @@
 			/>
 		</InputContainer>
 
-		<InputContainer
-			errors={$errors.description}
-			let:inputClassName
-			id="description"
-			variant="opaque"
-			label="Descrição"
-		>
+		<InputContainer errors={$errors.description} let:inputClassName id="description" variant="opaque" label="Descrição">
 			<textarea
 				{...$constraints.description}
 				bind:value={$sForm.description}
@@ -83,15 +71,15 @@
 		</InputContainer>
 
 		<InputContainer
-			errors={$errors.imageAlt}
+			errors={$errors.thumbnailAlt}
 			let:inputClassName
-			id="imageAlt"
+			id="thumbnailAlt"
 			variant="opaque"
 			label="Texto alternativo da imagem"
 		>
 			<input
-				{...$constraints.imageAlt}
-				bind:value={$sForm.imageAlt}
+				{...$constraints.thumbnailAlt}
+				bind:value={$sForm.thumbnailAlt}
 				id="imageAlt"
 				class={inputClassName}
 				name="imageAlt"
@@ -100,8 +88,8 @@
 		</InputContainer>
 
 		<div class="bg-white/95 p-4 rounded-md flex flex-col gap-2">
-			{#if form?.imageUploadError}
-				{#each form.imageUploadError as error}
+			{#if form?.thumbnailUploadError}
+				{#each form.thumbnailUploadError as error}
 					<Badge variant="error" class="text-sm">
 						{error}
 					</Badge>
@@ -109,7 +97,7 @@
 			{/if}
 
 			<FileDrop
-				name="image"
+				name="thumbnail"
 				max={1}
 				acceptedMimes={['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml']}
 				{handleFiles}

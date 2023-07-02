@@ -1,27 +1,21 @@
-import type { Pagination } from '$lib/types/pagination';
 import type { ResultType } from '$lib/types/result';
-import type { CreateTrailDTO } from '../dtos/create-trail.dto';
+import type { GetTrailsDTO } from '../dtos/get-trails.dto';
 import type { TrailPreview } from '../dtos/trail-preview.dto';
-import type { UpdatableTrail } from '../dtos/trail.dto';
-import type { Trail } from '../entities/trail.entity';
+import type { NewTrail, Trail, TrailId } from '../schemas/trail';
 
-export type FindManyTrailsParams = {
-	author?: string;
-	title?: string;
-	slug?: string;
+export type UpdateTrailDPO = Partial<NewTrail> & {
+	id: TrailId;
 };
 
-export type NewTrail = Omit<CreateTrailDTO, 'image'> & {
-	slug: string;
-	image: string;
+export type TrailPreviewDPO = Pick<TrailPreview, 'contributors' | 'description' | 'id' | 'title'> & {
+	thumbnail: string;
+	thumbnailDescription: string;
+	updatedAt: Date;
 };
 
 export interface TrailRepository {
-	findById: (id: string) => Promise<ResultType<Trail>>;
-	findMany(
-		params: FindManyTrailsParams,
-		pagination: Pagination
-	): Promise<ResultType<TrailPreview[]>>;
-	create: (trail: NewTrail) => Promise<ResultType<TrailPreview>>;
-	update: (trail: UpdatableTrail) => Promise<ResultType<Trail>>;
+	findById(id: TrailId): Promise<ResultType<Trail>>;
+	findMany(params: GetTrailsDTO): Promise<ResultType<TrailPreviewDPO[]>>;
+	create(data: NewTrail): Promise<ResultType<TrailPreviewDPO>>;
+	update(data: UpdateTrailDPO): Promise<ResultType<Trail>>;
 }

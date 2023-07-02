@@ -1,19 +1,15 @@
 <script lang="ts">
 	import { cn } from '$lib/utils/cn';
+	import type { Contributor } from '$modules/user/entities/contributor.entity';
 
-	type User = {
-		username: string;
-		avatar: string;
-	};
-
-	export let avatars: User[] = [];
+	export let contributors: Contributor[] = [];
 
 	let className: string | null | undefined;
 	export { className as class };
 </script>
 
 <div class={cn('flex items-center', className)}>
-	{#each avatars as avatar, index}
+	{#each contributors as avatar, index}
 		<img
 			loading="lazy"
 			title={avatar.username}
@@ -21,7 +17,7 @@
 			width={40}
 			height={40}
 			alt={avatar.username}
-			style="z-index: {avatars.length - index}"
+			style="z-index: {contributors.length - index}"
 			class={cn(
 				'transition-all duration-300 ease-in-out',
 				'hover:scale-110 hover:rotate-12',

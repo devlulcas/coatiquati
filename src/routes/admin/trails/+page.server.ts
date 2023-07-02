@@ -1,88 +1,94 @@
+import { adminBarrier } from '$lib/server/auth/utils/barriers';
+import { protect } from '$lib/server/auth/utils/protect';
 import { formDataToObject } from '$lib/utils/convert-form-data';
+import { redirectToSignIn } from '$lib/utils/redirect-url';
 import { CloudinaryImageService } from '$modules/image/services';
 import { createTrailSchema } from '$modules/trail/dtos/create-trail.dto';
-import type { TrailPreview } from '$modules/trail/dtos/trail-preview.dto';
+import { PostgresTrailRepository } from '$modules/trail/repositories/postgres-trail.repository';
+import { CreateTrail } from '$modules/trail/use-cases/create-trail';
+import { GetTrails } from '$modules/trail/use-cases/get-trails';
 import { fail, type ServerLoad } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 import type { Actions } from './$types';
 
-const trails = Array<TrailPreview>(10).fill({
-	id: '1',
-	title: 'Programação funcional com JavaScript',
-	slug: '/trails/trilha-mock-1',
-	updatedAt: '2021-08-01T00:00:00.000Z',
-	description:
-		'Aprenda a programar com JavaScript de forma funcional, utilizando programação assíncrona e muito mais.',
-	contributors: Array(3).fill({
-		id: 1,
-		username: 'random',
-		avatar: 'https://picsum.photos/50/50'
-	}),
-	image: {
-		url: 'https://picsum.photos/300/300',
-		alt: 'Imagem da trilha 1',
-		width: 300,
-		height: 300
-	}
-});
+export const load: ServerLoad = async ({ locals, url }) => {
+	await protect({
+		locals: locals,
+		barriers: [adminBarrier],
+		event: { url: url }
+	});
 
-export const load: ServerLoad = async () => {
-	const form = await superValidate(createTrailSchema.omit({ image: true }));
+	const form = await superValidate(createTrailSchema.omit({ thumbnail: true }));
+
+	const trailRepository = new PostgresTrailRepository();
+
+	const getTrails = new GetTrails(trailRepository);
+
+	const trailsResult = await getTrails.execute();
 
 	return {
 		form,
-		trails
+		trails: trailsResult.error ? [] : trailsResult.data
 	};
 };
 
 export const actions: Actions = {
-	createTrail: async ({ request }) => {
+	createTrail: async ({ request, locals, url }) => {
+		const validatedUserSession = await protect({
+			locals: locals,
+			barriers: [adminBarrier],
+			event: { url: url }
+		});
+
+		if (validatedUserSession.user === null) {
+			throw redirectToSignIn(url.pathname, 'NOT_AUTHENTICATED');
+		}
+
+		// Valida o formulário sem a imagem
 		const formData = await request.formData();
 
-		const form = await superValidate(formData, createTrailSchema.omit({ image: true }));
+		const form = await superValidate(formData, createTrailSchema.omit({ thumbnail: true }));
 
 		if (!form.valid) {
 			return fail(400, {
 				form,
-				imageUploadError: null
+				thumbnailUploadError: null
 			});
 		}
 
-		console.log(form.data);
-
-		const imageValidation = createTrailSchema
-			.pick({ image: true })
-			.safeParse(formDataToObject(formData));
+		// Valida a imagem
+		const imageValidation = createTrailSchema.pick({ thumbnail: true }).safeParse(formDataToObject(formData));
 
 		if (!imageValidation.success) {
 			return fail(400, {
 				form,
-				imageUploadError: imageValidation.error.flatten().fieldErrors.image
+				thumbnailUploadError: imageValidation.error.flatten().fieldErrors.thumbnail
 			});
 		}
 
-		const data = {
-			...form.data,
-			image: imageValidation.data.image
-		};
-
+		// Cria a trilha
+		const trailRepository = new PostgresTrailRepository();
 		const imageService = new CloudinaryImageService();
+		const createTrail = new CreateTrail(trailRepository, imageService);
 
-		const url = await imageService.uploadImage(data.image, {
-			width: 600,
-			height: 600
+		const createTrailResult = await createTrail.execute({
+			...form.data,
+			thumbnail: imageValidation.data.thumbnail,
+			authorId: validatedUserSession.user.id
 		});
 
-		if (url.error) {
-			return fail(400, {
+		if (createTrailResult.error) {
+			return fail(500, {
 				form,
-				imageUploadError: [url.error.message]
+				thumbnailUploadError: null
 			});
 		}
 
+		// Retorna a trilha criada
 		return {
 			form,
-			url: url.data
+			thumbnailUploadError: null,
+			trail: createTrailResult.data
 		};
 	}
 };

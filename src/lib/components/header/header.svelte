@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { Roles, userRolesHasRole } from '$modules/user/constants/user-roles';
-	import type { User } from '$modules/user/entities/user.entity';
+	import type { AuthUser } from '$modules/user/schemas/auth-user';
 	import { BrainIcon } from 'lucide-svelte';
 	import Dialog from './dialog.svelte';
 	import NavItem from './nav-item.svelte';
 
-	export let user: User | null = null;
+	export let user: AuthUser | null = null;
 </script>
 
 <header

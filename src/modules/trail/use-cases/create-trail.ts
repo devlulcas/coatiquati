@@ -1,23 +1,19 @@
+import { uuid } from '$lib/server/db/utils/uuid';
 import { log } from '$lib/server/log';
-import type { ResultType } from '$lib/types/result';
-import { slugify } from '$lib/utils/slugify';
+import { Ok, type ResultType } from '$lib/types/result';
 import type { ImageService } from '$modules/image/services';
+import { trailPreviewThumbnail } from '../constants/trail-preview-thumbnail';
 import type { CreateTrailDTO } from '../dtos/create-trail.dto';
 import type { TrailPreview } from '../dtos/trail-preview.dto';
 import type { TrailRepository } from '../repositories/trail.repository';
 
 export class CreateTrail {
-	constructor(
-		private trailRepository: TrailRepository,
-		private imageUploaderClient: ImageService
-	) {}
+	constructor(private trailRepository: TrailRepository, private imageService: ImageService) {}
 
 	async execute(data: CreateTrailDTO): Promise<ResultType<TrailPreview>> {
-		const slug = slugify(data.title);
-
-		const imageUploadResult = await this.imageUploaderClient.uploadImage(data.image, {
-			width: 600,
-			height: 600
+		const imageUploadResult = await this.imageService.uploadImage(data.thumbnail, {
+			width: trailPreviewThumbnail.width,
+			height: trailPreviewThumbnail.height
 		});
 
 		if (imageUploadResult.error) {
@@ -25,18 +21,31 @@ export class CreateTrail {
 		}
 
 		const createdTrail = await this.trailRepository.create({
+			id: uuid(),
 			authorId: data.authorId,
-			imageAlt: data.imageAlt,
-			image: imageUploadResult.data,
+			thumbnailDescription: data.thumbnailAlt,
+			thumbnail: imageUploadResult.data,
 			title: data.title,
-			description: data.description,
-			slug
+			description: data.description
 		});
 
 		if (createdTrail.error) {
 			log.error(createdTrail.error);
+			return createdTrail;
 		}
 
-		return createdTrail;
+		const preview: TrailPreview = {
+			...createdTrail.data,
+			thumbnail: {
+				url: createdTrail.data.thumbnail,
+				alt: createdTrail.data.thumbnailDescription,
+				height: trailPreviewThumbnail.height,
+				width: trailPreviewThumbnail.width
+			},
+			updatedAt: createdTrail.data.updatedAt.toISOString(),
+			slug: `/trails/${createdTrail.data.id}`
+		};
+
+		return Ok(preview);
 	}
 }

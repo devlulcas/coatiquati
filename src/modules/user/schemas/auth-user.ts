@@ -3,6 +3,8 @@ import { bigint, boolean, index, integer, pgTable, text, uniqueIndex } from 'dri
 
 export type AuthUser = InferModel<typeof authUser>;
 
+export type AuthUserId = AuthUser['id'];
+
 export const authUser = pgTable(
 	'auth_user',
 	{

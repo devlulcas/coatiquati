@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { ArrowRightIcon, Edit } from 'lucide-svelte';
-	import { AvatarGroup } from '../avatar-group';
-	import { Button } from '../button';
-	import { Image } from '../image';
 	import type { TrailPreview } from '$modules/trail/dtos/trail-preview.dto';
+	import { ArrowRightIcon, Edit } from 'lucide-svelte';
+	import { Button } from '../button';
+	import { ContributorAvatarGroup } from '../contributor-avatar-group';
+	import { Image } from '../image';
 
 	export let trail: TrailPreview;
 
@@ -13,20 +13,18 @@
 <article class="flex max-w-[580px] min-h-[300px] flex-1 border border-white/10 rounded-md">
 	<div class="relative w-1/2 rounded-tl-md rounded-bl-md overflow-hidden">
 		<Image
-			src={trail.image.url}
-			width={trail.image.width}
-			height={trail.image.height}
-			placeholder={trail.image.placeholder}
+			src={trail.thumbnail.url}
+			width={trail.thumbnail.width}
+			height={trail.thumbnail.height}
+			placeholder={trail.thumbnail.placeholder}
 			alt={trail.title}
 			class="h-full"
 		/>
 
-		<AvatarGroup avatars={trail.contributors} class="absolute bottom-0 left-0 p-4" />
+		<ContributorAvatarGroup contributors={trail.contributors} class="absolute bottom-0 left-0 p-4" />
 	</div>
 
-	<div
-		class="relative w-1/2 flex flex-col justify-between p-4 rounded-tr-md rounded-br-md bg-white/90"
-	>
+	<div class="relative w-1/2 flex flex-col justify-between p-4 rounded-tr-md rounded-br-md bg-white/90">
 		{#if editable}
 			<Button
 				size="icon"

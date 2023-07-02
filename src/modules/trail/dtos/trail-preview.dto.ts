@@ -1,10 +1,8 @@
 import type { Image } from '$lib/types/image';
-import type { User } from '../../user/entities/user.entity';
-
-type Contributor = Pick<User, 'id' | 'username' | 'avatar'>;
+import type { Contributor } from '$modules/user/entities/contributor.entity';
 
 export type TrailPreview = {
-	image: Image;
+	thumbnail: Image;
 	contributors: Contributor[];
 	title: string;
 	description: string;
