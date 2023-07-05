@@ -1,4 +1,4 @@
 export const trailPreviewThumbnail = {
-	width: 600,
-	height: 600
+	width: 300,
+	height: 300
 };

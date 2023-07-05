@@ -10,21 +10,18 @@
 	export let editable = false;
 </script>
 
-<article class="flex max-w-[580px] min-h-[300px] flex-1 border border-white/10 rounded-md">
-	<div class="relative w-1/2 rounded-tl-md rounded-bl-md overflow-hidden">
-		<Image
-			src={trail.thumbnail.url}
-			width={trail.thumbnail.width}
-			height={trail.thumbnail.height}
-			placeholder={trail.thumbnail.placeholder}
-			alt={trail.title}
-			class="h-full"
-		/>
+<article
+	class="flex flex-col md:flex-row aspect-[2/1] max-w-[600px] max-h-[300px] flex-1 border border-white/10 rounded-md"
+>
+	<div class="relative md:w-1/2 rounded-t-md md:rounded-tr-none md:rounded-l-md overflow-hidden">
+		<Image src={trail.thumbnail.url} placeholder={trail.thumbnail.placeholder} alt={trail.title} />
 
 		<ContributorAvatarGroup contributors={trail.contributors} class="absolute bottom-0 left-0 p-4" />
 	</div>
 
-	<div class="relative w-1/2 flex flex-col justify-between p-4 rounded-tr-md rounded-br-md bg-white/90">
+	<div
+		class="relative md:w-1/2 flex flex-col justify-between p-4 rounded-b-md md:rounded-bl-none md:rounded-r-md bg-white/90"
+	>
 		{#if editable}
 			<Button
 				size="icon"
@@ -45,7 +42,7 @@
 			</time>
 		</div>
 
-		<Button class="w-fit" href={trail.slug}>
+		<Button class="w-fit mt-4" href={trail.slug}>
 			Ver mais
 			<ArrowRightIcon size={18} />
 		</Button>

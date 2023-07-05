@@ -19,10 +19,10 @@ export interface PgTSVectorConfig {
 	pg_catalog?: PgTSVectorBuilderConfig['pg_catalog'];
 }
 
-function generateTsvectorColumn(input: string[]) {
+function generateTsvectorColumn(input: string[], pg_catalog = 'english') {
 	const columnExpressions = input.map((column, index) => {
 		const weight = String.fromCharCode(index + 65);
-		return `setweight(to_tsvector('english', coalesce(${column}, '')), '${weight}')`;
+		return `setweight(to_tsvector('${pg_catalog}', coalesce(${column}, '')), '${weight}')`;
 	});
 
 	const tsvectorColumn = `tsvector GENERATED ALWAYS AS (${columnExpressions.join(' || ')}) STORED`;
@@ -66,7 +66,7 @@ export class PgTSVector<TTableName extends string, TData extends string> extends
 		return this.config.sources === undefined
 			? `tsvector`
 			: this.config.weighted
-			? generateTsvectorColumn(this.config.sources)
+			? generateTsvectorColumn(this.config.sources, catalog)
 			: `tsvector generated always as (to_tsvector('${catalog}', ${this.config.sources.join(" || ' ' || ")})) stored`;
 	}
 }

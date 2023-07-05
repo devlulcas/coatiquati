@@ -3,39 +3,25 @@
 	import { Badge } from '$lib/components/badge/index.js';
 	import { Button } from '$lib/components/button';
 	import { InputContainer } from '$lib/components/input-container';
+	import InputImage from '$lib/components/input-file/input-image.svelte';
 	import { TrailCard } from '$lib/components/trail-card';
-	import { UploadedImage } from '$lib/components/uploaded-image';
 	import { cn } from '$lib/utils/cn';
-	import { FileDrop } from 'svelte-droplet';
 	import { superForm } from 'sveltekit-superforms/client';
+	import type { ActionData, PageServerData } from './$types.js';
 
-	export let data;
+	export let data: PageServerData;
 
-	export let form;
+	export let form: ActionData;
 
-	const { form: sForm, errors, enhance, constraints, submitting } = superForm(data.form);
-
-	let acceptedFile: { preview: string; file: File } | null = null;
-
-	$: {
-		if (form && form.thumbnailUploadError?.length) {
-			acceptedFile = null;
-		}
-	}
-
-	function handleFiles(files: File[]) {
-		const reader = new FileReader();
-		const file = files[0];
-
-		reader.readAsDataURL(file);
-
-		reader.onload = () => {
-			acceptedFile = {
-				preview: reader.result as string,
-				file
-			};
-		};
-	}
+	const {
+		form: sForm,
+		errors,
+		enhance,
+		constraints,
+		submitting
+	} = superForm(data.form, {
+		resetForm: true
+	});
 </script>
 
 <AdminSection title="Gerenciar conteúdo">
@@ -87,49 +73,19 @@
 			/>
 		</InputContainer>
 
-		<div class="bg-white/95 p-4 rounded-md flex flex-col gap-2">
-			{#if form?.thumbnailUploadError}
-				{#each form.thumbnailUploadError as error}
-					<Badge variant="error" class="text-sm">
-						{error}
-					</Badge>
-				{/each}
-			{/if}
-
-			<FileDrop
-				name="thumbnail"
-				max={1}
-				acceptedMimes={['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml']}
-				{handleFiles}
-				let:droppable
-			>
-				<div
-					class={cn(
-						'bg-white/95 w-full border-2 border-dashed rounded-md border-purple-400 text-center p-4 font-semibold text-purple-800',
-						droppable && 'bg-purple-100 border-purple-700'
-					)}
-				>
-					<span> Selecione ou arraste uma imagem </span>
-				</div>
-			</FileDrop>
-
-			{#if acceptedFile}
-				<UploadedImage
-					on:delete={() => (acceptedFile = null)}
-					alt="Imagem de preview"
-					width={300}
-					height={300}
-					id={acceptedFile.file.name}
-					base64={acceptedFile.preview}
-				/>
-			{/if}
-		</div>
+		<InputImage errors={form?.thumbnailUploadError} />
 
 		<Button loading={$submitting} type="submit">Criar</Button>
 	</form>
 </AdminSection>
 
-<div class="grid grid-cols-1 gap-4 mt-8 sm:grid-cols-2">
+{#if data.error}
+	<Badge variant="warning" class="mt-4">
+		{data.error}
+	</Badge>
+{/if}
+
+<div class="grid grid-cols-1 gap-4 mt-8 lg:grid-cols-2">
 	{#each data.trails as trail}
 		<TrailCard {trail} editable />
 	{/each}

@@ -1,7 +1,7 @@
-import { tsvector } from '$lib/server/db/utils/tsvector';
-import { authUser } from '$modules/user/schemas/auth-user';
 import type { InferModel } from 'drizzle-orm';
 import { boolean, pgTable, text, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { tsvector } from '../../../lib/server/db/utils/tsvector';
+import { authUser } from '../../user/schemas/auth-user';
 
 export type Trail = InferModel<typeof trail, 'select'>;
 

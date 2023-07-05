@@ -6,14 +6,14 @@
 
 	export let src: string;
 	export let alt: string;
-	export let width: string | number;
-	export let height: string | number;
+	export let width: string | number | undefined = undefined;
+	export let height: string | number | undefined = undefined;
 	export let loading: 'lazy' | 'eager' = 'lazy';
 	export let placeholder: string = defaultPlaceholder;
 	export let style: string | null | undefined = null;
 	export let imageClass: string | null | undefined = null;
 
-	let className: string | null | undefined;
+	let className: string | null | undefined = undefined;
 	export { className as class };
 
 	let isLoading = true;
@@ -36,7 +36,7 @@
 </div>
 
 <style lang="postcss">
-	.image {
+	div {
 		position: relative;
 		background-repeat: no-repeat;
 		background-size: cover;

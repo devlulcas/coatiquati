@@ -28,7 +28,8 @@ export const load: ServerLoad = async ({ locals, url }) => {
 
 	return {
 		form,
-		trails: trailsResult.error ? [] : trailsResult.data
+		trails: trailsResult.error ? [] : trailsResult.data,
+		error: trailsResult.error?.message ?? null
 	};
 };
 

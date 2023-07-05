@@ -1,9 +1,197 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "5e8e9bf1-1cfb-4ade-9960-92121557a466",
+  "id": "9209ae93-3a45-42bc-b420-4a5eac9f0525",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "ban_registry": {
+      "name": "ban_registry",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "admin_id": {
+          "name": "admin_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "second_admin_id": {
+          "name": "second_admin_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ban_registry_user_id_auth_user_id_fk": {
+          "name": "ban_registry_user_id_auth_user_id_fk",
+          "tableFrom": "ban_registry",
+          "tableTo": "auth_user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "ban_registry_admin_id_auth_user_id_fk": {
+          "name": "ban_registry_admin_id_auth_user_id_fk",
+          "tableFrom": "ban_registry",
+          "tableTo": "auth_user",
+          "columnsFrom": [
+            "admin_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        },
+        "ban_registry_second_admin_id_auth_user_id_fk": {
+          "name": "ban_registry_second_admin_id_auth_user_id_fk",
+          "tableFrom": "ban_registry",
+          "tableTo": "auth_user",
+          "columnsFrom": [
+            "second_admin_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "trail": {
+      "name": "trail",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "thumbnail": {
+          "name": "thumbnail",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'no_profile_picture.webp'"
+        },
+        "thumbnail_description": {
+          "name": "thumbnail_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "search_vector": {
+          "name": "search_vector",
+          "type": "tsvector GENERATED ALWAYS AS (setweight(to_tsvector('pg_catalog.portuguese', coalesce(title, '')), 'A') || setweight(to_tsvector('pg_catalog.portuguese', coalesce(description, '')), 'B') || setweight(to_tsvector('pg_catalog.portuguese', coalesce(thumbnail_description, '')), 'C')) STORED",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "trail_id_key": {
+          "name": "trail_id_key",
+          "columns": [
+            "id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "trail_user_id_auth_user_id_fk": {
+          "name": "trail_user_id_auth_user_id_fk",
+          "tableFrom": "trail",
+          "tableTo": "auth_user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
     "auth_key": {
       "name": "auth_key",
       "schema": "",
@@ -177,6 +365,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
+        },
+        "ban_votes": {
+          "name": "ban_votes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "avatar": {
           "name": "avatar",
