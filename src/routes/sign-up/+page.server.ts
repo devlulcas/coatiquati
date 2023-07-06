@@ -1,6 +1,5 @@
 import { emailClient } from '$lib/server/email';
 import { log } from '$lib/server/log';
-import { compactZodValidationErrors } from '$lib/utils/compact-zod-error';
 import { signUpWithUsernameSchema } from '$modules/user/dtos/sign-up-with-username.dto';
 import { PostgresUserRepository } from '$modules/user/repositories/postgres-user.repository';
 import { LuciaAuthService } from '$modules/user/services/lucia-auth.service';
@@ -22,8 +21,6 @@ export const actions: Actions = {
 		const form = await superValidate(request, signUpWithUsernameSchema);
 
 		if (!form.valid) {
-			form.message = compactZodValidationErrors(form.errors);
-
 			return fail(400, {
 				form
 			});
@@ -35,7 +32,7 @@ export const actions: Actions = {
 			form.message = dataResult.error.message;
 
 			return fail(400, {
-				form
+				form,
 			});
 		}
 

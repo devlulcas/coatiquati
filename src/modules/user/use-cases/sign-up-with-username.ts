@@ -17,7 +17,7 @@ export class SignUpWithUsername {
 		const userExists = await this.userRepository.findByEmail(data.email);
 
 		if (userExists.data?.id) {
-			return Fail('E-mail já cadastrado.');
+			return Fail('Usuário já cadastrado.');
 		}
 
 		const sessionResult = await this.authService.signUpWithUsername({
