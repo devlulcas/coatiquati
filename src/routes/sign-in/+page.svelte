@@ -8,7 +8,7 @@
 
 	export let data: PageServerData;
 
-	const { enhance, form, message, constraints } = superForm(data.form);
+	const { enhance, form, message, constraints, submitting } = superForm(data.form);
 </script>
 
 <div class="flex flex-col items-center justify-center text-white h-[--safe-screen-height]">
@@ -23,11 +23,7 @@
 			</Badge>
 		{/if}
 
-		<form
-			class="border px-8 py-10 w-full flex flex-col gap-4 bg-white/10 rounded-md"
-			method="post"
-			use:enhance
-		>
+		<form class="border px-8 py-10 w-full flex flex-col gap-4 bg-white/10 rounded-md" method="post" use:enhance>
 			<InputContainer let:inputClassName label="Nome de usuário" id="username">
 				<input
 					bind:value={$form.username}
@@ -50,7 +46,7 @@
 				/>
 			</InputContainer>
 
-			<Button type="submit">Entrar</Button>
+			<Button loading={$submitting} type="submit">Entrar</Button>
 		</form>
 
 		{#if $message}
