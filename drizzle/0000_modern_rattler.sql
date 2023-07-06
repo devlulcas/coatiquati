@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS "auth_user" (
 	"username" text NOT NULL,
 	"name" text,
 	"email" text NOT NULL,
-	"roles" text[] DEFAULT USER NOT NULL,
+	"roles" text[] DEFAULT ARRAY['USER']::text[] NOT NULL,
 	"active" boolean DEFAULT true NOT NULL,
 	"ban_votes" integer DEFAULT 0 NOT NULL,
 	"avatar" text DEFAULT 'no_profile_picture.webp' NOT NULL

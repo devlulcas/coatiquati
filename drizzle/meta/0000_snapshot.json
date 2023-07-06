@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "9209ae93-3a45-42bc-b420-4a5eac9f0525",
+  "id": "94080534-8822-4a25-b2d2-78d771f48527",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "ban_registry": {
@@ -355,9 +355,7 @@
           "type": "text[]",
           "primaryKey": false,
           "notNull": true,
-          "default": [
-            "USER"
-          ]
+          "default": "ARRAY['USER']::text[]"
         },
         "active": {
           "name": "active",
