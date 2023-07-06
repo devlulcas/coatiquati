@@ -32,7 +32,7 @@
 		class={cn(
 			'flex items-center gap-2 py-2 px-2 rounded-md cursor-pointer bg-white/95',
 			'peer-checked:bg-purple-500/95 peer-checked:text-white',
-			'before:block before:w-6 before:h-6 before:rounded-md before:border-2 before:border-purple-700 ',
+			'before:block before:w-6 before:h-6 before:rounded-md before:border-2 before:border-purple-700',
 			'peer-checked:before:bg-purple-700',
 			'hover:border-gray-400 focus-within:border-gray-400',
 			'transition-colors duration-100 ease-in-out'
