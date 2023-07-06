@@ -5,12 +5,12 @@ export const buttonVariants = cva(
 	{
 		variants: {
 			variant: {
-				default: 'bg-purple-600 text-white hover:bg-purple-600/90',
-				destructive: 'bg-red-500 text-white hover:bg-red-500/90',
-				outline: 'border border-input hover:bg-fuchsia-500 hover:text-white',
-				secondary: 'bg-fuchsia-500 text-white hover:bg-fuchsia-500/80',
-				ghost: 'hover:bg-fuchsia-500 hover:text-white',
-				link: 'underline-offset-4 hover:underline text-purple-600'
+				default: 'bg-purple-600 text-white hover:bg-purple-600/90 ring-purple-600',
+				destructive: 'bg-red-500 text-white hover:bg-red-500/90 ring-red-500',
+				outline: 'border border-input hover:bg-fuchsia-500 hover:text-white ring-fuchsia-500',
+				secondary: 'bg-fuchsia-500 text-white hover:bg-fuchsia-500/80 ring-fuchsia-500',
+				ghost: 'hover:bg-fuchsia-500 hover:text-white ring-fuchsia-500',
+				link: 'underline-offset-4 hover:underline text-purple-600 hover:text-purple-600/90 ring-purple-600'
 			},
 			size: {
 				default: 'h-10 py-2 px-4',
