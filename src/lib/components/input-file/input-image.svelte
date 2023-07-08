@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Badge } from '$lib/components/badge/index.js';
+	import { Badge } from '$lib/components/badge/';
 	import { UploadedImage } from '$lib/components/uploaded-image';
 	import { cn } from '$lib/utils/cn';
 	import { FileDrop } from 'svelte-droplet';

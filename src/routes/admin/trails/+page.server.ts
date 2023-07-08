@@ -35,6 +35,7 @@ export const load: ServerLoad = async ({ locals, url }) => {
 
 export const actions: Actions = {
 	createTrail: async ({ request, locals, url }) => {
+		// Valida a sessão do usuário
 		const validatedUserSession = await protect({
 			locals: locals,
 			barriers: [adminBarrier],

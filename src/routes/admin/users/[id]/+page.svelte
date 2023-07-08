@@ -1,10 +1,10 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import { AdminSection } from '$lib/components/admin-section';
 	import { Badge } from '$lib/components/badge';
 	import { Button } from '$lib/components/button';
-	import type { PageServerData, ActionData } from './$types';
-	import { enhance } from '$app/forms';
-	import { InputContainer } from '$lib/components/input-container/';
+	import { TextField } from '$lib/components/text-field';
+	import type { ActionData, PageServerData } from './$types';
 
 	export let data: PageServerData;
 	export let form: ActionData;
@@ -72,17 +72,11 @@
 	</form>
 
 	<form action="?/ban" method="POST" use:enhance class="lc-box mt-4 flex flex-col gap-2 w-full">
-		<InputContainer variant="opaque" let:inputClassName label="Motivo do banimento" id="reason">
-			<input class={inputClassName} type="text" name="reason" id="reason" />
-		</InputContainer>
+		<TextField id="reason" label="Motivo do banimento" name="reason" type="text" variant="opaque" />
 
 		<Badge variant="error">
 			Banir usuário ({data.user.banVotes} / 2)
-			<Button
-				class="min-w-fit ml-auto hover:bg-white hover:text-red-500"
-				type="submit"
-				variant="ghost"
-			>
+			<Button class="min-w-fit ml-auto hover:bg-white hover:text-red-500" type="submit" variant="ghost">
 				{data.user.banVotes === 0 ? 'Iniciar banimento' : 'Confirmar banimento'}
 			</Button>
 		</Badge>
@@ -91,8 +85,7 @@
 	<div class="flex flex-col gap-2 mt-2">
 		{#if form?.data}
 			<Badge variant="success">
-				{form.data.first.username} iniciou um processo de banimento contra {form.data.target
-					.username}.
+				{form.data.first.username} iniciou um processo de banimento contra {form.data.target.username}.
 			</Badge>
 
 			{#if form.data.second}

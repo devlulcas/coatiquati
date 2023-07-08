@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { AdminSection } from '$lib/components/admin-section';
-	import { Badge } from '$lib/components/badge/index.js';
+	import { Badge } from '$lib/components/badge';
 	import { Button } from '$lib/components/button';
-	import { InputContainer } from '$lib/components/input-container';
-	import InputImage from '$lib/components/input-file/input-image.svelte';
+	import { InputImage } from '$lib/components/input-file';
+	import { TextField } from '$lib/components/text-field';
 	import { TrailCard } from '$lib/components/trail-card';
-	import { cn } from '$lib/utils/cn';
 	import { superForm } from 'sveltekit-superforms/client';
 	import type { ActionData, PageServerData } from './$types.js';
 
@@ -30,48 +29,41 @@
 		enctype="multipart/form-data"
 		method="POST"
 		action="?/createTrail"
-		class="lc-box flex flex-col gap-4"
+		class="lc-box flex flex-col gap-2"
 	>
 		<h2 class="text-2xl font-bold">Criar trilha</h2>
 
-		<InputContainer errors={$errors.title} id="title" let:inputClassName variant="opaque" label="Título">
-			<input
-				{...$constraints.title}
-				bind:value={$sForm.title}
-				id="title"
-				class={inputClassName}
-				name="title"
-				type="text"
-			/>
-		</InputContainer>
-
-		<InputContainer errors={$errors.description} let:inputClassName id="description" variant="opaque" label="Descrição">
-			<textarea
-				{...$constraints.description}
-				bind:value={$sForm.description}
-				id="description"
-				class={cn(inputClassName, 'resize-none')}
-				name="description"
-				rows={3}
-			/>
-		</InputContainer>
-
-		<InputContainer
-			errors={$errors.thumbnailAlt}
-			let:inputClassName
-			id="thumbnailAlt"
+		<TextField
+			id="title"
 			variant="opaque"
+			label="Título"
+			name="title"
+			type="text"
+			errors={$errors.title}
+			bind:value={$sForm.title}
+			{...$constraints.title}
+		/>
+
+		<TextField
+			id="description"
+			name="description"
+			label="Descrição"
+			variant="opaque"
+			errors={$errors.description}
+			bind:value={$sForm.description}
+			{...$constraints.description}
+		/>
+
+		<TextField
+			id="thumbnailAlt"
 			label="Texto alternativo da imagem"
-		>
-			<input
-				{...$constraints.thumbnailAlt}
-				bind:value={$sForm.thumbnailAlt}
-				id="imageAlt"
-				class={inputClassName}
-				name="imageAlt"
-				type="text"
-			/>
-		</InputContainer>
+			name="imageAlt"
+			type="text"
+			variant="opaque"
+			errors={$errors.thumbnailAlt}
+			bind:value={$sForm.thumbnailAlt}
+			{...$constraints.thumbnailAlt}
+		/>
 
 		<InputImage errors={form?.thumbnailUploadError} />
 

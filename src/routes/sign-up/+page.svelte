@@ -1,66 +1,67 @@
 <script lang="ts">
-	import { Badge } from '$lib/components/badge/index.js';
+	import { Badge } from '$lib/components/badge/';
 	import { Button } from '$lib/components/button';
-	import { InputContainer } from '$lib/components/input-container';
 	import { SignInWithGoogle } from '$lib/components/sign-in-with-google';
+	import { TextField } from '$lib/components/text-field';
 	import { superForm } from 'sveltekit-superforms/client';
+	import type { PageData } from './$types';
 
-	export let data;
+	export let data: PageData;
 
-	const { form, errors, enhance, message, constraints, submitting } = superForm(data.form);
+	const { form, errors, enhance, message, constraints, submitting } = superForm(data.form, {
+		validationMethod: 'onblur'
+	});
 </script>
 
 <div class="flex flex-col items-center justify-center text-white h-[--safe-screen-height]">
 	<SignInWithGoogle />
 
 	<p class="m-2">ou</p>
-	<div class="min-w-[300px] max-w-3xl">
-		<form class="border px-8 py-10 w-full flex flex-col gap-4 bg-white/10 rounded-md" method="post" use:enhance>
-			<div class="flex flex-col lg:flex-row gap-2">
-				<InputContainer errors={$errors.username} let:inputClassName label="Nome de usuário" id="username">
-					<input
-						{...$constraints.username}
-						bind:value={$form.username}
-						class={inputClassName}
-						type="text"
-						id="username"
-						name="username"
-					/>
-				</InputContainer>
 
-				<InputContainer errors={$errors.name} let:inputClassName label="Nome" id="name">
-					<input
-						{...$constraints.name}
-						bind:value={$form.name}
-						class={inputClassName}
-						type="text"
-						id="name"
-						name="name"
-					/>
-				</InputContainer>
+	<div class="min-w-[300px] max-w-3xl">
+		<form class="border px-8 py-10 w-full flex flex-col gap-2 bg-white/10 rounded-md" method="post" use:enhance>
+			<div class="flex flex-col lg:flex-row gap-2">
+				<TextField
+					id="username"
+					name="username"
+					label="Nome de usuário"
+					type="text"
+					bind:value={$form.username}
+					errors={$errors.username}
+					{...$constraints.username}
+				/>
+
+				<TextField
+					id="name"
+					name="name"
+					label="Nome"
+					type="text"
+					bind:value={$form.name}
+					errors={$errors.name}
+					{...$constraints.name}
+				/>
 			</div>
 
-			<InputContainer errors={$errors.email} let:inputClassName label="E-mail" id="email">
-				<input
-					{...$constraints.email}
-					bind:value={$form.email}
-					class={inputClassName}
-					type="email"
-					id="email"
-					name="email"
-				/>
-			</InputContainer>
+			<TextField
+				id="email"
+				name="email"
+				label="E-mail"
+				type="email"
+				bind:value={$form.email}
+				errors={$errors.email}
+				{...$constraints.email}
+			/>
 
-			<InputContainer errors={$errors.password} let:inputClassName label="Senha" id="password">
-				<input
-					{...$constraints.password}
-					bind:value={$form.password}
-					class={inputClassName}
-					type="password"
-					id="password"
-					name="password"
-				/>
-			</InputContainer>
+			<TextField
+				id="password"
+				name="password"
+				label="Senha"
+				type="password"
+				bind:value={$form.password}
+				errors={$errors.password}
+				{...$constraints.password}
+				showVisibilityButton
+			/>
 
 			<Button type="submit" loading={$submitting}>Entrar</Button>
 		</form>

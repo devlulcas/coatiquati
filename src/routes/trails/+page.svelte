@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Badge } from '$lib/components/badge/index.js';
+	import { Badge } from '$lib/components/badge/';
 	import { SimpleFooter } from '$lib/components/footer';
 	import { TrailCard } from '$lib/components/trail-card';
 	import type { PageData } from './$types';

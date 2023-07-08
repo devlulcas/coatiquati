@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { AdminSection } from '$lib/components/admin-section';
+	import { Badge } from '$lib/components/badge';
 	import { Button } from '$lib/components/button';
-	import { InputContainer } from '$lib/components/input-container';
+	import { RadioButton } from '$lib/components/radio-button';
+	import { TextField } from '$lib/components/text-field';
 	import { UserCard } from '$lib/components/user-card';
 	import { Boxes, Footprints, Layout, RotateCcw, Search } from 'lucide-svelte';
-	import type { PageServerData } from './$types';
 	import { fly } from 'svelte/transition';
-	import { RadioButton } from '$lib/components/radio-button';
-	import { Badge } from '$lib/components/badge';
+	import type { PageData } from './$types';
 
-	export let data: PageServerData;
+	export let data: PageData;
 
 	const stats = [
 		{ label: 'Trilhas', value: 23 },
@@ -20,39 +20,27 @@
 </script>
 
 <AdminSection title="Membros">
-	<form
-		method="GET"
-		action="/admin"
-		data-sveltekit-keepfocus
-		class="lc-box flex flex-col lg:flex-row gap-2 mb-2 lg:items-end"
-	>
-		<InputContainer
+	<form method="GET" action="/admin" data-sveltekit-keepfocus class="lc-box mb-2">
+		<TextField
 			id="username"
 			variant="opaque"
 			label="Nome de usuário"
-			containerClassname="flex-1"
-			let:inputClassName
-		>
-			<input
-				class={inputClassName}
-				id="username"
-				name="username"
-				type="text"
-				placeholder="Buscar por nome"
-			/>
-		</InputContainer>
+			name="username"
+			type="text"
+			placeholder="Buscar por nome"
+		/>
 
 		<div class="flex gap-2">
 			<RadioButton name="role" id="role-user" value="USER" label="Usuário" />
 			<RadioButton name="role" id="role-admin" value="ADMIN" label="Moderador" />
+
+			<Button icon={RotateCcw} type="reset" variant="secondary">Limpar</Button>
+
+			<Button type="submit">
+				Buscar
+				<Search size={18} />
+			</Button>
 		</div>
-
-		<Button icon={RotateCcw} type="reset" variant="secondary">Limpar</Button>
-
-		<Button type="submit">
-			Buscar
-			<Search size={18} />
-		</Button>
 	</form>
 
 	{#if data.users}
@@ -72,24 +60,15 @@
 
 <AdminSection title="Gerenciar conteúdo">
 	<nav class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2" aria-label="Gerenciar conteúdo">
-		<a
-			class="lc-box flex flex-col gap-2 items-center justify-center w-fill aspect-square"
-			href="/admin/trails"
-		>
+		<a class="lc-box flex flex-col gap-2 items-center justify-center w-fill aspect-square" href="/admin/trails">
 			Gerenciar trilhas
 			<Footprints size={48} />
 		</a>
-		<a
-			class="lc-box flex flex-col gap-2 items-center justify-center w-fill aspect-square"
-			href="/admin/categories"
-		>
+		<a class="lc-box flex flex-col gap-2 items-center justify-center w-fill aspect-square" href="/admin/categories">
 			Gerenciar categorias
 			<Boxes size={48} />
 		</a>
-		<a
-			class="lc-box flex flex-col gap-2 items-center justify-center w-fill aspect-square"
-			href="/admin/seo"
-		>
+		<a class="lc-box flex flex-col gap-2 items-center justify-center w-fill aspect-square" href="/admin/seo">
 			Gerenciar página - CEO
 			<Layout size={48} />
 		</a>

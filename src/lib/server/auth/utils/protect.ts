@@ -1,6 +1,6 @@
 import type { RequestEvent } from '@sveltejs/kit';
 
-type ValidatedUserSession = ReturnType<App.Locals['auth']['validateUser']> extends Promise<infer U> ? U : never;
+type ValidatedUserSession = Awaited<ReturnType<App.Locals['auth']['validateUser']>>;
 
 export type AuthBarrierResult = {
 	result: boolean;

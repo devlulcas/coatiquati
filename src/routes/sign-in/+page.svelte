@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Badge } from '$lib/components/badge';
 	import { Button } from '$lib/components/button';
-	import { InputContainer } from '$lib/components/input-container';
 	import { SignInWithGoogle } from '$lib/components/sign-in-with-google';
+	import { TextField } from '$lib/components/text-field';
 	import { superForm } from 'sveltekit-superforms/client';
 	import type { PageServerData } from './$types';
 
@@ -24,27 +24,24 @@
 		{/if}
 
 		<form class="border px-8 py-10 w-full flex flex-col gap-4 bg-white/10 rounded-md" method="post" use:enhance>
-			<InputContainer let:inputClassName label="Nome de usuário" id="username">
-				<input
-					bind:value={$form.username}
-					class={inputClassName}
-					type="text"
-					name="username"
-					id="username"
-					{...$constraints.username}
-				/>
-			</InputContainer>
+			<TextField
+				id="username"
+				name="username"
+				label="Nome de usuário"
+				type="text"
+				bind:value={$form.username}
+				{...$constraints.username}
+			/>
 
-			<InputContainer let:inputClassName label="Senha" id="password">
-				<input
-					bind:value={$form.password}
-					class={inputClassName}
-					type="password"
-					name="password"
-					id="password"
-					{...$constraints.password}
-				/>
-			</InputContainer>
+			<TextField
+				id="password"
+				name="password"
+				type="password"
+				label="Senha"
+				showVisibilityButton
+				bind:value={$form.password}
+				{...$constraints.password}
+			/>
 
 			<Button loading={$submitting} type="submit">Entrar</Button>
 		</form>
