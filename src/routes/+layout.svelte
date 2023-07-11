@@ -2,17 +2,15 @@
 	import '$lib/assets/styles/global.postcss';
 	import { Blob } from '$lib/components/blob';
 	import { Header } from '$lib/components/header';
-  import { NavigationProgress } from '$lib/components/navigation-progress';
+	import { NavigationProgress } from '$lib/components/navigation-progress';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
 </script>
 
-<NavigationProgress/>
+<NavigationProgress />
 
-<div
-	class="fixed inset-0 select-none pointer-events-none bg-gradient-to-r from-black via-neutral-800 to-black"
->
+<div class="fixed inset-0 select-none pointer-events-none bg-gradient-to-r from-black via-neutral-800 to-black">
 	<div
 		class="w-7/12 aspect-square rounded-full absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-600 via-fuchsia-600 to-pink-600"
 	/>
@@ -22,9 +20,7 @@
 
 <Header user={data.user} />
 
-<div
-	class="grainy backdrop-blur-2xl relative max-w-[100vw] min-h-[--safe-screen-height] overflow-x-hidden"
->
+<div class="grainy relative max-w-[100vw] min-h-[--safe-screen-height] overflow-x-hidden">
 	<slot />
 </div>
 

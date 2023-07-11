@@ -2,9 +2,10 @@
 	import { AdminSection } from '$lib/components/admin-section';
 	import { Badge } from '$lib/components/badge';
 	import { Button } from '$lib/components/button';
-	import { InputImage } from '$lib/components/input-file';
+	import { InputFile } from '$lib/components/input-file';
 	import { TextField } from '$lib/components/text-field';
 	import { TrailCard } from '$lib/components/trail-card';
+	import { cn } from '$lib/utils/cn.js';
 	import { superForm } from 'sveltekit-superforms/client';
 	import type { ActionData, PageServerData } from './$types.js';
 
@@ -65,7 +66,27 @@
 			{...$constraints.thumbnailAlt}
 		/>
 
-		<InputImage errors={form?.thumbnailUploadError} />
+		<!-- <InputImage errors={form?.thumbnailUploadError} /> -->
+		<InputFile
+			name="thumbnail"
+			max={4}
+			accept={['*']}
+			let:canDrop
+			on:change={(event) => console.log(event.detail.files)}
+			on:error={(event) => console.log(event.detail.message)}
+			class={(data) => {
+				return cn('border-2 border-dashed rounded-lg', {
+					'border-primary-500': data.droppable,
+					'border-gray-300': !data.droppable
+				});
+			}}
+		>
+			{#if canDrop}
+				<p class="text-center">Solte a imagem aqui</p>
+			{:else}
+				<p class="text-center">Arraste e solte a imagem aqui</p>
+			{/if}
+		</InputFile>
 
 		<Button loading={$submitting} type="submit">Criar</Button>
 	</form>

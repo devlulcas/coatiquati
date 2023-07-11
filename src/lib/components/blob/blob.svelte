@@ -74,10 +74,7 @@
 	</defs>
 </svg>
 
-<canvas
-	bind:this={canvas}
-	class="h-full w-full z-[-1] fixed top-0 right-0 select-none pointer-events-none"
-/>
+<canvas bind:this={canvas} class="h-full w-full z-[-1] fixed top-0 right-0 select-none pointer-events-none" />
 
 <style lang="postcss">
 	canvas {
