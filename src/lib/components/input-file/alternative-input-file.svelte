@@ -9,7 +9,7 @@
 
 	type $$Slots = {
 		default: {
-			canDrop: boolean;
+			droppable: boolean;
 		};
 	};
 
@@ -30,24 +30,23 @@
 	export let max = 1;
 
 	export let disabled = false;
-	$: if (disabled) canDrop = false;
+	$: if (disabled) droppable = false;
 
 	export let name = '';
 
-	let canDrop = false;
-
-	const dispatch = createEventDispatcher();
+	let droppable = false;
 
 	let input: HTMLInputElement;
 
+	// Verifica se o tipo de arquivo é aceito
 	function isAcceptedMimeType(type: string) {
 		if (accept.length === 0 || accept.includes('*')) return true;
 		const acceptMimesRegex = accept.map((mime) => mime.replace('*', '.*')).join('|');
 		return new RegExp(acceptMimesRegex).test(type);
 	}
 
+	// Retorna a lista de arquivos aceitos
 	function getAcceptedFileList(files: FileList | null | undefined): File[] {
-		console.log(files);
 		if (!files) return [];
 
 		const acceptedFiles: File[] = [];
@@ -69,6 +68,9 @@
 		return acceptedFiles;
 	}
 
+	// Emissão de eventos
+	const dispatch = createEventDispatcher();
+
 	function handleFiles(files: FileList | null | undefined) {
 		const acceptedFiles = getAcceptedFileList(files);
 
@@ -77,44 +79,48 @@
 				name,
 				message: `O arquivo não é um dos tipos aceitos: ${accept.join(', ')}`
 			});
-			return;
+		} else {
+			dispatch('change', {
+				name,
+				files: acceptedFiles
+			});
 		}
-
-		dispatch('change', {
-			name,
-			files: acceptedFiles
-		});
 	}
 
+	// Ativa o efeito indicador
 	function onDragOver(event: DragEvent) {
 		if (disabled) return;
 
 		const items = Array.from(event.dataTransfer?.items ?? []);
 
 		if (items.length > max) {
-			canDrop = false;
+			droppable = false;
 			return;
 		}
 
 		for (const item of items) {
 			if (item.kind === 'file' && isAcceptedMimeType(item.type)) {
-				canDrop = true;
+				droppable = true;
 				return;
 			}
 		}
 	}
 
+	// Desativa o efeito indicador
 	function onDragLeave() {
 		if (disabled) return;
-		canDrop = false;
+		droppable = false;
 	}
 
+	// Captura de arquivos
 	function onDrop(event: DragEvent) {
 		if (disabled) return;
+		console.log('drop', event.dataTransfer?.files);
 		handleFiles(event.dataTransfer?.files);
-		canDrop = false;
+		droppable = false;
 	}
 
+	// Captura de arquivos
 	function onChange(event: Event) {
 		if (disabled) return;
 
@@ -123,6 +129,7 @@
 		}
 	}
 
+	// Atalhos de teclado
 	function onKeydown(event: KeyboardEvent) {
 		if (disabled) return;
 
@@ -143,21 +150,20 @@
 	aria-label="Arraste e solte um arquivo aqui ou clique para selecionar"
 	role="button"
 	tabindex="0"
-	on:keydown|preventDefault|stopPropagation={onKeydown}
-	on:dragover|preventDefault|stopPropagation={onDragOver}
-	on:dragleave|preventDefault|stopPropagation={onDragLeave}
-	on:drop|preventDefault|stopPropagation={onDrop}
-	on:click|preventDefault|stopPropagation={() => input.click()}
-	on:touchstart|preventDefault|stopPropagation={() => input.click()}
-	on:touchmove|preventDefault|stopPropagation={() => input.click()}
-	on:touchend|preventDefault|stopPropagation={() => input.click()}
-	class={className instanceof Function ? className({ droppable: canDrop }) : className}
+	on:keydown|preventDefault={onKeydown}
+	on:dragover|preventDefault={onDragOver}
+	on:dragleave|preventDefault={onDragLeave}
+	on:drop|preventDefault={onDrop}
+	on:click|preventDefault={() => input.click()}
+	on:touchstart|preventDefault={() => input.click()}
+	on:touchmove|preventDefault={() => input.click()}
+	on:touchend|preventDefault={() => input.click()}
+	class={className instanceof Function ? className({ droppable: droppable }) : className}
 >
-	<slot canDrop />
+	<slot droppable />
 </div>
 
 <input
-	class="hidden"
 	type="file"
 	accept={accept.length ? accept.join(',') : null}
 	aria-hidden="true"
@@ -166,6 +172,5 @@
 	{disabled}
 	{name}
 	bind:this={input}
-	on:change|preventDefault|stopPropagation={onChange}
-	on:abort|preventDefault|stopPropagation
+	on:change|preventDefault={onChange}
 />

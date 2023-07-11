@@ -69,9 +69,9 @@
 		<!-- <InputImage errors={form?.thumbnailUploadError} /> -->
 		<InputFile
 			name="thumbnail"
-			max={4}
-			accept={['*']}
-			let:canDrop
+			max={1}
+			accept={['image/*']}
+			let:droppable
 			on:change={(event) => console.log(event.detail.files)}
 			on:error={(event) => console.log(event.detail.message)}
 			class={(data) => {
@@ -81,7 +81,7 @@
 				});
 			}}
 		>
-			{#if canDrop}
+			{#if droppable}
 				<p class="text-center">Solte a imagem aqui</p>
 			{:else}
 				<p class="text-center">Arraste e solte a imagem aqui</p>
