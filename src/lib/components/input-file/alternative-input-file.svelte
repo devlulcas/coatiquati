@@ -18,11 +18,10 @@
 		max?: number;
 		disabled?: boolean;
 		name?: string;
-		class?: ClassName;
+		class?: string;
 	};
 
-	type ClassName = (data: { droppable: boolean }) => string | string;
-	let className: ClassName = () => '';
+	let className = '';
 	export { className as class };
 
 	export let accept: string[] = [];
@@ -158,7 +157,7 @@
 	on:touchstart|preventDefault={() => input.click()}
 	on:touchmove|preventDefault={() => input.click()}
 	on:touchend|preventDefault={() => input.click()}
-	class={className instanceof Function ? className({ droppable: droppable }) : className}
+	class={className}
 >
 	<slot droppable />
 </div>

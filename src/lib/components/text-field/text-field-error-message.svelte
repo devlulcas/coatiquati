@@ -8,7 +8,7 @@
 
 <div class="h-4">
 	{#if errors?.length}
-		<p {id} aria-live="assertive" class="text-red-300 uppercase h-full text-xs font-bold rounded">
+		<p {id} aria-live="assertive" class="text-red-600 uppercase h-full text-xs font-bold rounded">
 			{new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' }).format(errors)}
 		</p>
 	{/if}

@@ -25,7 +25,7 @@
 		</div>
 
 		<div class="w-full flex gap-2 mt-4">
-			<Button class="w-full lg:w-fit" href={trail.slug}>
+			<Button class="w-full" href={trail.slug}>
 				Ver mais
 				<ArrowRightIcon size={18} />
 			</Button>

@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import type { GetTrailsDTO } from '../dtos/get-trails.dto';
 import { trail, type NewTrail, type Trail, type TrailId } from '../schemas/trail';
 import type { TrailPreviewDPO, TrailRepository, UpdateTrailDPO } from './trail.repository';
@@ -20,7 +20,7 @@ export class PostgresTrailRepository implements TrailRepository {
 
 	// TODO: Finalizar implementação
 	async findMany(params: GetTrailsDTO): Promise<ResultType<TrailPreviewDPO[]>> {
-		const trails = await db.select().from(trail).where(eq(trail.active, true));
+		const trails = await db.select().from(trail).where(eq(trail.active, true)).orderBy(desc(trail.updatedAt));
 
 		if (trails.length === 0) {
 			return Fail('Nenhuma trilha encontrada');

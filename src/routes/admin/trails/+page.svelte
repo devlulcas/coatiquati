@@ -58,7 +58,6 @@
 			{...$constraints.thumbnailAlt}
 		/>
 
-		<!-- <InputImage errors={form?.thumbnailUploadError} /> -->
 		<InputFile
 			name="thumbnail"
 			max={1}
@@ -66,21 +65,13 @@
 			let:droppable
 			on:change={(event) => console.log(event.detail.files)}
 			on:error={(event) => console.log(event.detail.message)}
-			class={(data) => {
-				return cn('border-2 border-dashed rounded-lg', {
-					'border-primary-500': data.droppable,
-					'border-gray-300': !data.droppable
-				});
-			}}
 		>
-			{#if droppable}
-				<p class="text-center">Solte a imagem aqui</p>
-			{:else}
-				<p class="text-center">Arraste e solte a imagem aqui</p>
-			{/if}
+			<div class={cn('bg-white border border-dashed border-gray-300 rounded-md p-4 text-center', droppable && 'border-purple-600')}>
+				{droppable ? 'Solte o arquivo aqui' : 'Arraste e solte um arquivo aqui ou clique para selecionar'}
+			</div>
 		</InputFile>
 
-		<Button loading={$submitting} type="submit">Criar</Button>
+		<Button class="mt-4" loading={$submitting} type="submit">Criar</Button>
 	</form>
 </AdminSection>
 
