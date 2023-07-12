@@ -4,35 +4,35 @@
 
 ## TODO
 
-| status |           for           |                         task                         |
-| :----: | :---------------------: | :--------------------------------------------------: |
-|        |           eu            |               encontrar um orientador                |
-|        |           eu            |                escrever sobre o tema                 |
-|   x    |         público         |                        Login                         |
-|   x    |         público         |                 Cadastro de usuário                  |
-|   x    |         público         |                        Logout                        |
-|   x    |         público         |                     Landing page                     |
-|   x    |         público         |               Visualização de trilhas                |
-|   x    |          admin          |                     Criar trilha                     |
-|   x    |          admin          |                  Perfil de usuário                   |
-|   x    |          admin          |                   Busca de usuário                   |
-|   x    |          admin          |                    Ban de usuário                    |
-|        |          admin          |             Editar dados base da trilha              |
-|        |          admin          |                    Deletar trilha                    |
-|        |          admin          |               Criar tópicos da trilha                |
-|        |          admin          |               Editar tópicos da trilha               |
-|        |          admin          |              Remover tópicos da trilha               |
-|        |         público         |   Visualizar tópicos da trilha na página da trilha   |
-|        |         público         |           Criar migalhas do tópico (Link)            |
-|        |         público         |           Criar migalhas do tópico (Texto)           |
-|        |         público         |          Criar migalhas do tópico (Imagem)           |
-|        |         público         |           Criar migalhas do tópico (Vídeo)           |
-|        | admin e dono da migalha |              Editar migalhas do tópico               |
-|        | admin e dono da migalha |              Remover migalhas do tópico              |
-|        |         público         | Página de visualização de migalhas do tópico (Texto) |
-|        |         público         |       Perfil do usuário com suas contribuições       |
-|        |          admin          |                 Estatísticas gerais                  |
-|        |          admin          |                         SEO                          |
+| status |           for           |                         task                         | deadline |
+| :----: | :---------------------: | :--------------------------------------------------: | :------: |
+|        |           eu            |               encontrar um orientador                |  30/07   |
+|        |           eu            |                escrever sobre o tema                 |  30/09   |
+|   x    |         público         |                        Login                         |          |
+|   x    |         público         |                 Cadastro de usuário                  |          |
+|   x    |         público         |                        Logout                        |          |
+|   x    |         público         |                     Landing page                     |          |
+|   x    |         público         |               Visualização de trilhas                |          |
+|   x    |          admin          |                     Criar trilha                     |          |
+|   x    |          admin          |                  Perfil de usuário                   |          |
+|   x    |          admin          |                   Busca de usuário                   |          |
+|   x    |          admin          |                    Ban de usuário                    |          |
+|        |          admin          |             Editar dados base da trilha              |  15/07   |
+|        |          admin          |                    Deletar trilha                    |  16/07   |
+|        |          admin          |               Criar tópicos da trilha                |  20/07   |
+|        |          admin          |               Editar tópicos da trilha               |  23/07   |
+|        |          admin          |              Remover tópicos da trilha               |  24/07   |
+|        |         público         |   Visualizar tópicos da trilha na página da trilha   |  25/07   |
+|        |         público         |           Criar migalhas do tópico (Link)            |  27/07   |
+|        |         público         |           Criar migalhas do tópico (Texto)           |  01/08   |
+|        |         público         |          Criar migalhas do tópico (Imagem)           |  03/08   |
+|        |         público         |           Criar migalhas do tópico (Vídeo)           |  05/08   |
+|        | admin e dono da migalha |              Editar migalhas do tópico               |  10/08   |
+|        | admin e dono da migalha |              Remover migalhas do tópico              |  11/08   |
+|        |         público         | Página de visualização de migalhas do tópico (Texto) |  12/08   |
+|        |         público         |       Perfil do usuário com suas contribuições       |  13/08   |
+|        |          admin          |                 Estatísticas gerais                  |  14/08   |
+|        |          admin          |                         SEO                          |  15/08   |
 
 ## Sobre o projeto
 
