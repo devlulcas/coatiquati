@@ -1,50 +1,40 @@
 <script lang="ts">
+	import { Button } from '$lib/components/button';
 	import type { TrailPreview } from '$modules/trail/dtos/trail-preview.dto';
 	import { ArrowRightIcon, Edit } from 'lucide-svelte';
-	import { Button } from '../button';
 	import { ContributorAvatarGroup } from '../contributor-avatar-group';
-	import { Image } from '../image';
 
 	export let trail: TrailPreview;
 
 	export let editable = false;
 </script>
 
-<article
-	class="flex flex-col md:flex-row aspect-[2/1] max-w-[600px] max-h-[300px] flex-1 border border-white/10 rounded-md"
->
-	<div class="relative md:w-1/2 rounded-t-md md:rounded-tr-none md:rounded-l-md overflow-hidden">
-		<Image src={trail.thumbnail.url} placeholder={trail.thumbnail.placeholder} alt={trail.title} />
+<a href={trail.slug} class="relative flex flex-col w-full bg-white rounded-md overflow-clip border border-white/25">
+	<ContributorAvatarGroup class="absolute top-4 right-4" contributors={trail.contributors} />
 
-		<ContributorAvatarGroup contributors={trail.contributors} class="absolute bottom-0 left-0 p-4" />
-	</div>
+	<img class="object-cover w-full h-96 lg:h-80" src={trail.thumbnail.url} alt={trail.title} />
 
-	<div
-		class="relative md:w-1/2 flex flex-col justify-between p-4 rounded-b-md md:rounded-bl-none md:rounded-r-md bg-white/90"
-	>
-		{#if editable}
-			<Button
-				size="icon"
-				href="/admin/trails/{trail.id}"
-				title="Editar trilha"
-				class="absolute bottom-4 right-4 p-2 rounded-md bg-purple-500 bg-opacity-25 text-purple-800 hover:bg-opacity-50 hover:text-white"
-			>
-				<Edit size={18} />
-			</Button>
-		{/if}
-
+	<div class="p-4 h-full flex flex-col justify-between">
 		<div>
-			<h2 class="text-2xl font-black uppercase line-clamp-2 break-words">{trail.title}</h2>
-			<p class="mt-2 text-sm text-gray-800 w-full line-clamp-4 break-words">{trail.description}</p>
+			<h2 class="text-2xl font-black uppercase min-h-[2lh] line-clamp-2 break-words">{trail.title}</h2>
+			<p class="mt-2 text-sm text-gray-800 w-full min-h-[4lh] line-clamp-4 break-words">{trail.description}</p>
 
 			<time class="block mt-2 text-sm text-gray-500" datetime={trail.updatedAt}>
 				Atualizado em {new Date(trail.updatedAt).toLocaleDateString()}
 			</time>
 		</div>
 
-		<Button class="w-fit mt-4" href={trail.slug}>
-			Ver mais
-			<ArrowRightIcon size={18} />
-		</Button>
+		<div class="w-full flex gap-2 mt-4">
+			<Button class="w-full lg:w-fit" href={trail.slug}>
+				Ver mais
+				<ArrowRightIcon size={18} />
+			</Button>
+
+			{#if editable}
+				<Button size="icon" href="/admin/trails/{trail.id}" title="Editar trilha">
+					<Edit size={18} />
+				</Button>
+			{/if}
+		</div>
 	</div>
-</article>
+</a>

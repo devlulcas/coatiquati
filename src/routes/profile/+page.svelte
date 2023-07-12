@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Image } from '$lib/components/image';
 	import { userRolesHasRole } from '$modules/user/constants/user-roles';
 	import type { PageServerData } from './$types';
 
@@ -19,7 +18,7 @@
 				/>
 			{/if}
 
-			<Image
+			<img
 				width={96}
 				height={96}
 				class="w-24 h-24 rounded-full"

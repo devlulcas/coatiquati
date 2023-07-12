@@ -11,9 +11,9 @@
 	],
 	"cSpell.language": "en,pt-BR",
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true
+		"source.fixAll.eslint": false
 	},
-	"editor.formatOnSave": true,
+	"editor.formatOnSave": false,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"[svelte]": {
 		"editor.defaultFormatter": "svelte.svelte-vscode"
@@ -28,7 +28,4 @@
 			"connectString": "postgresql://postgres:postgres@localhost:5432/db-coati"
 		}
 	],
-	"[prisma]": {
-		"editor.defaultFormatter": "Prisma.prisma"
-	}
 }

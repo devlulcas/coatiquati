@@ -4,22 +4,14 @@
 	import { Button } from '$lib/components/button';
 	import { InputFile } from '$lib/components/input-file';
 	import { TextField } from '$lib/components/text-field';
-	import { TrailCard } from '$lib/components/trail-card';
+	import { TrailCard, TrailCardGrid } from '$lib/components/trail-card';
 	import { cn } from '$lib/utils/cn.js';
 	import { superForm } from 'sveltekit-superforms/client';
-	import type { ActionData, PageServerData } from './$types.js';
+	import type { PageServerData } from './$types.js';
 
 	export let data: PageServerData;
 
-	export let form: ActionData;
-
-	const {
-		form: sForm,
-		errors,
-		enhance,
-		constraints,
-		submitting
-	} = superForm(data.form, {
+	const { form, errors, enhance, constraints, submitting } = superForm(data.form, {
 		resetForm: true
 	});
 </script>
@@ -41,7 +33,7 @@
 			name="title"
 			type="text"
 			errors={$errors.title}
-			bind:value={$sForm.title}
+			bind:value={$form.title}
 			{...$constraints.title}
 		/>
 
@@ -51,7 +43,7 @@
 			label="Descrição"
 			variant="opaque"
 			errors={$errors.description}
-			bind:value={$sForm.description}
+			bind:value={$form.description}
 			{...$constraints.description}
 		/>
 
@@ -62,7 +54,7 @@
 			type="text"
 			variant="opaque"
 			errors={$errors.thumbnailAlt}
-			bind:value={$sForm.thumbnailAlt}
+			bind:value={$form.thumbnailAlt}
 			{...$constraints.thumbnailAlt}
 		/>
 
@@ -98,8 +90,8 @@
 	</Badge>
 {/if}
 
-<div class="grid grid-cols-1 gap-4 mt-8 lg:grid-cols-2">
+<TrailCardGrid>
 	{#each data.trails as trail}
 		<TrailCard {trail} editable />
 	{/each}
-</div>
+</TrailCardGrid>
