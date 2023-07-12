@@ -6,6 +6,8 @@
 
 | status |           for           |                         task                         |
 | :----: | :---------------------: | :--------------------------------------------------: |
+|        |           eu            |               encontrar um orientador                |
+|        |           eu            |                escrever sobre o tema                 |
 |   x    |         público         |                        Login                         |
 |   x    |         público         |                 Cadastro de usuário                  |
 |   x    |         público         |                        Logout                        |
