@@ -2,6 +2,36 @@
 
 [:us: Hey! This project is also available in English!](./README.en.md)
 
+## TODO
+
+| status |           for           |                         task                         |
+| :----: | :---------------------: | :--------------------------------------------------: |
+|   x    |         público         |                        Login                         |
+|   x    |         público         |                 Cadastro de usuário                  |
+|   x    |         público         |                        Logout                        |
+|   x    |         público         |                     Landing page                     |
+|   x    |         público         |               Visualização de trilhas                |
+|   x    |          admin          |                     Criar trilha                     |
+|   x    |          admin          |                  Perfil de usuário                   |
+|   x    |          admin          |                   Busca de usuário                   |
+|   x    |          admin          |                    Ban de usuário                    |
+|        |          admin          |             Editar dados base da trilha              |
+|        |          admin          |                    Deletar trilha                    |
+|        |          admin          |               Criar tópicos da trilha                |
+|        |          admin          |               Editar tópicos da trilha               |
+|        |          admin          |              Remover tópicos da trilha               |
+|        |         público         |   Visualizar tópicos da trilha na página da trilha   |
+|        |         público         |           Criar migalhas do tópico (Link)            |
+|        |         público         |           Criar migalhas do tópico (Texto)           |
+|        |         público         |          Criar migalhas do tópico (Imagem)           |
+|        |         público         |           Criar migalhas do tópico (Vídeo)           |
+|        | admin e dono da migalha |              Editar migalhas do tópico               |
+|        | admin e dono da migalha |              Remover migalhas do tópico              |
+|        |         público         | Página de visualização de migalhas do tópico (Texto) |
+|        |         público         |       Perfil do usuário com suas contribuições       |
+|        |          admin          |                 Estatísticas gerais                  |
+|        |          admin          |                         SEO                          |
+
 ## Sobre o projeto
 
 O projeto consiste em um sistema de compartilhamento de conhecimento. Professores podem criar trilhas sobre um determinado assunto e alunos, professores e pessoas interessadas podem seguir essas trilhas e aprender sobre o assunto. O professor passa primeiro, criando tópicos (migalhas) e adicionando conteúdo a eles. Depois, os alunos podem seguir essas trilhas, aprender sobre o assunto e deixar suas próprias migalhas. Dessa forma o conhecimento é compartilhado e todos podem aprender e ensinar.
