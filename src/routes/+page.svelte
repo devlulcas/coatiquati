@@ -16,6 +16,7 @@
 	<a
 		class="flex gap-2 items-center w-fit mt-8 px-4 py-2 bg-white text-purple-800 rounded-sm font-bold hover:text-fuchsia-600 transition-colors"
 		href="/about"
+		data-testid="call-to-action"
 	>
 		Conheça as trilhas
 		<Footprints />
