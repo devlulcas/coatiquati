@@ -58,7 +58,6 @@
 		"cloudinary": "^1.37.3",
 		"clsx": "^1.2.1",
 		"drizzle-orm": "^0.26.5",
-		"embla-carousel-svelte": "8.0.0-rc03",
 		"form-data": "^4.0.0",
 		"lucia-auth": "^1.8.0",
 		"lucide-svelte": "^0.219.0",

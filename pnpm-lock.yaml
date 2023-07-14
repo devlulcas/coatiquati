@@ -26,9 +26,6 @@ dependencies:
   drizzle-orm:
     specifier: ^0.26.5
     version: 0.26.5(@types/pg@8.10.2)(pg@8.11.0)
-  embla-carousel-svelte:
-    specifier: 8.0.0-rc03
-    version: 8.0.0-rc03(svelte@3.59.2)
   form-data:
     specifier: ^4.0.0
     version: 4.0.0
@@ -1410,28 +1407,6 @@ packages:
   /electron-to-chromium@1.4.436:
     resolution: {integrity: sha512-aktOxo8fnrMC8vOIBMVS3PXbT1nrPQ+SouUuN7Y0a+Rw3pOMrvIV92Ybnax7x4tugA+ZpYA5fOHTby7ama8OQQ==}
     dev: true
-
-  /embla-carousel-reactive-utils@8.0.0-rc03(embla-carousel@8.0.0-rc03):
-    resolution: {integrity: sha512-m2ZaxmG0MBs9nFsA3vEz0ZUNiwJaoJM8f//ENe8ODM/rEIiHkSQ1fN90k3k2NX9JemcllYGqz/bmE5cMYGXjJQ==}
-    peerDependencies:
-      embla-carousel: 8.0.0-rc03
-    dependencies:
-      embla-carousel: 8.0.0-rc03
-    dev: false
-
-  /embla-carousel-svelte@8.0.0-rc03(svelte@3.59.2):
-    resolution: {integrity: sha512-bD0onN0El+BW8YtC8FYZ2LhjnCCjg+R1Q2QTpPypa5v93p8M355big0ULtxBqFjGYFn6PAa0PsX8tYcmWVkPUQ==}
-    peerDependencies:
-      svelte: ^3.49.0
-    dependencies:
-      embla-carousel: 8.0.0-rc03
-      embla-carousel-reactive-utils: 8.0.0-rc03(embla-carousel@8.0.0-rc03)
-      svelte: 3.59.2
-    dev: false
-
-  /embla-carousel@8.0.0-rc03:
-    resolution: {integrity: sha512-2goVwmTYZdGFcRejbYJlaC/iWDPv/VAsASE60uLQYLSKpuQRTxq/huu548OozLsH/2uSelVszvmzfinZnnk/iw==}
-    dev: false
 
   /emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
