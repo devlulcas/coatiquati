@@ -19,7 +19,7 @@
 	<p class="m-2">ou</p>
 
 	<div class="min-w-[300px] max-w-3xl">
-		<form class="border px-8 py-10 w-full flex flex-col gap-2 bg-white/10 rounded-md" method="post" use:enhance>
+		<form class="border px-8 py-10 w-full flex flex-col gap-2 bg-white/25 rounded-md" method="post" use:enhance>
 			<div class="flex flex-col lg:flex-row gap-2">
 				<TextField
 					id="username"

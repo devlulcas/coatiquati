@@ -5,7 +5,7 @@ import { PostgresUserRepository } from '$modules/user/repositories/postgres-user
 import { LuciaAuthService } from '$modules/user/services/lucia-auth.service';
 import { SignUpWithUsername } from '$modules/user/use-cases/sign-up-with-username';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms/server';
+import { setError, superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -20,9 +20,7 @@ export const actions: Actions = {
 		const form = await superValidate(request, signUpWithUsernameSchema);
 
 		if (!form.valid) {
-			return fail(400, {
-				form
-			});
+      return setError(form, 'password', form.errors._errors?.join(', ') ?? 'Erro desconhecido');
 		}
 
 		const signUpWithUsername = new SignUpWithUsername(

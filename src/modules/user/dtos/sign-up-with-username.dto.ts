@@ -5,15 +5,18 @@ const errors = {
 	password: { required: 'a senha é obrigatória', min: 'a senha deve ter no mínimo 8 caracteres' },
 	email: { required: 'o e-mail é obrigatório', invalid: 'e-mail inválido' },
 	name: { required: 'o nome é obrigatório' },
-	refined: 'o nome de usuário e a senha são obrigatórios'
+	refined: 'a senha não pode conter o nome de usuário ou o e-mail'
 };
 
 export const signUpWithUsernameSchema = z
 	.object({
 		username: z.string({ required_error: errors.username.required }).nonempty().min(3),
-		password: z.string({ required_error: errors.password.required }).nonempty().min(8),
+		name: z.string({ required_error: errors.name.required }).optional(),
 		email: z.string().email({ message: errors.email.invalid }).nonempty().min(3, { message: errors.email.required }),
-		name: z.string({ required_error: errors.name.required }).optional()
+		password: z
+			.string({ required_error: errors.password.required })
+			.nonempty()
+			.min(8)
 	})
 	.refine(
 		(data) => {
@@ -21,15 +24,10 @@ export const signUpWithUsernameSchema = z
 			const emailLowerCase = data.email.toLowerCase();
 			const lowerCaseUsername = data.username.toLowerCase();
 
-			if (lowerCasePassword.includes(lowerCaseUsername) || lowerCaseUsername.includes(lowerCasePassword)) {
-				return false;
-			}
+			const passwordIncludesUsername = lowerCasePassword.includes(lowerCaseUsername);
+			const passwordIncludesEmail = lowerCasePassword.includes(emailLowerCase);
 
-			if (emailLowerCase.includes(lowerCasePassword) || lowerCasePassword.includes(emailLowerCase)) {
-				return false;
-			}
-
-			return true;
+			return !passwordIncludesUsername && !passwordIncludesEmail;
 		},
 		{ message: errors.refined }
 	);
