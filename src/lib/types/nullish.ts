@@ -21,6 +21,4 @@
  * //   };
  * // }
  */
-export type Nullish<T> = T extends Record<string, unknown>
-	? { [P in keyof T]?: Nullish<T[P]> }
-	: T | null | undefined;
+export type Nullish<T> = T extends Record<string, unknown> ? { [P in keyof T]?: Nullish<T[P]> } : T | null | undefined;

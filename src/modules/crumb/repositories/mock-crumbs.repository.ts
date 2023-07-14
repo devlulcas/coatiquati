@@ -32,7 +32,7 @@ export class MockCrumbRepository implements CrumbRepositoryInterface {
 			id: Math.random().toString(36),
 			...crumb,
 			contents: [],
-      contentTypeAvailable: []
+			contentTypeAvailable: []
 		};
 
 		this.crumbs.push(newCrumb);

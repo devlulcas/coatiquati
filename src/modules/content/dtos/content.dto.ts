@@ -1,4 +1,4 @@
-import type { Content } from "../entities/content.entity";
+import type { Content } from '../entities/content.entity';
 
 export type ContentPreview = Omit<Content, 'body' | 'originalBody'>;
 

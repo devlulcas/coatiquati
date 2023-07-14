@@ -1,1 +1,1 @@
-export { default as SimpleFooter } from "./simple-footer.svelte";
+export { default as SimpleFooter } from './simple-footer.svelte';

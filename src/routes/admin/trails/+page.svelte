@@ -66,7 +66,12 @@
 			on:change={(event) => console.log(event.detail.files)}
 			on:error={(event) => console.log(event.detail.message)}
 		>
-			<div class={cn('bg-white border border-dashed border-gray-300 rounded-md p-4 text-center', droppable && 'border-purple-600')}>
+			<div
+				class={cn(
+					'bg-white border border-dashed border-gray-300 rounded-md p-4 text-center',
+					droppable && 'border-purple-600'
+				)}
+			>
 				{droppable ? 'Solte o arquivo aqui' : 'Arraste e solte um arquivo aqui ou clique para selecionar'}
 			</div>
 		</InputFile>

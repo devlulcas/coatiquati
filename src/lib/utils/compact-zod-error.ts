@@ -9,9 +9,7 @@ export function compactZodError(error: ZodError): string {
 	return intl.format(messages);
 }
 
-export function compactZodValidationErrors(
-	errors: ValidationErrors<ZodObject<ZodRawShape>>
-): string {
+export function compactZodValidationErrors(errors: ValidationErrors<ZodObject<ZodRawShape>>): string {
 	let messages: string[] = [];
 
 	for (const key in errors) {

@@ -8,9 +8,9 @@
 	<h1 class="text-5xl lg:text-8xl font-black">Coati! Aprenda mais ensinando.</h1>
 
 	<p class="font-medium mt-2 max-w-2xl">
-		<strong>Coati</strong> é uma plataforma de ensino colaborativo, onde você pode aprender e ensinar
-		qualquer coisa. Professores criam trilhas e passam primeiro deixando migalhas de conhecimento, depois
-		estudantes passam pelas trilhas aprendendo com o que existe nelas e deixando mais migalhas de conhecimento.
+		<strong>Coati</strong> é uma plataforma de ensino colaborativo, onde você pode aprender e ensinar qualquer coisa. Professores
+		criam trilhas e passam primeiro deixando migalhas de conhecimento, depois estudantes passam pelas trilhas aprendendo
+		com o que existe nelas e deixando mais migalhas de conhecimento.
 	</p>
 
 	<a

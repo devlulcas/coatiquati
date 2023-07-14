@@ -11,20 +11,10 @@
 	<div class="flex gap-2">
 		<picture class="relative">
 			{#if hat}
-				<img
-					class="w-14 h-14 absolute -top-9 rotate-[30deg] -right-4 invert"
-					src={hat + '.svg'}
-					alt={hat}
-				/>
+				<img class="w-14 h-14 absolute -top-9 rotate-[30deg] -right-4 invert" src={hat + '.svg'} alt={hat} />
 			{/if}
 
-			<img
-				width={96}
-				height={96}
-				class="w-24 h-24 rounded-full"
-				src={data.user.avatar}
-				alt={data.user.username}
-			/>
+			<img width={96} height={96} class="w-24 h-24 rounded-full" src={data.user.avatar} alt={data.user.username} />
 		</picture>
 
 		<div class="flex flex-col gap-2 justify-center">

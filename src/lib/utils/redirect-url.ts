@@ -8,14 +8,8 @@ const reasons = {
 
 type AuthRedirectReason = keyof typeof reasons;
 
-export function redirectToSignIn(
-	redirectTo: string,
-	reason: AuthRedirectReason = 'NOT_AUTHORIZED'
-): Redirect {
-	return redirect(
-		302,
-		`/sign-in?redirect=${encodeURIComponent(redirectTo)}&reason=${encodeURIComponent(reason)}`
-	);
+export function redirectToSignIn(redirectTo: string, reason: AuthRedirectReason = 'NOT_AUTHORIZED'): Redirect {
+	return redirect(302, `/sign-in?redirect=${encodeURIComponent(redirectTo)}&reason=${encodeURIComponent(reason)}`);
 }
 
 type AuthRedirectData = {

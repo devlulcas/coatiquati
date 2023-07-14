@@ -38,10 +38,7 @@ export const actions: Actions = {
 			});
 		}
 
-		const signInWithUsername = new SignInWithUsername(
-			new LuciaAuthService(),
-			new PostgresUserRepository()
-		);
+		const signInWithUsername = new SignInWithUsername(new LuciaAuthService(), new PostgresUserRepository());
 
 		const sessionResult = await signInWithUsername.execute(form.data);
 

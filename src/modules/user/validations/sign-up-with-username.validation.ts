@@ -1,9 +1,7 @@
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import type { SignUpWithUsernameDTO } from '../dtos/sign-up-with-username.dto';
 
-export function validateSignUpWithUsername(
-	data: SignUpWithUsernameDTO
-): ResultType<SignUpWithUsernameDTO> {
+export function validateSignUpWithUsername(data: SignUpWithUsernameDTO): ResultType<SignUpWithUsernameDTO> {
 	if (
 		data.password.toLowerCase().includes(data.username.toLowerCase()) ||
 		data.username.toLowerCase().includes(data.password.toLowerCase())

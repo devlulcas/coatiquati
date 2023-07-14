@@ -32,7 +32,7 @@ export const actions: Actions = {
 			form.message = dataResult.error.message;
 
 			return fail(400, {
-				form,
+				form
 			});
 		}
 

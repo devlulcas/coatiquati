@@ -39,7 +39,7 @@ export class ContentUrl {
 		if (!extension) {
 			throw new Error('Invalid URL');
 		}
-    
+
 		for (const [type, extensions] of Object.entries(typeByExtension)) {
 			if (extensions.includes(extension)) {
 				// Confia
@@ -47,7 +47,7 @@ export class ContentUrl {
 			}
 		}
 
-    throw new Error('Invalid URL');
+		throw new Error('Invalid URL');
 	}
 
 	/**

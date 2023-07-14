@@ -16,10 +16,7 @@
 	}
 </script>
 
-<div
-	style="width: {width}px; height: {height}px;"
-	class="relative bg-gray-100 rounded-md overflow-hidden"
->
+<div style="width: {width}px; height: {height}px;" class="relative bg-gray-100 rounded-md overflow-hidden">
 	<img class="absolute inset-0 w-full h-full object-cover" src={base64} {alt} {width} {height} />
 
 	<Button

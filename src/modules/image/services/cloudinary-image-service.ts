@@ -28,7 +28,7 @@ export class CloudinaryImageService implements ImageService {
 		if (!uri) {
 			return Fail('Error ao converter a imagem para uri');
 		}
-    
+
 		try {
 			const result = await this.cloudinary.uploader.upload(uri, {
 				overwrite: true,

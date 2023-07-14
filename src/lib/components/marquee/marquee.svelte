@@ -25,12 +25,7 @@
 		position: fixed;
 		width: 100%;
 		overflow-x: hidden;
-		background: linear-gradient(
-			90deg,
-			rgba(0, 0, 0, 0) 0%,
-			rgba(0, 0, 0, 0.5) 50%,
-			rgba(0, 0, 0, 0) 100%
-		);
+		background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 100%);
 		backdrop-filter: blur(10px);
 	}
 

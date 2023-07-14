@@ -1,4 +1,4 @@
-import type { Crumb } from "../entities/crumbs.entity";
+import type { Crumb } from '../entities/crumbs.entity';
 
 export type CrumbPreview = Omit<Crumb, 'contents'>;
 

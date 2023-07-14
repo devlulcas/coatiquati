@@ -10,9 +10,7 @@
 
 <div class="lc-wrapper min-h-[--safe-screen-height]">
 	<form method="GET" class="flex flex-1 items-end mt-8">
-		<TextField id="search" name="search" label="Pesquisar" variant="opaque"
-      labelVariant="default"
-     />
+		<TextField id="search" name="search" label="Pesquisar" variant="opaque" labelVariant="default" />
 	</form>
 
 	{#if data.error}
