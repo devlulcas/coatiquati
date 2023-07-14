@@ -1,7 +1,7 @@
 import { redirectToSignIn } from '$lib/utils/redirect-url';
 import { PostgresBanRegistryRepository } from '$modules/ban/repositories/postgres-ban-registry.repository';
 import { BanUser } from '$modules/ban/use-cases/ban-user';
-import { Roles, userRolesHasRole } from '$modules/user/constants/user-roles';
+import { isAdministrator } from '$modules/user/constants/user-roles';
 import { PostgresUserRepository } from '$modules/user/repositories/postgres-user.repository';
 import { GetUserProfile } from '$modules/user/use-cases/get-user-profile';
 import { error } from '@sveltejs/kit';
@@ -30,7 +30,7 @@ export const load: PageServerLoad = async ({ locals, params, url }) => {
 
 	return {
 		user: user.data,
-		currentUserIsAdmin: userRolesHasRole(Roles.ADMIN, currentUser.data.roles)
+		currentUserIsAdmin: isAdministrator(currentUser.data.roles)
 	};
 };
 
@@ -56,15 +56,8 @@ export const actions = {
 			throw error(404, 'User not found');
 		}
 
-		if (!userRolesHasRole(Roles.ADMIN, currentUser.data.roles)) {
-			throw error(403, 'Forbidden');
-		}
-
-		if (userRolesHasRole(Roles.ADMIN, user.data.roles)) {
-			throw error(403, 'Forbidden');
-		}
-
-		if (user.data.active === false) {
+		// Previne que um usuário comum/banido bana outro usuário comum ou um administrador
+		if (!isAdministrator(currentUser.data.roles) || isAdministrator(user.data.roles) || user.data.active === false) {
 			throw error(403, 'Forbidden');
 		}
 
@@ -77,8 +70,6 @@ export const actions = {
 			adminId: currentUser.data.id,
 			reason: form.get('reason')?.toString() || 'Não informado'
 		});
-
-		console.log(banResult);
 
 		if (banResult.error) {
 			throw error(403, banResult.error.message);

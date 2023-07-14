@@ -37,7 +37,6 @@ export const authKey = pgTable(
 			.notNull()
 			.references(() => authUser.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
 		primaryKey: boolean('primary_key').notNull(),
-		// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 		expires: bigint('expires', { mode: 'number' })
 	},
 	(table) => {
@@ -55,9 +54,7 @@ export const authSession = pgTable(
 		userId: text('user_id')
 			.notNull()
 			.references(() => authUser.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-		// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 		activeExpires: bigint('active_expires', { mode: 'number' }).notNull(),
-		// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 		idleExpires: bigint('idle_expires', { mode: 'number' }).notNull()
 	},
 	(table) => {

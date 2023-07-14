@@ -1,13 +1,13 @@
 import { z } from 'zod';
 
 const errors = {
-	invalidPage: 'a página deve ser um número inteiro positivo',
-	invalidLimit: 'o limite deve ser um número inteiro positivo'
+	page: { invalidType: 'a página deve ser um número inteiro positivo' },
+	limit: { invalidType: 'o limite deve ser um número inteiro positivo' }
 };
 
 export const paginationSchemaShape = {
-	page: z.coerce.number({ invalid_type_error: errors.invalidPage }).int().positive().nullish(),
-	limit: z.coerce.number({ invalid_type_error: errors.invalidLimit }).int().positive().nullish()
+	page: z.coerce.number({ invalid_type_error: errors.page.invalidType }).int().positive().nullish(),
+	limit: z.coerce.number({ invalid_type_error: errors.limit.invalidType }).int().positive().nullish()
 };
 
 export const paginationSchema = z.object(paginationSchemaShape);

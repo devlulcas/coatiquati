@@ -3,20 +3,20 @@ import { Fail, Ok, type ResultType } from '$lib/types/result';
 import type { BanDTO } from '$modules/ban/dtos/ban.dto';
 import type { BanRegistryRepository } from '$modules/ban/repositories/ban-registry.repository';
 import type { NewBanRegistry } from '$modules/ban/schemas/ban-registry';
-import { Roles, userRolesHasRole } from '$modules/user/constants/user-roles';
+import { isAdministrator } from '$modules/user/constants/user-roles';
 import type { UserRepository } from '$modules/user/repositories/user.repository';
 
 export class BanUser {
 	constructor(private userRepository: UserRepository, private banRegistryRepository: BanRegistryRepository) {}
 
-	async execute(data: NewBanRegistry): Promise<ResultType<BanDTO>> {
+	async execute(data: Omit<NewBanRegistry, 'id'>): Promise<ResultType<BanDTO>> {
 		const admin = await this.userRepository.findById(data.adminId);
 
 		if (admin.error) {
 			return admin;
 		}
 
-		if (!userRolesHasRole(Roles.ADMIN, admin.data.roles)) {
+		if (!isAdministrator(admin.data.roles)) {
 			return Fail('Você não tem permissão para banir usuários');
 		}
 

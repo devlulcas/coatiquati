@@ -1,7 +1,7 @@
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import type { BanDTO } from '$modules/ban/dtos/ban.dto';
 import type { BanRegistryRepository } from '$modules/ban/repositories/ban-registry.repository';
-import { Roles, userRolesHasRole } from '$modules/user/constants/user-roles';
+import { isAdministrator } from '$modules/user/constants/user-roles';
 import type { UserRepository } from '$modules/user/repositories/user.repository';
 import type { AuthUserId } from '$modules/user/schemas/auth-user';
 import type { BanRegistryId } from '../schemas/ban-registry';
@@ -31,11 +31,12 @@ export class ConfirmBanUser {
 			return Fail('Não foi possível encontrar os usuários');
 		}
 
-		if (!userRolesHasRole(Roles.ADMIN, secondAdmin.data.roles)) {
+		if (!isAdministrator(secondAdmin.data.roles)) {
 			return Fail('Você não tem permissão para banir usuários');
 		}
 
-		const updatedBanRegistry = await this.banRegistryRepository.update(data.banRegistryId, {
+		const updatedBanRegistry = await this.banRegistryRepository.update({
+			id: data.banRegistryId,
 			secondAdminId: secondAdmin.data.id
 		});
 

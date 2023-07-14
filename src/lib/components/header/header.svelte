@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Roles, userRolesHasRole } from '$modules/user/constants/user-roles';
+	import { isAdministrator } from '$modules/user/constants/user-roles';
 	import type { AuthUser } from '$modules/user/schemas/auth-user';
 	import { BrainIcon } from 'lucide-svelte';
 	import Dialog from './dialog.svelte';
@@ -20,7 +20,7 @@
 		<nav class="flex flex-col gap-3 p-3 z-50">
 			<NavItem href="/trails">Conhecer trilhas</NavItem>
 
-			{#if user && userRolesHasRole(Roles.ADMIN, user.roles)}
+			{#if user && isAdministrator(user.roles)}
 				<NavItem href="/admin">Painel administrativo</NavItem>
 			{/if}
 
@@ -46,7 +46,7 @@
 
 			<a href="/profile" class="p-2">Olá {user.username}</a>
 
-			{#if userRolesHasRole(Roles.ADMIN, user.roles)}
+			{#if isAdministrator(user.roles)}
 				<a href="/admin" class="p-2">Painel administrativo</a>
 			{/if}
 		{:else}

@@ -6,7 +6,6 @@ import type { SignUpWithUsernameDTO } from '../dtos/sign-up-with-username.dto';
 export interface AuthService {
 	signInWithGithub(code: string): Promise<ResultType<Session>>;
 	signInWithGoogle(code: string): Promise<ResultType<Session>>;
-
 	signInWithUsername(data: SignInWithUsernameDTO): Promise<ResultType<Session>>;
 	signUpWithUsername(data: SignUpWithUsernameDTO): Promise<ResultType<Session>>;
 	signOut(sessionId: string): Promise<ResultType<null>>;

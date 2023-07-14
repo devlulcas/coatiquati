@@ -4,7 +4,6 @@ import { signUpWithUsernameSchema } from '$modules/user/dtos/sign-up-with-userna
 import { PostgresUserRepository } from '$modules/user/repositories/postgres-user.repository';
 import { LuciaAuthService } from '$modules/user/services/lucia-auth.service';
 import { SignUpWithUsername } from '$modules/user/use-cases/sign-up-with-username';
-import { validateSignUpWithUsername } from '$modules/user/validations/sign-up-with-username.validation';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
@@ -26,23 +25,13 @@ export const actions: Actions = {
 			});
 		}
 
-		const dataResult = validateSignUpWithUsername(form.data);
-
-		if (dataResult.error) {
-			form.message = dataResult.error.message;
-
-			return fail(400, {
-				form
-			});
-		}
-
 		const signUpWithUsername = new SignUpWithUsername(
 			new PostgresUserRepository(),
 			new LuciaAuthService(),
 			emailClient
 		);
 
-		const sessionResult = await signUpWithUsername.execute(dataResult.data);
+		const sessionResult = await signUpWithUsername.execute(form.data);
 
 		if (sessionResult.error) {
 			log.error({ error: sessionResult.error }, 'Error signing in with username');

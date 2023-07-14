@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { userRolesHasRole } from '$modules/user/constants/user-roles';
+	import { isAdministrator } from '$modules/user/constants/user-roles';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
 
-	const hat = userRolesHasRole('ADMIN', data.user?.roles) ? 'hat-fedora' : null;
+	const hat = isAdministrator(data.user?.roles) ? 'hat-fedora' : null;
 </script>
 
 <main class="p-10 bg-black/25 text-white">
