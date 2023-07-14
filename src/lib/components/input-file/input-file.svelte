@@ -159,7 +159,7 @@
 	on:touchend|preventDefault={() => input.click()}
 	class={className}
 >
-	<slot droppable />
+	<slot {droppable} />
 </div>
 
 <input

@@ -41,9 +41,6 @@ dependencies:
   mailgun.js:
     specifier: ^8.2.2
     version: 8.2.2
-  nanoid:
-    specifier: ^4.0.2
-    version: 4.0.2
   nodemailer:
     specifier: ^6.9.3
     version: 6.9.3
@@ -56,9 +53,6 @@ dependencies:
   pino:
     specifier: ^8.14.1
     version: 8.14.1
-  svelte-droplet:
-    specifier: ^0.3.0
-    version: 0.3.0
   tailwind-merge:
     specifier: ^1.13.2
     version: 1.13.2
@@ -68,9 +62,6 @@ dependencies:
   zod:
     specifier: ^3.21.4
     version: 3.21.4
-  zod-form-data:
-    specifier: ^2.0.1
-    version: 2.0.1(zod@3.21.4)
 
 devDependencies:
   '@playwright/test':
@@ -2475,12 +2466,6 @@ packages:
     hasBin: true
     dev: true
 
-  /nanoid@4.0.2:
-    resolution: {integrity: sha512-7ZtY5KTCNheRGfEFxnedV5zFiORN1+Y1N6zvPTnHQd8ENUvfaDBeuJDZb2bN/oXwXxu3qkTXDzy57W5vAmDTBw==}
-    engines: {node: ^14 || ^16 || >=18}
-    hasBin: true
-    dev: false
-
   /natural-compare-lite@1.4.0:
     resolution: {integrity: sha512-Tj+HTDSJJKaZnfiuw+iaF9skdPpTo2GtEly5JHnWV/hfv2Qj/9RKsGISQtLh2ox3l5EAGw487hnBee0sIJ6v2g==}
     dev: true
@@ -3275,10 +3260,6 @@ packages:
       - sugarss
     dev: true
 
-  /svelte-droplet@0.3.0:
-    resolution: {integrity: sha512-/IYTsqJjn8JlVip0qlucJCs28ckXyOEutQJpPLqY9+CK83N+VXNIlWSQR5K8tdhuNBD0wM0WVLqfSYNK/Xoeiw==}
-    dev: false
-
   /svelte-hmr@0.15.2(svelte@3.59.2):
     resolution: {integrity: sha512-q/bAruCvFLwvNbeE1x3n37TYFb3mTBJ6TrCq6p2CoFbSTNhDE9oAtEfpy+wmc9So8AG0Tja+X0/mJzX9tSfvIg==}
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
@@ -3730,14 +3711,6 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
-
-  /zod-form-data@2.0.1(zod@3.21.4):
-    resolution: {integrity: sha512-4jcsj3vFyFGINLLHEmehfOPKdcw+HqV65RwsV2IdyLHp9wpvGJRVXWg1yY8sq0ASEbQfTVBRtI7LcDGv3Qpj8g==}
-    peerDependencies:
-      zod: ^3.11.x
-    dependencies:
-      zod: 3.21.4
-    dev: false
 
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}

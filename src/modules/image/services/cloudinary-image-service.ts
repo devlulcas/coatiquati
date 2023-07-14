@@ -1,12 +1,7 @@
-import {
-	CLOUDINARY_API_KEY,
-	CLOUDINARY_API_SECRET,
-	CLOUDINARY_CLOUD_NAME
-} from '$env/static/private';
+import { CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME } from '$env/static/private';
 import { log } from '$lib/server/log';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import cloudinary from 'cloudinary';
-import { nanoid } from 'nanoid';
 import type { ImageProperties, ImageService } from './image-service';
 export type { ImageService } from './image-service';
 
@@ -33,35 +28,26 @@ export class CloudinaryImageService implements ImageService {
 		if (!uri) {
 			return Fail('Error ao converter a imagem para uri');
 		}
-
-		const result = await this.cloudinary.uploader
-			.upload(uri, {
-				public_id: this.generatePublicId(),
+    
+		try {
+			const result = await this.cloudinary.uploader.upload(uri, {
 				overwrite: true,
 				width: properties.width,
 				height: properties.height,
 				folder: 'coatiquati',
 				transformation: [{ width: properties.width, height: properties.height, crop: 'fill' }]
-			})
-			.catch((error) => {
-				log.error(error);
-				return null;
 			});
 
-		if (!result) {
+			return Ok(result.secure_url);
+		} catch (error) {
+			log.error(error);
 			return Fail('Erro ao fazer upload da imagem');
 		}
-
-		return Ok(result.secure_url);
 	}
 
 	private async toURI(file: File): Promise<string> {
 		const type = file.type;
 		const data = Buffer.from(await file.arrayBuffer());
 		return 'data:' + type + ';base64,' + data.toString('base64');
-	}
-
-	private generatePublicId(): string {
-		return 'coatiquati_' + nanoid();
 	}
 }

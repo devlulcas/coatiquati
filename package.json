@@ -63,15 +63,12 @@
 		"lucia-auth": "^1.8.0",
 		"lucide-svelte": "^0.219.0",
 		"mailgun.js": "^8.2.2",
-		"nanoid": "^4.0.2",
 		"nodemailer": "^6.9.3",
 		"nprogress": "^0.2.0",
 		"pg": "^8.11.0",
 		"pino": "^8.14.1",
-		"svelte-droplet": "^0.3.0",
 		"tailwind-merge": "^1.13.2",
 		"uuid": "^9.0.0",
-		"zod": "^3.21.4",
-		"zod-form-data": "^2.0.1"
+		"zod": "^3.21.4"
 	}
 }
