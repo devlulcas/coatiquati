@@ -1,4 +1,6 @@
-export const trailPreviewThumbnail = {
-	width: 300,
-	height: 300
+export const TRAIL_PREVIEW_THUMBNAIL = {
+	default: {
+		width: 300,
+		height: 300
+	}
 };

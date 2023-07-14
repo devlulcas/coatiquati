@@ -2,7 +2,7 @@ import { uuid } from '$lib/server/db/utils/uuid';
 import { log } from '$lib/server/log';
 import { Ok, type ResultType } from '$lib/types/result';
 import type { ImageService } from '$modules/image/services';
-import { trailPreviewThumbnail } from '../constants/trail-preview-thumbnail';
+import { TRAIL_PREVIEW_THUMBNAIL } from '../constants/trail-preview-thumbnail';
 import type { CreateTrailDTO } from '../dtos/create-trail.dto';
 import type { TrailPreview } from '../dtos/trail-preview.dto';
 import type { TrailRepository } from '../repositories/trail.repository';
@@ -12,8 +12,8 @@ export class CreateTrail {
 
 	async execute(data: CreateTrailDTO): Promise<ResultType<TrailPreview>> {
 		const imageUploadResult = await this.imageService.uploadImage(data.thumbnail, {
-			width: trailPreviewThumbnail.width,
-			height: trailPreviewThumbnail.height
+			width: TRAIL_PREVIEW_THUMBNAIL.default.width,
+			height: TRAIL_PREVIEW_THUMBNAIL.default.height
 		});
 
 		if (imageUploadResult.error) {
@@ -39,8 +39,8 @@ export class CreateTrail {
 			thumbnail: {
 				url: createdTrail.data.thumbnail,
 				alt: createdTrail.data.thumbnailDescription,
-				height: trailPreviewThumbnail.height,
-				width: trailPreviewThumbnail.width
+				height: TRAIL_PREVIEW_THUMBNAIL.default.height,
+				width: TRAIL_PREVIEW_THUMBNAIL.default.width
 			},
 			updatedAt: createdTrail.data.updatedAt.toISOString(),
 			slug: `/trails/${createdTrail.data.id}`

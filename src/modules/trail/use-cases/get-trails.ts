@@ -1,6 +1,6 @@
 import { log } from '$lib/server/log';
 import { Ok, type ResultType } from '$lib/types/result';
-import { trailPreviewThumbnail } from '../constants/trail-preview-thumbnail';
+import { TRAIL_PREVIEW_THUMBNAIL } from '../constants/trail-preview-thumbnail';
 import type { GetTrailsDTO } from '../dtos/get-trails.dto';
 import type { TrailPreview } from '../dtos/trail-preview.dto';
 import type { TrailRepository } from '../repositories/trail.repository';
@@ -21,8 +21,8 @@ export class GetTrails {
 			thumbnail: {
 				url: trail.thumbnail,
 				alt: trail.thumbnailDescription,
-				height: trailPreviewThumbnail.height,
-				width: trailPreviewThumbnail.width
+				height: TRAIL_PREVIEW_THUMBNAIL.default.height,
+				width: TRAIL_PREVIEW_THUMBNAIL.default.width
 			},
 			updatedAt: trail.updatedAt.toISOString(),
 			slug: `/trails/${trail.id}`

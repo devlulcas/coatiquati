@@ -1,7 +1,7 @@
 import { log } from '$lib/server/log';
 import type { ResultType } from '$lib/types/result';
 import type { ImageService } from '$modules/image/services';
-import { trailPreviewThumbnail } from '../constants/trail-preview-thumbnail';
+import { TRAIL_PREVIEW_THUMBNAIL } from '../constants/trail-preview-thumbnail';
 import type { UpdateTrailDTO } from '../dtos/update-trail.dto';
 import type { TrailRepository } from '../repositories/trail.repository';
 import type { Trail } from '../schemas/trail';
@@ -19,8 +19,8 @@ export class UpdateTrail {
 
 		if (data.thumbnail instanceof File) {
 			const imageUploadResult = await this.imageService.uploadImage(data.thumbnail, {
-				width: trailPreviewThumbnail.width,
-				height: trailPreviewThumbnail.height
+				width: TRAIL_PREVIEW_THUMBNAIL.default.width,
+				height: TRAIL_PREVIEW_THUMBNAIL.default.height
 			});
 
 			if (imageUploadResult.error) return imageUploadResult;
