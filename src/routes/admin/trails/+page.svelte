@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { AdminSection } from '$lib/components/admin-section';
 	import { Badge } from '$lib/components/badge';
 	import { Button } from '$lib/components/button';
+	import { SectionHeading } from '$lib/components/heading';
 	import { InputFile } from '$lib/components/input-file';
 	import { TextField } from '$lib/components/text-field';
 	import { TrailCard, TrailCardGrid } from '$lib/components/trail-card';
@@ -16,7 +16,8 @@
 	});
 </script>
 
-<AdminSection title="Gerenciar conteúdo">
+<section >
+  <SectionHeading>Gerenciar conteúdo</SectionHeading>
 	<form
 		use:enhance
 		enctype="multipart/form-data"
@@ -78,10 +79,10 @@
 
 		<Button class="mt-4" loading={$submitting} type="submit">Criar</Button>
 	</form>
-</AdminSection>
+</section>
 
 {#if data.error}
-	<Badge variant="warning" class="mt-4">
+	<Badge variant="warning" className="mt-4">
 		{data.error}
 	</Badge>
 {/if}

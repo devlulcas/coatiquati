@@ -13,10 +13,7 @@ export const signUpWithUsernameSchema = z
 		username: z.string({ required_error: errors.username.required }).nonempty().min(3),
 		name: z.string({ required_error: errors.name.required }).optional(),
 		email: z.string().email({ message: errors.email.invalid }).nonempty().min(3, { message: errors.email.required }),
-		password: z
-			.string({ required_error: errors.password.required })
-			.nonempty()
-			.min(8)
+		password: z.string({ required_error: errors.password.required }).nonempty().min(8)
 	})
 	.refine(
 		(data) => {

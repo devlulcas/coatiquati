@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { AdminSection } from '$lib/components/admin-section';
 	import { Badge } from '$lib/components/badge';
 	import { Button } from '$lib/components/button';
+	import { SectionHeading } from '$lib/components/heading/';
 	import { TextField } from '$lib/components/text-field';
 	import type { ActionData, PageServerData } from './$types';
 
 	export let data: PageServerData;
 	export let form: ActionData;
-
-	const intl = new Intl.ListFormat('pt-BR', { style: 'long', type: 'conjunction' });
 </script>
 
-<AdminSection title={data.user.username}>
+<section>
+ <SectionHeading>{data.user.username}</SectionHeading>
+
 	<main class="lc-box flex flex-col gap-4">
 		<p>
 			<span>Nome:</span>
@@ -38,7 +38,7 @@
 		<p>
 			<span>Roles:</span>
 			<strong>
-				{intl.format(data.user.roles)}
+				{data.user.roles.join(', ')}
 			</strong>
 		</p>
 	</main>
@@ -101,4 +101,4 @@
 			{/if}
 		{/if}
 	</div>
-</AdminSection>
+</section>

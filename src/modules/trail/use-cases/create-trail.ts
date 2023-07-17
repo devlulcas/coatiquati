@@ -8,7 +8,10 @@ import type { TrailPreview } from '../dtos/trail-preview.dto';
 import type { TrailRepository } from '../repositories/trail.repository';
 
 export class CreateTrail {
-	constructor(private trailRepository: TrailRepository, private imageService: ImageService) {}
+	constructor(
+		private trailRepository: TrailRepository,
+		private imageService: ImageService
+	) {}
 
 	async execute(data: CreateTrailDTO): Promise<ResultType<TrailPreview>> {
 		const imageUploadResult = await this.imageService.uploadImage(data.thumbnail, {

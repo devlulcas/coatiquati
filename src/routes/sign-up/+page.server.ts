@@ -20,7 +20,7 @@ export const actions: Actions = {
 		const form = await superValidate(request, signUpWithUsernameSchema);
 
 		if (!form.valid) {
-      return setError(form, 'password', form.errors._errors?.join(', ') ?? 'Erro desconhecido');
+			return setError(form, 'password', form.errors._errors?.join(', ') ?? 'Erro desconhecido');
 		}
 
 		const signUpWithUsername = new SignUpWithUsername(

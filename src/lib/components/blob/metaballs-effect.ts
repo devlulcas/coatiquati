@@ -3,7 +3,10 @@ import { Ball } from './ball';
 export class MetaballsEffect {
 	balls: Ball[];
 
-	constructor(public width: number, public height: number) {
+	constructor(
+		public width: number,
+		public height: number
+	) {
 		this.balls = [];
 	}
 

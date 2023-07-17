@@ -1,3 +1,4 @@
+import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
 export const badgeVariants = cva('text-white h-fit w-full p-2 rounded-md flex items-center gap-2 font-semibold', {
@@ -20,3 +21,7 @@ export const badgeVariants = cva('text-white h-fit w-full p-2 rounded-md flex it
 		variant: 'default'
 	}
 });
+
+export type BadgeVariant = VariantProps<typeof badgeVariants>['variant'];
+
+export type BadgeSize = VariantProps<typeof badgeVariants>['size'];

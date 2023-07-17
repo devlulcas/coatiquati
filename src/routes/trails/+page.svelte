@@ -14,7 +14,7 @@
 	</form>
 
 	{#if data.error}
-		<Badge variant="warning" class="mt-4">
+		<Badge variant="warning" className="mt-4">
 			{data.error}
 		</Badge>
 	{/if}

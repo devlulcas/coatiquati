@@ -1,21 +1,12 @@
 <script lang="ts">
+	import type { ClassName } from '$lib/types/class-name';
 	import { cn } from '$lib/utils/cn';
-	import type { VariantProps } from 'class-variance-authority';
 	import { AlertTriangle, BadgeInfo, Smile } from 'lucide-svelte';
-	import { badgeVariants } from './badge.variants';
+	import { badgeVariants, type BadgeSize, type BadgeVariant } from './badge.variants';
 
-	type BaseElementProps = {
-		variant?: VariantProps<typeof badgeVariants>['variant'];
-		size?: VariantProps<typeof badgeVariants>['size'];
-		class?: string;
-	};
-
-	export let size: BaseElementProps['size'] = 'default';
-
-	export let variant: BaseElementProps['variant'] = 'default';
-
-	let className: BaseElementProps['class'] = undefined;
-	export { className as class };
+	export let size: BadgeSize = 'default'
+	export let variant: BadgeVariant = 'default'
+	export let className:ClassName = ''
 
 	let icon = {
 		default: Smile,

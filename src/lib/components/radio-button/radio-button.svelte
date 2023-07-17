@@ -3,12 +3,12 @@
 	import { CheckIcon } from 'lucide-svelte';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 
-	type $$Props = {
+	type $$Props = HTMLInputAttributes & {
 		id: string;
 		name: string;
 		value: string;
 		label: string;
-	} & HTMLInputAttributes;
+	} ;
 
 	export let id: string;
 	export let name: string;

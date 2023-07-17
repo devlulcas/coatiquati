@@ -7,7 +7,10 @@ import { isAdministrator } from '$modules/user/constants/user-roles';
 import type { UserRepository } from '$modules/user/repositories/user.repository';
 
 export class BanUser {
-	constructor(private userRepository: UserRepository, private banRegistryRepository: BanRegistryRepository) {}
+	constructor(
+		private userRepository: UserRepository,
+		private banRegistryRepository: BanRegistryRepository
+	) {}
 
 	async execute(data: Omit<NewBanRegistry, 'id'>): Promise<ResultType<BanDTO>> {
 		const admin = await this.userRepository.findById(data.adminId);

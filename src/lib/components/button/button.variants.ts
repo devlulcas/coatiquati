@@ -1,4 +1,4 @@
-import { cva } from 'class-variance-authority';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 export const buttonVariants = cva(
 	'inline-flex gap-2 items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background',
@@ -25,3 +25,7 @@ export const buttonVariants = cva(
 		}
 	}
 );
+
+export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
+
+export type ButtonSize = VariantProps<typeof buttonVariants>['size'];

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { ClassName } from '$lib/types/class-name';
+	import { cn } from '$lib/utils/cn';
 	import { createEventDispatcher } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 
@@ -18,17 +20,17 @@
 		max?: number;
 		disabled?: boolean;
 		name?: string;
-		class?: string;
+    className?: ClassName
 	};
 
-	let className = '';
-	export { className as class };
+	export let className: ClassName = '';
 
 	export let accept: string[] = [];
 
 	export let max = 1;
 
 	export let disabled = false;
+  
 	$: if (disabled) droppable = false;
 
 	export let name = '';
@@ -157,7 +159,7 @@
 	on:touchstart|preventDefault={() => input.click()}
 	on:touchmove|preventDefault={() => input.click()}
 	on:touchend|preventDefault={() => input.click()}
-	class={className}
+	class={cn(className)}
 >
 	<slot {droppable} />
 </div>

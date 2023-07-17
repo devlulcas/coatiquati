@@ -10,7 +10,7 @@
 </script>
 
 <a href={trail.slug} class="relative flex flex-col w-full bg-white rounded-md overflow-clip border border-white/25">
-	<ContributorAvatarGroup class="absolute top-4 right-4" contributors={trail.contributors} />
+	<ContributorAvatarGroup className="absolute top-4 right-4" contributors={trail.contributors} />
 
 	<img class="object-cover w-full h-96 lg:h-80" src={trail.thumbnail.url} alt={trail.title} />
 
@@ -25,7 +25,7 @@
 		</div>
 
 		<div class="w-full flex gap-2 mt-4">
-			<Button class="w-full" href={trail.slug}>
+			<Button className="w-full" href={trail.slug}>
 				Ver mais
 				<ArrowRightIcon size={18} />
 			</Button>

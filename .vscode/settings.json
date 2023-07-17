@@ -6,6 +6,7 @@
 		"ilike",
 		"lucia",
 		"micromark",
+		"nprogress",
 		"postgres",
 		"sqlite",
 		"testid",
@@ -20,7 +21,5 @@
 	"[svelte]": {
 		"editor.defaultFormatter": "svelte.svelte-vscode"
 	},
-  "tailwindCSS.experimental.classRegex": [
-    ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ]
+	"tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]]
 }

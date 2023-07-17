@@ -1,36 +1,25 @@
 <script lang="ts">
+	import type { ClassName } from '$lib/types/class-name';
 	import type { Icon } from '$lib/types/icon';
 	import { cn } from '$lib/utils/cn';
-	import type { VariantProps } from 'class-variance-authority';
 	import { Loader2 } from 'lucide-svelte';
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
-	import { buttonVariants } from './button.variants';
+	import { buttonVariants, type ButtonSize, type ButtonVariant } from './button.variants';
 
-	type BaseElementProps = {
-		variant?: VariantProps<typeof buttonVariants>['variant'];
-		size?: VariantProps<typeof buttonVariants>['size'];
-		class?: string;
-		type?: HTMLButtonAttributes['type'];
-		href?: HTMLAnchorAttributes['href'];
-	};
-
-	export let type: BaseElementProps['type'] = 'button';
-
-	export let href: BaseElementProps['href'] = undefined;
-
-	export let size: BaseElementProps['size'] = 'default';
-
-	export let variant: BaseElementProps['variant'] = 'default';
-
-	export let icon: Icon | undefined = undefined;
-
+	export let type: HTMLButtonAttributes['type'] = 'button';
+  export let href: HTMLAnchorAttributes['href'] = undefined;
+	export let size: ButtonSize= 'default'
+	export let variant: ButtonVariant= 'default'
+	export let icon: Icon | null = null;
 	export let loading = false;
-
-	let className: BaseElementProps['class'] = undefined;
-	export { className as class };
+	export let className: ClassName = '';
 </script>
 
 <svelte:element
+  aria-busy={loading}
+  aria-disabled={loading}
+  role="button"
+  tabindex="0"
 	this={href ? 'a' : 'button'}
 	type={href ? undefined : type}
 	{href}
@@ -49,9 +38,6 @@
 		<Loader2 class="animate-spin" size={18} />
 	{:else}
 		<slot />
-
-		{#if icon}
-			<svelte:component this={icon} size={18} />
-		{/if}
+		<svelte:component this={icon} size={18} />
 	{/if}
 </svelte:element>

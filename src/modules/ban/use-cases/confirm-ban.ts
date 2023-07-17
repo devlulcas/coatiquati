@@ -12,7 +12,10 @@ type ConfirmBanUserDTO = {
 };
 
 export class ConfirmBanUser {
-	constructor(private userRepository: UserRepository, private banRegistryRepository: BanRegistryRepository) {}
+	constructor(
+		private userRepository: UserRepository,
+		private banRegistryRepository: BanRegistryRepository
+	) {}
 
 	async execute(data: ConfirmBanUserDTO): Promise<ResultType<BanDTO>> {
 		const banRegistry = await this.banRegistryRepository.findById(data.banRegistryId);

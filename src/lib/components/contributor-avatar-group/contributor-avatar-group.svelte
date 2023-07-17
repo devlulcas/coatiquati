@@ -3,9 +3,7 @@
 	import type { Contributor } from '$modules/user/entities/contributor.entity';
 
 	export let contributors: Contributor[] = [];
-
-	let className: string | null | undefined;
-	export { className as class };
+	export let className: string | null | undefined;
 </script>
 
 <div class={cn('flex items-center', className)}>

@@ -7,7 +7,10 @@ import type { TrailRepository } from '../repositories/trail.repository';
 import type { Trail } from '../schemas/trail';
 
 export class UpdateTrail {
-	constructor(private trailRepository: TrailRepository, private imageService: ImageService) {}
+	constructor(
+		private trailRepository: TrailRepository,
+		private imageService: ImageService
+	) {}
 
 	async execute(data: UpdateTrailDTO): Promise<ResultType<Trail>> {
 		const trail = await this.trailRepository.findById(data.id);

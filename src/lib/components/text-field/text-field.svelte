@@ -21,11 +21,11 @@
 		showVisibilityButton?: boolean;
 	};
 
-	export let id = '';
+	export let id  = '';
 	export let value = '';
-	export let label: string;
-	export let errors: FormError = null;
+	export let label = '';
 	export let required = false;
+	export let errors: FormError = null;
 	export let variant: InputVariant = 'default';
 	export let labelVariant: LabelVariant = variant;
 	export let labelClassname = '';

@@ -5,7 +5,10 @@ import type { AuthService } from '../services/auth.service';
 import type { UserRepository } from '../repositories/user.repository';
 
 export class SignInWithUsername {
-	constructor(private authService: AuthService, private userRepository: UserRepository) {}
+	constructor(
+		private authService: AuthService,
+		private userRepository: UserRepository
+	) {}
 
 	async execute(data: SignInWithUsernameDTO): Promise<ResultType<Session>> {
 		const sessionResult = await this.authService.signInWithUsername(data);

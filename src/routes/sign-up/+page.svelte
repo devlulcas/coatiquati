@@ -67,7 +67,7 @@
 		</form>
 
 		{#if $message}
-			<Badge variant="error" class="mt-4">
+			<Badge variant="error" className="mt-4">
 				{$message}
 			</Badge>
 		{/if}
