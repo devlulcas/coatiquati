@@ -30,7 +30,7 @@
 			placeholder="Buscar por nome"
 		/>
 
-		<div class="flex gap-2">
+		<div class="flex gap-2 mt-2">
 			<RadioButton name="role" id="role-user" value="USER" label="Usuário" />
 			<RadioButton name="role" id="role-admin" value="ADMIN" label="Moderador" />
 
