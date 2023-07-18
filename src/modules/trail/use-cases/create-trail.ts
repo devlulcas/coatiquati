@@ -1,11 +1,11 @@
 import { uuid } from '$lib/server/db/utils/uuid';
 import { log } from '$lib/server/log';
-import { Ok, type ResultType } from '$lib/types/result';
+import { Fail, Ok, type ResultType } from '$lib/types/result';
 import type { ImageService } from '$modules/image/services';
 import { TRAIL_PREVIEW_THUMBNAIL } from '../constants/trail-preview-thumbnail';
-import type { CreateTrailDTO } from '../dtos/create-trail.dto';
-import type { TrailPreview } from '../dtos/trail-preview.dto';
+import { newTrailSchema } from '../dtos/new-trail.dto';
 import type { TrailRepository } from '../repositories/trail.repository';
+import type { Trail } from '../types/trail';
 
 export class CreateTrail {
 	constructor(
@@ -13,40 +13,55 @@ export class CreateTrail {
 		private imageService: ImageService
 	) {}
 
-	async execute(data: CreateTrailDTO): Promise<ResultType<TrailPreview>> {
-		const imageUploadResult = await this.imageService.uploadImage(data.thumbnail, {
+	async execute(data: unknown): Promise<ResultType<Trail>> {
+		const parsedResult = newTrailSchema.safeParse(data);
+
+		if (!parsedResult.success) {
+			return Fail({
+				message: 'Dados inválidos',
+				type: 'badRequest',
+				fieldErrors: parsedResult.error.flatten().fieldErrors
+			});
+		}
+
+		const imageUploadResult = await this.imageService.uploadImage(parsedResult.data.thumbnail, {
 			width: TRAIL_PREVIEW_THUMBNAIL.default.width,
 			height: TRAIL_PREVIEW_THUMBNAIL.default.height
 		});
 
 		if (imageUploadResult.error) {
-			return imageUploadResult;
+			log.error(imageUploadResult.error);
+
+			return Fail({
+				message: 'Erro ao fazer upload da imagem',
+				type: 'badRequest',
+				fieldErrors: {
+					thumbnail: [imageUploadResult.error.message]
+				}
+			});
 		}
 
 		const createdTrail = await this.trailRepository.create({
 			id: uuid(),
-			authorId: data.authorId,
-			thumbnailDescription: data.thumbnailAlt,
+			authorId: parsedResult.data.authorId,
+			thumbnailDescription: parsedResult.data.thumbnailAlt,
 			thumbnail: imageUploadResult.data,
-			title: data.title,
-			description: data.description
+			title: parsedResult.data.title,
+			description: parsedResult.data.description
 		});
 
 		if (createdTrail.error) {
 			log.error(createdTrail.error);
-			return createdTrail;
+
+			return Fail({
+				message: 'Erro ao criar a trilha',
+				type: 'internalServerError'
+			});
 		}
 
-		const preview: TrailPreview = {
+		const preview: Trail = {
 			...createdTrail.data,
-			thumbnail: {
-				url: createdTrail.data.thumbnail,
-				alt: createdTrail.data.thumbnailDescription,
-				height: TRAIL_PREVIEW_THUMBNAIL.default.height,
-				width: TRAIL_PREVIEW_THUMBNAIL.default.width
-			},
-			updatedAt: createdTrail.data.updatedAt.toISOString(),
-			slug: `/trails/${createdTrail.data.id}`
+			contributors: []
 		};
 
 		return Ok(preview);

@@ -2,7 +2,7 @@ import { welcomeMail } from '$lib/assets/email-templates/welcome';
 import type { EmailClient } from '$lib/server/email';
 import { Fail, type ResultType } from '$lib/types/result';
 import type { Session } from 'lucia-auth';
-import type { SignUpWithUsernameDTO } from '../dtos/sign-up-with-username.dto';
+import type { SignUpWithUsernameSchema } from '../dtos/sign-up-with-username.dto';
 import type { UserRepository } from '../repositories/user.repository';
 import type { AuthService } from '../services/auth.service';
 
@@ -13,7 +13,7 @@ export class SignUpWithUsername {
 		private mailClient: EmailClient
 	) {}
 
-	async execute(data: SignUpWithUsernameDTO): Promise<ResultType<Session>> {
+	async execute(data: SignUpWithUsernameSchema): Promise<ResultType<Session>> {
 		const userExists = await this.userRepository.findByEmail(data.email);
 
 		if (userExists.data?.id) {

@@ -29,4 +29,4 @@ export const signUpWithUsernameSchema = z
 		{ message: errors.refined }
 	);
 
-export type SignUpWithUsernameDTO = z.infer<typeof signUpWithUsernameSchema>;
+export type SignUpWithUsernameSchema = z.infer<typeof signUpWithUsernameSchema>;

@@ -10,4 +10,4 @@ export const signInWithUsernameSchema = z.object({
 	password: z.string({ required_error: errors.password.required }).min(8, { message: errors.password.min })
 });
 
-export type SignInWithUsernameDTO = z.infer<typeof signInWithUsernameSchema>;
+export type SignInWithUsernameSchema = z.infer<typeof signInWithUsernameSchema>;

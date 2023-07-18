@@ -1,10 +1,10 @@
 import type { ResultType } from '$lib/types/result';
-import type { ListUsersDTO } from '../dtos/list-users.dto';
-import type { AuthUser, AuthUserId } from '../schemas/auth-user';
+import type { UsersSearchSchema } from '../dtos/users-search.dto';
+import type { User, UserId } from '../types/user';
 
 export interface UserRepository {
-	findByEmail(email: string): Promise<ResultType<AuthUser>>;
-	findById(id: AuthUserId): Promise<ResultType<AuthUser>>;
-	findMany(params: ListUsersDTO): Promise<ResultType<AuthUser[]>>;
-	update(id: AuthUserId, data: Partial<AuthUser>): Promise<ResultType<AuthUser>>;
+	findByEmail(email: string): Promise<ResultType<User>>;
+	findById(id: UserId): Promise<ResultType<User>>;
+	findMany(params: UsersSearchSchema): Promise<ResultType<User[]>>;
+	update(id: UserId, data: Partial<User>): Promise<ResultType<User>>;
 }

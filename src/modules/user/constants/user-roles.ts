@@ -1,16 +1,16 @@
-export const Roles = Object.freeze({
-	USER: 'USER',
-	ADMIN: 'ADMIN'
+export const ROLES = Object.freeze({
+	user: 'USER',
+	admin: 'ADMIN'
 });
 
-export const roles = Object.freeze(Object.values(Roles));
+export const ROLE_LIST = Object.freeze(Object.values(ROLES));
 
-export type Role = (typeof roles)[number];
+export type Role = (typeof ROLE_LIST)[number];
 
 function userRolesHasRole(role: Role, userRoles?: string[]) {
 	return userRoles?.includes(role);
 }
 
 export function isAdministrator(userRoles?: string[]) {
-	return userRolesHasRole(Roles.ADMIN, userRoles);
+	return userRolesHasRole(ROLES.admin, userRoles);
 }

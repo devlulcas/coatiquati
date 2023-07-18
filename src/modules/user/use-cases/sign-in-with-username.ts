@@ -1,8 +1,8 @@
 import type { ResultType } from '$lib/types/result';
 import type { Session } from 'lucia-auth';
-import type { SignInWithUsernameDTO } from '../dtos/sign-in-with-username.dto';
-import type { AuthService } from '../services/auth.service';
+import type { SignInWithUsernameSchema } from '../dtos/sign-in-with-username.dto';
 import type { UserRepository } from '../repositories/user.repository';
+import type { AuthService } from '../services/auth.service';
 
 export class SignInWithUsername {
 	constructor(
@@ -10,7 +10,7 @@ export class SignInWithUsername {
 		private userRepository: UserRepository
 	) {}
 
-	async execute(data: SignInWithUsernameDTO): Promise<ResultType<Session>> {
+	async execute(data: SignInWithUsernameSchema): Promise<ResultType<Session>> {
 		const sessionResult = await this.authService.signInWithUsername(data);
 
 		if (sessionResult.error) {

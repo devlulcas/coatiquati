@@ -10,4 +10,4 @@ export const updateUserPasswordSchema = z.object({
 	email: z.string().email({ message: errors.email.invalid }).nonempty().min(3, { message: errors.email.required })
 });
 
-export type UpdateUserPasswordDTO = z.infer<typeof updateUserPasswordSchema>;
+export type UpdateUserPasswordSchema = z.infer<typeof updateUserPasswordSchema>;

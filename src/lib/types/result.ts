@@ -1,4 +1,4 @@
-type FieldError = Record<string, string[] | undefined> | null;
+export type FieldError = Record<string, string[] | undefined> | null;
 
 const errorCodes = {
 	badRequest: 400,
@@ -24,7 +24,7 @@ const errorCodes = {
 
 type ErrorType = keyof typeof errorCodes;
 
-type AppError = {
+export type AppError = {
 	message: string;
 	type?: ErrorType;
 	fieldErrors?: FieldError;

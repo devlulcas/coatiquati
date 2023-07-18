@@ -1,7 +1,7 @@
 import { log } from '$lib/server/log';
 import type { ResultType } from '$lib/types/result';
 import type { TrailRepository } from '../repositories/trail.repository';
-import type { Trail } from '../schemas/trail';
+import type { Trail } from '../types/trail';
 
 export class DeleteTrail {
 	constructor(private trailRepository: TrailRepository) {}

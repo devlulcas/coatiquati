@@ -8,13 +8,12 @@ const errors = {
 	thumbnailAlt: { required: 'o texto alternativo da imagem de capa é obrigatório' }
 };
 
-export const createTrailSchema = z.object({
+export const newTrailSchema = z.object({
+  authorId: z.string(),  
 	title: z.string({ required_error: errors.title.required }).min(15, { message: errors.title.min }),
 	description: z.string({ required_error: errors.description.required }),
 	thumbnail: imageFileSchema,
 	thumbnailAlt: z.string({ required_error: errors.thumbnailAlt.required })
 });
 
-export type CreateTrailDTO = z.infer<typeof createTrailSchema> & {
-	authorId: string;
-};
+export type NewTrailSchema = z.infer<typeof newTrailSchema> 

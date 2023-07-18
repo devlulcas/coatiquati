@@ -2,13 +2,13 @@ import type { Nullish } from '$lib/types/nullish';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import { compactZodError } from '$lib/utils/compact-zod-error';
 import {
-	signInWithOAuthProviderSchema,
-	type SignInWithOAuthProviderDTO
+  signInWithOAuthProviderSchema,
+  type SignInWithOAuthProviderSchema
 } from '../dtos/sign-in-with-oauth-provider.dto';
 
 export function validateSignInWithOAuthProvider(
-	data: Nullish<SignInWithOAuthProviderDTO>
-): ResultType<SignInWithOAuthProviderDTO> {
+	data: Nullish<SignInWithOAuthProviderSchema>
+): ResultType<SignInWithOAuthProviderSchema> {
 	const result = signInWithOAuthProviderSchema.safeParse(data);
 
 	if (result.success === false) {

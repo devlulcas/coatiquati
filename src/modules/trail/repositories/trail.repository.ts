@@ -1,21 +1,17 @@
 import type { ResultType } from '$lib/types/result';
-import type { GetTrailsDTO } from '../dtos/get-trails.dto';
-import type { TrailPreview } from '../dtos/trail-preview.dto';
-import type { NewTrail, Trail, TrailId } from '../schemas/trail';
+import type { TrailsSearchSchema } from '../dtos/trails-search';
+import type { NewTrailTable } from '../schemas/trail';
+import type { Trail, TrailId } from '../types/trail';
 
-export type UpdateTrailDPO = Partial<NewTrail> & {
+export type NewTrailPersinstance = NewTrailTable;
+
+export type UpdateTrailPersinstance = Partial<NewTrailTable> & {
 	id: TrailId;
-};
-
-export type TrailPreviewDPO = Pick<TrailPreview, 'contributors' | 'description' | 'id' | 'title'> & {
-	thumbnail: string;
-	thumbnailDescription: string;
-	updatedAt: Date;
 };
 
 export interface TrailRepository {
 	findById(id: TrailId): Promise<ResultType<Trail>>;
-	findMany(params: GetTrailsDTO): Promise<ResultType<TrailPreviewDPO[]>>;
-	create(data: NewTrail): Promise<ResultType<TrailPreviewDPO>>;
-	update(data: UpdateTrailDPO): Promise<ResultType<Trail>>;
+	findMany(params: TrailsSearchSchema): Promise<ResultType<Trail[]>>;
+	create(data: NewTrailPersinstance): Promise<ResultType<Trail>>;
+	update(data: UpdateTrailPersinstance): Promise<ResultType<Trail>>;
 }

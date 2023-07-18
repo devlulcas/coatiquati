@@ -1,14 +1,13 @@
 import { log } from '$lib/server/log';
 import { Ok, type ResultType } from '$lib/types/result';
-import { TRAIL_PREVIEW_THUMBNAIL } from '../constants/trail-preview-thumbnail';
-import type { GetTrailsDTO } from '../dtos/get-trails.dto';
-import type { TrailPreview } from '../dtos/trail-preview.dto';
+import type { TrailsSearchSchema } from '../dtos/trails-search';
 import type { TrailRepository } from '../repositories/trail.repository';
+import type { Trail } from '../types/trail';
 
 export class GetTrails {
 	constructor(private trailRepository: TrailRepository) {}
 
-	async execute(data: GetTrailsDTO = {}): Promise<ResultType<TrailPreview[]>> {
+	async execute(data: TrailsSearchSchema = {}): Promise<ResultType<Trail[]>> {
 		const trailPreviewsResult = await this.trailRepository.findMany(data);
 
 		if (trailPreviewsResult.error) {
@@ -16,18 +15,11 @@ export class GetTrails {
 			return trailPreviewsResult;
 		}
 
-		const previews: TrailPreview[] = trailPreviewsResult.data.map((trail) => ({
+		const trails: Trail[] = trailPreviewsResult.data.map((trail) => ({
 			...trail,
-			thumbnail: {
-				url: trail.thumbnail,
-				alt: trail.thumbnailDescription,
-				height: TRAIL_PREVIEW_THUMBNAIL.default.height,
-				width: TRAIL_PREVIEW_THUMBNAIL.default.width
-			},
-			updatedAt: trail.updatedAt.toISOString(),
-			slug: `/trails/${trail.id}`
+			contributors: []
 		}));
 
-		return Ok(previews);
+		return Ok(trails);
 	}
 }

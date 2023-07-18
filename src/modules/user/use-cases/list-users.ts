@@ -1,12 +1,12 @@
 import type { ResultType } from '$lib/types/result';
-import type { ListUsersDTO } from '../dtos/list-users.dto';
+import type { UsersSearchSchema } from '../dtos/users-search.dto';
 import type { UserRepository } from '../repositories/user.repository';
-import type { AuthUser } from '../schemas/auth-user';
+import type { User } from '../types/user';
 
 export class ListUsers {
 	constructor(private userRepository: UserRepository) {}
 
-	async execute(data: ListUsersDTO): Promise<ResultType<AuthUser[]>> {
+	async execute(data: UsersSearchSchema): Promise<ResultType<User[]>> {
 		return this.userRepository.findMany(data);
 	}
 }

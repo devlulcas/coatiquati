@@ -1,63 +1,66 @@
 import { db } from '$lib/server/db';
+import { getLimitAndOffset } from '$lib/types/pagination';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import { desc, eq } from 'drizzle-orm';
-import type { GetTrailsDTO } from '../dtos/get-trails.dto';
-import { trail, type NewTrail, type Trail, type TrailId } from '../schemas/trail';
-import type { TrailPreviewDPO, TrailRepository, UpdateTrailDPO } from './trail.repository';
+import type { TrailsSearchSchema } from '../dtos/trails-search';
+import { trailTable } from '../schemas/trail';
+import type { Trail, TrailId } from '../types/trail';
+import type { NewTrailPersinstance, TrailRepository, UpdateTrailPersinstance } from './trail.repository';
 
 export class PostgresTrailRepository implements TrailRepository {
 	async findById(id: TrailId): Promise<ResultType<Trail>> {
-		const trails = await db.select().from(trail).where(eq(trail.id, id));
+		const trail = (await db.select().from(trailTable).where(eq(trailTable.id, id)))[0];
 
-		const firstTrail = trails[0];
-
-		if (!firstTrail) {
+		if (!trail) {
 			return Fail('Trilha não encontrada');
 		}
+
+		const firstTrail = { ...trail, contributors: [] };
 
 		return Ok(firstTrail);
 	}
 
-	// TODO: Finalizar implementação
-	async findMany(params: GetTrailsDTO): Promise<ResultType<TrailPreviewDPO[]>> {
-		const trails = await db.select().from(trail).where(eq(trail.active, true)).orderBy(desc(trail.updatedAt));
+	async findMany(params: TrailsSearchSchema): Promise<ResultType<Trail[]>> {
+		const pagination = getLimitAndOffset(params);
+
+		const trails = await db
+			.select()
+			.from(trailTable)
+			.where(eq(trailTable.active, true))
+			.limit(pagination.limit)
+			.offset(pagination.offset)
+			.orderBy(desc(params.orderBy === 'updated_at' ? trailTable.updatedAt : trailTable.createdAt));
 
 		if (trails.length === 0) {
 			return Fail('Nenhuma trilha encontrada');
 		}
 
-		const trailPreviews = trails.map((trail) => ({
-			id: trail.id,
-			title: trail.title,
-			description: trail.description,
-			contributors: [],
-			thumbnail: trail.thumbnail,
-			thumbnailDescription: trail.thumbnailDescription,
-			updatedAt: trail.updatedAt
-		}));
-
-		return Ok(trailPreviews);
+		return Ok(trails.map((trail) => ({ ...trail, contributors: [] })));
 	}
 
-	async create(data: NewTrail): Promise<ResultType<TrailPreviewDPO>> {
+	async create(data: NewTrailPersinstance): Promise<ResultType<Trail>> {
 		try {
-			const newTrail = (await db.insert(trail).values(data).returning())[0];
+			const newTrail = (await db.insert(trailTable).values(data).returning())[0];
 
-			return Ok({
-				id: newTrail.id,
-				title: newTrail.title,
-				description: newTrail.description,
-				contributors: [],
-				thumbnail: newTrail.thumbnail,
-				thumbnailDescription: newTrail.thumbnailDescription,
-				updatedAt: newTrail.updatedAt
-			});
+			const trail = {
+				...newTrail,
+				contributors: []
+			};
+
+			return Ok(trail);
 		} catch (error) {
 			return Fail('not impl');
 		}
 	}
 
-	async update(data: UpdateTrailDPO): Promise<ResultType<Trail>> {
-		return Fail('not impl');
+	async update(data: UpdateTrailPersinstance): Promise<ResultType<Trail>> {
+		const updatedTrail = (await db.update(trailTable).set(data).where(eq(trailTable.id, data.id)).returning())[0];
+
+		const trail = {
+			...updatedTrail,
+			contributors: []
+		};
+
+		return Ok(trail);
 	}
 }

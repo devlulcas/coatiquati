@@ -12,4 +12,4 @@ export const signInWithOAuthProviderSchema = z.object({
 	storedState: z.string({ required_error: errors.storedState.required })
 });
 
-export type SignInWithOAuthProviderDTO = z.infer<typeof signInWithOAuthProviderSchema>;
+export type SignInWithOAuthProviderSchema = z.infer<typeof signInWithOAuthProviderSchema>;

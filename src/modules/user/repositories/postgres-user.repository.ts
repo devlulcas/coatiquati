@@ -2,13 +2,14 @@ import { db } from '$lib/server/db';
 import { getLimitAndOffset } from '$lib/types/pagination';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import { and, eq, ilike, inArray } from 'drizzle-orm';
-import type { ListUsersDTO } from '../dtos/list-users.dto';
-import { authUser, type AuthUser, type AuthUserId } from '../schemas/auth-user';
+import type { UsersSearchSchema } from '../dtos/users-search.dto';
+import { authUserTable } from '../schemas/auth-user';
+import type { User, UserId } from '../types/user';
 import type { UserRepository } from './user.repository';
 
 export class PostgresUserRepository implements UserRepository {
-	async findByEmail(email: string): Promise<ResultType<AuthUser>> {
-		const users = await db.select().from(authUser).where(eq(authUser.email, email));
+	async findByEmail(email: string): Promise<ResultType<User>> {
+		const users = await db.select().from(authUserTable).where(eq(authUserTable.email, email));
 
 		const user = users[0];
 
@@ -19,8 +20,8 @@ export class PostgresUserRepository implements UserRepository {
 		return Ok(user);
 	}
 
-	async findById(id: AuthUserId): Promise<ResultType<AuthUser>> {
-		const users = await db.select().from(authUser).where(eq(authUser.id, id));
+	async findById(id: UserId): Promise<ResultType<User>> {
+		const users = await db.select().from(authUserTable).where(eq(authUserTable.id, id));
 
 		const user = users[0];
 
@@ -31,7 +32,7 @@ export class PostgresUserRepository implements UserRepository {
 		return Ok(user);
 	}
 
-	async findMany(params: ListUsersDTO): Promise<ResultType<AuthUser[]>> {
+	async findMany(params: UsersSearchSchema): Promise<ResultType<User[]>> {
 		const { limit, offset } = getLimitAndOffset(params);
 
 		const permittedRoles: string[] = typeof params.role === 'string' ? [params.role] : [];
@@ -39,15 +40,15 @@ export class PostgresUserRepository implements UserRepository {
 		const email = `%${params.email}%`;
 
 		const clearParams = [
-			params.role ? inArray(authUser.roles, [permittedRoles]) : undefined,
-			params.username ? ilike(authUser.username, username) : undefined,
-			params.email ? ilike(authUser.email, email) : undefined,
-			params.banned ? eq(authUser.active, params.banned) : undefined
+			params.role ? inArray(authUserTable.roles, [permittedRoles]) : undefined,
+			params.username ? ilike(authUserTable.username, username) : undefined,
+			params.email ? ilike(authUserTable.email, email) : undefined,
+			params.banned ? eq(authUserTable.active, params.banned) : undefined
 		].filter(Boolean);
 
 		const users = await db
 			.select()
-			.from(authUser)
+			.from(authUserTable)
 			.where(and(...clearParams))
 			.limit(limit)
 			.offset(offset);
@@ -55,8 +56,8 @@ export class PostgresUserRepository implements UserRepository {
 		return Ok(users ?? []);
 	}
 
-	async update(id: AuthUserId, data: Partial<AuthUser>): Promise<ResultType<AuthUser>> {
-		const users = await db.select().from(authUser).where(eq(authUser.id, id));
+	async update(id: UserId, data: Partial<User>): Promise<ResultType<User>> {
+		const users = await db.select().from(authUserTable).where(eq(authUserTable.id, id));
 
 		const user = users[0];
 
@@ -64,7 +65,7 @@ export class PostgresUserRepository implements UserRepository {
 			return Fail('User not found');
 		}
 
-		const updatedUser = await db.update(authUser).set(data).where(eq(authUser.id, id)).returning();
+		const updatedUser = await db.update(authUserTable).set(data).where(eq(authUserTable.id, id)).returning();
 
 		return Ok(updatedUser[0]);
 	}

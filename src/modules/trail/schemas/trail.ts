@@ -1,15 +1,13 @@
 import type { InferModel } from 'drizzle-orm';
 import { boolean, pgTable, text, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 import { tsvector } from '../../../lib/server/db/utils/tsvector';
-import { authUser } from '../../user/schemas/auth-user';
+import { authUserTable } from '../../../modules/user/schemas/auth-user';
 
-export type Trail = InferModel<typeof trail, 'select'>;
+export type TrailTable = InferModel<typeof trailTable, 'select'>;
 
-export type NewTrail = InferModel<typeof trail, 'insert'>;
+export type NewTrailTable = InferModel<typeof trailTable, 'insert'>;
 
-export type TrailId = Trail['id'];
-
-export const trail = pgTable(
+export const trailTable = pgTable(
 	'trail',
 	{
 		id: uuid('id').primaryKey().notNull(),
@@ -20,7 +18,8 @@ export const trail = pgTable(
 		thumbnailDescription: text('thumbnail_description').notNull(),
 		authorId: text('user_id')
 			.notNull()
-			.references(() => authUser.id, { onDelete: 'no action', onUpdate: 'cascade' }),
+			.references(() => authUserTable.id, { onDelete: 'no action', onUpdate: 'cascade' }),
+    contributors: text('contributors').notNull().default('[]'),
 		searchVector: tsvector('search_vector', {
 			sources: ['title', 'description', 'thumbnail_description'],
 			weighted: true,
@@ -34,4 +33,19 @@ export const trail = pgTable(
 			idKey: uniqueIndex('trail_id_key').on(table.id)
 		};
 	}
+);
+
+export const trailContributorTable = pgTable(
+  'trail_contributor',
+  {
+    trailId: text('trail_id').notNull().references(() => trailTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    userId: text('user_id').notNull().references(() => authUserTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull()
+  },
+  (table) => {
+    return {
+      idKey: uniqueIndex('trail_contributor_id_key').on(table.trailId, table.userId)
+    };
+  }
 );

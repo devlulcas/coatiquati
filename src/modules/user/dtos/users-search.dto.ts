@@ -1,7 +1,7 @@
 import { paginationSchemaShape } from '$lib/types/pagination';
 import { z } from 'zod';
 
-export const listUsersSchema = z.object({
+export const usersSearchSchema = z.object({
 	...paginationSchemaShape,
 	role: z.string().nullish(),
 	username: z.string().nullish(),
@@ -9,4 +9,4 @@ export const listUsersSchema = z.object({
 	banned: z.coerce.boolean().nullish().default(false)
 });
 
-export type ListUsersDTO = z.infer<typeof listUsersSchema>;
+export type UsersSearchSchema = z.infer<typeof usersSearchSchema>;

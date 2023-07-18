@@ -1,10 +1,10 @@
 import { auth, googleAuth } from '$lib/server/auth';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import { LuciaError, type Session } from 'lucia-auth';
-import { AuthProviders } from '../constants/auth-providers';
-import { Roles } from '../constants/user-roles';
-import type { SignInWithUsernameDTO } from '../dtos/sign-in-with-username.dto';
-import type { SignUpWithUsernameDTO } from '../dtos/sign-up-with-username.dto';
+import { AUTH_PROVIDERS } from '../constants/auth-providers';
+import { ROLES } from '../constants/user-roles';
+import type { SignInWithUsernameSchema } from '../dtos/sign-in-with-username.dto';
+import type { SignUpWithUsernameSchema } from '../dtos/sign-up-with-username.dto';
 import type { AuthService } from './auth.service';
 
 export class LuciaAuthService implements AuthService {
@@ -28,7 +28,7 @@ export class LuciaAuthService implements AuthService {
 				// O Google não fornece um endereço de e-mail, então vamos fingir que é isso mesmo
 				return createUser({
 					username: providerUser.name,
-					roles: [Roles.USER],
+					roles: [ROLES.user],
 					email: providerUser.email || providerUser.sub + '@google.com',
 					name: providerUser.name
 				});
@@ -61,7 +61,7 @@ export class LuciaAuthService implements AuthService {
 	/**
 	 * Cria uma sessão para o usuário usando usuário e senha.
 	 */
-	async signInWithUsername(data: SignInWithUsernameDTO): Promise<ResultType<Session>> {
+	async signInWithUsername(data: SignInWithUsernameSchema): Promise<ResultType<Session>> {
 		try {
 			const key = await auth.useKey('username', data.username, data.password);
 
@@ -83,17 +83,17 @@ export class LuciaAuthService implements AuthService {
 	/**
 	 * Criar um usuário usando usuário e senha. Pede e-mail para enviar e-mails de segurança.
 	 */
-	async signUpWithUsername(data: SignUpWithUsernameDTO): Promise<ResultType<Session>> {
+	async signUpWithUsername(data: SignUpWithUsernameSchema): Promise<ResultType<Session>> {
 		try {
 			const user = await auth.createUser({
 				primaryKey: {
-					providerId: AuthProviders.USERNAME,
+					providerId: AUTH_PROVIDERS.USERNAME,
 					providerUserId: data.username,
 					password: data.password
 				},
 				attributes: {
 					username: data.username,
-					roles: [Roles.USER],
+					roles: [ROLES.user],
 					email: data.email,
 					name: data.name ? data.name : undefined
 				}
