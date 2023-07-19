@@ -1,29 +1,29 @@
 import type { InferModel } from 'drizzle-orm';
 import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { authUser } from '../../user/schemas/auth-user';
+import { authUserTable } from '../../user/schemas/auth-user';
 
-export type BanRegistry = InferModel<typeof banRegistry>;
+export type BanRegistryTable = InferModel<typeof banRegistryTable>;
 
-export type NewBanRegistry = InferModel<typeof banRegistry, 'insert'>;
+export type NewBanRegistryTable = InferModel<typeof banRegistryTable, 'insert'>;
 
-export type BanRegistryId = BanRegistry['id'];
+export type BanRegistryTableId = BanRegistryTable['id'];
 
-export const banRegistry = pgTable('ban_registry', {
+export const banRegistryTable = pgTable('ban_registry', {
 	id: uuid('id').primaryKey(),
 	userId: text('user_id')
-		.references(() => authUser.id, {
+		.references(() => authUserTable.id, {
 			onDelete: 'cascade',
 			onUpdate: 'cascade'
 		})
 		.notNull(),
 	reason: text('reason').notNull(),
 	adminId: text('admin_id')
-		.references(() => authUser.id, {
+		.references(() => authUserTable.id, {
 			onDelete: 'no action',
 			onUpdate: 'cascade'
 		})
 		.notNull(),
-	secondAdminId: text('second_admin_id').references(() => authUser.id, {
+	secondAdminId: text('second_admin_id').references(() => authUserTable.id, {
 		onDelete: 'no action',
 		onUpdate: 'cascade'
 	}),

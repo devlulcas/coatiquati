@@ -1,10 +1,10 @@
 import { uuid } from '$lib/server/db/utils/uuid';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
-import type { BanDTO } from '$modules/ban/dtos/ban.dto';
 import type { BanRegistryRepository } from '$modules/ban/repositories/ban-registry.repository';
-import type { NewBanRegistry } from '$modules/ban/schemas/ban-registry';
 import { isAdministrator } from '$modules/user/constants/user-roles';
 import type { UserRepository } from '$modules/user/repositories/user.repository';
+import type { BanSchema } from '../dtos/ban.dto';
+import type { NewBanRegistryTable } from '../schemas/ban-registry';
 
 export class BanUser {
 	constructor(
@@ -12,7 +12,7 @@ export class BanUser {
 		private banRegistryRepository: BanRegistryRepository
 	) {}
 
-	async execute(data: Omit<NewBanRegistry, 'id'>): Promise<ResultType<BanDTO>> {
+	async execute(data: Omit<NewBanRegistryTable, 'id'>): Promise<ResultType<BanSchema>> {
 		const admin = await this.userRepository.findById(data.adminId);
 
 		if (admin.error) {

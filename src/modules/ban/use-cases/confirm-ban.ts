@@ -1,14 +1,14 @@
 import { Fail, Ok, type ResultType } from '$lib/types/result';
-import type { BanDTO } from '$modules/ban/dtos/ban.dto';
 import type { BanRegistryRepository } from '$modules/ban/repositories/ban-registry.repository';
 import { isAdministrator } from '$modules/user/constants/user-roles';
 import type { UserRepository } from '$modules/user/repositories/user.repository';
-import type { AuthUserId } from '$modules/user/schemas/auth-user';
-import type { BanRegistryId } from '../schemas/ban-registry';
+import type { UserId } from '$modules/user/types/user';
+import type { BanSchema } from '../dtos/ban.dto';
+import type { BanRegistryTableId } from '../schemas/ban-registry';
 
 type ConfirmBanUserDTO = {
-	banRegistryId: BanRegistryId;
-	secondAdminId: AuthUserId;
+	banRegistryId: BanRegistryTableId;
+	secondAdminId: UserId;
 };
 
 export class ConfirmBanUser {
@@ -17,7 +17,7 @@ export class ConfirmBanUser {
 		private banRegistryRepository: BanRegistryRepository
 	) {}
 
-	async execute(data: ConfirmBanUserDTO): Promise<ResultType<BanDTO>> {
+	async execute(data: ConfirmBanUserDTO): Promise<ResultType<BanSchema>> {
 		const banRegistry = await this.banRegistryRepository.findById(data.banRegistryId);
 
 		if (banRegistry.error) {

@@ -1,5 +1,5 @@
-import type { BanRegistryId, NewBanRegistry } from '../schemas/ban-registry';
+import type { BanRegistryTableId, NewBanRegistryTable } from "../schemas/ban-registry";
 
-export type UpdateBanDTO = Partial<NewBanRegistry> & {
-	id: BanRegistryId;
+export type UpdateBanSchema = Partial<NewBanRegistryTable> & {
+	id: BanRegistryTableId;
 };

@@ -1,9 +1,9 @@
 import type { ResultType } from '$lib/types/result';
-import type { BanRegistry, BanRegistryId, NewBanRegistry } from '$modules/ban/schemas/ban-registry';
-import type { UpdateBanDTO } from '../dtos/update-ban.dto';
+import type { UpdateBanSchema } from '../dtos/update-ban.dto';
+import type { BanRegistryTable, BanRegistryTableId, NewBanRegistryTable } from '../schemas/ban-registry';
 
 export interface BanRegistryRepository {
-	findById(id: BanRegistryId): Promise<ResultType<BanRegistry>>;
-	update(data: UpdateBanDTO): Promise<ResultType<BanRegistry>>;
-	create(data: NewBanRegistry): Promise<ResultType<BanRegistry>>;
+	findById(id: BanRegistryTableId): Promise<ResultType<BanRegistryTable>>;
+	update(data: UpdateBanSchema): Promise<ResultType<BanRegistryTable>>;
+	create(data: NewBanRegistryTable): Promise<ResultType<BanRegistryTable>>;
 }

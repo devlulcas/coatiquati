@@ -1,10 +1,10 @@
-import type { AuthUser } from '$modules/user/schemas/auth-user';
-import type { BanRegistry } from '../schemas/ban-registry';
+import type { User } from "$modules/user/types/user";
+import type { BanRegistryTable } from "../schemas/ban-registry";
 
-export type BanDTO = {
+export type BanSchema = {
 	reason: string;
-	target: AuthUser;
-	first: AuthUser;
-	second: AuthUser | null;
-	registry: BanRegistry;
+	target: User;
+	first: User;
+	second: User | null;
+	registry: BanRegistryTable;
 };
