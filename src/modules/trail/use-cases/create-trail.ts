@@ -1,6 +1,7 @@
 import { uuid } from '$lib/server/db/utils/uuid';
 import { log } from '$lib/server/log';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
+import { slugify } from '$lib/utils/slugify';
 import type { ImageService } from '$modules/image/services';
 import { TRAIL_PREVIEW_THUMBNAIL } from '../constants/trail-preview-thumbnail';
 import { newTrailSchema } from '../dtos/new-trail.dto';
@@ -41,8 +42,13 @@ export class CreateTrail {
 			});
 		}
 
+		const id = uuid();
+
+		const slug = slugify(parsedResult.data.title) + '-' + id;
+
 		const createdTrail = await this.trailRepository.create({
-			id: uuid(),
+			id: id,
+			slug: slug,
 			authorId: parsedResult.data.authorId,
 			thumbnailDescription: parsedResult.data.thumbnailAlt,
 			thumbnail: imageUploadResult.data,

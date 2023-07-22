@@ -48,7 +48,7 @@
 			<Badge variant="warning">
 				Atenção: este usuário é um administrador e tem acesso a todas as funcionalidades do sistema.
 				<Button
-					class="min-w-fit ml-auto hover:bg-white hover:text-orange-500"
+					className="min-w-fit ml-auto hover:bg-white hover:text-orange-500"
 					type="submit"
 					formaction="?/downgrade"
 					variant="ghost"
@@ -60,7 +60,7 @@
 			<Badge variant="info">
 				Atenção: usuário sem permissões de administrador.
 				<Button
-					class="min-w-fit ml-auto hover:bg-white hover:text-blue-500"
+					className="min-w-fit ml-auto hover:bg-white hover:text-blue-500"
 					type="submit"
 					formaction="?/upgrade"
 					variant="ghost"
@@ -76,7 +76,7 @@
 
 		<Badge variant="error">
 			Banir usuário ({data.user.banVotes} / 2)
-			<Button class="min-w-fit ml-auto hover:bg-white hover:text-red-500" type="submit" variant="ghost">
+			<Button className="min-w-fit ml-auto hover:bg-white hover:text-red-500" type="submit" variant="ghost">
 				{data.user.banVotes === 0 ? 'Iniciar banimento' : 'Confirmar banimento'}
 			</Button>
 		</Badge>

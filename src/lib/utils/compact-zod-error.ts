@@ -1,4 +1,4 @@
-import type { ValidationErrors } from 'sveltekit-superforms/index';
+import type { ValidationErrors } from 'sveltekit-superforms';
 import type { ZodError, ZodObject, ZodRawShape } from 'zod';
 
 export function compactZodError(error: ZodError): string {

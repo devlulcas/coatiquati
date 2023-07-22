@@ -1,10 +1,10 @@
 import { log } from '$lib/server/log';
 import { redirectToSignIn } from '$lib/utils/redirect-url';
-import { Roles } from '$modules/user/constants/user-roles';
+import { ROLES } from '$modules/user/constants/user-roles';
 import type { AuthBarrier } from './protect';
 
 export const adminBarrier: AuthBarrier = (session, event) => {
-	const isAdmin = session.user?.roles.includes(Roles.ADMIN) ?? false;
+	const isAdmin = session.user?.roles.includes(ROLES.admin) ?? false;
 
 	return {
 		result: isAdmin,

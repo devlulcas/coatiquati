@@ -1,5 +1,5 @@
 import { redirectToSignIn } from '$lib/utils/redirect-url';
-import { listUsersSchema } from '$modules/user/dtos/list-users.dto';
+import { usersSearchSchema } from '$modules/user/dtos/users-search.dto';
 import { PostgresUserRepository } from '$modules/user/repositories/postgres-user.repository';
 import { ListUsers } from '$modules/user/use-cases/list-users';
 import { superValidate } from 'sveltekit-superforms/server';
@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ url, parent }) => {
 
 	const listUsers = new ListUsers(new PostgresUserRepository());
 
-	const form = await superValidate(url.searchParams, listUsersSchema);
+	const form = await superValidate(url.searchParams, usersSearchSchema);
 
 	const users = await listUsers.execute(form.data);
 

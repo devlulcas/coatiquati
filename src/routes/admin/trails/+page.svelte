@@ -22,7 +22,7 @@
 		use:enhance
 		enctype="multipart/form-data"
 		method="POST"
-		action="?/createTrail"
+		action="/"
 		class="lc-box flex flex-col gap-2"
 	>
 		<h2 class="text-2xl font-bold">Criar trilha</h2>
@@ -77,7 +77,7 @@
 			</div>
 		</InputFile>
 
-		<Button class="mt-4" loading={$submitting} type="submit">Criar</Button>
+		<Button className="mt-4" loading={$submitting} type="submit">Criar</Button>
 	</form>
 </section>
 

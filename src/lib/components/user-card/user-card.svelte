@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { AuthUser } from '$modules/user/schemas/auth-user';
+	import type { User } from '$modules/user/types/user';
 	import { Edit } from 'lucide-svelte';
 	import { RoleBadge } from '../badge';
 	import { Divider } from '../divider';
 
-	export let user: AuthUser;
+	export let user: User;
 	export let isCurrentUser = false;
 </script>
 

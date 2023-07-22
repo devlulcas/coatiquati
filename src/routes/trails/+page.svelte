@@ -8,7 +8,12 @@
 	export let data: PageData;
 </script>
 
-<div class="lc-wrapper min-h-[--safe-screen-height]">
+{#if data.error}
+  <img src="/raccoon-stealing.gif" alt="Coati" class="fixed inset-0 opacity-25 w-full h-full pointer-events-none mix-blend-darken" />
+{/if}
+
+
+<div class="lc-wrapper min-h-[--safe-screen-height] z-10">
 	<form method="GET" class="flex flex-1 items-end mt-8">
 		<TextField id="search" name="search" label="Pesquisar" variant="opaque" labelVariant="default" />
 	</form>
@@ -17,8 +22,8 @@
 		<Badge variant="warning" className="mt-4">
 			{data.error}
 		</Badge>
-	{/if}
-
+    {/if}
+    
 	<TrailCardGrid>
 		{#each data.trails as trail}
 			<TrailCard {trail} />

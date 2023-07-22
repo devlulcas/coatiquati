@@ -21,7 +21,7 @@
 
 	<Button
 		variant="destructive"
-		class="absolute top-4 right-4"
+		className="absolute top-4 right-4"
 		size="icon"
 		on:click={onDelete}
 		title="Remover imagem"

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { ClassName } from '$lib/types/class-name';
 	import { cn } from '$lib/utils/cn';
 	import type { VariantProps } from 'class-variance-authority';
 	import type { HTMLInputAttributes } from 'svelte/elements';
@@ -28,10 +29,11 @@
 	export let errors: FormError = null;
 	export let variant: InputVariant = 'default';
 	export let labelVariant: LabelVariant = variant;
-	export let labelClassname = '';
+	export let labelClassname: ClassName = ''
+	export let className: ClassName = '';
 	export let showVisibilityButton = false;
 
-	let inputClassname = cn(inputVariants({ variant }));
+	let inputClassname = cn(inputVariants({ variant, className }));
 
 	const errorId = id + '-' + 'error';
 

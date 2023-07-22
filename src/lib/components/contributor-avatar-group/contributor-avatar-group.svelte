@@ -1,9 +1,10 @@
 <script lang="ts">
+	import type { ClassName } from '$lib/types/class-name';
 	import { cn } from '$lib/utils/cn';
-	import type { Contributor } from '$modules/user/entities/contributor.entity';
+	import type { Contributor } from '$modules/user/types/user';
 
 	export let contributors: Contributor[] = [];
-	export let className: string | null | undefined;
+	export let className: ClassName = '';
 </script>
 
 <div class={cn('flex items-center', className)}>

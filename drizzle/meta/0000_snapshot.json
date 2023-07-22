@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "94080534-8822-4a25-b2d2-78d771f48527",
+  "id": "572a9414-567c-41c1-bf5a-ba43d3e892f8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "ban_registry": {
@@ -95,7 +95,80 @@
           "onUpdate": "cascade"
         }
       },
-      "compositePrimaryKeys": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "trail_contributor": {
+      "name": "trail_contributor",
+      "schema": "",
+      "columns": {
+        "trail_id": {
+          "name": "trail_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "trail_contributor_id_key": {
+          "name": "trail_contributor_id_key",
+          "columns": [
+            "trail_id",
+            "user_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "trail_contributor_trail_id_trail_id_fk": {
+          "name": "trail_contributor_trail_id_trail_id_fk",
+          "tableFrom": "trail_contributor",
+          "tableTo": "trail",
+          "columnsFrom": [
+            "trail_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "trail_contributor_user_id_auth_user_id_fk": {
+          "name": "trail_contributor_user_id_auth_user_id_fk",
+          "tableFrom": "trail_contributor",
+          "tableTo": "auth_user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "trail": {
       "name": "trail",
@@ -115,6 +188,12 @@
         },
         "description": {
           "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -145,12 +224,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "search_vector": {
-          "name": "search_vector",
-          "type": "tsvector GENERATED ALWAYS AS (setweight(to_tsvector('pg_catalog.portuguese', coalesce(title, '')), 'A') || setweight(to_tsvector('pg_catalog.portuguese', coalesce(description, '')), 'B') || setweight(to_tsvector('pg_catalog.portuguese', coalesce(thumbnail_description, '')), 'C')) STORED",
-          "primaryKey": false,
-          "notNull": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -173,6 +246,13 @@
             "id"
           ],
           "isUnique": true
+        },
+        "trail_slug_key": {
+          "name": "trail_slug_key",
+          "columns": [
+            "slug"
+          ],
+          "isUnique": true
         }
       },
       "foreignKeys": {
@@ -190,7 +270,8 @@
           "onUpdate": "cascade"
         }
       },
-      "compositePrimaryKeys": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "auth_key": {
       "name": "auth_key",
@@ -258,7 +339,8 @@
           "onUpdate": "cascade"
         }
       },
-      "compositePrimaryKeys": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "auth_session": {
       "name": "auth_session",
@@ -320,7 +402,8 @@
           "onUpdate": "cascade"
         }
       },
-      "compositePrimaryKeys": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "auth_user": {
       "name": "auth_user",
@@ -396,7 +479,8 @@
         }
       },
       "foreignKeys": {},
-      "compositePrimaryKeys": {}
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     }
   },
   "enums": {},

@@ -3,6 +3,7 @@
 	import { Blob } from '$lib/components/blob';
 	import { Header } from '$lib/components/header';
 	import { NavigationProgress } from '$lib/components/navigation-progress';
+	import { cn } from '$lib/utils/cn';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
@@ -20,7 +21,9 @@
 
 <Header user={data.user} />
 
-<div class="grainy relative max-w-[100vw] min-h-[--safe-screen-height] overflow-x-hidden">
+<div class={cn("grainy relative max-w-[100vw] min-h-[--safe-screen-height] overflow-x-hidden", {
+  "backdrop-blur-3xl": process.env.NODE_ENV === 'production'
+})}>
 	<slot />
 </div>
 
@@ -29,6 +32,7 @@
 		background-image: url('/grainy.svg');
 		background-size: 100px;
 		background-repeat: repeat;
+    background-color: #0000000f;
 	}
 
 	.grainy::before {

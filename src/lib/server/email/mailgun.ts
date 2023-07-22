@@ -2,11 +2,11 @@ import { MAIL_FROM } from '$env/static/private';
 import { Fail, Ok, type ResultType } from '$lib/types/result';
 import InputFormData from 'form-data';
 import Mailgun from 'mailgun.js';
-import type Client from 'mailgun.js/client';
+import type { IMailgunClient } from 'mailgun.js/Interfaces';
 import type { EmailClient, Mail } from './email-client';
 
 export class MailgunEmailClientStrategy implements EmailClient {
-	private mg: Client | undefined;
+	private mg: IMailgunClient;
 	private mailgunApiKey: string;
 	private mailgunDomain: string;
 
@@ -21,7 +21,7 @@ export class MailgunEmailClientStrategy implements EmailClient {
 
 	async sendEmail(mail: Mail): Promise<ResultType<string | undefined>> {
 		try {
-			const response = await this.mg?.messages.create(this.mailgunDomain, {
+			const response = await this.mg.messages.create(this.mailgunDomain, {
 				from: MAIL_FROM,
 				to: [mail.to],
 				subject: mail.subject,

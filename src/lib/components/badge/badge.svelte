@@ -6,7 +6,7 @@
 
 	export let size: BadgeSize = 'default'
 	export let variant: BadgeVariant = 'default'
-	export let className:ClassName = ''
+	export let className: ClassName = ''
 
 	let icon = {
 		default: Smile,
