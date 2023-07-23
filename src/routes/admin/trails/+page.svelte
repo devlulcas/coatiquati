@@ -11,18 +11,18 @@
 
 	export let data: PageServerData;
 
-	const { form, errors, enhance, constraints, submitting } = superForm(data.form, {
+	const { form, errors, enhance, constraints, submitting, message } = superForm(data.form, {
 		resetForm: true
 	});
 </script>
 
 <section >
   <SectionHeading>Gerenciar conteúdo</SectionHeading>
+
 	<form
 		use:enhance
 		enctype="multipart/form-data"
 		method="POST"
-		action="/"
 		class="lc-box flex flex-col gap-2"
 	>
 		<h2 class="text-2xl font-bold">Criar trilha</h2>
@@ -79,13 +79,13 @@
 
 		<Button className="mt-4" loading={$submitting} type="submit">Criar</Button>
 	</form>
+  
+  {#if $message}
+    <Badge variant="warning" className="mt-4">
+      {$message}
+    </Badge>
+  {/if}
 </section>
-
-{#if data.error}
-	<Badge variant="warning" className="mt-4">
-		{data.error}
-	</Badge>
-{/if}
 
 <TrailCardGrid>
 	{#each data.trails as trail}

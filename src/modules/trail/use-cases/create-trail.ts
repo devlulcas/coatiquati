@@ -4,7 +4,7 @@ import { Fail, Ok, type ResultType } from '$lib/types/result';
 import { slugify } from '$lib/utils/slugify';
 import type { ImageService } from '$modules/image/services';
 import { TRAIL_PREVIEW_THUMBNAIL } from '../constants/trail-preview-thumbnail';
-import { newTrailSchema } from '../dtos/new-trail.dto';
+import type { NewTrailSchema } from '../dtos/new-trail.dto';
 import type { TrailRepository } from '../repositories/trail.repository';
 import type { Trail } from '../types/trail';
 
@@ -14,18 +14,8 @@ export class CreateTrail {
 		private imageService: ImageService
 	) {}
 
-	async execute(data: unknown): Promise<ResultType<Trail>> {
-		const parsedResult = newTrailSchema.safeParse(data);
-
-		if (!parsedResult.success) {
-			return Fail({
-				message: 'Dados inválidos',
-				type: 'badRequest',
-				fieldErrors: parsedResult.error.flatten().fieldErrors
-			});
-		}
-
-		const imageUploadResult = await this.imageService.uploadImage(parsedResult.data.thumbnail, {
+	async execute(data: NewTrailSchema): Promise<ResultType<Trail>> {
+		const imageUploadResult = await this.imageService.uploadImage(data.thumbnail, {
 			width: TRAIL_PREVIEW_THUMBNAIL.default.width,
 			height: TRAIL_PREVIEW_THUMBNAIL.default.height
 		});
@@ -44,16 +34,16 @@ export class CreateTrail {
 
 		const id = uuid();
 
-		const slug = slugify(parsedResult.data.title) + '-' + id;
+		const slug = slugify(data.title) + '-' + id;
 
 		const createdTrail = await this.trailRepository.create({
 			id: id,
 			slug: slug,
-			authorId: parsedResult.data.authorId,
-			thumbnailDescription: parsedResult.data.thumbnailAlt,
+			authorId: data.authorId,
+			thumbnailDescription: data.thumbnailAlt,
 			thumbnail: imageUploadResult.data,
-			title: parsedResult.data.title,
-			description: parsedResult.data.description
+			title: data.title,
+			description: data.description
 		});
 
 		if (createdTrail.error) {
