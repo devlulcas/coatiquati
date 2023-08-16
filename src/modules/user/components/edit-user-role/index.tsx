@@ -57,8 +57,8 @@ export function EditUserRole({ user }: EditUserRoleProps) {
           {isAdmin ? 'usuário' : 'administrador'}?
         </DialogTitle>
 
-        <DialogDescription>
-          <SkullIcon className="w-24 h-24 mx-auto my-10 text-red-600" />
+        <DialogDescription className="flex items-center justify-center py-10">
+          <SkullIcon className="w-24 h-24 text-red-600" />
         </DialogDescription>
 
         <DialogFooter className="flex gap-4 w-full">
