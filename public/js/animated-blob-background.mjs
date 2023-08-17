@@ -45,7 +45,7 @@ canvas.height = window.innerHeight;
 
 paintGradient(canvas, ctx);
 
-effect.init(10);
+effect.init(15);
 
 window.addEventListener('resize', () => {
   canvas.width = window.innerWidth;
