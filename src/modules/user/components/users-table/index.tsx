@@ -1,5 +1,5 @@
 import { DataTable } from '@/shared/components/common/data-table';
-import { User } from '../../types/user';
+import { type User } from '../../types/user';
 import { usersColumns } from './columns';
 
 type UserTableProps = {

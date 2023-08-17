@@ -3,7 +3,7 @@ import { Button } from '@/shared/components/ui/button';
 import { ArrowRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trail } from '../../types/trail';
+import { type Trail } from '../../types/trail';
 
 type TrailCardProps = {
   trail: Trail;

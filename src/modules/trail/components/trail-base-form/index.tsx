@@ -12,6 +12,7 @@ import {
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { type ClassValue } from 'clsx';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { newTrailSchema } from '../../schemas/new-trail-schema';
@@ -19,7 +20,7 @@ import { newTrailSchema } from '../../schemas/new-trail-schema';
 type TrailBaseFormProps = {
   defaultValues?: z.infer<typeof newTrailSchema>;
   onSubmit: (values: z.infer<typeof newTrailSchema>) => void;
-  className?: string;
+  className?: ClassValue;
 };
 
 export function TrailBaseForm(props: TrailBaseFormProps) {

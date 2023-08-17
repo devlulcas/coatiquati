@@ -2,10 +2,10 @@
 
 import { SortedColumnHeader } from '@/shared/components/common/data-table';
 import { Button } from '@/shared/components/ui/button';
-import { ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Trail } from '../../types/trail';
+import { type Trail } from '../../types/trail';
 import { EditTrailDialogTrigger } from '../edit-trail-dialog-trigger';
 import { StatusBadge } from './status-badge';
 

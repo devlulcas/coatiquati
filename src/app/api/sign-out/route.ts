@@ -1,7 +1,6 @@
 import { auth } from '@/modules/auth/services/lucia';
 import { cookies } from 'next/headers';
-
-import type { NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
   const authRequest = auth.handleRequest({ request, cookies });

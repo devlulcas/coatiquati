@@ -2,7 +2,7 @@ import { db } from '@/modules/database/db';
 import { trailTable } from '@/modules/database/schema/trail';
 import { z } from 'zod';
 import { newTrailSchema } from '../schemas/new-trail-schema';
-import { Trail } from '../types/trail';
+import { type Trail } from '../types/trail';
 
 const updateTrailSchema = z.object({
   trail: newTrailSchema,

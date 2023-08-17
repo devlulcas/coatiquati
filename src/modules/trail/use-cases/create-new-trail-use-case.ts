@@ -2,7 +2,7 @@ import { db } from '@/modules/database/db';
 import { trailTable } from '@/modules/database/schema/trail';
 import { z } from 'zod';
 import { newTrailSchema } from '../schemas/new-trail-schema';
-import { Trail } from '../types/trail';
+import { type Trail } from '../types/trail';
 
 const createNewTrailUseCaseSchema = z.object({
   authorId: z.string({ required_error: 'O id do autor é obrigatório' }),

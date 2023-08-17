@@ -1,9 +1,10 @@
 import { cn } from '@/shared/utils/cn';
+import { type ClassValue } from 'clsx';
 import css from './marquee.module.css';
 
 type MarqueeProps = {
   words: string[];
-  className?: string;
+  className?: ClassValue;
 };
 
 export function Marquee({ words, className }: MarqueeProps) {

@@ -2,7 +2,7 @@ import { db } from '@/modules/database/db';
 import { trailTable } from '@/modules/database/schema/trail';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { Trail } from '../types/trail';
+import { type Trail } from '../types/trail';
 
 const getTrailUseCaseSchema = z.object({
   id: z.number({ required_error: 'O id da trilha é obrigatório' }),

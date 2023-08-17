@@ -7,7 +7,7 @@ export default async function Page() {
   return (
     <div className="pt-12 h-[--view-height] flex flex-col">
       <h1 className="text-5xl lg:text-8xl font-black">
-        Coati! Aprenda mais ensinando.
+        CoatiQuati! Aprenda mais ensinando.
       </h1>
 
       <p className="font-medium mt-2 max-w-2xl">
@@ -28,7 +28,7 @@ export default async function Page() {
 
       <div className="overflow-hidden outline absolute h-[--safe-screen-height] inset-0 z-[-1]">
         <Image
-          className="absolute bottom-0 translate-y-1/2 right-1/2 translate-x-1/2 w-full md:w-1/2 blur-xl"
+          className="absolute bottom-0  right-1/2 translate-1/2 w-full md:w-1/2 blur-xl"
           src={blobImage}
           alt="blob"
         />

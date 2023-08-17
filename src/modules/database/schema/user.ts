@@ -1,4 +1,4 @@
-import { InferModel } from 'drizzle-orm';
+import { type InferModel } from 'drizzle-orm';
 import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export type AuthUserTable = InferModel<typeof userTable, 'select'>;

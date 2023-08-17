@@ -2,7 +2,7 @@ import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import { like, or } from 'drizzle-orm';
 import { z } from 'zod';
-import { User } from '../types/user';
+import { type User } from '../types/user';
 
 const getUsersUseCaseSchema = z.object({
   limit: z.number().optional().default(10),

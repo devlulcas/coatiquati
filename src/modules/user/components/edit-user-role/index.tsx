@@ -12,7 +12,7 @@ import {
 } from '@/shared/components/ui/dialog';
 import { SkullIcon } from 'lucide-react';
 import { useState } from 'react';
-import { User } from '../../types/user';
+import { type User } from '../../types/user';
 
 type EditUserRoleProps = {
   user: User;

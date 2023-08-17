@@ -3,9 +3,7 @@ import { auth } from '@/modules/auth/services/lucia';
 import { formDataToObject } from '@/shared/utils/form-data-to-object';
 import { LuciaError } from 'lucia';
 import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
-
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
   const formData = await request.formData();

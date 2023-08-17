@@ -1,5 +1,5 @@
 import { cn } from '@/shared/utils/cn';
-import { Trail } from '../../types/trail';
+import { type Trail } from '../../types/trail';
 
 type StatusBadgeProps = {
   status: Trail['status'];

@@ -1,5 +1,5 @@
 import { DataTable } from '@/shared/components/common/data-table';
-import { Trail } from '../../types/trail';
+import { type Trail } from '../../types/trail';
 import { trailsColumns } from './columns';
 
 type TrailTableProps = {

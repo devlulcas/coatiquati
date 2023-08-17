@@ -1,16 +1,5 @@
 'use client';
 
-import {
-  Column,
-  ColumnDef,
-  SortingState,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
-
 import { Button } from '@/shared/components/ui/button';
 import {
   Table,
@@ -20,6 +9,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/shared/components/ui/table';
+import {
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+  type Column,
+  type ColumnDef,
+  type SortingState,
+} from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { useState } from 'react';
 

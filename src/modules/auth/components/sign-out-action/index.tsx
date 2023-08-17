@@ -1,9 +1,11 @@
+import { cn } from '@/shared/utils/cn';
+import type { ClassValue } from 'clsx';
 import { AuthForm } from '../auth-form';
 
 type SignOutActionProps = {
   children: React.ReactNode;
-  className?: string;
-  formClassName?: string;
+  className?: ClassValue;
+  formClassName?: ClassValue;
 };
 
 export function SignOutAction({
@@ -12,8 +14,8 @@ export function SignOutAction({
   formClassName,
 }: SignOutActionProps) {
   return (
-    <AuthForm action="/api/sign-out" className={formClassName}>
-      <button className={className} type="submit">
+    <AuthForm action="/api/sign-out" className={cn(formClassName)}>
+      <button className={cn(className)} type="submit">
         {children}
       </button>
     </AuthForm>

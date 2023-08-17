@@ -24,7 +24,7 @@ import { PencilIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { User } from '../../types/user';
+import { type User } from '../../types/user';
 import { PinConfirmationDialog } from './pin-confirmation-dialog';
 
 const editUserDialogSchema = userSignUpSchema.omit({ password: true });

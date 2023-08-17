@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
 import { PencilIcon } from 'lucide-react';
-import { Trail } from '../../types/trail';
+import { type Trail } from '../../types/trail';
 import { TrailBaseForm } from '../trail-base-form';
 
 type EditTrailDialogTriggerProps = {

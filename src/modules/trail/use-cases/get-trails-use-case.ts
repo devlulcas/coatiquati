@@ -2,7 +2,7 @@ import { db } from '@/modules/database/db';
 import { trailTable } from '@/modules/database/schema/trail';
 import { like, or } from 'drizzle-orm';
 import { z } from 'zod';
-import { Trail } from '../types/trail';
+import { type Trail } from '../types/trail';
 
 const getTrailsUseCaseSchema = z.object({
   limit: z.number().optional().default(10),
