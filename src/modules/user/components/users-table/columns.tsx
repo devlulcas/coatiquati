@@ -2,12 +2,12 @@
 
 import { SortedColumnHeader } from '@/shared/components/common/data-table';
 import { Button } from '@/shared/components/ui/button';
-import { ColumnDef } from '@tanstack/react-table';
+import { type ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
-import { User } from '../../types/user';
+import { type User } from '../../types/user';
 import { EditUserRole } from '../edit-user-role';
+import { UserRoleBadge } from '../user-role-badge';
 import { UserAvatar } from './user-avatar';
-import { UserRoleBadge } from './user-role-badge';
 
 export const usersColumns: ColumnDef<User>[] = [
   {
