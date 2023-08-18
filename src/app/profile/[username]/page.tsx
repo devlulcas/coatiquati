@@ -1,3 +1,5 @@
+import { TrailCard } from '@/modules/trail/components/trail-card';
+import { ProfileHeading } from '@/modules/user/components/profile-heading';
 import { getUserProfileUseCase } from '@/modules/user/use-cases/get-user-profile-use-case';
 
 type PageProps = {
@@ -6,16 +8,32 @@ type PageProps = {
   };
 };
 
+export const revalidate = 60;
+
 export default async function Page({ params }: PageProps) {
   const profile = await getUserProfileUseCase({
     username: params.username,
   });
 
   return (
-    <>
-      <pre>
-        <code>{JSON.stringify(profile, null, 2)}</code>
-      </pre>
-    </>
+    <main className="py-4">
+      <ProfileHeading user={profile.user} />
+
+      {profile.trailsAuthored.length > 0 && (
+        <section className="mt-8">
+          <h2 className="text-xl font-bold">Trilhas autoradas</h2>
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            {profile.trailsAuthored.map((trail) => (
+              <li
+                key={trail.id}
+                className="transition duration-500 ease-in-out  hover:scale-105"
+              >
+                <TrailCard trail={trail} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </main>
   );
 }

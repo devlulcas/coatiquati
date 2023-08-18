@@ -1,27 +1,26 @@
 import { userSignInSchema } from '@/modules/auth/schemas/user-sign-in-schema';
 import { db } from '@/modules/database/db';
-import {
-  trailContributorTable,
-  trailTable,
-} from '@/modules/database/schema/trail';
+import { trailTable } from '@/modules/database/schema/trail';
 import { userTable } from '@/modules/database/schema/user';
-import { Trail } from '@/modules/trail/types/trail';
+import { type Trail } from '@/modules/trail/types/trail';
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { User } from '../types/user';
+import { type User } from '../types/user';
 
 const getUserProfileUseCaseSchema = userSignInSchema.pick({
   username: true,
 });
 
-type Params = z.infer<typeof getUserProfileUseCaseSchema>;
+type GetUserProfileUseCaseSchema = z.infer<typeof getUserProfileUseCaseSchema>;
 
 type Result = {
   user: User;
   trailsAuthored: Trail[];
 };
 
-export async function getUserProfileUseCase(params: Params): Promise<Result> {
+export async function getUserProfileUseCase(
+  params: GetUserProfileUseCaseSchema
+): Promise<Result> {
   const validatedParams = getUserProfileUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
@@ -29,29 +28,35 @@ export async function getUserProfileUseCase(params: Params): Promise<Result> {
   }
 
   const { username } = validatedParams.data;
-  // SELECT m.name, cp.id_category
-  // FROM manufacturer as m
-  // INNER JOIN product as p
-  //     ON m.id_manufacturer = p.id_manufacturer
-  // INNER JOIN category_product as cp
-  //     ON p.id_product = cp.id_product
-  // WHERE cp.id_category = 'some value'
+
   try {
+    const user = db
+      .select()
+      .from(userTable)
+      .where(eq(userTable.username, username))
+      .get();
+
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }
+
     const data = db
       .select()
       .from(userTable)
-      .innerJoin(trailTable, eq(trailTable.authorId, userTable.id))
-      .innerJoin(
-        trailContributorTable,
-        eq(trailTable.id, trailContributorTable.trailId)
-      )
-      .where(eq(trailContributorTable.userUsername, username))
-      .get();
+      .innerJoin(trailTable, eq(trailTable.authorId, user.id))
+      .all();
 
-    console.table(data);
+    const trailsAuthored: Trail[] = [];
 
-    throw new Error('Erro ao buscar usuários');
-    // return data;
+    for (const item of data) {
+      if (trailsAuthored.find((trail) => trail.id === item.trail.id)) {
+        continue;
+      }
+
+      trailsAuthored.push(item.trail);
+    }
+
+    return { user, trailsAuthored };
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao buscar usuários');
