@@ -1,4 +1,4 @@
-import { type InferModel } from 'drizzle-orm';
+import { sql, type InferModel } from 'drizzle-orm';
 import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export type AuthUserTable = InferModel<typeof userTable, 'select'>;
@@ -10,6 +10,12 @@ export const userTable = sqliteTable('user', {
   email: text('email').notNull().unique(),
   avatar: text('avatar'),
   email_verified: integer('email_verified', { mode: 'boolean' }).default(false),
+  createdAt: text('created_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: text('updated_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
 });
 
 export const sessionTable = sqliteTable('user_session', {

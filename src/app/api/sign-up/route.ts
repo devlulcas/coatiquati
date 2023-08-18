@@ -28,8 +28,6 @@ export const POST = async (request: NextRequest) => {
       attributes: {
         username,
         email,
-        email_verified: false,
-        avatar: null,
         role: roles.USER,
       },
     });
