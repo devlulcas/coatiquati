@@ -3,6 +3,7 @@
 import { SortedColumnHeader } from '@/shared/components/common/data-table';
 import { Button } from '@/shared/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
+import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import Link from 'next/link';
 import { type Topic } from '../../types/topic';
 import { EditTopicDialogTrigger } from '../edit-topic-dialog-trigger';
@@ -41,5 +42,21 @@ export const topicsColumns: ColumnDef<Topic>[] = [
   {
     id: 'edit',
     cell: ({ row }) => <EditTopicDialogTrigger topic={row.original} />,
+  },
+  {
+    id: 'order',
+    cell: ({ row }) => {
+      return (
+        <div className="flex justify-center items-center flex-col">
+          <Button variant="ghost">
+            <ArrowUpIcon />
+          </Button>
+          <span className="text-sm">{row.index + 1}</span>
+          <Button variant="ghost">
+            <ArrowDownIcon />
+          </Button>
+        </div>
+      );
+    },
   },
 ];
