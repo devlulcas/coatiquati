@@ -8,11 +8,12 @@ import {
   DialogDescription,
   DialogFooter,
   DialogTitle,
-  DialogTrigger,
 } from '@/shared/components/ui/dialog';
+import { useToast } from '@/shared/components/ui/use-toast';
 import { SkullIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { type User } from '../../types/user';
+import { submitEditUserRole } from './edit-user-role-action';
 
 type EditUserRoleProps = {
   user: User;
@@ -20,41 +21,53 @@ type EditUserRoleProps = {
 
 export function EditUserRole({ user }: EditUserRoleProps) {
   const [isConfirming, setIsConfirming] = useState(false);
+  const [isLoading, startTransition] = useTransition();
+  const { toast } = useToast();
 
   const isAdmin = user.role === roles.ADMIN;
 
-  const flippedRole = isAdmin ? roles.USER : roles.ADMIN;
+  const flippedRole = isAdmin
+    ? { role: roles.USER, label: 'Usuário' }
+    : { role: roles.ADMIN, label: 'Administrador' };
 
-  const openConfirmDialog = () => {
-    setIsConfirming(true);
-  };
+  const openConfirmDialog = () => setIsConfirming(true);
 
-  const closeConfirmDialog = () => {
-    setIsConfirming(false);
-  };
+  const closeConfirmDialog = () => setIsConfirming(false);
 
-  const onChangeConfirmation = () => {
-    setIsConfirming(false);
-    console.log('change role', flippedRole);
+  const onSubmit = () => {
+    startTransition(async () => {
+      try {
+        await submitEditUserRole({
+          userId: user.id,
+          permission: flippedRole.role,
+        });
+
+        toast({ title: `${user.username} agora é um ${flippedRole.label}` });
+      } catch (error) {
+        toast({
+          title: 'Erro ao editar permissão do usuário',
+          description: error instanceof Error ? error.message : String(error),
+          variant: 'destructive',
+        });
+      }
+    });
   };
 
   return (
     <Dialog open={isConfirming}>
-      <DialogTrigger className="w-full">
-        <Button
-          onClick={openConfirmDialog}
-          variant="ghost"
-          className="w-full text-red-600"
-        >
-          {isAdmin ? 'Torná-lo usuário' : 'Elevar para administrador'}
-        </Button>
-      </DialogTrigger>
+      <Button
+        onClick={openConfirmDialog}
+        variant="ghost"
+        className="w-full text-red-600"
+      >
+        {isAdmin ? 'Torná-lo usuário' : 'Elevar para administrador'}
+      </Button>
 
       <DialogContent hideCloseButton>
         <DialogTitle className="leading-relaxed">
           Tem certeza que deseja tornar
           <strong className="mx-2 text-red-600">{user.username}</strong>
-          {isAdmin ? 'usuário' : 'administrador'}?
+          {flippedRole.label}?
         </DialogTitle>
 
         <DialogDescription className="flex items-center justify-center py-10">
@@ -66,7 +79,11 @@ export function EditUserRole({ user }: EditUserRoleProps) {
             Cancelar
           </Button>
 
-          <Button onClick={onChangeConfirmation} variant="destructive">
+          <Button
+            onClick={onSubmit}
+            variant="destructive"
+            isLoading={isLoading}
+          >
             Confirmar
           </Button>
         </DialogFooter>
