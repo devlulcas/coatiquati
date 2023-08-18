@@ -12,7 +12,6 @@ import {
 import { Input } from '@/shared/components/ui/input';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -111,12 +110,12 @@ export function SignUpForm() {
             )}
           />
 
-          <Button className="w-full mt-4" type="submit">
-            {form.formState.isSubmitting ? (
-              <Loader className="animate-spin" size={16} />
-            ) : (
-              'Entrar'
-            )}
+          <Button
+            className="w-full mt-4"
+            type="submit"
+            isLoading={form.formState.isSubmitting}
+          >
+            Entrar
           </Button>
         </form>
       </Form>
