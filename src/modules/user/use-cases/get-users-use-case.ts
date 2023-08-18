@@ -10,13 +10,11 @@ const getUsersUseCaseSchema = z.object({
   search: z.string().optional().default(''),
 });
 
-type Params = {
-  limit?: number;
-  offset?: number;
-  search?: string;
-};
+type GetUsersUseCaseSchema = Partial<z.infer<typeof getUsersUseCaseSchema>>;
 
-export async function getUsersUseCase(params: Params): Promise<User[]> {
+export async function getUsersUseCase(
+  params: GetUsersUseCaseSchema
+): Promise<User[]> {
   const validatedParams = getUsersUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
