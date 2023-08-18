@@ -28,7 +28,7 @@ export default async function Page() {
 
       <div className="overflow-hidden outline absolute h-[--safe-screen-height] inset-0 z-[-1]">
         <Image
-          className="absolute bottom-0  right-1/2 translate-1/2 w-full md:w-1/2 blur-xl"
+          className="absolute bottom-0 right-1/2 translate-x-1/2 translate-y-1/2 w-full md:w-1/2 blur-xl"
           src={blobImage}
           alt="blob"
         />
