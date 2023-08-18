@@ -7,7 +7,7 @@ import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function Page() {
-  const trails = await getTrailsUseCase({});
+  const trailsData = await getTrailsUseCase({});
   const users = await getUsersUseCase({});
 
   return (
@@ -23,7 +23,7 @@ export default async function Page() {
             </Link>
           </Button>
         </div>
-        <TrailsTable data={trails} />
+        <TrailsTable data={trailsData.map((data) => data.trail)} />
       </section>
 
       <section>

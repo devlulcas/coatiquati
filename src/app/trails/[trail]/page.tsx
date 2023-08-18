@@ -9,16 +9,21 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const trailId = Number(params.trail);
 
-  const trail = await getTrailUseCase({ id: trailId });
+  const trailData = await getTrailUseCase({ id: trailId });
 
-  if (!trail) {
-    return <div>Trilha não encontrada</div>;
+  if (!trailData) {
+    return (
+      <div>
+        {trailId}
+        {JSON.stringify({ trailData, params })}
+      </div>
+    );
   }
 
   return (
     <div>
-      <h1>{trail.title}</h1>
-      <p>{trail.description}</p>
+      <h1>{trailData.trail.title}</h1>
+      <p>{trailData.trail.description}</p>
     </div>
   );
 }

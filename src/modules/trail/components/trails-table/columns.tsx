@@ -22,7 +22,10 @@ export const trailsColumns: ColumnDef<Trail>[] = [
     header: 'Título',
     cell: ({ row }) => (
       <Button variant="link" asChild>
-        <Link href={`/dashboard/trails/${row.original.id}`}>
+        <Link
+          className="truncate break-words whitespace-break-spaces h-[2lh] w-[40ch]"
+          href={`/dashboard/trails/${row.original.id}`}
+        >
           {row.original.title}
         </Link>
       </Button>
@@ -31,6 +34,11 @@ export const trailsColumns: ColumnDef<Trail>[] = [
   {
     accessorKey: 'description',
     header: 'Descrição',
+    cell: ({ row }) => (
+      <p className="truncate break-words whitespace-break-spaces h-[2lh] w-[40ch]">
+        {row.original.description}
+      </p>
+    ),
   },
   {
     accessorKey: 'updatedAt',

@@ -12,3 +12,5 @@ export const newTrailSchema = z.object({
   }),
   status: z.enum(['published', 'draft']).default('draft'),
 });
+
+export type NewTrailSchema = z.infer<typeof newTrailSchema>;

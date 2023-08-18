@@ -1,4 +1,9 @@
-import { Avatar, AvatarFallback } from '@/shared/components/ui/avatar';
+import type { User } from '@/modules/user/types/user';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
 import { ArrowRightIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -7,33 +12,38 @@ import { type Trail } from '../../types/trail';
 
 type TrailCardProps = {
   trail: Trail;
+  author?: User;
 };
 
-export function TrailCard({ trail }: TrailCardProps) {
-  return (
-    <Link
-      href={`/trails/${trail.id}`}
-      className="flex flex-col justify-center items-center w-96 bg-card text-card-foreground rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out border"
-    >
-      <div className="relative">
-        <Image
-          alt={trail.title}
-          src={trail.thumbnail}
-          width={300}
-          height={300}
-          className="object-cover object-center w-full "
-        />
+export function TrailCard({ trail, author }: TrailCardProps) {
+  const trailSlug = `/trails/${trail.id}`;
+  const userProfileSlug = author ? `/profile/${author.username}` : '';
 
-        <div className="absolute bottom-2 left-2 flex gap-2">
-          <Avatar>
-            <AvatarFallback>
-              {trail.authorId[0] + trail.authorId[1]}
-            </AvatarFallback>
-          </Avatar>
-        </div>
+  return (
+    <article className="flex flex-col justify-center items-center w-full bg-card text-card-foreground rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out border">
+      <div className="relative h-96 w-full">
+        <Link href={trailSlug}>
+          <Image
+            fill
+            alt={trail.title}
+            src={trail.thumbnail}
+            className="object-cover object-center w-full"
+          />
+        </Link>
+
+        {author && (
+          <div className="absolute bottom-2 left-2 flex gap-2">
+            <Link href={userProfileSlug}>
+              <Avatar>
+                <AvatarFallback>{author.username.slice(0, 2)}</AvatarFallback>
+                <AvatarImage src={author.avatar} alt={author.username} />
+              </Avatar>
+            </Link>
+          </div>
+        )}
       </div>
 
-      <div className="p-4 h-full flex flex-col justify-between">
+      <div className="p-4 w-full h-fit flex flex-col justify-between">
         <div>
           <h2 className="text-2xl font-black uppercase min-h-[2lh] line-clamp-2 break-words">
             {trail.title}
@@ -51,12 +61,14 @@ export function TrailCard({ trail }: TrailCardProps) {
         </div>
 
         <div className="w-full flex gap-2 mt-4">
-          <Button className="w-full">
-            Ver mais
-            <ArrowRightIcon size={18} />
+          <Button asChild className="w-full">
+            <Link href={trailSlug}>
+              Ver mais
+              <ArrowRightIcon size={18} />
+            </Link>
           </Button>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

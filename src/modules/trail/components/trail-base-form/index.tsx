@@ -13,20 +13,22 @@ import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type ClassValue } from 'clsx';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { newTrailSchema } from '../../schemas/new-trail-schema';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import {
+  newTrailSchema,
+  type NewTrailSchema,
+} from '../../schemas/new-trail-schema';
 
 type TrailBaseFormProps = {
-  defaultValues?: z.infer<typeof newTrailSchema>;
-  onSubmit: (values: z.infer<typeof newTrailSchema>) => void;
+  defaultValues?: NewTrailSchema;
+  onSubmit: SubmitHandler<NewTrailSchema>;
   className?: ClassValue;
 };
 
 export function TrailBaseForm(props: TrailBaseFormProps) {
   const { defaultValues, onSubmit, className } = props;
 
-  const form = useForm<z.infer<typeof newTrailSchema>>({
+  const form = useForm<NewTrailSchema>({
     resolver: zodResolver(newTrailSchema),
     defaultValues,
   });
@@ -35,7 +37,7 @@ export function TrailBaseForm(props: TrailBaseFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('space-y-8', className)}
+        className={cn('space-y-8 w-full', className)}
       >
         <FormField
           control={form.control}
@@ -79,7 +81,11 @@ export function TrailBaseForm(props: TrailBaseFormProps) {
           )}
         />
 
-        <Button className="w-full" type="submit">
+        <Button
+          className="w-full"
+          type="submit"
+          isLoading={form.formState.isSubmitting}
+        >
           Salvar
         </Button>
       </form>

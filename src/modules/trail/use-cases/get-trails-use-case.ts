@@ -1,6 +1,8 @@
 import { db } from '@/modules/database/db';
 import { trailTable } from '@/modules/database/schema/trail';
-import { like, or } from 'drizzle-orm';
+import { userTable } from '@/modules/database/schema/user';
+import type { User } from '@/modules/user/types/user';
+import { eq, like, or } from 'drizzle-orm';
 import { z } from 'zod';
 import { type Trail } from '../types/trail';
 
@@ -10,13 +12,11 @@ const getTrailsUseCaseSchema = z.object({
   search: z.string().optional().default(''),
 });
 
-type Params = {
-  limit?: number;
-  offset?: number;
-  search?: string;
-};
+type GetTrailsUseCaseSchema = Partial<z.infer<typeof getTrailsUseCaseSchema>>;
 
-export async function getTrailsUseCase(params: Params): Promise<Trail[]> {
+export async function getTrailsUseCase(
+  params: GetTrailsUseCaseSchema
+): Promise<{ trail: Trail; author: User }[]> {
   const validatedParams = getTrailsUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
@@ -35,12 +35,14 @@ export async function getTrailsUseCase(params: Params): Promise<Trail[]> {
           like(trailTable.description, `%${search}%`)
         )
       )
+      .innerJoin(userTable, eq(userTable.id, trailTable.authorId))
       .limit(limit)
       .offset(offset)
       .all();
 
-    return data;
+    return data.map((item) => ({ trail: item.trail, author: item.user }));
   } catch (error) {
+    console.error(error);
     throw new Error('Erro ao buscar trilhas');
   }
 }

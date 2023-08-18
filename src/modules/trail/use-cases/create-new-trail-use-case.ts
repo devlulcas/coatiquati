@@ -1,5 +1,8 @@
 import { db } from '@/modules/database/db';
-import { trailTable } from '@/modules/database/schema/trail';
+import {
+  trailTable,
+  type NewTrailTable,
+} from '@/modules/database/schema/trail';
 import { z } from 'zod';
 import { newTrailSchema } from '../schemas/new-trail-schema';
 import { type Trail } from '../types/trail';
@@ -9,16 +12,18 @@ const createNewTrailUseCaseSchema = z.object({
   trail: newTrailSchema,
 });
 
-type Params = z.infer<typeof createNewTrailUseCaseSchema>;
+type CreateNewTrailUseCaseSchema = z.infer<typeof createNewTrailUseCaseSchema>;
 
-export async function createNewTrailUseCase(params: Params): Promise<Trail> {
+export async function createNewTrailUseCase(
+  params: CreateNewTrailUseCaseSchema
+): Promise<Trail> {
   const validatedParams = createNewTrailUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
     throw new Error('Parâmetros inválidos');
   }
 
-  const newTrail = {
+  const newTrail: NewTrailTable = {
     ...validatedParams.data.trail,
     authorId: validatedParams.data.authorId,
   };
@@ -26,6 +31,7 @@ export async function createNewTrailUseCase(params: Params): Promise<Trail> {
   try {
     return db.insert(trailTable).values(newTrail).returning().get();
   } catch (error) {
+    console.error(error);
     throw new Error('Erro ao criar trilha');
   }
 }
