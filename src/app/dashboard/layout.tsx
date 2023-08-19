@@ -12,5 +12,5 @@ export default async function DashboardLayout({
     acceptRoles: ['ADMIN'],
   });
 
-  return <div className="py-4">{children}</div>;
+  return <div className="py-8 container">{children}</div>;
 }
