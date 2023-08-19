@@ -22,7 +22,9 @@ export const topicsColumns: ColumnDef<Topic>[] = [
     header: 'Título',
     cell: ({ row }) => (
       <Button variant="link" asChild>
-        <Link href={`/dashboard/topics/${row.original.id}`}>
+        <Link
+          href={`/trails/${row.original.trailId}/topics/${row.original.id}`}
+        >
           {row.original.title}
         </Link>
       </Button>
