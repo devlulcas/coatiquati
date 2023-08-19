@@ -20,6 +20,8 @@ export const auth = lucia({
       id: data.id,
       username: data.username,
       role: data.role,
+      email: data.email,
+      emailVerified: data.email_verified,
     };
   },
   getSessionAttributes: (data) => {

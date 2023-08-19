@@ -29,6 +29,7 @@ export const POST = async (request: NextRequest) => {
         username,
         email,
         role: roles.USER,
+        email_verified: false,
       },
     });
 
