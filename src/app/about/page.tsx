@@ -9,7 +9,7 @@ export default function Page() {
   };
 
   return (
-    <main className="flex justify-center gap-4 lg:gap-8 min-h-[--view-height] flex-col lg:flex-row">
+    <main className="flex justify-center gap-4 lg:gap-8 min-h-[--view-height] flex-col lg:flex-row container">
       <div className="lg:w-1/2 p-4 border bg-background/50 my-4 rounded-lg flex flex-col">
         <h1 className="text-4xl font-bold">Sobre o projeto</h1>
 

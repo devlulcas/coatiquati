@@ -30,7 +30,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
         <div className="min-h-[100dvh] backdrop-blur-xl">
           <Header />
-          <div className="min-h-[--view-height] container">{children}</div>
+          <div className="min-h-[--view-height]">{children}</div>
         </div>
       </body>
     </html>

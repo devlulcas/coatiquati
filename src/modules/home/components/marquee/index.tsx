@@ -14,6 +14,10 @@ export function Marquee({ words, className }: MarqueeProps) {
         {words.map((word) => (
           <span key={word}>{word}</span>
         ))}
+
+        {words.map((word) => (
+          <span key={word}>{word}</span>
+        ))}
       </div>
     </div>
   );

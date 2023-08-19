@@ -56,7 +56,7 @@ export function SignUpForm() {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center flex-col">
+    <div className="flex items-center justify-center flex-col h-[--view-height]">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

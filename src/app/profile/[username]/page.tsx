@@ -16,7 +16,7 @@ export default async function Page({ params }: PageProps) {
   });
 
   return (
-    <main className="py-4">
+    <main className="py-8 container">
       <ProfileHeading user={profile.user} />
 
       {profile.trailsAuthored.length > 0 && (

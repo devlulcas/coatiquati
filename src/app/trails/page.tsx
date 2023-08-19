@@ -19,7 +19,7 @@ export default async function Page(props: PageProps) {
   });
 
   return (
-    <main className="py-8">
+    <main className="py-8 container">
       <form
         action="/trails"
         method="get"
