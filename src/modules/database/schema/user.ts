@@ -38,3 +38,29 @@ export const keyTable = sqliteTable('user_key', {
     .references(() => userTable.id),
   hashedPassword: text('hashed_password'),
 });
+
+export const passwordResetTokenTable = sqliteTable(
+  'user_password_reset_token',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => userTable.id),
+    expires: blob('expires', {
+      mode: 'bigint',
+    }).notNull(),
+  }
+);
+
+export const emailVerificationTokenTable = sqliteTable(
+  'user_email_verification_token',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => userTable.id),
+    expires: blob('expires', {
+      mode: 'bigint',
+    }).notNull(),
+  }
+);
