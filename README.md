@@ -1,34 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CoatiQuati
 
-## Getting Started
+## Sobre o projeto
 
-First, run the development server:
+CoatiQuati é um projeto de [código aberto](https://github.com/devlulcas/coatiquati), desenvolvido por [mim (Lucas Alves Rego)](https://github.com/devlulcas/), com o objetivo de ajudar pessoas interessadas em aprender algo novo
+e que não sabem por onde começar.
+
+## Funcionamento geral
+
+O projeto funciona da seguinte forma:
+
+- Um professoar cria uma trilha de estudos com um nome, uma descrição, uma imagem e mais alguns detalhes.
+- Um professor adicona à trilha de estudos criada, uma lista de tópicos com um nome, uma descrição, uma imagem e mais alguns detalhes. Dando direção aos estudos dos alunos.
+- Um aluno pode se inscrever em uma trilha de estudos e começar a estudar os tópicos adicionados pelo professor. O aluno pode marcar os tópicos como concluídos e assim, o professor pode acompanhar o progresso do aluno. Assim que o aluno for progredindo ele pode publicar seus materiais de estudo e compartilhar com outros alunos em cada tópico.
+- Alunos podem comentar nos tópicos e compartilhar suas dúvidas com outros alunos e professores.
+
+## Executando o projeto localmente
+
+Primeiro copie o arquivo `.env.example` para `.env.local` e preencha as variáveis de ambiente.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+cp .env.example .env.local
+```
+
+Instale o PNPM globalmente na sua máquina.
+
+[PNPM Installation](https://pnpm.io/pt/installation)
+
+Instale as dependências do projeto.
+
+```bash
+pnpm install
+```
+
+Execute as migrations do banco de dados.
+
+```bash
+pnpm migrate
+```
+
+Execute o projeto.
+
+```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o resultado.
