@@ -27,7 +27,7 @@ export function TrailHeading({
   return (
     <div
       className={cn(
-        'relative w-full h-80 flex flex-col lg:flex-row gap-4',
+        'relative w-full min-h-80 flex flex-col lg:flex-row gap-4',
         className
       )}
     >
@@ -44,22 +44,20 @@ export function TrailHeading({
         alt={trail.title}
         height={320}
         width={320}
-        className="rounded-md border"
+        className="rounded-md border w-full lg:w-fit"
       />
 
       <div className="flex flex-col gap-4 w-full bg-background/50 p-4 rounded-md border">
-        <h1 className="text-4xl font-bold truncate break-words whitespace-break-spaces w-full lg:max-w-screen-md">
-          {trail.title}
-        </h1>
+        <h1 className="text-4xl font-bold break-all">{trail.title}</h1>
 
-        <p className="text-lg truncate max-w-prose">{trail.description}</p>
+        <p className="text-lg break-all">{trail.description}</p>
 
         <UpdatedAt updatedAt={trail.updatedAt} />
 
         {isAdmin && (
           <Link
             href={`/dashboard/trails/${trail.id}`}
-            className="flex items-center gap-2 text-sm text-brand-500"
+            className="flex items-center gap-2 text-sm text-brand-300"
           >
             Visualizar trilha como administrador
           </Link>
