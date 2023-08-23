@@ -1,4 +1,4 @@
-import { getTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
+import { TextEditor } from '@/modules/editor/components/editor';
 
 type PageProps = {
   params: {
@@ -7,13 +7,13 @@ type PageProps = {
 };
 
 export default async function Page({ params }: PageProps) {
-  const topicId = Number(params.topic);
+  // const topicId = Number(params.topic);
 
-  const topicData = await getTopicUseCase({ id: topicId });
+  // const topicData = await getTopicUseCase({ id: topicId });
 
   return (
     <div className="py-8 container">
-      <pre>{JSON.stringify({ topicData, params })}</pre>
+      <TextEditor />
     </div>
   );
 }
