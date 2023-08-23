@@ -11,20 +11,18 @@ export async function Header() {
   const hasAdminAccess = session !== null && session.user.role === roles.ADMIN;
 
   return (
-    <>
-      <header className="top-0 sticky border-b h-[--header-height] bg-background/75 backdrop-blur-md">
-        <div className="flex items-center justify-between container h-full">
-          <Link href="/" className="flex items-center justify-center gap-2">
-            <Image src={coatiSvg} alt="CoatiQuati" height={34} />
-            <h1 className="text-xs lg:text-xl font-bold">CoatiQuati</h1>
-          </Link>
+    <header className="z-50 top-0 sticky border-b h-[--header-height] bg-background/75 backdrop-blur-md">
+      <div className="flex items-center justify-between container h-full">
+        <Link href="/" className="flex items-center justify-center gap-2">
+          <Image src={coatiSvg} alt="CoatiQuati" height={34} />
+          <h1 className="text-xs lg:text-xl font-bold">CoatiQuati</h1>
+        </Link>
 
-          <HeaderNav
-            hasAdminAccess={hasAdminAccess}
-            isLoggedIn={session !== null}
-          />
-        </div>
-      </header>
-    </>
+        <HeaderNav
+          hasAdminAccess={hasAdminAccess}
+          isLoggedIn={session !== null}
+        />
+      </div>
+    </header>
   );
 }
