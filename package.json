@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.2.0",
+    "@hookform/resolvers": "^3.3.0",
     "@lucia-auth/adapter-sqlite": "^2.0.0",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.4",
@@ -19,21 +19,31 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.4",
-    "@t3-oss/env-nextjs": "^0.6.0",
+    "@t3-oss/env-nextjs": "^0.6.1",
     "@tanstack/react-table": "^8.9.3",
+    "@tiptap/extension-highlight": "^2.1.6",
+    "@tiptap/extension-image": "^2.1.6",
+    "@tiptap/extension-task-item": "^2.1.6",
+    "@tiptap/extension-task-list": "^2.1.6",
+    "@tiptap/extension-text-align": "^2.1.6",
+    "@tiptap/extension-text-style": "^2.1.6",
+    "@tiptap/extension-youtube": "^2.1.6",
+    "@tiptap/pm": "^2.1.6",
+    "@tiptap/react": "^2.1.6",
+    "@tiptap/starter-kit": "^2.1.6",
     "@types/node": "20.4.10",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
-    "better-sqlite3": "^8.5.0",
+    "better-sqlite3": "^8.5.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "diff": "^5.1.0",
     "dotenv": "^16.3.1",
-    "drizzle-orm": "^0.28.2",
+    "drizzle-orm": "^0.28.3",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",
-    "lucia": "^2.2.0",
+    "lucia": "^2.4.0",
     "lucide-react": "^0.263.1",
     "next": "13.4.13",
     "postcss": "8.4.27",
@@ -44,11 +54,11 @@
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.6",
     "typescript": "5.1.6",
-    "zod": "^3.21.4"
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.4",
     "@types/diff": "^5.0.3",
-    "drizzle-kit": "^0.19.12"
+    "drizzle-kit": "^0.19.13"
   }
 }
