@@ -1,4 +1,4 @@
-import { TextEditor } from '@/modules/editor/components/editor';
+import { TextEditor } from '@/modules/content/components/editor';
 
 type PageProps = {
   params: {
