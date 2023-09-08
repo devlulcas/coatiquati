@@ -1,5 +1,6 @@
 import { AnimatedBlobBackgroundScript } from '@/shared/components/common/animated-blob-background-script';
 import { Header } from '@/shared/components/common/header';
+import { Providers } from '@/shared/components/common/providers';
 import { Toaster } from '@/shared/components/ui/toaster';
 import { cn } from '@/shared/utils/cn';
 import type { Metadata } from 'next';
@@ -26,12 +27,14 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       <body className={cn(inter.className, 'dark')}>
         <AnimatedBlobBackgroundScript />
 
-        <Toaster />
+        <Providers>
+          <Toaster />
 
-        <div className="min-h-[100dvh] backdrop-blur-xl">
-          <Header />
-          <div className="min-h-[--view-height]">{children}</div>
-        </div>
+          <div className="min-h-[100dvh] backdrop-blur-xl">
+            <Header />
+            <div className="min-h-[--view-height]">{children}</div>
+          </div>
+        </Providers>
       </body>
     </html>
   );
