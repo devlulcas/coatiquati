@@ -29,7 +29,7 @@ export const POST = async (request: NextRequest) => {
         username,
         email,
         role: roles.USER,
-        emailVerified: null,
+        email_verified: null,
       },
     });
 

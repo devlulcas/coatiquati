@@ -16,7 +16,7 @@ export const userTable = sqliteTable('user', {
   role: text('role').$type<Role>().notNull(),
   email: text('email').notNull().unique(),
   avatar: text('avatar'),
-  emailVerified: integer('email_verified', { mode: 'boolean' }).default(false),
+  email_verified: integer('email_verified', { mode: 'boolean' }).default(false),
   createdAt: text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
