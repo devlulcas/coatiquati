@@ -2,15 +2,7 @@
 
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/cn';
-import Highlight from '@tiptap/extension-highlight';
-import Image from '@tiptap/extension-image';
-import TaskItem from '@tiptap/extension-task-item';
-import TaskList from '@tiptap/extension-task-list';
-import TextAlign from '@tiptap/extension-text-align';
-import TextStyle from '@tiptap/extension-text-style';
-import Youtube from '@tiptap/extension-youtube';
-import { Editor, EditorContent, useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
+import { Editor } from '@tiptap/react';
 import {
   BoldIcon,
   Code2Icon,
@@ -40,74 +32,6 @@ import {
   WrapTextIcon,
   YoutubeIcon,
 } from 'lucide-react';
-import { useEffect } from 'react';
-import css from './editor.module.css';
-
-type TextEditorProps = {
-  initialContent?: string;
-};
-
-function useAutoSave(editor: Editor | null) {
-  useEffect(() => {
-    if (!editor) return;
-
-    const save = () => {
-      const content = editor.getHTML();
-
-      console.log(content);
-    };
-
-    editor.on('update', save);
-
-    return () => {
-      editor.off('update', save);
-    };
-  }, [editor]);
-}
-
-export function TextEditor({ initialContent }: TextEditorProps) {
-  const editor = useEditor({
-    extensions: [
-      TextStyle.configure(),
-      TextAlign.configure({
-        types: ['heading', 'paragraph'],
-      }),
-      Highlight,
-      Image,
-      StarterKit.configure({
-        bulletList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-        orderedList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-      }),
-      TaskList,
-      TaskItem.configure({
-        nested: true,
-      }),
-      Youtube.configure({
-        progressBarColor: 'hotpink',
-      }),
-    ],
-  });
-
-  useAutoSave(editor);
-
-  return (
-    <div className={css.editor}>
-      <MenuBar editor={editor} />
-      <EditorContent content={initialContent} editor={editor}>
-        {null}
-      </EditorContent>
-      <Button className="mt-4" onClick={() => console.log(editor?.getHTML())}>
-        Logar HTML
-      </Button>
-    </div>
-  );
-}
 
 type EditorActionButtonProps = {
   icon: React.ReactNode;
@@ -140,7 +64,7 @@ type MenuBarProps = {
   editor: Editor | null;
 };
 
-function MenuBar({ editor }: MenuBarProps) {
+export function MenuBar({ editor }: MenuBarProps) {
   if (!editor) return null;
 
   const imageUpload = () => {
