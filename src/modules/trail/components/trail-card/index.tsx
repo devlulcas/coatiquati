@@ -21,7 +21,7 @@ export function TrailCard({ trail, author }: TrailCardProps) {
 
   return (
     <article className="flex flex-col justify-center items-center w-full bg-card text-card-foreground rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out border">
-      <div className="relative h-96 w-full">
+      <div className="relative h-[300px] w-full">
         <Link href={trailSlug}>
           <Image
             fill
