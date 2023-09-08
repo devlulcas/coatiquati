@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm';
 import {
   integer,
   primaryKey,
@@ -25,5 +26,19 @@ export const trailSubscriptionTable = sqliteTable(
   },
   (table) => ({
     pk: primaryKey(table.trailId, table.userId),
+  })
+);
+
+export const trailSubscriptionTableRelations = relations(
+  trailSubscriptionTable,
+  ({ one }) => ({
+    trail: one(trailTable, {
+      fields: [trailSubscriptionTable.trailId],
+      references: [trailTable.id],
+    }),
+    user: one(userTable, {
+      fields: [trailSubscriptionTable.userId],
+      references: [userTable.id],
+    }),
   })
 );

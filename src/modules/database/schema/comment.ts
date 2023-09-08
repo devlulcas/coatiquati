@@ -1,19 +1,24 @@
-import { sql, type InferModel } from 'drizzle-orm';
 import {
+  relations,
+  sql,
+  type InferInsertModel,
+  type InferSelectModel,
+} from 'drizzle-orm';
+import {
+  foreignKey,
   integer,
-  primaryKey,
   sqliteTable,
   text,
 } from 'drizzle-orm/sqlite-core';
 import { userTable } from './user';
 
-export type CommentTable = InferModel<typeof commentTable, 'select'>;
-
-export type NewCommentTable = InferModel<typeof commentTable, 'insert'>;
+export type CommentTable = InferSelectModel<typeof commentTable>;
+export type NewCommentTable = InferInsertModel<typeof commentTable>;
 
 export const commentTable = sqliteTable(
   'comment',
   {
+    id: integer('id').primaryKey().notNull(),
     entityId: integer('content_id').notNull(),
     entityType: text('entity_type')
       .$type<'trail' | 'topic' | 'content'>()
@@ -27,12 +32,32 @@ export const commentTable = sqliteTable(
     content: text('content').notNull(),
     upvotes: integer('upvotes').notNull().default(0),
     downvotes: integer('downvotes').notNull().default(0),
+    replyTo: integer('reply_to'),
+    edited: integer('edited', { mode: 'boolean' }).notNull().default(false),
+    originalContent: text('original_content'),
     createdAt: text('created_at')
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
+    updatedAt: text('updated_at')
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    deletedAt: text('deleted_at'),
   },
   (table) => ({
-    // This guarantees that the combination of entityId and entityType is unique
-    pk: primaryKey(table.entityId, table.entityType),
+    parentReference: foreignKey(() => ({
+      columns: [table.replyTo],
+      foreignColumns: [table.id],
+    })),
+  })
+);
+
+export const commentTableRelations = relations(
+  commentTable,
+  ({ one, many }) => ({
+    author: one(userTable, {
+      fields: [commentTable.authorId],
+      references: [userTable.id],
+    }),
+    replies: many(commentTable),
   })
 );

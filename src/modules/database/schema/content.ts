@@ -1,10 +1,17 @@
-import { sql, type InferModel } from 'drizzle-orm';
+import {
+  relations,
+  sql,
+  type InferInsertModel,
+  type InferSelectModel,
+} from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { commentTable } from './comment';
+import { contributionTable } from './contribution';
 import { userTable } from './user';
 
-export type ContentTable = InferModel<typeof contentTable, 'select'>;
+export type ContentTable = InferSelectModel<typeof contentTable>;
 
-export type NewContentTable = InferModel<typeof contentTable, 'insert'>;
+export type NewContentTable = InferInsertModel<typeof contentTable>;
 
 export const contentTable = sqliteTable('content', {
   id: integer('id').primaryKey().notNull(),
@@ -27,11 +34,20 @@ export const contentTable = sqliteTable('content', {
     .notNull(),
 });
 
-export type ContentImageTable = InferModel<typeof contentImageTable, 'select'>;
-export type NewContentImageTable = InferModel<
-  typeof contentImageTable,
-  'insert'
->;
+export const contentTableRelations = relations(
+  contentTable,
+  ({ one, many }) => ({
+    author: one(userTable, {
+      fields: [contentTable.authorId],
+      references: [userTable.id],
+    }),
+    contributors: many(contributionTable),
+    comments: many(commentTable),
+  })
+);
+
+export type ContentImageTable = InferSelectModel<typeof contentImageTable>;
+export type NewContentImageTable = InferInsertModel<typeof contentImageTable>;
 
 export const contentImageTable = sqliteTable('content_image', {
   id: integer('id').primaryKey().notNull(),
@@ -51,8 +67,8 @@ export const contentImageTable = sqliteTable('content_image', {
     .notNull(),
 });
 
-export type ContentHtmlTable = InferModel<typeof contentHtmlTable, 'select'>;
-export type NewContentHtmlTable = InferModel<typeof contentHtmlTable, 'insert'>;
+export type ContentHtmlTable = InferSelectModel<typeof contentHtmlTable>;
+export type NewContentHtmlTable = InferInsertModel<typeof contentHtmlTable>;
 
 export const contentHtmlTable = sqliteTable('content_html', {
   id: integer('id').primaryKey().notNull(),
@@ -71,8 +87,8 @@ export const contentHtmlTable = sqliteTable('content_html', {
     .notNull(),
 });
 
-export type ContentFileTable = InferModel<typeof contentFileTable, 'select'>;
-export type NewContentFileTable = InferModel<typeof contentFileTable, 'insert'>;
+export type ContentFileTable = InferSelectModel<typeof contentFileTable>;
+export type NewContentFileTable = InferInsertModel<typeof contentFileTable>;
 
 export const contentFileTable = sqliteTable('content_file', {
   id: integer('id').primaryKey().notNull(),

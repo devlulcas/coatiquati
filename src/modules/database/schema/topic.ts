@@ -1,20 +1,28 @@
-import { sql, type InferModel } from 'drizzle-orm';
+import {
+  relations,
+  sql,
+  type InferInsertModel,
+  type InferSelectModel,
+} from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import {
+  contentStatus,
+  type ContentStatus,
+} from '../../../shared/constants/content-status';
+import { commentTable } from './comment';
 import { trailTable } from './trail';
 import { userTable } from './user';
 
-export type TopicTable = InferModel<typeof topicTable, 'select'>;
+export type TopicTable = InferSelectModel<typeof topicTable>;
 
-export type NewTopicTable = InferModel<typeof topicTable, 'insert'>;
+export type NewTopicTable = InferInsertModel<typeof topicTable>;
 
 export const topicTable = sqliteTable('topic', {
   id: integer('id').primaryKey().notNull(),
   title: text('title').notNull(),
   description: text('description').notNull(),
-  status: text('status')
-    .$type<'draft' | 'published'>()
-    .default('draft')
-    .notNull(),
+  thumbnail: text('thumbnail'),
+  status: text('status').$type<ContentStatus>().default(contentStatus.DRAFT).notNull(),
   trailId: integer('trail_id')
     .notNull()
     .references(() => trailTable.id, {
@@ -34,3 +42,15 @@ export const topicTable = sqliteTable('topic', {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });
+
+export const topicTableRelations = relations(topicTable, ({ many, one }) => ({
+  trail: one(trailTable, {
+    fields: [topicTable.trailId],
+    references: [trailTable.id],
+  }),
+  author: one(userTable, {
+    fields: [topicTable.authorId],
+    references: [userTable.id],
+  }),
+  comments: many(commentTable),
+}));
