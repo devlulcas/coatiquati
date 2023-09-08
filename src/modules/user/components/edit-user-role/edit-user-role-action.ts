@@ -15,9 +15,9 @@ export async function submitEditUserRole(data: SetUserPermissionSchema) {
     );
   }
 
-  if (session.user.role !== roles.ADMIN) {
+  if (session.user.role !== roles.HIGH_PRIVILEGE_ADMIN) {
     throw new Error(
-      'Você precisa ser um administrador para editar as permissões de um usuário.'
+      'Nível de permissões insuficiente para editar as permissões de um usuário.'
     );
   }
 

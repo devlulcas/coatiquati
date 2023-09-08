@@ -1,3 +1,4 @@
+import { contentStatus } from '@/shared/constants/content-status';
 import { z } from 'zod';
 
 export const newTrailSchema = z.object({
@@ -10,7 +11,9 @@ export const newTrailSchema = z.object({
   thumbnail: z.string().url({
     message: 'A URL da thumbnail deve ser válida.',
   }),
-  status: z.enum(['published', 'draft']).default('draft'),
+  status: z
+    .enum([contentStatus.DRAFT, contentStatus.PUBLISHED])
+    .default(contentStatus.DRAFT),
 });
 
 export type NewTrailSchema = z.infer<typeof newTrailSchema>;

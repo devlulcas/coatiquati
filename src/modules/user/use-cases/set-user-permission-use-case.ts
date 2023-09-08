@@ -19,6 +19,25 @@ export async function setUserPermissionUseCase(
 
   const { userId, permission } = validatedParams.data;
 
+  const user = await db.query.userTable.findFirst({
+    columns: { role: true, email_verified: true },
+    where: eq(userTable.id, userId),
+  });
+
+  if (!user) {
+    throw new Error('Usuário não encontrado');
+  }
+
+  if (user.email_verified === false) {
+    throw new Error('Usuário não verificado');
+  }
+
+  if (user.role === roles.HIGH_PRIVILEGE_ADMIN) {
+    throw new Error(
+      'Não é possível alterar a permissão de um administrador de nível alto'
+    );
+  }
+
   const newUser: Partial<User> = {
     role: permission === roles.ADMIN ? roles.ADMIN : roles.USER,
     updatedAt: new Date().toISOString(),
