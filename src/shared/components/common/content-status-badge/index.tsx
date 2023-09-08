@@ -1,12 +1,11 @@
+import {
+  contentStatus,
+  type ContentStatus,
+} from '@/shared/constants/content-status';
 import { cn } from '@/shared/utils/cn';
-import { type Trail } from '../../types/trail';
 
-type StatusBadgeProps = {
-  status: Trail['status'];
-};
-
-export function StatusBadge({ status }: StatusBadgeProps) {
-  const isPublished = status === 'published';
+export function ContentStatusBadge({ status }: { status: ContentStatus }) {
+  const isPublished = status === contentStatus.PUBLISHED;
 
   return (
     <span

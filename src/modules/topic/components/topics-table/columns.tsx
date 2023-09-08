@@ -1,5 +1,6 @@
 'use client';
 
+import { ContentStatusBadge } from '@/shared/components/common/content-status-badge';
 import { SortedColumnHeader } from '@/shared/components/common/data-table';
 import { Button } from '@/shared/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
@@ -7,7 +8,6 @@ import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import Link from 'next/link';
 import { type Topic } from '../../types/topic';
 import { EditTopicDialogTrigger } from '../edit-topic-dialog-trigger';
-import { StatusBadge } from './status-badge';
 
 export const topicsColumns: ColumnDef<Topic>[] = [
   {
@@ -15,7 +15,7 @@ export const topicsColumns: ColumnDef<Topic>[] = [
     header: ({ column }) => (
       <SortedColumnHeader column={column}>Status</SortedColumnHeader>
     ),
-    cell: ({ row }) => <StatusBadge status={row.original.status} />,
+    cell: ({ row }) => <ContentStatusBadge status={row.original.status} />,
   },
   {
     accessorKey: 'title',
