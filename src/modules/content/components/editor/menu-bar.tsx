@@ -1,7 +1,5 @@
 'use client';
 
-import { Button } from '@/shared/components/ui/button';
-import { cn } from '@/shared/utils/cn';
 import { Editor } from '@tiptap/react';
 import {
   BoldIcon,
@@ -13,7 +11,6 @@ import {
   Heading4Icon,
   Heading5Icon,
   Heading6Icon,
-  ImagePlusIcon,
   ItalicIcon,
   LayoutListIcon,
   ListIcon,
@@ -32,33 +29,9 @@ import {
   WrapTextIcon,
   YoutubeIcon,
 } from 'lucide-react';
-
-type EditorActionButtonProps = {
-  icon: React.ReactNode;
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-  active?: boolean;
-};
-
-function EditorActionButton({
-  icon,
-  label,
-  onClick,
-  disabled,
-  active,
-}: EditorActionButtonProps) {
-  return (
-    <Button
-      onClick={onClick}
-      disabled={disabled}
-      className={cn('gap-2', { 'bg-brand-500 text-brand-50': active })}
-    >
-      {icon}
-      {label}
-    </Button>
-  );
-}
+import { EditorActionButton } from './editor-action-button';
+import { ImageUploaderDialogTrigger } from './image-uploader-dialog-trigger';
+import { LayeredImageUploaderDialogTrigger } from './layered-image-uploader-dialog-trigger';
 
 type MenuBarProps = {
   editor: Editor | null;
@@ -66,14 +39,6 @@ type MenuBarProps = {
 
 export function MenuBar({ editor }: MenuBarProps) {
   if (!editor) return null;
-
-  const imageUpload = () => {
-    const url = window.prompt('URL');
-
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
-    }
-  };
 
   const setYoutubeVideo = () => {
     const url = window.prompt('URL');
@@ -232,11 +197,7 @@ export function MenuBar({ editor }: MenuBarProps) {
         label="refazer"
       />
 
-      <EditorActionButton
-        onClick={imageUpload}
-        icon={<ImagePlusIcon />}
-        label="imagem"
-      />
+      <ImageUploaderDialogTrigger editor={editor} />
 
       <EditorActionButton
         onClick={() => editor.chain().focus().toggleTaskList().run()}
@@ -272,6 +233,8 @@ export function MenuBar({ editor }: MenuBarProps) {
         icon={<YoutubeIcon />}
         label="vídeo do youtube"
       />
+
+      <LayeredImageUploaderDialogTrigger editor={editor} />
     </div>
   );
 }

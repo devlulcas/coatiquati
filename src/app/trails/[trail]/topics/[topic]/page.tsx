@@ -7,13 +7,9 @@ type PageProps = {
 };
 
 export default async function Page({ params }: PageProps) {
-  // const topicId = Number(params.topic);
-
-  // const topicData = await getTopicUseCase({ id: topicId });
-
   return (
     <div className="py-8 container">
-      <TextEditor />
+      <TextEditor initialContent="<p>Before</p><image-uploader-node></image-uploader-node<strong>After</strong>" />
     </div>
   );
 }

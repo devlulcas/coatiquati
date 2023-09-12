@@ -13,6 +13,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { UploadMarkdownButton } from '../upload-markdown-button';
 import css from './editor.module.css';
+import LayeredImage from './layered-image-node';
 import { MenuBar } from './menu-bar';
 
 type TextEditorProps = {
@@ -54,7 +55,9 @@ export function TextEditor({ initialContent }: TextEditorProps) {
       Youtube.configure({
         progressBarColor: 'hotpink',
       }),
+      LayeredImage,
     ],
+    content: initialContent,
   });
 
   const saveMutation = useMutation({
@@ -68,9 +71,7 @@ export function TextEditor({ initialContent }: TextEditorProps) {
   return (
     <div className={css.editor}>
       <MenuBar editor={editor} />
-      <EditorContent content={initialContent} editor={editor}>
-        {null}
-      </EditorContent>
+      <EditorContent editor={editor}>{null}</EditorContent>
 
       <div className="mt-4 flex gap-2">
         <Button
@@ -83,6 +84,8 @@ export function TextEditor({ initialContent }: TextEditorProps) {
 
         <UploadMarkdownButton />
       </div>
+
+      <pre>{JSON.stringify(editor?.getJSON(), null, 2)}</pre>
     </div>
   );
 }
