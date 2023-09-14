@@ -29,9 +29,9 @@ import {
   WrapTextIcon,
   YoutubeIcon,
 } from 'lucide-react';
+import { LayeredImageUploaderDialogTrigger } from '../layered-image-uploader/layered-image-uploader-dialog-trigger';
 import { EditorActionButton } from './editor-action-button';
 import { ImageUploaderDialogTrigger } from './image-uploader-dialog-trigger';
-import { LayeredImageUploaderDialogTrigger } from './layered-image-uploader-dialog-trigger';
 
 type MenuBarProps = {
   editor: Editor | null;
@@ -49,7 +49,7 @@ export function MenuBar({ editor }: MenuBarProps) {
   };
 
   return (
-    <div className="flex gap-2 flex-wrap">
+    <div className="flex gap-1 flex-wrap w-full">
       <EditorActionButton
         icon={<BoldIcon />}
         label="negrito"
@@ -234,7 +234,9 @@ export function MenuBar({ editor }: MenuBarProps) {
         label="vídeo do youtube"
       />
 
-      <LayeredImageUploaderDialogTrigger editor={editor} />
+      <LayeredImageUploaderDialogTrigger
+        onSave={(layers) => editor.chain().focus().setLayers({ layers }).run()}
+      />
     </div>
   );
 }
