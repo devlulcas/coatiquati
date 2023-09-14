@@ -48,7 +48,9 @@ export function LayeredImageUploaderDialogTrigger({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        {children ?? (
+        {typeof children !== 'undefined' ? (
+          children
+        ) : (
           <EditorActionButton icon={<LayersIcon />} label="layers" />
         )}
       </DialogTrigger>
