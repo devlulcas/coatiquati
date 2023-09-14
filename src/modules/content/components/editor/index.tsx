@@ -11,10 +11,11 @@ import TextStyle from '@tiptap/extension-text-style';
 import Youtube from '@tiptap/extension-youtube';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { UploadMarkdownButton } from '../upload-markdown-button';
 import css from './editor.module.css';
 import LayeredImage from './layered-image-node';
 import { MenuBar } from './menu-bar';
+import { NewImageContentDialogTrigger } from '../new-image-content-dialog-trigger';
+import { NewVideoContentDialogTrigger } from '../new-video-content-dialog-trigger';
 
 type TextEditorProps = {
   initialContent?: string;
@@ -82,7 +83,10 @@ export function TextEditor({ initialContent }: TextEditorProps) {
           {saveMutation.isError ? 'Erro ao salvar' : 'Salvar manualmente'}
         </Button>
 
-        <UploadMarkdownButton />
+
+        <NewImageContentDialogTrigger/>
+
+        <NewVideoContentDialogTrigger/>
       </div>
 
       <pre>{JSON.stringify(editor?.getJSON(), null, 2)}</pre>
