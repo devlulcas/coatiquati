@@ -1,13 +1,40 @@
 'use client';
 
 import { Button } from '@/shared/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
-import { Label } from '@/shared/components/ui/label';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
 import { cn } from '@/shared/utils/cn';
-import { ArrowUpIcon, PlusIcon, TrashIcon } from 'lucide-react';
+import { nanoid } from '@/shared/utils/nanoid';
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { TrashIcon } from 'lucide-react';
 import Image from 'next/image';
-import { useId, useState } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import type { LayeredImage } from '../editor/layered-image-node';
 
 export function useLayeredImageControl(defaultLayers: LayeredImage[] = []) {
@@ -17,68 +44,89 @@ export function useLayeredImageControl(defaultLayers: LayeredImage[] = []) {
     setLayers([...layers, layer]);
   };
 
-  const removeLayer = (index: number) => {
-    setLayers(layers.filter((_, i) => i !== index));
+  const removeLayer = (id: string) => {
+    setLayers(layers.filter((l) => l.id !== id));
   };
 
-  const updateLayerOrder = (from: number, to: number) => {
-    const layer = layers[from];
-    const newLayers = layers.filter((_, i) => i !== from);
-    newLayers.splice(to, 0, layer);
-    setLayers(newLayers);
-  };
-
-  const layerUp = (index: number) => {
-    if (index > 0) {
-      updateLayerOrder(index, index - 1);
-    }
-  };
-
-  const layerDown = (index: number) => {
-    if (index < layers.length - 1) {
-      updateLayerOrder(index, index + 1);
-    }
-  };
-
-  return { layers, pushLayer, removeLayer, layerUp, layerDown };
+  return { layers, pushLayer, setLayers, removeLayer };
 }
 
 type LayeredImageUploaderProps = {
   layers: LayeredImage[];
+  setLayers: React.Dispatch<React.SetStateAction<LayeredImage[]>>;
   pushLayer: (layer: LayeredImage) => void;
-  removeLayer: (index: number) => void;
-  layerUp: (index: number) => void;
-  layerDown: (index: number) => void;
+  removeLayer: (id: string) => void;
 };
 
-export function LayeredImageUploader(props: LayeredImageUploaderProps) {
-  const { layers, layerDown, layerUp, pushLayer, removeLayer } = props;
+export function LayeredImageUploader({
+  layers,
+  setLayers,
+  pushLayer,
+  removeLayer,
+}: LayeredImageUploaderProps) {
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  function handleDragEnd(event: any) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setLayers((layers) => {
+        const oldIndex = layers.findIndex((l) => l.id === active.id);
+        const newIndex = layers.findIndex((l) => l.id === over.id);
+
+        return arrayMove(layers, oldIndex, newIndex);
+      });
+    }
+  }
 
   return (
     <>
-      <ScrollArea className="h-[60vh] w-full min-w-fit flex flex-col rounded-md border p-4">
-        {layers.map((layer, index) => (
-          <LayerPreview
-            key={layer.src}
-            index={index}
-            value={layer}
-            onRemove={removeLayer}
-            onUp={layerUp}
-            onDown={layerDown}
-            className="mb-4"
-          />
-        ))}
-      </ScrollArea>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <ScrollArea className="h-[60vh] w-full min-w-fit flex flex-col rounded-md border p-4">
+          <SortableContext
+            items={layers}
+            strategy={verticalListSortingStrategy}
+          >
+            {layers.map((layer) => (
+              <LayerPreview
+                key={layer.id}
+                value={layer}
+                onRemove={removeLayer}
+                className="mb-4"
+              />
+            ))}
+          </SortableContext>
+        </ScrollArea>
+      </DndContext>
 
       <div className="w-full h-full min-w-[25vw]">
         <LayerInput
           onAdd={pushLayer}
-          defaultValue={{ src: '', alt: '', title: '' }}
+          defaultValue={{ id: '', src: '', alt: '', title: '' }}
         />
       </div>
     </>
   );
 }
+
+const layeredImageSchema = z.object({
+  src: z.string().url(),
+  alt: z.string(),
+  title: z.string(),
+});
 
 function LayerInput(props: {
   onAdd: (layer: LayeredImage) => void;
@@ -87,121 +135,138 @@ function LayerInput(props: {
 }) {
   const { onAdd, defaultValue, className } = props;
 
-  const id = useId();
+  const form = useForm<LayeredImage>({
+    resolver: zodResolver(layeredImageSchema),
+    defaultValues: defaultValue,
+  });
 
-  const [src, setSrc] = useState(defaultValue?.src || '');
-  const [alt, setAlt] = useState(defaultValue?.alt || '');
-  const [title, setTitle] = useState(defaultValue?.title || '');
+  const onSubmit = async (values: LayeredImage) => {
+    onAdd({
+      ...values,
+      id: nanoid(),
+    });
+
+    form.reset();
+  };
 
   return (
-    <div
-      className={cn(
-        'flex h-full flex-col gap-4 p-4 border rounded-lg',
-        className
-      )}
-    >
-      <div className="flex gap-3 flex-col border-b w-full">
-        <Label htmlFor={'layer-src' + id}>Camada</Label>
-        <Input
-          id={'layer-src' + id}
-          placeholder="URL"
-          value={src}
-          onChange={(e) => setSrc(e.target.value)}
-        />
-      </div>
-
-      <div className="flex gap-3 flex-col border-b w-full">
-        <Label htmlFor={`layer-alt-${id}`}>Texto alternativo</Label>
-        <Input
-          id={`layer-alt-${id}`}
-          placeholder="alt"
-          value={alt}
-          onChange={(e) => setAlt(e.target.value)}
-        />
-      </div>
-
-      <div className="flex gap-3 flex-col border-b w-full">
-        <Label htmlFor={`layer-title-${id}`}>Título</Label>
-        <Input
-          id={`layer-title-${id}`}
-          placeholder="Título"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-
-      <Button
-        className="w-full mt-auto"
-        title="Adicionar"
-        onClick={() => onAdd({ src, alt, title })}
-        variant="default"
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn(
+          'flex h-full flex-col gap-4 p-4 border rounded-lg',
+          className
+        )}
+        action="/api/sign-in"
       >
-        <PlusIcon />
-      </Button>
-    </div>
+        <FormField
+          control={form.control}
+          name="src"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>URL da imagem</FormLabel>
+              <FormControl>
+                <Input
+                  type="url"
+                  placeholder="https://placekitten.com/500"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="alt"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Texto alternativo</FormLabel>
+              <FormControl>
+                <Input type="text" placeholder="Imagem de um gato" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Título</FormLabel>
+              <FormControl>
+                <Input type="text" placeholder="Gato" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button variant="secondary" className="w-full mt-auto" type="submit">
+          Adicionar camada
+        </Button>
+      </form>
+    </Form>
   );
 }
 
 function LayerPreview(props: {
-  index: number;
-  onRemove: (index: number) => void;
-  onUp: (index: number) => void;
-  onDown: (index: number) => void;
+  onRemove: (id: string) => void;
   className?: string;
   value: LayeredImage;
 }) {
-  const { index, onRemove, onUp, onDown, value, className } = props;
+  const { onRemove, value, className } = props;
+
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: value.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   return (
-    <div className={cn('flex gap-4 p-4 border rounded-lg', className)}>
-      <div className="flex gap-4 w-full">
-        <Image
-          src={value.src}
-          alt={value.alt}
-          title={value.title}
-          width={150}
-          height={150}
-          className="rounded-lg"
-        />
+    <div
+      className={cn('flex gap-2 p-2 border rounded-lg relative', className)}
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
+      <Image
+        src={value.src}
+        alt={value.alt}
+        title={value.title}
+        width={150}
+        height={150}
+        className="rounded-lg"
+      />
 
-        <div className="flex flex-col gap-2">
-          <h4>
-            Título: <strong>{value.title}</strong>
-          </h4>
-          <p>
-            Alt: <strong>{value.alt}</strong>
-          </p>
-          <p>
-            URL: <strong>{value.src}</strong>
-          </p>
-        </div>
+      <div className="flex flex-col gap-2">
+        <span>ID #{value.id}</span>
+        <h4>
+          Título: <strong>{value.title}</strong>
+        </h4>
+        <p>
+          Alt: <strong>{value.alt}</strong>
+        </p>
+        <p>
+          URL: <strong>{value.src}</strong>
+        </p>
       </div>
 
-      <div className="flex flex-col gap-1 justify-between border-l pl-4">
-        <Button
-          title="Mover para cima"
-          onClick={() => onUp(index)}
-          variant="secondary"
-        >
-          <ArrowUpIcon />
-        </Button>
-
-        <Button
-          title="Remover"
-          onClick={() => onRemove(index)}
-          variant="destructive"
-        >
-          <TrashIcon />
-        </Button>
-
-        <Button
-          title="Mover para baixo"
-          onClick={() => onDown(index)}
-          variant="secondary"
-        >
-          <ArrowUpIcon className="rotate-180" />
-        </Button>
-      </div>
+      <Button
+        title="Remover"
+        size="icon"
+        onClick={() => onRemove(value.id)}
+        variant="destructive"
+        className="absolute bottom-2 right-2 z-10 opacity-25 hover:opacity-100 focus:opacity-100 transition-opacity"
+      >
+        <TrashIcon />
+      </Button>
     </div>
   );
 }
