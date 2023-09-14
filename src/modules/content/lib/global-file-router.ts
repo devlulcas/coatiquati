@@ -22,24 +22,6 @@ const authHandler = async (request: NextRequest) => {
  * UploadThing integration will automatically create the routes
  */
 export const globalFileRouter = {
-  markdown: f({
-    text: { maxFileSize: '2MB' },
-    'text/markdown': { maxFileSize: '2MB' },
-  })
-    .middleware(async ({ req }) => {
-      const user = await authHandler(req);
-
-      if (!user) {
-        throw new Error('Unauthorized: You must be logged in to upload');
-      }
-
-      return { userId: user.id };
-    })
-    .onUploadComplete(async ({ metadata, file }) => {
-      console.log('Upload complete for userId:', metadata.userId);
-
-      console.log('file url', file.url);
-    }),
   textEditorImage: f({
     image: { maxFileSize: '2MB' },
   })
@@ -57,6 +39,23 @@ export const globalFileRouter = {
 
       console.log('file url', file.url);
     }),
+    newImageContent: f({
+      image: { maxFileSize: '2MB' },
+    })
+      .middleware(async ({ req }) => {
+        const user = await authHandler(req);
+  
+        if (!user) {
+          throw new Error('Unauthorized: You must be logged in to upload');
+        }
+  
+        return { userId: user.id };
+      })
+      .onUploadComplete(async ({ metadata, file }) => {
+        console.log('Upload complete for userId:', metadata.userId);
+  
+        console.log('file url', file.url);
+      }),
 } satisfies FileRouter;
 
 export type GlobalFileRouter = typeof globalFileRouter;
