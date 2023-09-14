@@ -1,7 +1,7 @@
 import { Button } from '@/shared/components/ui/button';
 import { Node, mergeAttributes, type NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
-import { PencilIcon } from 'lucide-react';
+import { GripIcon, PencilIcon } from 'lucide-react';
 import { LayeredImageUploaderDialogTrigger } from '../layered-image-uploader/layered-image-uploader-dialog-trigger';
 import { LayeredImageView } from '../layered-image-view';
 
@@ -30,6 +30,16 @@ function LayeredImageVisualization(props: LayeredImageVisualizationProps) {
   return (
     <NodeViewWrapper className="layeredImageNode">
       <div className="relative w-fit h-fit">
+        <Button
+          size="icon"
+          className="absolute top-4 left-4 z-10 opacity-25 hover:opacity-100 focus:opacity-100 transition-opacity"
+          variant="ghost"
+          data-drag-handle
+        >
+          <GripIcon />
+          <span className="sr-only">Mover</span>
+        </Button>
+
         <LayeredImageUploaderDialogTrigger
           defaultData={props.node.attrs.layers}
           onSave={(layers) => {
