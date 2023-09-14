@@ -1,8 +1,12 @@
-import { Node, mergeAttributes } from '@tiptap/core';
+import { Button } from '@/shared/components/ui/button';
+import { Node, mergeAttributes, type NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
+import { PencilIcon } from 'lucide-react';
+import { LayeredImageUploaderDialogTrigger } from '../layered-image-uploader/layered-image-uploader-dialog-trigger';
 import { LayeredImageView } from '../layered-image-view';
 
 export type LayeredImage = {
+  id: string;
   src: string;
   alt: string;
   title: string;
@@ -20,16 +24,31 @@ declare module '@tiptap/core' {
   }
 }
 
-type LayeredImageVisualizationProps = {
-  node: {
-    attrs: LayeredImageNodeAttributes;
-  };
-};
+type LayeredImageVisualizationProps = NodeViewProps;
 
 function LayeredImageVisualization(props: LayeredImageVisualizationProps) {
   return (
     <NodeViewWrapper className="layeredImageNode">
-      <LayeredImageView layers={props.node.attrs.layers} />
+      <div className="relative w-fit h-fit">
+        <LayeredImageUploaderDialogTrigger
+          defaultData={props.node.attrs.layers}
+          onSave={(layers) => {
+            props.updateAttributes({
+              layers,
+            });
+          }}
+        >
+          <Button
+            size="icon"
+            className="absolute top-4 right-4 z-10 opacity-25 hover:opacity-100 focus:opacity-100 transition-opacity"
+          >
+            <PencilIcon />
+            <span className="sr-only">Editar camadas</span>
+          </Button>
+        </LayeredImageUploaderDialogTrigger>
+
+        <LayeredImageView layers={props.node.attrs.layers} />
+      </div>
     </NodeViewWrapper>
   );
 }
