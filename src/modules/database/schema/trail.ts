@@ -28,6 +28,10 @@ export const trailTable = sqliteTable('trail', {
     .$type<ContentStatus>()
     .default(contentStatus.DRAFT)
     .notNull(),
+  category: integer('category_id').references(() => categoryTable.id, {
+    onDelete: 'set null',
+    onUpdate: 'cascade',
+  }),
   authorId: text('user_id')
     .notNull()
     .references(() => userTable.id, {
@@ -43,7 +47,10 @@ export const trailTable = sqliteTable('trail', {
 });
 
 export const trailTableRelations = relations(trailTable, ({ many, one }) => ({
-  trailToCategories: many(trailToCategoriesTable),
+  category: one(categoryTable, {
+    fields: [trailTable.category],
+    references: [categoryTable.id],
+  }),
   subscriptions: many(trailSubscriptionTable),
   topics: many(topicTable),
   contributors: many(contributionTable),
@@ -72,34 +79,5 @@ export const categoryTable = sqliteTable('category', {
 });
 
 export const categoryTableRelations = relations(categoryTable, ({ many }) => ({
-  trailToCategories: many(trailToCategoriesTable),
+  trails: many(trailTable),
 }));
-
-export const trailToCategoriesTable = sqliteTable('trail_category', {
-  trailId: integer('trail_id')
-    .notNull()
-    .references(() => trailTable.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    }),
-  categoryId: integer('category_id')
-    .notNull()
-    .references(() => categoryTable.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    }),
-});
-
-export const trailToCategoriesTableRelations = relations(
-  trailToCategoriesTable,
-  ({ one }) => ({
-    trail: one(trailTable, {
-      fields: [trailToCategoriesTable.trailId],
-      references: [trailTable.id],
-    }),
-    category: one(categoryTable, {
-      fields: [trailToCategoriesTable.categoryId],
-      references: [categoryTable.id],
-    }),
-  })
-);

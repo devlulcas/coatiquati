@@ -1,33 +1,21 @@
-import { db } from '@/modules/database/db';
-import { trailTable } from '@/modules/database/schema/trail';
-import { eq } from 'drizzle-orm';
+import { updateTrail } from '../repositories/trail-repository';
 import {
   updateTrailUseCaseSchema,
   type UpdateTrailSchema,
 } from '../schemas/edit-trail-schema';
-import { type Trail } from '../types/trail';
 
-export async function updateTrailUseCase(
-  params: UpdateTrailSchema
-): Promise<Trail> {
+export async function updateTrailUseCase(params: UpdateTrailSchema) {
   const validatedParams = updateTrailUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
     throw new Error('Parâmetros inválidos');
   }
 
-  const newTrail: Partial<Trail> = {
-    ...validatedParams.data.trail,
-    updatedAt: new Date().toISOString(),
-  };
-
   try {
-    return db
-      .update(trailTable)
-      .set(newTrail)
-      .where(eq(trailTable.id, validatedParams.data.trailId))
-      .returning()
-      .get();
+    return updateTrail(
+      validatedParams.data.trailId,
+      validatedParams.data.trail
+    );
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao atualizar trilha');

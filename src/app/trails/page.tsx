@@ -46,8 +46,8 @@ export default async function Page(props: PageProps) {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
         {trails.map((trail) => (
           <TrailCard
-            key={trail.trail.id}
-            trail={trail.trail}
+            key={trail.id}
+            trail={trail}
             author={trail.author}
           />
         ))}
