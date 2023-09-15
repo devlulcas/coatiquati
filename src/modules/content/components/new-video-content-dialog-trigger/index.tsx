@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
 import { VideoIcon } from 'lucide-react';
-import { VideoContentForm } from './video-content-form';
+import { VideoContentForm } from '../video-content-form';
 
 export function NewVideoContentDialogTrigger() {
   return (

@@ -12,6 +12,7 @@ import {
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { VideoOffIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
@@ -46,6 +47,7 @@ function extractYoutubeVideoId(url: string) {
 
     return urlObject.searchParams.get('v');
   } catch (error) {
+    console.error(error);
     return null;
   }
 }
@@ -76,20 +78,21 @@ export function VideoContentForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn(
-          'flex h-full flex-col gap-4 p-4 border rounded-lg',
-          className
-        )}
-        action="/api/sign-in"
+        className={cn('flex h-full flex-col gap-4', className)}
       >
         <div
           className={cn(
-            'aspect-w-16 aspect-h-9 rounded-lg overflow-hidden min-w-0',
-            youtubeId ? 'bg-black' : 'bg-gray-200'
+            'aspect-video h-80 rounded-lg overflow-hidden ',
+            youtubeId ? 'bg-black' : 'bg-neutral-900'
           )}
         >
-          {youtubeId && (
+          {youtubeId ? (
             <LiteYouTubeEmbed id={youtubeId} title={form.watch('title')} />
+          ) : (
+            <div className="flex items-center justify-center gap-4 h-full">
+              <VideoOffIcon className="w-16 h-16 text-neutral-500" />
+              <p className="text-neutral-500 text-lg">Sem vídeo</p>
+            </div>
           )}
         </div>
 
