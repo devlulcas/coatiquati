@@ -68,6 +68,7 @@ export const UploadDropzone = (
 
   return (
     <UploadDropzoneRaw
+      className="p-2"
       onClientUploadComplete={(res) => {
         const fileNames = res?.map((file) => file.name).toLocaleString();
 
