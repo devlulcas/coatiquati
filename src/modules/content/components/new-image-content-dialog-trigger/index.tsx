@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
 import { ImagePlusIcon } from 'lucide-react';
-import { ImageContentForm } from './image-content-form';
+import { ImageContentForm } from '../image-content-form';
 
 export function NewImageContentDialogTrigger() {
   return (

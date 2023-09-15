@@ -11,19 +11,22 @@ import {
 } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { LayersIcon } from 'lucide-react';
-import { LayeredImageUploader, useLayeredImageControl } from '.';
+import { LayeredImageUploader } from '.';
 import { EditorActionButton } from '../editor/editor-action-button';
 import type { LayeredImage } from '../editor/layered-image-node';
+import { useLayeredImageControl } from './use-layered-image-control';
+
+type LayeredImageUploaderDialogTriggerProps = {
+  onSave: (data: LayeredImage[]) => void;
+  defaultData?: LayeredImage[];
+  children?: React.ReactNode;
+};
 
 export function LayeredImageUploaderDialogTrigger({
   onSave,
   defaultData = [],
   children,
-}: {
-  onSave: (data: LayeredImage[]) => void;
-  defaultData?: LayeredImage[];
-  children?: React.ReactNode;
-}) {
+}: LayeredImageUploaderDialogTriggerProps) {
   const layeredImageControl = useLayeredImageControl(defaultData);
 
   const { toast } = useToast();
