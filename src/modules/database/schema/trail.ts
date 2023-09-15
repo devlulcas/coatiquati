@@ -16,7 +16,6 @@ import { trailSubscriptionTable } from './trail-subscription';
 import { userTable } from './user';
 
 export type TrailTable = InferSelectModel<typeof trailTable>;
-
 export type NewTrailTable = InferInsertModel<typeof trailTable>;
 
 export const trailTable = sqliteTable('trail', {
@@ -60,6 +59,9 @@ export const trailTableRelations = relations(trailTable, ({ many, one }) => ({
     references: [userTable.id],
   }),
 }));
+
+export type CategoryTable = InferSelectModel<typeof categoryTable>;
+export type NewCategoryTable = InferInsertModel<typeof categoryTable>;
 
 export const categoryTable = sqliteTable('category', {
   id: integer('id').primaryKey().notNull(),
