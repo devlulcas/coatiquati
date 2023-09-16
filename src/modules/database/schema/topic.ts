@@ -10,6 +10,7 @@ import {
   type ContentStatus,
 } from '../../../shared/constants/content-status';
 import { commentTable } from './comment';
+import { contributionTable } from './contribution';
 import { trailTable } from './trail';
 import { userTable } from './user';
 
@@ -22,7 +23,10 @@ export const topicTable = sqliteTable('topic', {
   title: text('title').notNull(),
   description: text('description').notNull(),
   thumbnail: text('thumbnail'),
-  status: text('status').$type<ContentStatus>().default(contentStatus.DRAFT).notNull(),
+  status: text('status')
+    .$type<ContentStatus>()
+    .default(contentStatus.DRAFT)
+    .notNull(),
   trailId: integer('trail_id')
     .notNull()
     .references(() => trailTable.id, {
@@ -53,4 +57,5 @@ export const topicTableRelations = relations(topicTable, ({ many, one }) => ({
     references: [userTable.id],
   }),
   comments: many(commentTable),
+  contributors: many(contributionTable),
 }));
