@@ -1,12 +1,8 @@
-import { db } from '@/modules/database/db';
-import {
-  trailTable,
-  type NewTrailTable,
-} from '@/modules/database/schema/trail';
+import { type NewTrailTable } from '@/modules/database/schema/trail';
 import { z } from 'zod';
+import { createTrailRepository } from '../repositories/trail-repository';
 import { newTrailSchema } from '../schemas/new-trail-schema';
 import { type Trail } from '../types/trail';
-import { createTrail } from '../repositories/trail-repository';
 
 const createNewTrailUseCaseSchema = z.object({
   authorId: z.string({ required_error: 'O id do autor é obrigatório' }),
@@ -29,8 +25,10 @@ export async function createNewTrailUseCase(
     authorId: validatedParams.data.authorId,
   };
 
+  const repository = createTrailRepository();
+
   try {
-    return createTrail(newTrail);
+    return repository.createTrail(newTrail);
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao criar trilha');

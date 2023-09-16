@@ -1,28 +1,25 @@
-import { createPaginationSchema } from '@/modules/database/types/pagination';
+import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { z } from 'zod';
-import { getTrails } from '../repositories/trail-repository';
+import { createTrailRepository } from '../repositories/trail-repository';
+import type { Trail } from '../types/trail';
 
-const getTrailsUseCaseSchema = createPaginationSchema(30, 0).merge(
-  z.object({
-    search: z.string().optional().default(''),
-  })
-);
+const getTrailsUseCaseSchema = createPaginationSchemaWithSearch(30);
 
 type GetTrailsUseCaseSchema = Partial<z.infer<typeof getTrailsUseCaseSchema>>;
 
-export async function getTrailsUseCase(params: GetTrailsUseCaseSchema) {
+export async function getTrailsUseCase(
+  params: GetTrailsUseCaseSchema
+): Promise<Trail[]> {
   const validatedParams = getTrailsUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
     throw new Error('Parâmetros inválidos');
   }
 
+  const repository = createTrailRepository();
+
   try {
-    return getTrails({
-      take: validatedParams.data.take,
-      skip: validatedParams.data.skip,
-      query: validatedParams.data.search,
-    });
+    return repository.getTrails(validatedParams.data);
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao buscar trilhas');
