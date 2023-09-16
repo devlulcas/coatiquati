@@ -13,7 +13,7 @@ import type { Contributor } from '@/modules/user/types/user';
 
 type BaseContent = Omit<ContentTable, 'authorId' | 'contentType'> & {
   author: Contributor;
-  contributors: Contributor[];
+  contributors: { user: Contributor }[];
 };
 
 export type Content =

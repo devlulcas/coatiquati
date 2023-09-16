@@ -14,10 +14,10 @@ export type NewCategory = Creatable<NewCategoryTable>;
 
 export type UpdateCategory = Updatable<NewCategoryTable>;
 
-export type Trail = Omit<TrailTable, 'authorId'> & {
+export type Trail = Omit<TrailTable, 'authorId' | 'category'> & {
   author: Contributor;
-  contributors: Contributor[];
-  category: Category;
+  contributors: { user: Contributor }[];
+  category: Category | null;
 };
 
 export type TrailWithTopicArray = Trail & {
