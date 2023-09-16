@@ -10,6 +10,7 @@ import {
   type ContentStatus,
 } from '../../../shared/constants/content-status';
 import { commentTable } from './comment';
+import { contentTable } from './content';
 import { contributionTable } from './contribution';
 import { trailTable } from './trail';
 import { userTable } from './user';
@@ -58,4 +59,5 @@ export const topicTableRelations = relations(topicTable, ({ many, one }) => ({
   }),
   comments: many(commentTable),
   contributors: many(contributionTable),
+  contents: many(contentTable),
 }));

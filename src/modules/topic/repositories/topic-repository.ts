@@ -1,3 +1,15 @@
+import type {
+  BaseContent,
+  Content,
+  ContentFile,
+  ContentImage,
+  ContentRichTextPreview,
+  ContentVideo,
+  ContentWithFile,
+  ContentWithImage,
+  ContentWithRichTextPreview,
+  ContentWithVideo,
+} from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { topicTable } from '@/modules/database/schema/topic';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
@@ -106,6 +118,28 @@ async function getTopicWithContentArray(
         return operators.eq(fields.id, id);
       },
       with: {
+        contents: {
+          columns: {
+            id: true,
+            createdAt: true,
+            updatedAt: true,
+            title: true,
+            active: true,
+            contentType: true,
+          },
+          with: {
+            author: {
+              columns: CONTRIBUTOR_DB_FIELDS,
+            },
+            contributors: {
+              with: {
+                user: {
+                  columns: CONTRIBUTOR_DB_FIELDS,
+                },
+              },
+            },
+          },
+        },
         author: {
           columns: CONTRIBUTOR_DB_FIELDS,
         },
@@ -123,7 +157,29 @@ async function getTopicWithContentArray(
       throw new Error('Erro ao buscar trilha');
     }
 
-    return data;
+    const filledContents: Content[] = await Promise.all(
+      data.contents.map((content) => {
+        switch (content.contentType) {
+          case 'file':
+            return getContentWithFile(content);
+          case 'image':
+            return getContentWithImage(content);
+          case 'video':
+            return getContentWithVideo(content);
+          case 'rich_text':
+            return getContentWithRichTextPreview(content);
+          default:
+            throw new Error('Tipo de conteúdo inválido');
+        }
+      })
+    );
+
+    const dataWithFilledContents: TopicWithContentArray = {
+      ...data,
+      contents: filledContents,
+    };
+
+    return dataWithFilledContents;
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao buscar trilha');
@@ -170,4 +226,99 @@ async function updateTopic(
     console.error(error);
     throw new Error('Erro ao atualizar trilha');
   }
+}
+
+// TODO: Refactor this
+
+async function getContentWithFile(
+  content: BaseContent
+): Promise<ContentWithFile> {
+  const resultFile: ContentFile | undefined =
+    await db.query.contentFileTable.findFirst({
+      where(fields, operators) {
+        return operators.eq(fields.contentId, content.id);
+      },
+    });
+
+  if (!resultFile) {
+    throw new Error('Erro ao buscar conteúdo');
+  }
+
+  return {
+    ...content,
+    contentType: 'file',
+    content: resultFile,
+  };
+}
+
+async function getContentWithImage(
+  content: BaseContent
+): Promise<ContentWithImage> {
+  const resultImage: ContentImage | undefined =
+    await db.query.contentImageTable.findFirst({
+      where(fields, operators) {
+        return operators.eq(fields.contentId, content.id);
+      },
+    });
+
+  if (!resultImage) {
+    throw new Error('Erro ao buscar conteúdo de imagem com id = ' + content.id);
+  }
+
+  return {
+    ...content,
+    contentType: 'image',
+    content: resultImage,
+  };
+}
+
+async function getContentWithVideo(
+  content: BaseContent
+): Promise<ContentWithVideo> {
+  const resultVideo: ContentVideo | undefined =
+    await db.query.contentVideoTable.findFirst({
+      where(fields, operators) {
+        return operators.eq(fields.contentId, content.id);
+      },
+    });
+
+  if (!resultVideo) {
+    throw new Error('Erro ao buscar conteúdo de video com id = ' + content.id);
+  }
+
+  return {
+    ...content,
+    contentType: 'video',
+    content: resultVideo,
+  };
+}
+
+async function getContentWithRichTextPreview(
+  content: BaseContent
+): Promise<ContentWithRichTextPreview> {
+  const resultRichtext: ContentRichTextPreview | undefined =
+    await db.query.contentRichTextTable.findFirst({
+      columns: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        contentId: true,
+        previewAsJson: true,
+      },
+      where(fields, operators) {
+        return operators.eq(fields.contentId, content.id);
+      },
+    });
+
+  if (!resultRichtext) {
+    throw new Error(
+      'Erro ao buscar conteúdo de rich text com id = ' + content.id
+    );
+  }
+
+  return {
+    ...content,
+    contentType: 'rich_text',
+    content: resultRichtext,
+  };
 }
