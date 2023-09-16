@@ -2,6 +2,7 @@ import { roles } from '@/modules/auth/constants/roles';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import { eq } from 'drizzle-orm';
+import { createUserRepository } from '../repositories/user-repository';
 import {
   setUserPermissionUseCaseSchema,
   type SetUserPermissionSchema,
@@ -38,20 +39,13 @@ export async function setUserPermissionUseCase(
     );
   }
 
-  const newUser: Partial<User> = {
-    role: permission === roles.ADMIN ? roles.ADMIN : roles.USER,
-    updatedAt: new Date().toISOString(),
-  };
+  // Defaults to the lowest privilege
+  const role = permission === roles.ADMIN ? roles.ADMIN : roles.USER;
+
+  const repository = createUserRepository();
 
   try {
-    const data = db
-      .update(userTable)
-      .set(newUser)
-      .where(eq(userTable.id, userId))
-      .returning()
-      .get();
-
-    return data;
+    return repository.setUserRole(userId, role);
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao buscar usuários');

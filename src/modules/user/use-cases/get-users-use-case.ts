@@ -1,14 +1,9 @@
-import { db } from '@/modules/database/db';
-import { userTable } from '@/modules/database/schema/user';
-import { like, or } from 'drizzle-orm';
+import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { z } from 'zod';
+import { createUserRepository } from '../repositories/user-repository';
 import { type User } from '../types/user';
 
-const getUsersUseCaseSchema = z.object({
-  limit: z.number().optional().default(10),
-  offset: z.number().optional().default(0),
-  search: z.string().optional().default(''),
-});
+const getUsersUseCaseSchema = createPaginationSchemaWithSearch(20, 0);
 
 type GetUsersUseCaseSchema = Partial<z.infer<typeof getUsersUseCaseSchema>>;
 
@@ -21,23 +16,10 @@ export async function getUsersUseCase(
     throw new Error('Parâmetros inválidos');
   }
 
-  const { limit, offset, search } = validatedParams.data;
+  const repository = createUserRepository();
 
   try {
-    const data = db
-      .select()
-      .from(userTable)
-      .where(
-        or(
-          like(userTable.username, `%${search}%`),
-          like(userTable.email, `%${search}%`)
-        )
-      )
-      .limit(limit)
-      .offset(offset)
-      .all();
-
-    return data;
+    return repository.getUsers(validatedParams.data);
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao buscar usuários');
