@@ -1,8 +1,7 @@
-import { db } from '@/modules/database/db';
-import { topicTable } from '@/modules/database/schema/topic';
-import { eq } from 'drizzle-orm';
+import { DrizzleContentRepository } from '@/modules/content/repositories/content-repository';
 import { z } from 'zod';
-import { type Topic } from '../types/topic';
+import { DrizzleTopicRepository } from '../repositories/topic-repository';
+import type { TopicWithContentArray } from '../types/topic';
 
 const getTopicUseCaseSchema = z.object({
   id: z.number({ required_error: 'O id do tópico é obrigatório' }),
@@ -12,24 +11,17 @@ type GetTopicUseCaseSchema = z.infer<typeof getTopicUseCaseSchema>;
 
 export async function getTopicUseCase(
   params: GetTopicUseCaseSchema
-): Promise<Topic | null> {
+): Promise<TopicWithContentArray> {
   const validatedParams = getTopicUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
     throw new Error('Parâmetros inválidos');
   }
 
+  const repository = new DrizzleTopicRepository(new DrizzleContentRepository());
+
   try {
-    const data = db
-      .select()
-      .from(topicTable)
-      .where(eq(topicTable.id, params.id))
-      .limit(1)
-      .get();
-
-    if (!data) return null;
-
-    return data;
+    return repository.getTopicWithContentArray(validatedParams.data.id);
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao buscar tópico');

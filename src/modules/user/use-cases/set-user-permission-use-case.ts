@@ -2,7 +2,7 @@ import { roles } from '@/modules/auth/constants/roles';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import { eq } from 'drizzle-orm';
-import { createUserRepository } from '../repositories/user-repository';
+import { DrizzleUserRepository } from '../repositories/user-repository';
 import {
   setUserPermissionUseCaseSchema,
   type SetUserPermissionSchema,
@@ -42,7 +42,7 @@ export async function setUserPermissionUseCase(
   // Defaults to the lowest privilege
   const role = permission === roles.ADMIN ? roles.ADMIN : roles.USER;
 
-  const repository = createUserRepository();
+  const repository = new DrizzleUserRepository();
 
   try {
     return repository.setUserRole(userId, role);

@@ -30,179 +30,167 @@ export const CATEGORY_DB_FIELDS = Object.freeze({
   updatedAt: true,
 });
 
-export function createTrailRepository(): TrailRepository {
-  return {
-    createTrail,
-    getTrailWithTopicsById,
-    getTrails,
-    updateTrail,
-  };
-}
+export class DrizzleTrailRepository implements TrailRepository {
+  async createTrail(trail: NewTrail): Promise<Trail> {
+    try {
+      const newTrail = db.insert(trailTable).values(trail).returning().get();
 
-async function createTrail(trail: NewTrail): Promise<Trail> {
-  try {
-    const newTrail = db.insert(trailTable).values(trail).returning().get();
-
-    const data = await db.query.trailTable.findFirst({
-      columns: TRAIL_DB_FIELDS,
-      where: (fields, operators) => {
-        return operators.eq(fields.id, newTrail.id);
-      },
-      with: {
-        author: {
-          columns: CONTRIBUTOR_DB_FIELDS,
+      const data = await db.query.trailTable.findFirst({
+        columns: TRAIL_DB_FIELDS,
+        where: (fields, operators) => {
+          return operators.eq(fields.id, newTrail.id);
         },
-        contributors: {
-          with: {
-            user: {
-              columns: CONTRIBUTOR_DB_FIELDS,
+        with: {
+          author: {
+            columns: CONTRIBUTOR_DB_FIELDS,
+          },
+          contributors: {
+            with: {
+              user: {
+                columns: CONTRIBUTOR_DB_FIELDS,
+              },
             },
           },
+          category: {
+            columns: CATEGORY_DB_FIELDS,
+          },
         },
-        category: {
-          columns: CATEGORY_DB_FIELDS,
-        },
-      },
-    });
+      });
 
-    if (!data) {
+      if (!data) {
+        throw new Error('Erro ao criar trilha');
+      }
+
+      return data;
+    } catch (error) {
+      console.error(error);
       throw new Error('Erro ao criar trilha');
     }
-
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao criar trilha');
   }
-}
 
-async function getTrails(params: PaginationSchemaWithSearch): Promise<Trail[]> {
-  try {
-    return db.query.trailTable.findMany({
-      columns: TRAIL_DB_FIELDS,
-      limit: params.take,
-      offset: params.skip,
-      where: (fields, operators) => {
-        return operators.or(
-          operators.like(fields.title, `%${params.search}%`),
-          operators.like(fields.description, `%${params.search}%`)
-        );
-      },
-      with: {
-        author: {
-          columns: CONTRIBUTOR_DB_FIELDS,
+  async getTrails(params: PaginationSchemaWithSearch): Promise<Trail[]> {
+    try {
+      return db.query.trailTable.findMany({
+        columns: TRAIL_DB_FIELDS,
+        limit: params.take,
+        offset: params.skip,
+        where: (fields, operators) => {
+          return operators.or(
+            operators.like(fields.title, `%${params.search}%`),
+            operators.like(fields.description, `%${params.search}%`)
+          );
         },
-        contributors: {
-          with: {
-            user: {
-              columns: CONTRIBUTOR_DB_FIELDS,
+        with: {
+          author: {
+            columns: CONTRIBUTOR_DB_FIELDS,
+          },
+          contributors: {
+            with: {
+              user: {
+                columns: CONTRIBUTOR_DB_FIELDS,
+              },
             },
           },
-        },
-        category: {
-          columns: CATEGORY_DB_FIELDS,
-        },
-      },
-    });
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao buscar trilhas');
-  }
-}
-
-async function updateTrail(
-  id: number,
-  trail: Partial<NewTrail>
-): Promise<Trail> {
-  try {
-    const updatedTrail = db
-      .update(trailTable)
-      .set({ ...trail, updatedAt: new Date().toISOString() })
-      .where(eq(trailTable.id, id))
-      .returning()
-      .get();
-
-    const data = await db.query.trailTable.findFirst({
-      columns: TRAIL_DB_FIELDS,
-      where: (fields, operators) => {
-        return operators.eq(fields.id, updatedTrail.id);
-      },
-      with: {
-        author: {
-          columns: CONTRIBUTOR_DB_FIELDS,
-        },
-        contributors: {
-          with: {
-            user: {
-              columns: CONTRIBUTOR_DB_FIELDS,
-            },
+          category: {
+            columns: CATEGORY_DB_FIELDS,
           },
         },
-        category: {
-          columns: CATEGORY_DB_FIELDS,
-        },
-      },
-    });
+      });
+    } catch (error) {
+      console.error(error);
+      throw new Error('Erro ao buscar trilhas');
+    }
+  }
 
-    if (!data) {
+  async updateTrail(id: number, trail: Partial<NewTrail>): Promise<Trail> {
+    try {
+      const updatedTrail = db
+        .update(trailTable)
+        .set({ ...trail, updatedAt: new Date().toISOString() })
+        .where(eq(trailTable.id, id))
+        .returning()
+        .get();
+
+      const data = await db.query.trailTable.findFirst({
+        columns: TRAIL_DB_FIELDS,
+        where: (fields, operators) => {
+          return operators.eq(fields.id, updatedTrail.id);
+        },
+        with: {
+          author: {
+            columns: CONTRIBUTOR_DB_FIELDS,
+          },
+          contributors: {
+            with: {
+              user: {
+                columns: CONTRIBUTOR_DB_FIELDS,
+              },
+            },
+          },
+          category: {
+            columns: CATEGORY_DB_FIELDS,
+          },
+        },
+      });
+
+      if (!data) {
+        throw new Error('Erro ao atualizar trilha');
+      }
+
+      return data;
+    } catch (error) {
+      console.error(error);
       throw new Error('Erro ao atualizar trilha');
     }
-
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao atualizar trilha');
   }
-}
 
-async function getTrailWithTopicsById(
-  id: number
-): Promise<TrailWithTopicArray> {
-  try {
-    const data = await db.query.trailTable.findFirst({
-      columns: TRAIL_DB_FIELDS,
-      where: (fields, operators) => {
-        return operators.eq(fields.id, id);
-      },
-      with: {
-        author: {
-          columns: CONTRIBUTOR_DB_FIELDS,
+  async getTrailWithTopicsById(id: number): Promise<TrailWithTopicArray> {
+    try {
+      const data = await db.query.trailTable.findFirst({
+        columns: TRAIL_DB_FIELDS,
+        where: (fields, operators) => {
+          return operators.eq(fields.id, id);
         },
-        contributors: {
-          with: {
-            user: {
-              columns: CONTRIBUTOR_DB_FIELDS,
+        with: {
+          author: {
+            columns: CONTRIBUTOR_DB_FIELDS,
+          },
+          contributors: {
+            with: {
+              user: {
+                columns: CONTRIBUTOR_DB_FIELDS,
+              },
             },
           },
-        },
-        category: {
-          columns: CATEGORY_DB_FIELDS,
-        },
-        topics: {
-          columns: TOPIC_DB_FIELDS,
-          with: {
-            author: {
-              columns: CONTRIBUTOR_DB_FIELDS,
-            },
-            contributors: {
-              with: {
-                user: {
-                  columns: CONTRIBUTOR_DB_FIELDS,
+          category: {
+            columns: CATEGORY_DB_FIELDS,
+          },
+          topics: {
+            columns: TOPIC_DB_FIELDS,
+            with: {
+              author: {
+                columns: CONTRIBUTOR_DB_FIELDS,
+              },
+              contributors: {
+                with: {
+                  user: {
+                    columns: CONTRIBUTOR_DB_FIELDS,
+                  },
                 },
               },
             },
           },
         },
-      },
-    });
+      });
 
-    if (!data) {
+      if (!data) {
+        throw new Error('Erro ao buscar trilha');
+      }
+
+      return data;
+    } catch (error) {
+      console.error(error);
       throw new Error('Erro ao buscar trilha');
     }
-
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao buscar trilha');
   }
 }

@@ -1,9 +1,7 @@
-import { db } from '@/modules/database/db';
-import {
-  topicTable,
-  type NewTopicTable,
-} from '@/modules/database/schema/topic';
+import { DrizzleContentRepository } from '@/modules/content/repositories/content-repository';
+import { type NewTopicTable } from '@/modules/database/schema/topic';
 import { z } from 'zod';
+import { DrizzleTopicRepository } from '../repositories/topic-repository';
 import { newTopicSchema } from '../schemas/new-topic-schema';
 import { type Topic } from '../types/topic';
 
@@ -31,8 +29,10 @@ export async function createNewTopicUseCase(
     authorId: validatedParams.data.authorId,
   };
 
+  const repository = new DrizzleTopicRepository(new DrizzleContentRepository());
+
   try {
-    return db.insert(topicTable).values(newTopic).returning().get();
+    return repository.createTopic(newTopic);
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao criar tópico');

@@ -1,6 +1,5 @@
-import { db } from '@/modules/database/db';
-import { topicTable } from '@/modules/database/schema/topic';
-import { eq } from 'drizzle-orm';
+import { DrizzleContentRepository } from '@/modules/content/repositories/content-repository';
+import { DrizzleTopicRepository } from '../repositories/topic-repository';
 import {
   updateTopicUseCaseSchema,
   type UpdateTopicSchema,
@@ -16,18 +15,13 @@ export async function updateTopicUseCase(
     throw new Error('Parâmetros inválidos');
   }
 
-  const newTopic: Partial<Topic> = {
-    ...validatedParams.data.topic,
-    updatedAt: new Date().toISOString(),
-  };
+  const repository = new DrizzleTopicRepository(new DrizzleContentRepository());
 
   try {
-    return db
-      .update(topicTable)
-      .set(newTopic)
-      .where(eq(topicTable.id, validatedParams.data.topicId))
-      .returning()
-      .get();
+    return repository.updateTopic(
+      validatedParams.data.topicId,
+      validatedParams.data.topic
+    );
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao atualizar trilha');

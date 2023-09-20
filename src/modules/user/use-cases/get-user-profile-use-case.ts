@@ -1,6 +1,6 @@
 import { userSignInSchema } from '@/modules/auth/schemas/user-sign-in-schema';
 import { z } from 'zod';
-import { createUserRepository } from '../repositories/user-repository';
+import { DrizzleUserRepository } from '../repositories/user-repository';
 import { type UserProfile } from '../types/user';
 
 const getUserProfileUseCaseSchema = userSignInSchema.pick({
@@ -18,7 +18,7 @@ export async function getUserProfileUseCase(
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = createUserRepository();
+  const repository = new DrizzleUserRepository();
 
   try {
     return repository.getUserProfile(validatedParams.data.username);

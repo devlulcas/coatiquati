@@ -1,6 +1,6 @@
 import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { z } from 'zod';
-import { createUserRepository } from '../repositories/user-repository';
+import { DrizzleUserRepository } from '../repositories/user-repository';
 import { type User } from '../types/user';
 
 const getUsersUseCaseSchema = createPaginationSchemaWithSearch(20, 0);
@@ -16,7 +16,7 @@ export async function getUsersUseCase(
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = createUserRepository();
+  const repository = new DrizzleUserRepository();
 
   try {
     return repository.getUsers(validatedParams.data);
