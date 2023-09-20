@@ -21,10 +21,14 @@
     margin-top: 0.75em;
   }
 
-  ul,
+  ul {
+    padding: 0 1rem;
+    list-style: disc;
+  }
+
   ol {
     padding: 0 1rem;
-    list-style: initial;
+    list-style: decimal;
   }
 
   li {
@@ -110,12 +114,12 @@
 
   blockquote {
     padding-left: 1rem;
-    border-left: 2px solid rgba(#0d0d0d, 0.1);
+    border-left: 2px solid rgba(#b5b5b5, 0.2);
   }
 
   hr {
     border: none;
-    border-top: 2px solid rgba(#0d0d0d, 0.1);
+    border-top: 2px solid rgba(#b5b5b5, 0.2);
     margin: 2rem 0;
   }
 }
