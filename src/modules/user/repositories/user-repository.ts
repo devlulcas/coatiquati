@@ -7,6 +7,7 @@ import {
 } from '@/modules/trail/repositories/trail-repository';
 import type { UpdateUser, User, UserProfile } from '@/modules/user/types/user';
 import { eq } from 'drizzle-orm';
+import { userTableToUserMapper } from '../lib/user-table-to-user-mapper';
 
 export type UserRepository = {
   getUsers: (params: PaginationSchemaWithSearch) => Promise<User[]>;
@@ -69,7 +70,7 @@ export class DrizzleUserRepository implements UserRepository {
         return null;
       }
 
-      return { ...data, emailVerified: Boolean(data.email_verified) };
+      return userTableToUserMapper(data, false);
     } catch (error) {
       console.error(error);
       return null;
@@ -89,10 +90,7 @@ export class DrizzleUserRepository implements UserRepository {
       },
     });
 
-    return data.map((user) => ({
-      ...user,
-      emailVerified: Boolean(user.email_verified),
-    }));
+    return data.map((user) => userTableToUserMapper(user, true));
   }
 
   async getUserProfile(username: string): Promise<UserProfile | null> {
@@ -127,8 +125,7 @@ export class DrizzleUserRepository implements UserRepository {
       }
 
       const result: UserProfile = {
-        ...data,
-        emailVerified: Boolean(data.email_verified),
+        ...userTableToUserMapper(data, true),
         authoredTrails: data.authoredTrails.map((trail) => ({
           ...trail,
         })),
