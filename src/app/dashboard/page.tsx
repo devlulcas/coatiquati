@@ -7,8 +7,8 @@ import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function Page() {
-  const trailsData = await getTrailsUseCase({});
-  const users = await getUsersUseCase({});
+  const trailsData = await getTrailsUseCase();
+  const users = await getUsersUseCase();
 
   return (
     <div className="flex flex-col gap-8">
