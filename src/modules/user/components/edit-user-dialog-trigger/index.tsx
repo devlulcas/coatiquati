@@ -1,5 +1,6 @@
 'use client';
 
+import { PinConfirmationDialog } from '@/modules/auth/components/pin-confirmation-dialog';
 import { userSignUpSchema } from '@/modules/auth/schemas/user-sign-up-schema';
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -25,7 +26,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { type User } from '../../types/user';
-import { PinConfirmationDialog } from './pin-confirmation-dialog';
 
 const editUserDialogSchema = userSignUpSchema.omit({ password: true });
 
@@ -35,7 +35,7 @@ type EditUserDialogTriggerProps = {
 
 export function EditUserDialogTrigger({ user }: EditUserDialogTriggerProps) {
   const [waintingForPin, setWaintingForPin] = useState(false);
-  const [pin, setPin] = useState('');
+  const [pin, setPin] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof editUserDialogSchema>>({
     resolver: zodResolver(editUserDialogSchema),

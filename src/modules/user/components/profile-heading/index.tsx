@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { getRoleVisualIdentifier } from '../../lib/get-role-visual-identifier';
 import type { User } from '../../types/user';
 import { UserRoleBadge } from '../user-role-badge';
 
@@ -7,6 +8,8 @@ type ProfileHeadingProps = {
 };
 
 export function ProfileHeading({ user }: ProfileHeadingProps) {
+  const roleVisualIdentifier = getRoleVisualIdentifier(user.role);
+
   return (
     <div className="flex gap-2 bg-background/50 backdrop-blur-md border rounded-md overflow-clip">
       <Image
@@ -21,9 +24,9 @@ export function ProfileHeading({ user }: ProfileHeadingProps) {
         <h1 className="text-3xl font-bold mb-3">{user.username}</h1>
         <UserRoleBadge
           role={user.role}
-          className={(isAdmin) => [
+          className={[
             'px-2 py-1 rounded-md text-white font-bold text-sm',
-            isAdmin ? 'bg-purple-500' : 'bg-pink-500',
+            'bg-' + roleVisualIdentifier.color,
           ]}
         />
       </div>

@@ -13,7 +13,7 @@ import { useToast } from '@/shared/components/ui/use-toast';
 import { SkullIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { type User } from '../../types/user';
-import { submitEditUserRole } from './edit-user-role-action';
+import { editUserRoleAction } from './edit-user-role-action';
 
 type EditUserRoleProps = {
   user: User;
@@ -24,11 +24,13 @@ export function EditUserRole({ user }: EditUserRoleProps) {
   const [isLoading, startTransition] = useTransition();
   const { toast } = useToast();
 
+  if (user.role === roles.HIGH_PRIVILEGE_ADMIN) return null;
+
   const isAdmin = user.role === roles.ADMIN;
 
   const flippedRole = isAdmin
-    ? { role: roles.USER, label: 'Usuário' }
-    : { role: roles.ADMIN, label: 'Administrador' };
+    ? { value: roles.USER, label: 'Usuário' }
+    : { value: roles.ADMIN, label: 'Administrador' };
 
   const openConfirmDialog = () => setIsConfirming(true);
 
@@ -37,11 +39,7 @@ export function EditUserRole({ user }: EditUserRoleProps) {
   const onSubmit = () => {
     startTransition(async () => {
       try {
-        await submitEditUserRole({
-          userId: user.id,
-          permission: flippedRole.role,
-        });
-
+        await editUserRoleAction({ userId: user.id, role: flippedRole.value });
         toast({ title: `${user.username} agora é um ${flippedRole.label}` });
       } catch (error) {
         toast({

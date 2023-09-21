@@ -10,3 +10,7 @@ export type User = Omit<AuthUserTable, 'email_verified'> & {
 export type UserProfile = User & {
   authoredTrails: Trail[];
 };
+
+export type UpdateUser = Partial<
+  Pick<User, 'username' | 'avatar' | 'email' | 'role'>
+>;

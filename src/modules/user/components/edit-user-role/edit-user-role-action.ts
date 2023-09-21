@@ -1,12 +1,13 @@
 'use server';
 
-import { roles } from '@/modules/auth/constants/roles';
 import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import {
+  setUserRoleUseCase,
+  type SetUserRoleSchema,
+} from '@/modules/user/use-cases/set-user-role-use-case';
 import { revalidatePath } from 'next/cache';
-import type { SetUserPermissionSchema } from '../../schemas/set-user-permission-schema';
-import { setUserPermissionUseCase } from '../../use-cases/set-user-permission-use-case';
 
-export async function submitEditUserRole(data: SetUserPermissionSchema) {
+export async function editUserRoleAction(data: SetUserRoleSchema) {
   const session = await getPageSession();
 
   if (!session) {
@@ -15,21 +16,8 @@ export async function submitEditUserRole(data: SetUserPermissionSchema) {
     );
   }
 
-  if (session.user.role !== roles.HIGH_PRIVILEGE_ADMIN) {
-    throw new Error(
-      'Nível de permissões insuficiente para editar as permissões de um usuário.'
-    );
-  }
-
-  if (session.user.id === data.userId) {
-    throw new Error('Você não pode editar suas próprias permissões.');
-  }
-
-  setUserPermissionUseCase({
-    userId: data.userId,
-    permission: data.permission,
-  });
+  const user = await setUserRoleUseCase(data, session);
 
   revalidatePath('/dashboard');
-  revalidatePath('/profile/' + session.user.username);
+  revalidatePath('/profile/' + user.username);
 }

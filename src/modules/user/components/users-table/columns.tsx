@@ -4,6 +4,7 @@ import { SortedColumnHeader } from '@/shared/components/common/data-table';
 import { Button } from '@/shared/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
+import { createProfileUrl } from '../../lib/create-profile-url';
 import { type User } from '../../types/user';
 import { EditUserRole } from '../edit-user-role';
 import { UserRoleBadge } from '../user-role-badge';
@@ -16,7 +17,7 @@ export const usersColumns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       return (
         <Button variant="link" asChild>
-          <Link href={`/profile/${row.original.username}`}>
+          <Link href={createProfileUrl(row.original.username)}>
             {row.original.username}
           </Link>
         </Button>
