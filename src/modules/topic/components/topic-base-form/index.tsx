@@ -25,9 +25,11 @@ type TopicBaseFormProps = {
   className?: ClassValue;
 };
 
-export function TopicBaseForm(props: TopicBaseFormProps) {
-  const { defaultValues, onSubmit, className } = props;
-
+export function TopicBaseForm({
+  defaultValues,
+  onSubmit,
+  className,
+}: TopicBaseFormProps) {
   const form = useForm<NewTopicSchema>({
     resolver: zodResolver(newTopicSchema),
     defaultValues,

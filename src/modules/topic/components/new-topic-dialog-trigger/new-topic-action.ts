@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache';
 import type { NewTopicSchema } from '../../schemas/new-topic-schema';
 import { createNewTopicUseCase } from '../../use-cases/create-new-topic-use-case';
 
-export async function submitNewTopic(data: NewTopicSchema) {
+export async function newTopicAction(data: NewTopicSchema) {
   const session = await getPageSession();
 
   if (!session) {

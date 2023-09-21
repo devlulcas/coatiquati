@@ -6,6 +6,7 @@ import { Button } from '@/shared/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import Link from 'next/link';
+import { createTopicUrl } from '../../lib/create-topic-url';
 import { type Topic } from '../../types/topic';
 import { EditTopicDialogTrigger } from '../edit-topic-dialog-trigger';
 
@@ -22,9 +23,7 @@ export const topicsColumns: ColumnDef<Topic>[] = [
     header: 'Título',
     cell: ({ row }) => (
       <Button variant="link" asChild>
-        <Link
-          href={`/trails/${row.original.trailId}/topics/${row.original.id}`}
-        >
+        <Link href={createTopicUrl(row.original.id, row.original.trailId)}>
           {row.original.title}
         </Link>
       </Button>

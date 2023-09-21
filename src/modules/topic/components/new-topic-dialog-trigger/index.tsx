@@ -12,7 +12,7 @@ import { useToast } from '@/shared/components/ui/use-toast';
 import { PlusIcon } from 'lucide-react';
 import type { NewTopicSchema } from '../../schemas/new-topic-schema';
 import { TopicBaseForm } from '../topic-base-form';
-import { submitNewTopic } from './submit-new-topic-action';
+import { newTopicAction } from './new-topic-action';
 
 type NewTrailDialogTriggerProps = {
   trailId: number;
@@ -23,7 +23,7 @@ export function NewTrailDialogTrigger({ trailId }: NewTrailDialogTriggerProps) {
 
   const onSubmit = async (data: NewTopicSchema) => {
     try {
-      await submitNewTopic(data);
+      await newTopicAction(data);
       toast({ title: 'Tópico criado com sucesso' });
     } catch (error) {
       toast({

@@ -13,7 +13,7 @@ import { PencilIcon } from 'lucide-react';
 import type { NewTopicSchema } from '../../schemas/new-topic-schema';
 import { type Topic } from '../../types/topic';
 import { TopicBaseForm } from '../topic-base-form';
-import { submitEditTopic } from './submit-edit-topic-action';
+import { editTopicAction } from './edit-topic-action';
 
 type EditTopicDialogTriggerProps = {
   topic: Topic;
@@ -24,7 +24,7 @@ export function EditTopicDialogTrigger({ topic }: EditTopicDialogTriggerProps) {
 
   const onSubmit = async (data: NewTopicSchema) => {
     try {
-      await submitEditTopic({ topic: data, topicId: topic.id });
+      await editTopicAction({ topic: data, topicId: topic.id });
       toast({ title: 'Trilha editada com sucesso' });
     } catch (error) {
       toast({
