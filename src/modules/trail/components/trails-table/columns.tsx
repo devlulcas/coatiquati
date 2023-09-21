@@ -6,6 +6,7 @@ import { Button } from '@/shared/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import Link from 'next/link';
+import { createTrailUrl } from '../../lib/create-trail-url';
 import { type Trail } from '../../types/trail';
 import { EditTrailDialogTrigger } from '../edit-trail-dialog-trigger';
 
@@ -24,7 +25,7 @@ export const trailsColumns: ColumnDef<Trail>[] = [
       <Button variant="link" asChild>
         <Link
           className="break-all"
-          href={`/dashboard/trails/${row.original.id}`}
+          href={createTrailUrl(row.original.id, true)}
         >
           {row.original.title}
         </Link>

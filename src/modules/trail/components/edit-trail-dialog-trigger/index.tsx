@@ -13,7 +13,7 @@ import { PencilIcon } from 'lucide-react';
 import type { NewTrailSchema } from '../../schemas/new-trail-schema';
 import { type Trail } from '../../types/trail';
 import { TrailBaseForm } from '../trail-base-form';
-import { submitEditTrail } from './submit-edit-trail-action';
+import { editTrailAction } from './edit-trail-action';
 
 type EditTrailDialogTriggerProps = {
   trail: Trail;
@@ -24,7 +24,7 @@ export function EditTrailDialogTrigger({ trail }: EditTrailDialogTriggerProps) {
 
   const onSubmit = async (data: NewTrailSchema) => {
     try {
-      await submitEditTrail({ trail: data, trailId: trail.id });
+      await editTrailAction({ trail: data, trailId: trail.id });
       toast({ title: 'Trilha editada com sucesso' });
     } catch (error) {
       toast({

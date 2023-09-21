@@ -1,3 +1,4 @@
+import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import type { User } from '@/modules/user/types/user';
 import {
   Avatar,
@@ -8,6 +9,7 @@ import { Button } from '@/shared/components/ui/button';
 import { ArrowRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { createTrailUrl } from '../../lib/create-trail-url';
 import { type Trail } from '../../types/trail';
 
 type TrailCardProps = {
@@ -16,8 +18,8 @@ type TrailCardProps = {
 };
 
 export function TrailCard({ trail, author }: TrailCardProps) {
-  const trailSlug = `/trails/${trail.id}`;
-  const userProfileSlug = author ? `/profile/${author.username}` : '';
+  const trailSlug = createTrailUrl(trail.id);
+  const userProfileSlug = author ? createProfileUrl(author.username) : '/';
 
   return (
     <article className="flex flex-col justify-center items-center w-full bg-card text-card-foreground rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out border">

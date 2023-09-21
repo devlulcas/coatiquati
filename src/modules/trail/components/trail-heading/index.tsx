@@ -1,3 +1,4 @@
+import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import type { User } from '@/modules/user/types/user';
 import { UpdatedAt } from '@/shared/components/common/updated-at';
 import {
@@ -9,6 +10,7 @@ import { cn } from '@/shared/utils/cn';
 import type { ClassValue } from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+import { createTrailUrl } from '../../lib/create-trail-url';
 import type { Trail } from '../../types/trail';
 
 type TrailHeadingProps = {
@@ -56,7 +58,7 @@ export function TrailHeading({
 
         {isAdmin && (
           <Link
-            href={`/dashboard/trails/${trail.id}`}
+            href={createTrailUrl(trail.id, true)}
             className="flex items-center gap-2 text-sm text-brand-300"
           >
             Visualizar trilha como administrador
@@ -65,7 +67,7 @@ export function TrailHeading({
 
         <Link
           className="absolute top-4 left-4 flex items-center gap-2 group"
-          href={`/profile/${author.username}`}
+          href={createProfileUrl(author.username)}
         >
           <Avatar className="border border-foreground/25 rounded-full">
             <AvatarImage src={author.avatar} alt={author.username} />

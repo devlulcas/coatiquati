@@ -3,14 +3,14 @@
 import { useToast } from '@/shared/components/ui/use-toast';
 import type { NewTrailSchema } from '../../schemas/new-trail-schema';
 import { TrailBaseForm } from '../trail-base-form';
-import { submitNewTrail } from './submit-new-trail-action';
+import { newTrailAction } from './new-trail-action';
 
 export function NewTrailForm() {
   const { toast } = useToast();
 
   const onSubmit = async (data: NewTrailSchema) => {
     try {
-      await submitNewTrail(data);
+      await newTrailAction(data);
       toast({ title: 'Trilha criada com sucesso' });
     } catch (error) {
       toast({

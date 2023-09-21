@@ -6,14 +6,17 @@ import { revalidatePath } from 'next/cache';
 import type { UpdateTrailSchema } from '../../schemas/edit-trail-schema';
 import { updateTrailUseCase } from '../../use-cases/update-trail-use-case';
 
-export async function submitEditTrail(data: UpdateTrailSchema) {
+export async function editTrailAction(data: UpdateTrailSchema) {
   const session = await getPageSession();
 
   if (!session) {
     throw new Error('Você precisa estar logado para editar uma trilha.');
   }
 
-  if (session.user.role !== roles.ADMIN) {
+  if (
+    session.user.role !== roles.ADMIN &&
+    session.user.role !== roles.HIGH_PRIVILEGE_ADMIN
+  ) {
     throw new Error(
       'Você precisa ser um administrador para editar uma trilha.'
     );
