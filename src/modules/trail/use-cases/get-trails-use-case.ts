@@ -1,6 +1,6 @@
 import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { z } from 'zod';
-import { createTrailRepository } from '../repositories/trail-repository';
+import { DrizzleTrailRepository } from '../repositories/trail-repository';
 import type { Trail } from '../types/trail';
 
 const getTrailsUseCaseSchema = createPaginationSchemaWithSearch(30);
@@ -8,7 +8,7 @@ const getTrailsUseCaseSchema = createPaginationSchemaWithSearch(30);
 type GetTrailsUseCaseSchema = Partial<z.infer<typeof getTrailsUseCaseSchema>>;
 
 export async function getTrailsUseCase(
-  params: GetTrailsUseCaseSchema
+  params: GetTrailsUseCaseSchema = {}
 ): Promise<Trail[]> {
   const validatedParams = getTrailsUseCaseSchema.safeParse(params);
 
@@ -16,7 +16,7 @@ export async function getTrailsUseCase(
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = createTrailRepository();
+  const repository = new DrizzleTrailRepository();
 
   try {
     return repository.getTrails(validatedParams.data);

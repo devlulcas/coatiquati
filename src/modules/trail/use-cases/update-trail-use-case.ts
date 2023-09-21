@@ -1,4 +1,4 @@
-import { createTrailRepository } from '../repositories/trail-repository';
+import { DrizzleTrailRepository } from '../repositories/trail-repository';
 import {
   updateTrailUseCaseSchema,
   type UpdateTrailSchema,
@@ -11,7 +11,7 @@ export async function updateTrailUseCase(params: UpdateTrailSchema) {
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = createTrailRepository();
+  const repository = new DrizzleTrailRepository();
 
   try {
     return repository.updateTrail(

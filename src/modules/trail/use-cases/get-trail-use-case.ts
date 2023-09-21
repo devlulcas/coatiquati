@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createTrailRepository } from '../repositories/trail-repository';
+import { DrizzleTrailRepository } from '../repositories/trail-repository';
 import type { TrailWithTopicArray } from '../types/trail';
 
 const getTrailUseCaseSchema = z.object({
@@ -17,7 +17,7 @@ export async function getTrailUseCase(
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = createTrailRepository();
+  const repository = new DrizzleTrailRepository();
 
   try {
     return repository.getTrailWithTopicsById(validatedParams.data.id);

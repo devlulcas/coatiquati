@@ -1,6 +1,6 @@
 import { type NewTrailTable } from '@/modules/database/schema/trail';
 import { z } from 'zod';
-import { createTrailRepository } from '../repositories/trail-repository';
+import { DrizzleTrailRepository } from '../repositories/trail-repository';
 import { newTrailSchema } from '../schemas/new-trail-schema';
 import { type Trail } from '../types/trail';
 
@@ -25,7 +25,7 @@ export async function createNewTrailUseCase(
     authorId: validatedParams.data.authorId,
   };
 
-  const repository = createTrailRepository();
+  const repository = new DrizzleTrailRepository();
 
   try {
     return repository.createTrail(newTrail);
