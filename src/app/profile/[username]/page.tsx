@@ -15,15 +15,19 @@ export default async function Page({ params }: PageProps) {
     username: params.username,
   });
 
+  if (!profile) {
+    throw new Error('Profile not found');
+  }
+
   return (
     <main className="py-8 container">
-      <ProfileHeading user={profile.user} />
+      <ProfileHeading user={profile} />
 
-      {profile.trailsAuthored.length > 0 && (
+      {profile.authoredTrails.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xl font-bold">Trilhas autoradas</h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            {profile.trailsAuthored.map((trail) => (
+            {profile.authoredTrails.map((trail) => (
               <li
                 key={trail.id}
                 className="transition duration-500 ease-in-out  hover:scale-105"

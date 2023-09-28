@@ -23,7 +23,7 @@ export default async function Page() {
             </Link>
           </Button>
         </div>
-        <TrailsTable data={trailsData.map((data) => data.trail)} />
+        <TrailsTable data={trailsData} />
       </section>
 
       <section>

@@ -24,12 +24,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div className="py-8 container">
-      <TrailHeading
-        isAdmin={isAdmin}
-        trail={trailData.trail}
-        author={trailData.author}
-        className="mb-8"
-      />
+      <TrailHeading isAdmin={isAdmin} trail={trailData} className="mb-8" />
 
       {trailData.topics.length === 0 && (
         <p className="text-lg text-center">Nenhum tópico encontrado</p>

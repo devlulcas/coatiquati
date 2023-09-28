@@ -1,5 +1,4 @@
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
-import type { User } from '@/modules/user/types/user';
 import { UpdatedAt } from '@/shared/components/common/updated-at';
 import {
   Avatar,
@@ -15,17 +14,11 @@ import type { Trail } from '../../types/trail';
 
 type TrailHeadingProps = {
   trail: Trail;
-  author: User;
   isAdmin?: boolean;
   className?: ClassValue;
 };
 
-export function TrailHeading({
-  isAdmin,
-  trail,
-  author,
-  className,
-}: TrailHeadingProps) {
+export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
   return (
     <div
       className={cn(
@@ -67,15 +60,18 @@ export function TrailHeading({
 
         <Link
           className="absolute top-4 left-4 flex items-center gap-2 group"
-          href={createProfileUrl(author.username)}
+          href={createProfileUrl(trail.author.username)}
         >
           <Avatar className="border border-foreground/25 rounded-full">
-            <AvatarImage src={author.avatar} alt={author.username} />
-            <AvatarFallback>{author.username}</AvatarFallback>
+            <AvatarImage
+              src={trail.author.avatar}
+              alt={trail.author.username}
+            />
+            <AvatarFallback>{trail.author.username}</AvatarFallback>
           </Avatar>
 
           <span className="text-sm transition-all -translate-x-full opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-            {author.username}
+            {trail.author.username}
           </span>
         </Link>
       </div>

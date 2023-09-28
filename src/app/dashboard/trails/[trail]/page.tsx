@@ -19,11 +19,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div className="flex flex-col gap-8">
-      <TrailHeading
-        trail={trailData.trail}
-        author={trailData.author}
-        className="mb-8"
-      />
+      <TrailHeading trail={trailData} className="mb-8" />
 
       <section>
         <div className="flex justify-between mb-4">

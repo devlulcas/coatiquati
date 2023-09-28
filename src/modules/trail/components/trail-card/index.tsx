@@ -1,5 +1,4 @@
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
-import type { User } from '@/modules/user/types/user';
 import {
   Avatar,
   AvatarFallback,
@@ -14,12 +13,13 @@ import { type Trail } from '../../types/trail';
 
 type TrailCardProps = {
   trail: Trail;
-  author?: User;
 };
 
-export function TrailCard({ trail, author }: TrailCardProps) {
+export function TrailCard({ trail }: TrailCardProps) {
   const trailSlug = createTrailUrl(trail.id);
-  const userProfileSlug = author ? createProfileUrl(author.username) : '/';
+  const userProfileSlug = trail.author
+    ? createProfileUrl(trail.author.username)
+    : '/';
 
   return (
     <article className="flex flex-col justify-center items-center w-full bg-card text-card-foreground rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out border">
@@ -33,12 +33,17 @@ export function TrailCard({ trail, author }: TrailCardProps) {
           />
         </Link>
 
-        {author && (
+        {trail.author && (
           <div className="absolute bottom-2 left-2 flex gap-2">
             <Link href={userProfileSlug}>
               <Avatar>
-                <AvatarFallback>{author.username.slice(0, 2)}</AvatarFallback>
-                <AvatarImage src={author.avatar} alt={author.username} />
+                <AvatarFallback>
+                  {trail.author.username.slice(0, 2)}
+                </AvatarFallback>
+                <AvatarImage
+                  src={trail.author.avatar}
+                  alt={trail.author.username}
+                />
               </Avatar>
             </Link>
           </div>
