@@ -30,12 +30,10 @@ export default async function Page({ params }: PageProps) {
         <p className="text-lg text-center">Nenhum tópico encontrado</p>
       )}
 
-      <h2 className="text-2xl font-bold mb-4">
-        {trailData.topics.length} tópicos
-      </h2>
+      <h2 className="text-2xl font-bold mb-4">{trailData.topics.length} tópicos</h2>
 
       <ul className="flex flex-col gap-4 border-gray-300 border-l-2 pl-4">
-        {trailData.topics.map((topic) => (
+        {trailData.topics.map(topic => (
           <li key={topic.id}>
             <TopicCardItem topic={topic} />
           </li>

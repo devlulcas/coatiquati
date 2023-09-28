@@ -27,7 +27,7 @@ export function EditorActionButton({
       className={cn(
         'gap-2 flex-1 whitespace-nowrap',
         { 'bg-brand-500 text-brand-50': active },
-        className
+        className,
       )}
     >
       {icon}

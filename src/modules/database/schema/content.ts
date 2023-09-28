@@ -1,10 +1,5 @@
 import type { JSONContent } from '@tiptap/core';
-import {
-  relations,
-  sql,
-  type InferInsertModel,
-  type InferSelectModel,
-} from 'drizzle-orm';
+import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { commentTable } from './comment';
 import { contributionTable } from './contribution';
@@ -19,9 +14,7 @@ export const contentTable = sqliteTable('content', {
   id: integer('id').primaryKey().notNull(),
   title: text('title').notNull(),
   active: integer('active', { mode: 'boolean' }).notNull().default(true),
-  contentType: text('content_type')
-    .$type<'image' | 'rich_text' | 'video' | 'file'>()
-    .notNull(),
+  contentType: text('content_type').$type<'image' | 'rich_text' | 'video' | 'file'>().notNull(),
   authorId: text('user_id')
     .notNull()
     .references(() => userTable.id, {
@@ -40,21 +33,18 @@ export const contentTable = sqliteTable('content', {
     .notNull(),
 });
 
-export const contentTableRelations = relations(
-  contentTable,
-  ({ one, many }) => ({
-    author: one(userTable, {
-      fields: [contentTable.authorId],
-      references: [userTable.id],
-    }),
-    contributors: many(contributionTable),
-    comments: many(commentTable),
-    topic: one(contentTable, {
-      fields: [contentTable.topicId],
-      references: [contentTable.id],
-    }),
-  })
-);
+export const contentTableRelations = relations(contentTable, ({ one, many }) => ({
+  author: one(userTable, {
+    fields: [contentTable.authorId],
+    references: [userTable.id],
+  }),
+  contributors: many(contributionTable),
+  comments: many(commentTable),
+  topic: one(contentTable, {
+    fields: [contentTable.topicId],
+    references: [contentTable.id],
+  }),
+}));
 
 export type ContentImageTable = InferSelectModel<typeof contentImageTable>;
 export type NewContentImageTable = InferInsertModel<typeof contentImageTable>;
@@ -78,12 +68,8 @@ export const contentImageTable = sqliteTable('content_image', {
     .notNull(),
 });
 
-export type ContentRichTextTable = InferSelectModel<
-  typeof contentRichTextTable
->;
-export type NewContentRichTextTable = InferInsertModel<
-  typeof contentRichTextTable
->;
+export type ContentRichTextTable = InferSelectModel<typeof contentRichTextTable>;
+export type NewContentRichTextTable = InferInsertModel<typeof contentRichTextTable>;
 
 export const contentRichTextTable = sqliteTable('content_rich_text', {
   id: integer('id').primaryKey().notNull(),

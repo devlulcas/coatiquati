@@ -36,14 +36,14 @@ export class MetaballsEffect {
   }
 
   update() {
-    this.balls.forEach((ball) => ball.update());
+    this.balls.forEach(ball => ball.update());
   }
 
   /**
    * @param {CanvasRenderingContext2D} ctx
    */
   draw(ctx) {
-    this.balls.forEach((ball) => ball.draw(ctx));
+    this.balls.forEach(ball => ball.draw(ctx));
   }
 
   /**
@@ -53,6 +53,6 @@ export class MetaballsEffect {
   reset(width, height) {
     this.width = width;
     this.height = height;
-    this.balls.forEach((ball) => ball.reset());
+    this.balls.forEach(ball => ball.reset());
   }
 }

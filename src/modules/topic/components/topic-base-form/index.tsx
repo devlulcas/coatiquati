@@ -14,10 +14,7 @@ import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type ClassValue } from 'clsx';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import {
-  newTopicSchema,
-  type NewTopicSchema,
-} from '../../schemas/new-topic-schema';
+import { newTopicSchema, type NewTopicSchema } from '../../schemas/new-topic-schema';
 
 type TopicBaseFormProps = {
   defaultValues?: Partial<NewTopicSchema>;
@@ -25,11 +22,7 @@ type TopicBaseFormProps = {
   className?: ClassValue;
 };
 
-export function TopicBaseForm({
-  defaultValues,
-  onSubmit,
-  className,
-}: TopicBaseFormProps) {
+export function TopicBaseForm({ defaultValues, onSubmit, className }: TopicBaseFormProps) {
   const form = useForm<NewTopicSchema>({
     resolver: zodResolver(newTopicSchema),
     defaultValues,
@@ -37,10 +30,7 @@ export function TopicBaseForm({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('space-y-8', className)}
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8', className)}>
         <FormField
           control={form.control}
           name="title"
@@ -69,11 +59,7 @@ export function TopicBaseForm({
           )}
         />
 
-        <Button
-          className="w-full"
-          type="submit"
-          isLoading={form.formState.isSubmitting}
-        >
+        <Button className="w-full" type="submit" isLoading={form.formState.isSubmitting}>
           Salvar
         </Button>
       </form>

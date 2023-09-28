@@ -13,13 +13,8 @@ export async function editTrailAction(data: UpdateTrailSchema) {
     throw new Error('Você precisa estar logado para editar uma trilha.');
   }
 
-  if (
-    session.user.role !== roles.ADMIN &&
-    session.user.role !== roles.HIGH_PRIVILEGE_ADMIN
-  ) {
-    throw new Error(
-      'Você precisa ser um administrador para editar uma trilha.'
-    );
+  if (session.user.role !== roles.ADMIN && session.user.role !== roles.HIGH_PRIVILEGE_ADMIN) {
+    throw new Error('Você precisa ser um administrador para editar uma trilha.');
   }
 
   await updateTrailUseCase({

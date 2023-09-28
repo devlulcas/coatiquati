@@ -7,9 +7,7 @@ const getUsersUseCaseSchema = createPaginationSchemaWithSearch(20, 0);
 
 type GetUsersUseCaseSchema = Partial<z.infer<typeof getUsersUseCaseSchema>>;
 
-export async function getUsersUseCase(
-  params: GetUsersUseCaseSchema = {}
-): Promise<User[]> {
+export async function getUsersUseCase(params: GetUsersUseCaseSchema = {}): Promise<User[]> {
   const validatedParams = getUsersUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {

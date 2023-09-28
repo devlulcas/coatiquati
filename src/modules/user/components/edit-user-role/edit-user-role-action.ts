@@ -11,9 +11,7 @@ export async function editUserRoleAction(data: SetUserRoleSchema) {
   const session = await getPageSession();
 
   if (!session) {
-    throw new Error(
-      'Você precisa estar logado para editar as permissões de um usuário.'
-    );
+    throw new Error('Você precisa estar logado para editar as permissões de um usuário.');
   }
 
   const user = await setUserRoleUseCase(data, session);

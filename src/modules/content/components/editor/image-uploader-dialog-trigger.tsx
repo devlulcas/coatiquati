@@ -1,12 +1,7 @@
 'use client';
 
 import { Button } from '@/shared/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from '@/shared/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { useToast } from '@/shared/components/ui/use-toast';
@@ -21,11 +16,7 @@ type ImageUploaderProps = {
   onSave: (src: string, alt: string) => void;
 };
 
-export function ImageUploaderDialogTrigger({
-  editor,
-}: {
-  editor: Editor | null;
-}) {
+export function ImageUploaderDialogTrigger({ editor }: { editor: Editor | null }) {
   const imageUpload = (src: string, alt: string) => {
     if (editor) {
       editor.chain().focus().setImage({ src, alt }).run();
@@ -86,7 +77,7 @@ function ImageUploader({ onSave }: ImageUploaderProps) {
         <UploadDropzone
           className="mt-0"
           endpoint="textEditorImage"
-          onClientUploadComplete={(res) => {
+          onClientUploadComplete={res => {
             if (typeof res === 'undefined' || res.length === 0) {
               return toast({
                 title: 'Erro ao realizar upload',
@@ -115,7 +106,7 @@ function ImageUploader({ onSave }: ImageUploaderProps) {
           <Input
             id="alt"
             placeholder="Texto alternativo"
-            onChange={(e) => {
+            onChange={e => {
               altRef.current = e.target.value;
             }}
           />

@@ -10,7 +10,7 @@ const getTopicUseCaseSchema = z.object({
 type GetTopicUseCaseSchema = z.infer<typeof getTopicUseCaseSchema>;
 
 export async function getTopicUseCase(
-  params: GetTopicUseCaseSchema
+  params: GetTopicUseCaseSchema,
 ): Promise<TopicWithContentArray> {
   const validatedParams = getTopicUseCaseSchema.safeParse(params);
 

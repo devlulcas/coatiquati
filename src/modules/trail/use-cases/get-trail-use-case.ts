@@ -8,9 +8,7 @@ const getTrailUseCaseSchema = z.object({
 
 type GetTrailUseCaseSchema = z.infer<typeof getTrailUseCaseSchema>;
 
-export async function getTrailUseCase(
-  params: GetTrailUseCaseSchema
-): Promise<TrailWithTopicArray> {
+export async function getTrailUseCase(params: GetTrailUseCaseSchema): Promise<TrailWithTopicArray> {
   const validatedParams = getTrailUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {

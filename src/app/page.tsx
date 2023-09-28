@@ -7,16 +7,13 @@ export default async function Page() {
   return (
     <div className="pt-12 h-[--view-height] flex flex-col">
       <div className="flex flex-col container">
-        <h1 className="text-5xl lg:text-8xl font-black">
-          CoatiQuati! Aprenda mais ensinando.
-        </h1>
+        <h1 className="text-5xl lg:text-8xl font-black">CoatiQuati! Aprenda mais ensinando.</h1>
 
         <p className="font-medium mt-2 max-w-2xl">
-          <strong>Coati</strong> é uma plataforma de ensino colaborativo, onde
-          você pode aprender e ensinar qualquer coisa. Professores criam trilhas
-          e passam primeiro deixando migalhas de conhecimento, depois estudantes
-          passam pelas trilhas aprendendo com o que existe nelas e deixando mais
-          migalhas de conhecimento.
+          <strong>Coati</strong> é uma plataforma de ensino colaborativo, onde você pode aprender e
+          ensinar qualquer coisa. Professores criam trilhas e passam primeiro deixando migalhas de
+          conhecimento, depois estudantes passam pelas trilhas aprendendo com o que existe nelas e
+          deixando mais migalhas de conhecimento.
         </p>
 
         <a

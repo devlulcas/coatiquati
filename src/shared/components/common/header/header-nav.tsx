@@ -2,11 +2,7 @@
 
 import { SignOutAction } from '@/modules/auth/components/sign-out-action';
 import { Button } from '@/shared/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from '@/shared/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger } from '@/shared/components/ui/sheet';
 import { MenuIcon } from 'lucide-react';
 import Link from 'next/link';
 

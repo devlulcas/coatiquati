@@ -1,10 +1,7 @@
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
-import {
-  CATEGORY_DB_FIELDS,
-  TRAIL_DB_FIELDS,
-} from '@/modules/trail/repositories/trail-repository';
+import { CATEGORY_DB_FIELDS, TRAIL_DB_FIELDS } from '@/modules/trail/repositories/trail-repository';
 import type { UpdateUser, User, UserProfile } from '@/modules/user/types/user';
 import { eq } from 'drizzle-orm';
 import { userTableToUserMapper } from '../lib/user-table-to-user-mapper';
@@ -85,12 +82,12 @@ export class DrizzleUserRepository implements UserRepository {
       where: (fields, operators) => {
         return operators.or(
           operators.like(fields.username, `%${params.search}%`),
-          operators.like(fields.email, `%${params.search}%`)
+          operators.like(fields.email, `%${params.search}%`),
         );
       },
     });
 
-    return data.map((user) => userTableToUserMapper(user, true));
+    return data.map(user => userTableToUserMapper(user, true));
   }
 
   async getUserProfile(username: string): Promise<UserProfile | null> {
@@ -126,7 +123,7 @@ export class DrizzleUserRepository implements UserRepository {
 
       const result: UserProfile = {
         ...userTableToUserMapper(data, true),
-        authoredTrails: data.authoredTrails.map((trail) => ({
+        authoredTrails: data.authoredTrails.map(trail => ({
           ...trail,
         })),
       };

@@ -12,9 +12,7 @@ const createNewTopicUseCaseSchema = z.object({
 
 type CreateNewTopicUseCaseSchema = z.infer<typeof createNewTopicUseCaseSchema>;
 
-export async function createNewTopicUseCase(
-  params: CreateNewTopicUseCaseSchema
-): Promise<Topic> {
+export async function createNewTopicUseCase(params: CreateNewTopicUseCaseSchema): Promise<Topic> {
   const validatedParams = createNewTopicUseCaseSchema.safeParse(params);
 
   console.log('validatedParams', validatedParams);

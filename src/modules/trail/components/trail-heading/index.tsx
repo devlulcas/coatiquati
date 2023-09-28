@@ -1,10 +1,6 @@
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { UpdatedAt } from '@/shared/components/common/updated-at';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/shared/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { cn } from '@/shared/utils/cn';
 import type { ClassValue } from 'clsx';
 import Image from 'next/image';
@@ -20,12 +16,7 @@ type TrailHeadingProps = {
 
 export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
   return (
-    <div
-      className={cn(
-        'relative w-full min-h-80 flex flex-col lg:flex-row gap-4',
-        className
-      )}
-    >
+    <div className={cn('relative w-full min-h-80 flex flex-col lg:flex-row gap-4', className)}>
       <Image
         src={trail.thumbnail}
         alt={trail.title}
@@ -63,10 +54,7 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
           href={createProfileUrl(trail.author.username)}
         >
           <Avatar className="border border-foreground/25 rounded-full">
-            <AvatarImage
-              src={trail.author.avatar}
-              alt={trail.author.username}
-            />
+            <AvatarImage src={trail.author.avatar} alt={trail.author.username} />
             <AvatarFallback>{trail.author.username}</AvatarFallback>
           </Avatar>
 

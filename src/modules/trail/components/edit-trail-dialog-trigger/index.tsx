@@ -46,9 +46,7 @@ export function EditTrailDialogTrigger({ trail }: EditTrailDialogTriggerProps) {
 
       <DialogContent className="min-w-fit">
         <DialogHeader>
-          <DialogTitle className="mb-4 max-w-md truncate">
-            Editar: {trail.title}
-          </DialogTitle>
+          <DialogTitle className="mb-4 max-w-md truncate">Editar: {trail.title}</DialogTitle>
           <TrailBaseForm defaultValues={trail} onSubmit={onSubmit} />
         </DialogHeader>
       </DialogContent>

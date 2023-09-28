@@ -13,13 +13,8 @@ export async function newTrailAction(data: NewTrailSchema) {
     throw new Error('Você precisa estar logado para criar uma nova trilha.');
   }
 
-  if (
-    session.user.role !== roles.ADMIN &&
-    session.user.role !== roles.HIGH_PRIVILEGE_ADMIN
-  ) {
-    throw new Error(
-      'Você precisa ser um administrador para criar uma nova trilha.'
-    );
+  if (session.user.role !== roles.ADMIN && session.user.role !== roles.HIGH_PRIVILEGE_ADMIN) {
+    throw new Error('Você precisa ser um administrador para criar uma nova trilha.');
   }
 
   await createNewTrailUseCase({

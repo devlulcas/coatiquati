@@ -71,10 +71,7 @@ export function EditUserDialogTrigger({ user }: EditUserDialogTriggerProps) {
           <DialogTitle className="mb-4">Editar {user.username}</DialogTitle>
           <DialogDescription>
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                   control={form.control}
                   name="username"
@@ -96,11 +93,7 @@ export function EditUserDialogTrigger({ user }: EditUserDialogTriggerProps) {
                     <FormItem>
                       <FormLabel>E-mail</FormLabel>
                       <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="email@exemplo.com"
-                          {...field}
-                        />
+                        <Input type="email" placeholder="email@exemplo.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

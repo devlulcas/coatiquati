@@ -100,11 +100,7 @@ export function SignInForm() {
           />
 
           <Button className="w-full mt-4" type="submit">
-            {form.formState.isSubmitting ? (
-              <Loader className="animate-spin" size={16} />
-            ) : (
-              'Entrar'
-            )}
+            {form.formState.isSubmitting ? <Loader className="animate-spin" size={16} /> : 'Entrar'}
           </Button>
         </form>
       </Form>

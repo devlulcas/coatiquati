@@ -11,6 +11,4 @@ export type UserProfile = User & {
   authoredTrails: Trail[];
 };
 
-export type UpdateUser = Partial<
-  Pick<User, 'username' | 'avatar' | 'email' | 'role'>
->;
+export type UpdateUser = Partial<Pick<User, 'username' | 'avatar' | 'email' | 'role'>>;

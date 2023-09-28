@@ -13,9 +13,7 @@ import { EditTopicDialogTrigger } from '../edit-topic-dialog-trigger';
 export const topicsColumns: ColumnDef<Topic>[] = [
   {
     accessorKey: 'status',
-    header: ({ column }) => (
-      <SortedColumnHeader column={column}>Status</SortedColumnHeader>
-    ),
+    header: ({ column }) => <SortedColumnHeader column={column}>Status</SortedColumnHeader>,
     cell: ({ row }) => <ContentStatusBadge status={row.original.status} />,
   },
   {
@@ -35,9 +33,7 @@ export const topicsColumns: ColumnDef<Topic>[] = [
   },
   {
     accessorKey: 'updatedAt',
-    header: ({ column }) => (
-      <SortedColumnHeader column={column}>Atualizado em</SortedColumnHeader>
-    ),
+    header: ({ column }) => <SortedColumnHeader column={column}>Atualizado em</SortedColumnHeader>,
     cell: ({ row }) => new Date(row.original.updatedAt).toLocaleString(),
   },
   {

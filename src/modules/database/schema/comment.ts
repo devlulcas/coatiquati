@@ -1,15 +1,5 @@
-import {
-  relations,
-  sql,
-  type InferInsertModel,
-  type InferSelectModel,
-} from 'drizzle-orm';
-import {
-  foreignKey,
-  integer,
-  sqliteTable,
-  text,
-} from 'drizzle-orm/sqlite-core';
+import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { foreignKey, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { userTable } from './user';
 
 export type CommentTable = InferSelectModel<typeof commentTable>;
@@ -20,9 +10,7 @@ export const commentTable = sqliteTable(
   {
     id: integer('id').primaryKey().notNull(),
     entityId: integer('content_id').notNull(),
-    entityType: text('entity_type')
-      .$type<'trail' | 'topic' | 'content'>()
-      .notNull(),
+    entityType: text('entity_type').$type<'trail' | 'topic' | 'content'>().notNull(),
     authorId: text('user_id')
       .notNull()
       .references(() => userTable.id, {
@@ -43,21 +31,18 @@ export const commentTable = sqliteTable(
       .notNull(),
     deletedAt: text('deleted_at'),
   },
-  (table) => ({
+  table => ({
     parentReference: foreignKey(() => ({
       columns: [table.replyTo],
       foreignColumns: [table.id],
     })),
-  })
+  }),
 );
 
-export const commentTableRelations = relations(
-  commentTable,
-  ({ one, many }) => ({
-    author: one(userTable, {
-      fields: [commentTable.authorId],
-      references: [userTable.id],
-    }),
-    replies: many(commentTable),
-  })
-);
+export const commentTableRelations = relations(commentTable, ({ one, many }) => ({
+  author: one(userTable, {
+    fields: [commentTable.authorId],
+    references: [userTable.id],
+  }),
+  replies: many(commentTable),
+}));

@@ -13,12 +13,10 @@ export type SetUserRoleSchema = z.infer<typeof setUserRoleUseCaseSchema>;
 
 export async function setUserRoleUseCase(
   params: SetUserRoleSchema,
-  session: Session
+  session: Session,
 ): Promise<User> {
   if (session.user.role !== roles.HIGH_PRIVILEGE_ADMIN) {
-    throw new Error(
-      'Nível de permissões insuficiente para editar as permissões de um usuário.'
-    );
+    throw new Error('Nível de permissões insuficiente para editar as permissões de um usuário.');
   }
 
   const validatedParams = setUserRoleUseCaseSchema.safeParse(params);
@@ -44,13 +42,10 @@ export async function setUserRoleUseCase(
   }
 
   if (user.role === roles.HIGH_PRIVILEGE_ADMIN) {
-    throw new Error(
-      'Não é possível alterar a permissão de um administrador de nível alto'
-    );
+    throw new Error('Não é possível alterar a permissão de um administrador de nível alto');
   }
 
-  const role =
-    validatedParams.data.role === roles.ADMIN ? roles.ADMIN : roles.USER;
+  const role = validatedParams.data.role === roles.ADMIN ? roles.ADMIN : roles.USER;
 
   try {
     return repository.updateUser(validatedParams.data.userId, { role });

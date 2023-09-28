@@ -9,12 +9,12 @@ type LayeredImageViewProps = {
 
 export function LayeredImageView({ layers }: LayeredImageViewProps) {
   const [visibleLayerIndexes, setVisibleLayerIndexes] = useState<number[]>(
-    layers.map((_: unknown, index: number) => index)
+    layers.map((_: unknown, index: number) => index),
   );
 
   const handleLayerClick = (index: number) => {
     if (visibleLayerIndexes.includes(index)) {
-      setVisibleLayerIndexes(visibleLayerIndexes.filter((i) => i !== index));
+      setVisibleLayerIndexes(visibleLayerIndexes.filter(i => i !== index));
     } else {
       setVisibleLayerIndexes([...visibleLayerIndexes, index]);
     }
@@ -46,9 +46,7 @@ export function LayeredImageView({ layers }: LayeredImageViewProps) {
           return (
             <Button
               key={index}
-              variant={
-                visibleLayerIndexes.includes(index) ? 'default' : 'secondary'
-              }
+              variant={visibleLayerIndexes.includes(index) ? 'default' : 'secondary'}
               onClick={() => handleLayerClick(index)}
               className="w-full"
             >

@@ -11,11 +11,11 @@ export function Marquee({ words, className }: MarqueeProps) {
   return (
     <div className={cn(css.scrollContainer, className)}>
       <div className={css.scroll}>
-        {words.map((word) => (
+        {words.map(word => (
           <span key={word}>{word}</span>
         ))}
 
-        {words.map((word) => (
+        {words.map(word => (
           <span key={word}>{word}</span>
         ))}
       </div>

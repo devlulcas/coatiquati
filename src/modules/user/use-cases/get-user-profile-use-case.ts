@@ -10,7 +10,7 @@ const getUserProfileUseCaseSchema = userSignInSchema.pick({
 type GetUserProfileUseCaseSchema = z.infer<typeof getUserProfileUseCaseSchema>;
 
 export async function getUserProfileUseCase(
-  params: GetUserProfileUseCaseSchema
+  params: GetUserProfileUseCaseSchema,
 ): Promise<UserProfile | null> {
   const validatedParams = getUserProfileUseCaseSchema.safeParse(params);
 

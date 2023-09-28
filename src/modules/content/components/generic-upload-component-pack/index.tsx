@@ -9,9 +9,7 @@ const {
   Uploader,
 } = generateComponents<GlobalFileRouter>();
 
-export const UploadButton = (
-  props: React.ComponentPropsWithoutRef<typeof UploadButtonRaw>
-) => {
+export const UploadButton = (props: React.ComponentPropsWithoutRef<typeof UploadButtonRaw>) => {
   const { toast } = useToast();
   return (
     <UploadButtonRaw
@@ -21,8 +19,8 @@ export const UploadButton = (
         container: 'w-full',
         allowedContent: 'text-white mt-2 text-sm',
       }}
-      onClientUploadComplete={(res) => {
-        const fileNames = res?.map((file) => file.name).toLocaleString();
+      onClientUploadComplete={res => {
+        const fileNames = res?.map(file => file.name).toLocaleString();
 
         toast({
           title: 'Upload completo',
@@ -61,16 +59,14 @@ export const UploadButton = (
   );
 };
 
-export const UploadDropzone = (
-  props: React.ComponentPropsWithoutRef<typeof UploadDropzoneRaw>
-) => {
+export const UploadDropzone = (props: React.ComponentPropsWithoutRef<typeof UploadDropzoneRaw>) => {
   const { toast } = useToast();
 
   return (
     <UploadDropzoneRaw
       className="p-2"
-      onClientUploadComplete={(res) => {
-        const fileNames = res?.map((file) => file.name).toLocaleString();
+      onClientUploadComplete={res => {
+        const fileNames = res?.map(file => file.name).toLocaleString();
 
         toast({
           title: 'Upload completo',

@@ -235,7 +235,7 @@ export function MenuBar({ editor }: MenuBarProps) {
       />
 
       <LayeredImageUploaderDialogTrigger
-        onSave={(layers) => editor.chain().focus().setLayers({ layers }).run()}
+        onSave={layers => editor.chain().focus().setLayers({ layers }).run()}
       />
     </div>
   );

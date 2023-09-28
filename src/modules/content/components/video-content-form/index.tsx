@@ -22,7 +22,7 @@ const videoContentSchema = z.object({
   url: z
     .string()
     .url()
-    .refine((url) => {
+    .refine(url => {
       try {
         const urlObject = new URL(url);
 
@@ -60,11 +60,7 @@ type VideoContentFormProps = {
   className?: string;
 };
 
-export function VideoContentForm({
-  onSubmit,
-  className,
-  defaultValues,
-}: VideoContentFormProps) {
+export function VideoContentForm({ onSubmit, className, defaultValues }: VideoContentFormProps) {
   const form = useForm<VideoContentSchema>({
     resolver: zodResolver(videoContentSchema),
     defaultValues: defaultValues,
@@ -83,7 +79,7 @@ export function VideoContentForm({
         <div
           className={cn(
             'aspect-video h-80 rounded-lg overflow-hidden ',
-            youtubeId ? 'bg-black' : 'bg-neutral-900'
+            youtubeId ? 'bg-black' : 'bg-neutral-900',
           )}
         >
           {youtubeId ? (

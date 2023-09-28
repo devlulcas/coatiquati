@@ -11,9 +11,7 @@ export const newTrailSchema = z.object({
   thumbnail: z.string().url({
     message: 'A URL da thumbnail deve ser válida.',
   }),
-  status: z
-    .enum([contentStatus.DRAFT, contentStatus.PUBLISHED])
-    .default(contentStatus.DRAFT),
+  status: z.enum([contentStatus.DRAFT, contentStatus.PUBLISHED]).default(contentStatus.DRAFT),
 });
 
 export type NewTrailSchema = z.infer<typeof newTrailSchema>;

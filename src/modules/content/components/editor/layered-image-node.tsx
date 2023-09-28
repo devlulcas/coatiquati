@@ -42,7 +42,7 @@ function LayeredImageVisualization(props: LayeredImageVisualizationProps) {
 
         <LayeredImageUploaderDialogTrigger
           defaultData={props.node.attrs.layers}
-          onSave={(layers) => {
+          onSave={layers => {
             props.updateAttributes({
               layers,
             });
@@ -89,7 +89,7 @@ export default Node.create({
   addCommands() {
     return {
       setLayers:
-        (options) =>
+        options =>
         ({ commands }) => {
           return commands.insertContent({
             type: this.name,

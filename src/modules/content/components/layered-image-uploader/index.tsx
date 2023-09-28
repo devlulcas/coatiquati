@@ -40,16 +40,16 @@ export function LayeredImageUploader({
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   function handleDragEnd(event: any) {
     const { active, over } = event;
 
     if (active.id !== over.id) {
-      setLayers((layers) => {
-        const oldIndex = layers.findIndex((l) => l.id === active.id);
-        const newIndex = layers.findIndex((l) => l.id === over.id);
+      setLayers(layers => {
+        const oldIndex = layers.findIndex(l => l.id === active.id);
+        const newIndex = layers.findIndex(l => l.id === over.id);
 
         return arrayMove(layers, oldIndex, newIndex);
       });
@@ -58,17 +58,10 @@ export function LayeredImageUploader({
 
   return (
     <>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <ScrollArea className="h-[60vh] w-full min-w-fit flex flex-col rounded-md border p-4">
-          <SortableContext
-            items={layers}
-            strategy={verticalListSortingStrategy}
-          >
-            {layers.map((layer) => (
+          <SortableContext items={layers} strategy={verticalListSortingStrategy}>
+            {layers.map(layer => (
               <LayeredImagePreview
                 key={layer.id}
                 value={layer}

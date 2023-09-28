@@ -77,7 +77,7 @@ export class DrizzleTrailRepository implements TrailRepository {
         where: (fields, operators) => {
           return operators.or(
             operators.like(fields.title, `%${params.search}%`),
-            operators.like(fields.description, `%${params.search}%`)
+            operators.like(fields.description, `%${params.search}%`),
           );
         },
         with: {

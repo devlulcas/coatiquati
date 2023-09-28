@@ -33,7 +33,7 @@ canvas.setAttribute(
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
-  `
+  `,
 );
 
 const ctx = canvas.getContext('2d');

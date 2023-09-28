@@ -78,7 +78,7 @@
     "@types/better-sqlite3": "^7.6.4",
     "@types/diff": "^5.0.3",
     "drizzle-kit": "^0.19.13",
-    "prettier": "^3.0.3",
-    "prettier-eslint-plugin": "^1.1.4"
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.3"
   }
 }

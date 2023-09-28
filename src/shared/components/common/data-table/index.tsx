@@ -27,10 +27,7 @@ type DataTableProps<TData, TValue> = {
   data: TData[];
 };
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
@@ -56,20 +53,14 @@ export function DataTable<TData, TValue>({
       <div className="rounded-md border bg-card/75">
         <Table>
           <TableHeader>
-            {headerGroups.map((headerGroup) => (
+            {headerGroups.map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
-                    <TableHead
-                      key={header.id}
-                      className="text-center border-r last:border-r-0"
-                    >
+                    <TableHead key={header.id} className="text-center border-r last:border-r-0">
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -79,30 +70,18 @@ export function DataTable<TData, TValue>({
 
           <TableBody>
             {hasRows ? (
-              rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="text-center border-r last:border-r-0"
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+              rows.map(row => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  {row.getVisibleCells().map(cell => (
+                    <TableCell key={cell.id} className="text-center border-r last:border-r-0">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   Nenhum registro encontrado
                 </TableCell>
               </TableRow>
@@ -142,10 +121,7 @@ export function SortedColumnHeader(props: SortedColumnHeaderProps) {
   const { column, children } = props;
 
   return (
-    <Button
-      variant="ghost"
-      onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-    >
+    <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
       <span className="min-w-fit">{children}</span>
       <ArrowUpDown className="ml-2 min-w-[1rem] w-[1rem]" />
     </Button>

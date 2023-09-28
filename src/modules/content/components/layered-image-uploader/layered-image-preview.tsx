@@ -14,13 +14,10 @@ type LayeredImagePreviewProps = {
   value: LayeredImage;
 };
 
-export function LayeredImagePreview({
-  onRemove,
-  value,
-  className,
-}: LayeredImagePreviewProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: value.id });
+export function LayeredImagePreview({ onRemove, value, className }: LayeredImagePreviewProps) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: value.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),

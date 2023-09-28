@@ -14,9 +14,7 @@ export async function newTopicAction(data: NewTopicSchema) {
   }
 
   if (session.user.role !== roles.ADMIN) {
-    throw new Error(
-      'Você precisa ser um administrador para criar uma nova trilha.'
-    );
+    throw new Error('Você precisa ser um administrador para criar uma nova trilha.');
   }
 
   createNewTopicUseCase({

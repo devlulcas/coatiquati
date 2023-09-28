@@ -44,9 +44,7 @@ export function NewTrailDialogTrigger({ trailId }: NewTrailDialogTriggerProps) {
       </DialogTrigger>
       <DialogContent className="min-w-fit">
         <DialogHeader>
-          <DialogTitle className="mb-4 max-w-xs truncate">
-            Criar novo tópico
-          </DialogTitle>
+          <DialogTitle className="mb-4 max-w-xs truncate">Criar novo tópico</DialogTitle>
           <TopicBaseForm defaultValues={{ trailId }} onSubmit={onSubmit} />
         </DialogHeader>
       </DialogContent>

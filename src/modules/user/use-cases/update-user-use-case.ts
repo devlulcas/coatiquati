@@ -13,13 +13,10 @@ const updateUserUseCaseSchema = z.object({
 
 export type UpdateUserSchema = z.infer<typeof updateUserUseCaseSchema>;
 
-export async function updateUserUseCase(
-  params: UpdateUserSchema,
-  session: Session
-): Promise<User> {
+export async function updateUserUseCase(params: UpdateUserSchema, session: Session): Promise<User> {
   if (session.user.role === roles.HIGH_PRIVILEGE_ADMIN) {
     throw new Error(
-      'Peça para um administrador de servidor para alterar diretamente as permissões do seu usuário.'
+      'Peça para um administrador de servidor para alterar diretamente as permissões do seu usuário.',
     );
   }
 

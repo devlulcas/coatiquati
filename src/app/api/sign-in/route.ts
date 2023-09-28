@@ -19,11 +19,7 @@ export const POST = async (request: NextRequest) => {
   const password = formDataResult.data.password;
 
   try {
-    const user = await auth.useKey(
-      'username',
-      username.toLowerCase(),
-      password
-    );
+    const user = await auth.useKey('username', username.toLowerCase(), password);
 
     const session = await auth.createSession({
       userId: user.userId,
@@ -49,24 +45,15 @@ export const POST = async (request: NextRequest) => {
     console.log(e);
 
     if (isWrongPasswordError(e)) {
-      return NextResponse.json(
-        { error: 'Incorrect username or password' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Incorrect username or password' }, { status: 400 });
     }
 
-    return NextResponse.json(
-      { error: 'An unknown error occurred' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
   }
 };
 
 function isWrongPasswordError(e: unknown) {
   if (e instanceof LuciaError) {
-    return (
-      e.message === 'AUTH_INVALID_KEY_ID' ||
-      e.message === 'AUTH_INVALID_PASSWORD'
-    );
+    return e.message === 'AUTH_INVALID_KEY_ID' || e.message === 'AUTH_INVALID_PASSWORD';
   }
 }

@@ -1,9 +1,5 @@
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/shared/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
 import { ArrowRightIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -17,9 +13,7 @@ type TrailCardProps = {
 
 export function TrailCard({ trail }: TrailCardProps) {
   const trailSlug = createTrailUrl(trail.id);
-  const userProfileSlug = trail.author
-    ? createProfileUrl(trail.author.username)
-    : '/';
+  const userProfileSlug = trail.author ? createProfileUrl(trail.author.username) : '/';
 
   return (
     <article className="flex flex-col justify-center items-center w-full bg-card text-card-foreground rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out border">
@@ -37,13 +31,8 @@ export function TrailCard({ trail }: TrailCardProps) {
           <div className="absolute bottom-2 left-2 flex gap-2">
             <Link href={userProfileSlug}>
               <Avatar>
-                <AvatarFallback>
-                  {trail.author.username.slice(0, 2)}
-                </AvatarFallback>
-                <AvatarImage
-                  src={trail.author.avatar}
-                  alt={trail.author.username}
-                />
+                <AvatarFallback>{trail.author.username.slice(0, 2)}</AvatarFallback>
+                <AvatarImage src={trail.author.avatar} alt={trail.author.username} />
               </Avatar>
             </Link>
           </div>
@@ -59,10 +48,7 @@ export function TrailCard({ trail }: TrailCardProps) {
             {trail.description}
           </p>
 
-          <time
-            className="block mt-2 text-sm text-card-foreground-500"
-            dateTime={trail.updatedAt}
-          >
+          <time className="block mt-2 text-sm text-card-foreground-500" dateTime={trail.updatedAt}>
             Atualizado em {new Date(trail.updatedAt).toLocaleString()}
           </time>
         </div>

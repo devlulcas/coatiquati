@@ -32,9 +32,7 @@ export function LayeredImageUploaderDialogTrigger({
   const { toast } = useToast();
 
   const save = () => {
-    const cleanLayers = layeredImageControl.layers.filter(
-      (layer) => layer.src !== ''
-    );
+    const cleanLayers = layeredImageControl.layers.filter(layer => layer.src !== '');
 
     onSave(cleanLayers);
 

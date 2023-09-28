@@ -14,7 +14,7 @@ export function UserRoleBadge({ role, className }: UserRoleBadgeProps) {
     <span
       className={cn(
         'flex gap-1 items-center justify-center rounded-md text-sm font-medium',
-        'text-' + roleVisualIdentifier.color
+        'text-' + roleVisualIdentifier.color,
       )}
     >
       {roleVisualIdentifier.label}

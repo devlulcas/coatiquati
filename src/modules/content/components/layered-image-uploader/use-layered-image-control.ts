@@ -11,7 +11,7 @@ export function useLayeredImageControl(defaultLayers: LayeredImage[] = []) {
   };
 
   const removeLayer = (id: string) => {
-    setLayers(layers.filter((l) => l.id !== id));
+    setLayers(layers.filter(l => l.id !== id));
   };
 
   return { layers, pushLayer, setLayers, removeLayer };

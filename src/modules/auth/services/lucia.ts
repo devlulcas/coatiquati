@@ -15,7 +15,7 @@ export const auth = lucia({
     key: 'user_key',
     session: 'user_session',
   }),
-  getUserAttributes: (data) => {
+  getUserAttributes: data => {
     return {
       id: data.id,
       username: data.username,
@@ -24,7 +24,7 @@ export const auth = lucia({
       emailVerified: data.email_verified,
     };
   },
-  getSessionAttributes: (data) => {
+  getSessionAttributes: data => {
     return {
       userId: data.user_id,
     };

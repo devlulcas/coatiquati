@@ -29,11 +29,7 @@ type LayeredImageFormProps = {
   className?: string;
 };
 
-export function LayeredImageForm({
-  onAdd,
-  defaultValue,
-  className,
-}: LayeredImageFormProps) {
+export function LayeredImageForm({ onAdd, defaultValue, className }: LayeredImageFormProps) {
   const form = useForm<LayeredImage>({
     resolver: zodResolver(layeredImageSchema),
     defaultValues: defaultValue,
@@ -52,10 +48,7 @@ export function LayeredImageForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn(
-          'flex h-full flex-col gap-4 p-4 border rounded-lg',
-          className
-        )}
+        className={cn('flex h-full flex-col gap-4 p-4 border rounded-lg', className)}
         action="/api/sign-in"
       >
         <FormField
@@ -65,11 +58,7 @@ export function LayeredImageForm({
             <FormItem>
               <FormLabel>URL da imagem</FormLabel>
               <FormControl>
-                <Input
-                  type="url"
-                  placeholder="https://placekitten.com/500"
-                  {...field}
-                />
+                <Input type="url" placeholder="https://placekitten.com/500" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -13,9 +13,7 @@ import { EditTrailDialogTrigger } from '../edit-trail-dialog-trigger';
 export const trailsColumns: ColumnDef<Trail>[] = [
   {
     accessorKey: 'status',
-    header: ({ column }) => (
-      <SortedColumnHeader column={column}>Status</SortedColumnHeader>
-    ),
+    header: ({ column }) => <SortedColumnHeader column={column}>Status</SortedColumnHeader>,
     cell: ({ row }) => <ContentStatusBadge status={row.original.status} />,
   },
   {
@@ -23,10 +21,7 @@ export const trailsColumns: ColumnDef<Trail>[] = [
     header: 'Título',
     cell: ({ row }) => (
       <Button variant="link" asChild>
-        <Link
-          className="break-all"
-          href={createTrailUrl(row.original.id, true)}
-        >
+        <Link className="break-all" href={createTrailUrl(row.original.id, true)}>
           {row.original.title}
         </Link>
       </Button>
@@ -39,9 +34,7 @@ export const trailsColumns: ColumnDef<Trail>[] = [
   },
   {
     accessorKey: 'updatedAt',
-    header: ({ column }) => (
-      <SortedColumnHeader column={column}>Atualizado em</SortedColumnHeader>
-    ),
+    header: ({ column }) => <SortedColumnHeader column={column}>Atualizado em</SortedColumnHeader>,
     cell: ({ row }) => new Date(row.original.updatedAt).toLocaleString(),
   },
   {

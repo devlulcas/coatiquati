@@ -45,9 +45,7 @@ export function EditTopicDialogTrigger({ topic }: EditTopicDialogTriggerProps) {
       </DialogTrigger>
       <DialogContent className="min-w-fit">
         <DialogHeader>
-          <DialogTitle className="mb-4 max-w-xs truncate">
-            Editar {topic.title}
-          </DialogTitle>
+          <DialogTitle className="mb-4 max-w-xs truncate">Editar {topic.title}</DialogTitle>
           <TopicBaseForm defaultValues={topic} onSubmit={onSubmit} />
         </DialogHeader>
       </DialogContent>

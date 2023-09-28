@@ -83,10 +83,9 @@ export function TextEditor({ initialContent }: TextEditorProps) {
           {saveMutation.isError ? 'Erro ao salvar' : 'Salvar manualmente'}
         </Button>
 
+        <NewImageContentDialogTrigger />
 
-        <NewImageContentDialogTrigger/>
-
-        <NewVideoContentDialogTrigger/>
+        <NewVideoContentDialogTrigger />
       </div>
 
       <pre>{JSON.stringify(editor?.getJSON(), null, 2)}</pre>

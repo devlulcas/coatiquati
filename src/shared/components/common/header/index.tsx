@@ -18,10 +18,7 @@ export async function Header() {
           <h1 className="text-xs lg:text-xl font-bold">CoatiQuati</h1>
         </Link>
 
-        <HeaderNav
-          hasAdminAccess={hasAdminAccess}
-          isLoggedIn={session !== null}
-        />
+        <HeaderNav hasAdminAccess={hasAdminAccess} isLoggedIn={session !== null} />
       </div>
     </header>
   );

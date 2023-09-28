@@ -7,10 +7,7 @@ type ProtectWithRedirectParams = {
   acceptRoles?: Array<(typeof roles)[keyof typeof roles]>;
 };
 
-export async function protectWithRedirect({
-  acceptRoles,
-  redirectTo,
-}: ProtectWithRedirectParams) {
+export async function protectWithRedirect({ acceptRoles, redirectTo }: ProtectWithRedirectParams) {
   const session = await getPageSession();
 
   if (!session) {

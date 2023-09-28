@@ -51,15 +51,10 @@ export function PinConfirmationDialog(props: PinConfirmationDialogProps) {
     <Dialog open={isOpen} onOpenChange={onCancel}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mb-4">
-            Insira o código enviado no seu e-email
-          </DialogTitle>
+          <DialogTitle className="mb-4">Insira o código enviado no seu e-email</DialogTitle>
           <DialogDescription>
             <Form {...pinForm}>
-              <form
-                onSubmit={pinForm.handleSubmit(onConfirm)}
-                className="space-y-8"
-              >
+              <form onSubmit={pinForm.handleSubmit(onConfirm)} className="space-y-8">
                 <FormField
                   control={pinForm.control}
                   name="pin"
@@ -75,11 +70,7 @@ export function PinConfirmationDialog(props: PinConfirmationDialogProps) {
                 />
 
                 <div className="flex gap-4">
-                  <Button
-                    className="w-full"
-                    variant="secondary"
-                    onClick={onCancel}
-                  >
+                  <Button className="w-full" variant="secondary" onClick={onCancel}>
                     Cancelar
                   </Button>
 

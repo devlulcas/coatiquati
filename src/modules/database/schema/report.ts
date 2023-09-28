@@ -23,14 +23,9 @@ export const reportTable = sqliteTable('report', {
     .references(() => userTable.id),
   type: text('type').$type<ReportReason>().notNull(),
   reportedEntityId: text('entity_id').notNull(),
-  reportedEntityType: text('entity_type')
-    .$type<'trail' | 'topic' | 'content'>()
-    .notNull(),
+  reportedEntityType: text('entity_type').$type<'trail' | 'topic' | 'content'>().notNull(),
   description: text('description').notNull(),
-  status: text('status')
-    .$type<'pending' | 'resolved'>()
-    .notNull()
-    .default('pending'),
+  status: text('status').$type<'pending' | 'resolved'>().notNull().default('pending'),
   moderatorId: text('moderator_id').references(() => userTable.id),
   createdAt: text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)

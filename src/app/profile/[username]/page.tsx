@@ -27,11 +27,8 @@ export default async function Page({ params }: PageProps) {
         <section className="mt-8">
           <h2 className="text-xl font-bold">Trilhas autoradas</h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-            {profile.authoredTrails.map((trail) => (
-              <li
-                key={trail.id}
-                className="transition duration-500 ease-in-out  hover:scale-105"
-              >
+            {profile.authoredTrails.map(trail => (
+              <li key={trail.id} className="transition duration-500 ease-in-out  hover:scale-105">
                 <TrailCard trail={trail} />
               </li>
             ))}

@@ -13,10 +13,7 @@ import type {
 import type { Creatable, Updatable } from '@/modules/database/types/utils';
 import type { Contributor } from '@/modules/user/types/user';
 
-export type BaseContent = Omit<
-  ContentTable,
-  'authorId' | 'contentType' | 'topicId'
-> & {
+export type BaseContent = Omit<ContentTable, 'authorId' | 'contentType' | 'topicId'> & {
   author: Contributor;
   contributors: { user: Contributor }[];
 };
@@ -53,10 +50,7 @@ export type Content =
   | ContentWithVideo;
 
 export type NewContent = Creatable<NewContentTable>;
-export type UpdateContent = Omit<
-  Updatable<ContentTable>,
-  'authorId' | 'contentType'
->;
+export type UpdateContent = Omit<Updatable<ContentTable>, 'authorId' | 'contentType'>;
 
 export type ContentFile = ContentFileTable;
 export type NewContentFile = Creatable<NewContentFileTable>;

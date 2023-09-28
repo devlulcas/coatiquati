@@ -1,12 +1,7 @@
 'use client';
 
 import { Button } from '@/shared/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from '@/shared/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/components/ui/dialog';
 import { VideoIcon } from 'lucide-react';
 import { VideoContentForm } from '../video-content-form';
 
@@ -21,7 +16,7 @@ export function NewVideoContentDialogTrigger() {
 
       <DialogContent className="min-w-fit">
         <DialogHeader>
-          <VideoContentForm onSubmit={(data) => console.log(data)} />
+          <VideoContentForm onSubmit={data => console.log(data)} />
         </DialogHeader>
       </DialogContent>
     </Dialog>

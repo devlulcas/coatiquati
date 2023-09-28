@@ -85,11 +85,7 @@ export function SignUpForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="email@exemplo.com"
-                    {...field}
-                  />
+                  <Input type="email" placeholder="email@exemplo.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -110,11 +106,7 @@ export function SignUpForm() {
             )}
           />
 
-          <Button
-            className="w-full mt-4"
-            type="submit"
-            isLoading={form.formState.isSubmitting}
-          >
+          <Button className="w-full mt-4" type="submit" isLoading={form.formState.isSubmitting}>
             Entrar
           </Button>
         </form>

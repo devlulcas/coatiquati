@@ -1,8 +1,5 @@
 import type { Content } from '@/modules/content/types/content';
-import type {
-  NewTopicTable,
-  TopicTable,
-} from '@/modules/database/schema/topic';
+import type { NewTopicTable, TopicTable } from '@/modules/database/schema/topic';
 import type { Creatable, Updatable } from '@/modules/database/types/utils';
 import type { Contributor } from '@/modules/user/types/user';
 

@@ -7,9 +7,7 @@ const getTrailsUseCaseSchema = createPaginationSchemaWithSearch(30);
 
 type GetTrailsUseCaseSchema = Partial<z.infer<typeof getTrailsUseCaseSchema>>;
 
-export async function getTrailsUseCase(
-  params: GetTrailsUseCaseSchema = {}
-): Promise<Trail[]> {
+export async function getTrailsUseCase(params: GetTrailsUseCaseSchema = {}): Promise<Trail[]> {
   const validatedParams = getTrailsUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {

@@ -11,9 +11,7 @@ const createNewTrailUseCaseSchema = z.object({
 
 type CreateNewTrailUseCaseSchema = z.infer<typeof createNewTrailUseCaseSchema>;
 
-export async function createNewTrailUseCase(
-  params: CreateNewTrailUseCaseSchema
-): Promise<Trail> {
+export async function createNewTrailUseCase(params: CreateNewTrailUseCaseSchema): Promise<Trail> {
   const validatedParams = createNewTrailUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {

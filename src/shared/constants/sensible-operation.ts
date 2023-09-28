@@ -5,5 +5,4 @@ export const sensibleOperation = {
   DOWNGRADE_FROM_ADMIN: 'DOWNGRADE_FROM_ADMIN',
 };
 
-export type SensibleOperation =
-  (typeof sensibleOperation)[keyof typeof sensibleOperation];
+export type SensibleOperation = (typeof sensibleOperation)[keyof typeof sensibleOperation];

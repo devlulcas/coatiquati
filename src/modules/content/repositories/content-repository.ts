@@ -17,9 +17,7 @@ export type ContentRepository = {
   getContentWithFile(content: BaseContent): Promise<ContentWithFile>;
   getContentWithImage(content: BaseContent): Promise<ContentWithImage>;
   getContentWithVideo(content: BaseContent): Promise<ContentWithVideo>;
-  getContentWithRichTextPreview(
-    content: BaseContent
-  ): Promise<ContentWithRichTextPreview>;
+  getContentWithRichTextPreview(content: BaseContent): Promise<ContentWithRichTextPreview>;
 };
 
 export const CONTENT_DB_FIELDS = Object.freeze({
@@ -60,12 +58,11 @@ export class DrizzleContentRepository implements ContentRepository {
   }
 
   async getContentWithFile(content: BaseContent): Promise<ContentWithFile> {
-    const resultFile: ContentFile | undefined =
-      await db.query.contentFileTable.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.contentId, content.id);
-        },
-      });
+    const resultFile: ContentFile | undefined = await db.query.contentFileTable.findFirst({
+      where(fields, operators) {
+        return operators.eq(fields.contentId, content.id);
+      },
+    });
 
     if (!resultFile) {
       throw new Error('Erro ao buscar conteúdo');
@@ -79,17 +76,14 @@ export class DrizzleContentRepository implements ContentRepository {
   }
 
   async getContentWithImage(content: BaseContent): Promise<ContentWithImage> {
-    const resultImage: ContentImage | undefined =
-      await db.query.contentImageTable.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.contentId, content.id);
-        },
-      });
+    const resultImage: ContentImage | undefined = await db.query.contentImageTable.findFirst({
+      where(fields, operators) {
+        return operators.eq(fields.contentId, content.id);
+      },
+    });
 
     if (!resultImage) {
-      throw new Error(
-        'Erro ao buscar conteúdo de imagem com id = ' + content.id
-      );
+      throw new Error('Erro ao buscar conteúdo de imagem com id = ' + content.id);
     }
 
     return {
@@ -100,17 +94,14 @@ export class DrizzleContentRepository implements ContentRepository {
   }
 
   async getContentWithVideo(content: BaseContent): Promise<ContentWithVideo> {
-    const resultVideo: ContentVideo | undefined =
-      await db.query.contentVideoTable.findFirst({
-        where(fields, operators) {
-          return operators.eq(fields.contentId, content.id);
-        },
-      });
+    const resultVideo: ContentVideo | undefined = await db.query.contentVideoTable.findFirst({
+      where(fields, operators) {
+        return operators.eq(fields.contentId, content.id);
+      },
+    });
 
     if (!resultVideo) {
-      throw new Error(
-        'Erro ao buscar conteúdo de video com id = ' + content.id
-      );
+      throw new Error('Erro ao buscar conteúdo de video com id = ' + content.id);
     }
 
     return {
@@ -120,9 +111,7 @@ export class DrizzleContentRepository implements ContentRepository {
     };
   }
 
-  async getContentWithRichTextPreview(
-    content: BaseContent
-  ): Promise<ContentWithRichTextPreview> {
+  async getContentWithRichTextPreview(content: BaseContent): Promise<ContentWithRichTextPreview> {
     const resultRichtext: ContentRichTextPreview | undefined =
       await db.query.contentRichTextTable.findFirst({
         columns: {
@@ -138,9 +127,7 @@ export class DrizzleContentRepository implements ContentRepository {
       });
 
     if (!resultRichtext) {
-      throw new Error(
-        'Erro ao buscar conteúdo de rich text com id = ' + content.id
-      );
+      throw new Error('Erro ao buscar conteúdo de rich text com id = ' + content.id);
     }
 
     return {

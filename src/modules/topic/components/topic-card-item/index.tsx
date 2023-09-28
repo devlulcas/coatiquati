@@ -17,9 +17,7 @@ export function TopicCardItem({ topic }: TopicCardItemProps) {
         {topic.title}
       </h3>
 
-      <p className="text-sm truncate break-words whitespace-break-spaces">
-        {topic.description}
-      </p>
+      <p className="text-sm truncate break-words whitespace-break-spaces">{topic.description}</p>
 
       <UpdatedAt updatedAt={topic.updatedAt} />
     </Link>

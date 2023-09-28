@@ -17,18 +17,14 @@ export const usersColumns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       return (
         <Button variant="link" asChild>
-          <Link href={createProfileUrl(row.original.username)}>
-            {row.original.username}
-          </Link>
+          <Link href={createProfileUrl(row.original.username)}>{row.original.username}</Link>
         </Button>
       );
     },
   },
   {
     accessorKey: 'role',
-    header: ({ column }) => (
-      <SortedColumnHeader column={column}>Permissão</SortedColumnHeader>
-    ),
+    header: ({ column }) => <SortedColumnHeader column={column}>Permissão</SortedColumnHeader>,
     cell: ({ row }) => <UserRoleBadge role={row.original.role} />,
   },
   {
@@ -38,12 +34,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     accessorKey: 'avatar',
     header: 'Avatar',
-    cell: ({ row }) => (
-      <UserAvatar
-        avatar={row.original.avatar}
-        username={row.original.username}
-      />
-    ),
+    cell: ({ row }) => <UserAvatar avatar={row.original.avatar} username={row.original.username} />,
   },
   {
     id: 'edit',

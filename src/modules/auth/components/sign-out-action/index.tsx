@@ -8,11 +8,7 @@ type SignOutActionProps = {
   formClassName?: ClassValue;
 };
 
-export function SignOutAction({
-  children,
-  className,
-  formClassName,
-}: SignOutActionProps) {
+export function SignOutAction({ children, className, formClassName }: SignOutActionProps) {
   return (
     <AuthForm action="/api/sign-out" className={cn(formClassName)}>
       <button className={cn(className)} type="submit">

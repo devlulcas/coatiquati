@@ -74,7 +74,7 @@ export class DrizzleTopicRepository implements TopicRepository {
         where: (fields, operators) => {
           return operators.or(
             operators.like(fields.title, `%${params.search}%`),
-            operators.like(fields.description, `%${params.search}%`)
+            operators.like(fields.description, `%${params.search}%`),
           );
         },
         with: {
@@ -137,7 +137,7 @@ export class DrizzleTopicRepository implements TopicRepository {
       }
 
       const filledContents: Content[] = await Promise.all(
-        data.contents.map((content) => {
+        data.contents.map(content => {
           switch (content.contentType) {
             case 'file':
               return this.contentRepository.getContentWithFile(content);
@@ -146,13 +146,11 @@ export class DrizzleTopicRepository implements TopicRepository {
             case 'video':
               return this.contentRepository.getContentWithVideo(content);
             case 'rich_text':
-              return this.contentRepository.getContentWithRichTextPreview(
-                content
-              );
+              return this.contentRepository.getContentWithRichTextPreview(content);
             default:
               throw new Error('Tipo de conteúdo inválido');
           }
-        })
+        }),
       );
 
       const dataWithFilledContents: TopicWithContentArray = {

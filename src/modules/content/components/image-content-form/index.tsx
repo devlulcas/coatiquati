@@ -33,11 +33,7 @@ type ImageContentFormProps = {
   className?: string;
 };
 
-export function ImageContentForm({
-  onSubmit,
-  className,
-  defaultValues,
-}: ImageContentFormProps) {
+export function ImageContentForm({ onSubmit, className, defaultValues }: ImageContentFormProps) {
   const { toast } = useToast();
 
   const form = useForm<ImageContentSchema>({
@@ -71,7 +67,7 @@ export function ImageContentForm({
           <UploadDropzone
             className="mt-0"
             endpoint="newImageContent"
-            onClientUploadComplete={(res) => {
+            onClientUploadComplete={res => {
               if (typeof res === 'undefined' || res.length === 0) {
                 return toast({
                   title: 'Erro ao realizar upload',

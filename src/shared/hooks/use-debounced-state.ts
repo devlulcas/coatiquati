@@ -15,10 +15,7 @@ export function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-export function useDebouncedState<T>(
-  value: T,
-  delay: number
-): [T, (value: T) => void] {
+export function useDebouncedState<T>(value: T, delay: number): [T, (value: T) => void] {
   const [state, setState] = useState(value);
   const debouncedState = useDebounce(state, delay);
   return [debouncedState, setState];

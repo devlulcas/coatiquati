@@ -53,11 +53,7 @@ export function EditUserRole({ user }: EditUserRoleProps) {
 
   return (
     <Dialog open={isConfirming}>
-      <Button
-        onClick={openConfirmDialog}
-        variant="ghost"
-        className="w-full text-red-600"
-      >
+      <Button onClick={openConfirmDialog} variant="ghost" className="w-full text-red-600">
         {isAdmin ? 'Torná-lo usuário' : 'Elevar para administrador'}
       </Button>
 
@@ -77,11 +73,7 @@ export function EditUserRole({ user }: EditUserRoleProps) {
             Cancelar
           </Button>
 
-          <Button
-            onClick={onSubmit}
-            variant="destructive"
-            isLoading={isLoading}
-          >
+          <Button onClick={onSubmit} variant="destructive" isLoading={isLoading}>
             Confirmar
           </Button>
         </DialogFooter>
