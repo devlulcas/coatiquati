@@ -14,9 +14,7 @@ export async function protectWithRedirect({ acceptRoles, redirectTo }: ProtectWi
     redirect(redirectTo || '/sign-in');
   }
 
-  const userRole = session.user.role === roles.ADMIN ? roles.ADMIN : roles.USER;
-
-  if (acceptRoles && !acceptRoles.includes(userRole)) {
+  if (acceptRoles && !acceptRoles.includes(session.user.role)) {
     redirect(redirectTo || '/sign-in');
   }
 
