@@ -1,7 +1,11 @@
 import { relations, sql, type InferSelectModel } from 'drizzle-orm';
 import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import type { Role } from '../../auth/constants/roles';
-import { contributionTable } from './contribution';
+import {
+  contentContributionTable,
+  topicContributionTable,
+  trailContributionTable,
+} from './contribution';
 import { emailVerificationTokenTable } from './email-verification-token';
 import { passwordResetTokenTable } from './password-reset-token';
 import { sensibleOperationTokenTable } from './sensible-action-token';
@@ -32,7 +36,9 @@ export const userTableRelations = relations(userTable, ({ one, many }) => ({
   trailSubscriptions: many(trailSubscriptionTable),
   authoredTrails: many(trailTable),
   authoredTopics: many(trailTable),
-  contributions: many(contributionTable),
+  trailContributions: many(trailContributionTable),
+  topicContributions: many(topicContributionTable),
+  contentContributions: many(contentContributionTable),
 }));
 
 export const sessionTable = sqliteTable('user_session', {

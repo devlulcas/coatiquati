@@ -1,16 +1,21 @@
 import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { foreignKey, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { contentTable } from './content';
 import { userTable } from './user';
 
-export type CommentTable = InferSelectModel<typeof commentTable>;
-export type NewCommentTable = InferInsertModel<typeof commentTable>;
+export type ContentCommentTable = InferSelectModel<typeof contentCommentTable>;
+export type ContentNewCommentTable = InferInsertModel<typeof contentCommentTable>;
 
-export const commentTable = sqliteTable(
+export const contentCommentTable = sqliteTable(
   'comment',
   {
     id: integer('id').primaryKey().notNull(),
-    entityId: integer('content_id').notNull(),
-    entityType: text('entity_type').$type<'trail' | 'topic' | 'content'>().notNull(),
+    contentId: integer('content_id')
+      .notNull()
+      .references(() => contentTable.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      }),
     authorId: text('user_id')
       .notNull()
       .references(() => userTable.id, {
@@ -18,9 +23,9 @@ export const commentTable = sqliteTable(
         onUpdate: 'cascade',
       }),
     content: text('content').notNull(),
+    parentCommentId: integer('parent_comment_id'),
     upvotes: integer('upvotes').notNull().default(0),
     downvotes: integer('downvotes').notNull().default(0),
-    replyTo: integer('reply_to'),
     edited: integer('edited', { mode: 'boolean' }).notNull().default(false),
     originalContent: text('original_content'),
     createdAt: text('created_at')
@@ -32,17 +37,20 @@ export const commentTable = sqliteTable(
     deletedAt: text('deleted_at'),
   },
   table => ({
-    parentReference: foreignKey(() => ({
-      columns: [table.replyTo],
+    parentCommentReference: foreignKey(() => ({
+      columns: [table.parentCommentId],
       foreignColumns: [table.id],
     })),
   }),
 );
 
-export const commentTableRelations = relations(commentTable, ({ one, many }) => ({
+export const contentCommentTableRelations = relations(contentCommentTable, ({ one }) => ({
+  content: one(contentTable, {
+    fields: [contentCommentTable.contentId],
+    references: [contentTable.id],
+  }),
   author: one(userTable, {
-    fields: [commentTable.authorId],
+    fields: [contentCommentTable.authorId],
     references: [userTable.id],
   }),
-  replies: many(commentTable),
 }));

@@ -1,8 +1,7 @@
 import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentStatus, type ContentStatus } from '../../../shared/constants/content-status';
-import { commentTable } from './comment';
-import { contributionTable } from './contribution';
+import { trailContributionTable } from './contribution';
 import { topicTable } from './topic';
 import { trailSubscriptionTable } from './trail-subscription';
 import { userTable } from './user';
@@ -41,8 +40,7 @@ export const trailTableRelations = relations(trailTable, ({ many, one }) => ({
   }),
   subscriptions: many(trailSubscriptionTable),
   topics: many(topicTable),
-  contributors: many(contributionTable),
-  comments: many(commentTable),
+  contributors: many(trailContributionTable),
   author: one(userTable, {
     fields: [trailTable.authorId],
     references: [userTable.id],

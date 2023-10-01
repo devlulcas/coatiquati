@@ -1,9 +1,8 @@
 import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentStatus, type ContentStatus } from '../../../shared/constants/content-status';
-import { commentTable } from './comment';
 import { contentTable } from './content';
-import { contributionTable } from './contribution';
+import { topicContributionTable } from './contribution';
 import { trailTable } from './trail';
 import { userTable } from './user';
 
@@ -46,7 +45,6 @@ export const topicTableRelations = relations(topicTable, ({ many, one }) => ({
     fields: [topicTable.authorId],
     references: [userTable.id],
   }),
-  comments: many(commentTable),
-  contributors: many(contributionTable),
+  contributors: many(topicContributionTable),
   contents: many(contentTable),
 }));

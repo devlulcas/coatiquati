@@ -1,8 +1,8 @@
 import type { JSONContent } from '@tiptap/core';
 import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { commentTable } from './comment';
-import { contributionTable } from './contribution';
+import { contentCommentTable } from './comment';
+import { contentContributionTable } from './contribution';
 import { topicTable } from './topic';
 import { userTable } from './user';
 
@@ -38,11 +38,11 @@ export const contentTableRelations = relations(contentTable, ({ one, many }) => 
     fields: [contentTable.authorId],
     references: [userTable.id],
   }),
-  contributors: many(contributionTable),
-  comments: many(commentTable),
-  topic: one(contentTable, {
+  contributors: many(contentContributionTable),
+  comments: many(contentCommentTable),
+  topic: one(topicTable, {
     fields: [contentTable.topicId],
-    references: [contentTable.id],
+    references: [topicTable.id],
   }),
 }));
 
