@@ -1,7 +1,7 @@
 'use server';
 
-import { roles } from '@/modules/auth/constants/roles';
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { revalidatePath } from 'next/cache';
 import type { UpdateTrailSchema } from '../../schemas/edit-trail-schema';
 import { updateTrailUseCase } from '../../use-cases/update-trail-use-case';
@@ -13,7 +13,7 @@ export async function editTrailAction(data: UpdateTrailSchema) {
     throw new Error('Você precisa estar logado para editar uma trilha.');
   }
 
-  if (session.user.role !== roles.ADMIN && session.user.role !== roles.HIGH_PRIVILEGE_ADMIN) {
+  if (!isAdminOrAbove(session.user.role)) {
     throw new Error('Você precisa ser um administrador para editar uma trilha.');
   }
 

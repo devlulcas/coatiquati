@@ -1,5 +1,5 @@
-import { roles } from '@/modules/auth/constants/roles';
 import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import coatiSvg from '@/shared/assets/images/coati.svg';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ import { HeaderNav } from './header-nav';
 export async function Header() {
   const session = await getPageSession();
 
-  const hasAdminAccess = session !== null && session.user.role !== roles.USER;
+  const hasAdminAccess = session !== null && isAdminOrAbove(session.user.role);
 
   return (
     <header className="z-50 top-0 sticky border-b h-[--header-height] bg-background/75 backdrop-blur-md">

@@ -1,5 +1,5 @@
-import { roles } from '@/modules/auth/constants/roles';
 import type { Session } from '@/modules/auth/types/session';
+import { isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { z } from 'zod';
 import { DrizzleUserRepository } from '../repositories/user-repository';
 import { type User } from '../types/user';
@@ -14,7 +14,7 @@ const updateUserUseCaseSchema = z.object({
 export type UpdateUserSchema = z.infer<typeof updateUserUseCaseSchema>;
 
 export async function updateUserUseCase(params: UpdateUserSchema, session: Session): Promise<User> {
-  if (session.user.role === roles.HIGH_PRIVILEGE_ADMIN) {
+  if (isHighPrivilegeAdmin(session.user.role)) {
     throw new Error(
       'Peça para um administrador de servidor para alterar diretamente as permissões do seu usuário.',
     );

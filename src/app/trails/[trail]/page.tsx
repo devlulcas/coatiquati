@@ -1,5 +1,5 @@
-import { roles } from '@/modules/auth/constants/roles';
 import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { TopicCardItem } from '@/modules/topic/components/topic-card-item';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
 import { getTrailUseCase } from '@/modules/trail/use-cases/get-trail-use-case';
@@ -20,11 +20,11 @@ export default async function Page({ params }: PageProps) {
 
   const session = await getPageSession();
 
-  const isAdmin = session?.user.role === roles.ADMIN;
+  const isAdmin = session && isAdminOrAbove(session.user.role);
 
   return (
     <div className="py-8 container">
-      <TrailHeading isAdmin={isAdmin} trail={trailData} className="mb-8" />
+      <TrailHeading trail={trailData} className="mb-8" />
 
       {trailData.topics.length === 0 && (
         <p className="text-lg text-center">Nenhum tópico encontrado</p>

@@ -1,7 +1,7 @@
 'use server';
 
-import { roles } from '@/modules/auth/constants/roles';
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { revalidatePath } from 'next/cache';
 import type { NewTopicSchema } from '../../schemas/new-topic-schema';
 import { createNewTopicUseCase } from '../../use-cases/create-new-topic-use-case';
@@ -13,7 +13,7 @@ export async function newTopicAction(data: NewTopicSchema) {
     throw new Error('Você precisa estar logado para criar uma nova trilha.');
   }
 
-  if (session.user.role !== roles.ADMIN) {
+  if (!isAdminOrAbove(session.user.role)) {
     throw new Error('Você precisa ser um administrador para criar uma nova trilha.');
   }
 

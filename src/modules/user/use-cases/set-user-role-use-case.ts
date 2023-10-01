@@ -1,5 +1,6 @@
 import { roles } from '@/modules/auth/constants/roles';
 import type { Session } from '@/modules/auth/types/session';
+import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { z } from 'zod';
 import { DrizzleUserRepository } from '../repositories/user-repository';
 import { type User } from '../types/user';
@@ -15,7 +16,7 @@ export async function setUserRoleUseCase(
   params: SetUserRoleSchema,
   session: Session,
 ): Promise<User> {
-  if (session.user.role !== roles.HIGH_PRIVILEGE_ADMIN) {
+  if (!isHighPrivilegeAdmin(session.user.role)) {
     throw new Error('Nível de permissões insuficiente para editar as permissões de um usuário.');
   }
 
@@ -41,11 +42,11 @@ export async function setUserRoleUseCase(
     throw new Error('Usuário não verificado');
   }
 
-  if (user.role === roles.HIGH_PRIVILEGE_ADMIN) {
+  if (isHighPrivilegeAdmin(user.role)) {
     throw new Error('Não é possível alterar a permissão de um administrador de nível alto');
   }
 
-  const role = validatedParams.data.role === roles.ADMIN ? roles.ADMIN : roles.USER;
+  const role = isAdmin(validatedParams.data.role) ? roles.ADMIN : roles.USER;
 
   try {
     return repository.updateUser(validatedParams.data.userId, { role });

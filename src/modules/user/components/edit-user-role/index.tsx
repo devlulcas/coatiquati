@@ -1,6 +1,7 @@
 'use client';
 
 import { roles } from '@/modules/auth/constants/roles';
+import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
@@ -24,11 +25,9 @@ export function EditUserRole({ user }: EditUserRoleProps) {
   const [isLoading, startTransition] = useTransition();
   const { toast } = useToast();
 
-  if (user.role === roles.HIGH_PRIVILEGE_ADMIN) return null;
+  if (isHighPrivilegeAdmin(user.role)) return null;
 
-  const isAdmin = user.role === roles.ADMIN;
-
-  const flippedRole = isAdmin
+  const flippedRole = isAdmin(user.role)
     ? { value: roles.USER, label: 'Usuário' }
     : { value: roles.ADMIN, label: 'Administrador' };
 
@@ -54,7 +53,7 @@ export function EditUserRole({ user }: EditUserRoleProps) {
   return (
     <Dialog open={isConfirming}>
       <Button onClick={openConfirmDialog} variant="ghost" className="w-full text-red-600">
-        {isAdmin ? 'Torná-lo usuário' : 'Elevar para administrador'}
+        {isAdmin(user.role) ? 'Torná-lo usuário' : 'Elevar para administrador'}
       </Button>
 
       <DialogContent hideCloseButton>
