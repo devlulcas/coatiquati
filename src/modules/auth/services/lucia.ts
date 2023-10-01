@@ -1,12 +1,13 @@
+import { env } from '@/env';
 import { sqlite } from '@/modules/database/db';
 import { betterSqlite3 } from '@lucia-auth/adapter-sqlite';
 import { lucia } from 'lucia';
-import { nextjs } from 'lucia/middleware';
+import { nextjs_future } from 'lucia/middleware';
 import 'lucia/polyfill/node';
 
 export const auth = lucia({
-  env: 'DEV',
-  middleware: nextjs(),
+  env: env.NODE_ENV === 'production' ? 'PROD' : 'DEV',
+  middleware: nextjs_future(),
   sessionCookie: {
     expires: false,
   },
