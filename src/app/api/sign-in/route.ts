@@ -1,8 +1,8 @@
 import { userSignInSchema } from '@/modules/auth/schemas/user-sign-in-schema';
 import { auth } from '@/modules/auth/services/lucia';
+import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
 import { formDataToObject } from '@/shared/utils/form-data-to-object';
 import { LuciaError } from 'lucia';
-import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
@@ -14,7 +14,7 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json({ error: 'Invalid username' }, { status: 400 });
   }
 
-  const username = formDataResult.data.username.toLowerCase();
+  const username = formDataResult.data.username.toLowerCase().trim();
 
   const password = formDataResult.data.password;
 
@@ -28,10 +28,7 @@ export const POST = async (request: NextRequest) => {
       },
     });
 
-    const authRequest = auth.handleRequest({
-      request,
-      cookies,
-    });
+    const authRequest = handleApiAuthRequest(request);
 
     authRequest.setSession(session);
 

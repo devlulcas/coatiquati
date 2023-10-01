@@ -1,9 +1,9 @@
 import { auth } from '@/modules/auth/services/lucia';
-import { cookies } from 'next/headers';
+import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
 import { type NextRequest } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
-  const authRequest = auth.handleRequest({ request, cookies });
+  const authRequest = handleApiAuthRequest(request);
 
   const session = await authRequest.validate();
 

@@ -1,8 +1,8 @@
 import { roles } from '@/modules/auth/constants/roles';
 import { userSignUpSchema } from '@/modules/auth/schemas/user-sign-up-schema';
 import { auth } from '@/modules/auth/services/lucia';
+import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
 import { formDataToObject } from '@/shared/utils/form-data-to-object';
-import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
@@ -14,9 +14,9 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json({ error: 'Invalid username' }, { status: 400 });
   }
 
-  const username = formDataResult.data.username.toLowerCase();
+  const username = formDataResult.data.username.toLowerCase().trim();
 
-  const email = formDataResult.data.email.toLowerCase();
+  const email = formDataResult.data.email.toLowerCase().trim();
 
   try {
     const user = await auth.createUser({
@@ -26,7 +26,7 @@ export const POST = async (request: NextRequest) => {
         password: formDataResult.data.password,
       },
       attributes: {
-        username,
+        username: username,
         email,
         role: roles.USER,
         email_verified: null,
@@ -40,10 +40,7 @@ export const POST = async (request: NextRequest) => {
       },
     });
 
-    const authRequest = auth.handleRequest({
-      request,
-      cookies,
-    });
+    const authRequest = handleApiAuthRequest(request);
 
     authRequest.setSession(session);
 

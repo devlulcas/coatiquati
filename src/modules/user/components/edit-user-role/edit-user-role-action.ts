@@ -1,6 +1,6 @@
 'use server';
 
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import {
   setUserRoleUseCase,
   type SetUserRoleSchema,
@@ -8,7 +8,7 @@ import {
 import { revalidatePath } from 'next/cache';
 
 export async function editUserRoleAction(data: SetUserRoleSchema) {
-  const session = await getPageSession();
+  const session = await getActionSession();
 
   if (!session) {
     throw new Error('Você precisa estar logado para editar as permissões de um usuário.');

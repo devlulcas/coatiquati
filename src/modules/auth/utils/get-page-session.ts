@@ -1,6 +1,5 @@
-import { auth } from '@/modules/auth/services/lucia';
-import { cookies } from 'next/headers';
 import { cache } from 'react';
+import { handlePageAuthRequest } from './handle-auth-request';
 
 /**
  * This allows you share the session across pages and layouts, making it possible to validate the request in
@@ -8,9 +7,6 @@ import { cache } from 'react';
  * @see {@link https://lucia-auth.com/guidebook/sign-in-with-username-and-password/nextjs-app} for more information.
  */
 export const getPageSession = cache(() => {
-  const authRequest = auth.handleRequest({
-    request: null,
-    cookies,
-  });
+  const authRequest = handlePageAuthRequest();
   return authRequest.validate();
 });
