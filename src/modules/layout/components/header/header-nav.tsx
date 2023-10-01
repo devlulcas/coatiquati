@@ -1,6 +1,6 @@
 'use client';
 
-import { SignOutAction } from '@/modules/auth/components/sign-out-action';
+import { SignOutForm } from '@/modules/auth/components/sign-out-form';
 import { Button } from '@/shared/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/shared/components/ui/sheet';
 import { MenuIcon } from 'lucide-react';
@@ -45,9 +45,9 @@ export function HeaderNav({ hasAdminAccess, isLoggedIn }: HeaderNavProps) {
 
           {isLoggedIn ? (
             <Button className="w-full" variant="destructive" asChild>
-              <SignOutAction className="w-full" formClassName="w-full">
+              <SignOutForm className="w-full" formClassName="w-full">
                 Sair
-              </SignOutAction>
+              </SignOutForm>
             </Button>
           ) : (
             <Button className="w-full" variant="secondary" asChild>
@@ -74,7 +74,7 @@ export function HeaderNav({ hasAdminAccess, isLoggedIn }: HeaderNavProps) {
 
         {isLoggedIn ? (
           <Button variant="ghost" asChild>
-            <SignOutAction>Sair</SignOutAction>
+            <SignOutForm>Sair</SignOutForm>
           </Button>
         ) : (
           <Button variant="ghost" asChild>
