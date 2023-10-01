@@ -5,14 +5,17 @@ import { Button } from '@/shared/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/shared/components/ui/sheet';
 import { MenuIcon } from 'lucide-react';
 import Link from 'next/link';
+import { usePerfStore } from '../../stores/perf-mode-store';
 
-export function HeaderNav({
-  hasAdminAccess,
-  isLoggedIn,
-}: {
+type HeaderNavProps = {
   hasAdminAccess?: boolean;
   isLoggedIn?: boolean;
-}) {
+};
+
+export function HeaderNav({ hasAdminAccess, isLoggedIn }: HeaderNavProps) {
+  const togglePerfMode = usePerfStore(state => state.togglePerfMode);
+  const perfMode = usePerfStore(state => state.perfMode);
+
   return (
     <>
       <Sheet>
@@ -78,6 +81,10 @@ export function HeaderNav({
             <Link href="/sign-in">Entrar</Link>
           </Button>
         )}
+
+        <Button variant="ghost" onClick={togglePerfMode}>
+          {perfMode ? 'Desativar' : 'Ativar'} modo de performance
+        </Button>
       </div>
     </>
   );

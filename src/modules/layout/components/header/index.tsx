@@ -8,7 +8,7 @@ import { HeaderNav } from './header-nav';
 export async function Header() {
   const session = await getPageSession();
 
-  const hasAdminAccess = session !== null && session.user.role === roles.ADMIN;
+  const hasAdminAccess = session !== null && session.user.role !== roles.USER;
 
   return (
     <header className="z-50 top-0 sticky border-b h-[--header-height] bg-background/75 backdrop-blur-md">
