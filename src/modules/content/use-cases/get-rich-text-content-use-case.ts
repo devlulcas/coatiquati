@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { DrizzleContentRepository } from '../repositories/content-repository';
+import { DrizzleRichTextContentRepository } from '../repositories/rich-text-content-repository';
 import type { ContentRichText } from '../types/content';
 
 const getRichTextContentUseCaseSchema = z.object({
@@ -16,10 +16,10 @@ export async function getRichTextContentUseCase(params: GetRichTextContentUseCas
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = new DrizzleContentRepository();
+  const repository = new DrizzleRichTextContentRepository();
 
   try {
-    return repository.getContentWithRichText(validatedParams.data.id);
+    return repository.getContent(validatedParams.data.id);
   } catch (error) {
     console.error(error);
     throw new Error('Erro ao buscar conteúdo');
