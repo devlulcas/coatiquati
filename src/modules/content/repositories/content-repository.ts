@@ -19,7 +19,6 @@ export type ContentRepository = {
   getContentWithImage(content: BaseContent): Promise<ContentWithImage>;
   getContentWithVideo(content: BaseContent): Promise<ContentWithVideo>;
   getContentWithRichTextPreview(content: BaseContent): Promise<ContentWithRichTextPreview>;
-  getContentWithRichText(contentId: number): Promise<ContentRichText>;
 };
 
 export const CONTENT_DB_FIELDS = Object.freeze({
@@ -136,26 +135,5 @@ export class DrizzleContentRepository implements ContentRepository {
       contentType: 'rich_text',
       content: resultRichtext,
     };
-  }
-
-  async getContentWithRichText(contentId: number): Promise<ContentRichText> {
-    const resultRichtext: ContentRichText | undefined = await db.query.contentRichTextTable.findFirst({
-      columns: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        contentId: true,
-        asJson: true,
-      },
-      where(fields, operators) {
-        return operators.eq(fields.contentId, contentId);
-      },
-    });
-
-    if (!resultRichtext) {
-      throw new Error('Erro ao buscar conteúdo de rich text com id = ' + contentId);
-    }
-
-    return resultRichtext;
   }
 }
