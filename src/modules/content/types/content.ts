@@ -30,7 +30,7 @@ export type ContentWithImage = BaseContent & {
 
 export type ContentWithRichText = BaseContent & {
   contentType: 'rich_text';
-  content: ContentRichTextTable;
+  content: ContentRichText;
 };
 
 export type ContentWithRichTextPreview = BaseContent & {

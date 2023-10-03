@@ -111,6 +111,9 @@ function RenderRichTextContentCard({ content }: { content: ContentWithRichTextPr
     <div className="flex flex-col gap-2 p-2 border rounded">
       <h5 className="text-lg font-bold">{meta.title}</h5>
       <PreviewRichTextContent richTextContent={data.previewAsJson} />
+      <Link href={`/contents/post/${meta.id}`} className="text-md text-muted-foreground">
+        Ler mais
+      </Link>
     </div>
   );
 }
