@@ -5,6 +5,7 @@ import { TOPIC_DB_FIELDS } from '@/modules/topic/repositories/topic-repository';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
 import type { NewTrail, Trail, TrailWithTopicArray } from '../types/trail';
+import { trailContributionTable } from '@/modules/database/schema/contribution';
 
 export type TrailRepository = {
   createTrail: (trail: NewTrail) => Promise<Trail>;
@@ -103,45 +104,61 @@ export class DrizzleTrailRepository implements TrailRepository {
   }
 
   async updateTrail(id: number, trail: Partial<NewTrail>): Promise<Trail> {
-    try {
-      const updatedTrail = db
-        .update(trailTable)
-        .set({ ...trail, updatedAt: new Date().toISOString() })
-        .where(eq(trailTable.id, id))
-        .returning()
-        .get();
+    return db.transaction(async tx => {
+      try {
+        const {authorId, ...updatedData} = { ...trail, updatedAt: new Date().toISOString() }
 
-      const data = await db.query.trailTable.findFirst({
-        columns: TRAIL_DB_FIELDS,
-        where: (fields, operators) => {
-          return operators.eq(fields.id, updatedTrail.id);
-        },
-        with: {
-          author: {
-            columns: CONTRIBUTOR_DB_FIELDS,
+        if (!authorId) {
+          throw new Error('Autor não informado');
+        }
+
+        // Atualiza a trilha em si
+        const updatedTrail = tx
+          .update(trailTable)
+          .set(updatedData)
+          .where(eq(trailTable.id, id))
+          .returning()
+          .get();
+
+        // Atualiza a lista de contribuidores
+        tx.update(trailContributionTable)
+          .set({ trailId: updatedTrail.id, userId: authorId })
+          .where(eq(trailContributionTable.trailId, id))
+          .execute();
+
+        const data = await tx.query.trailTable.findFirst({
+          columns: TRAIL_DB_FIELDS,
+          where: (fields, operators) => {
+            return operators.eq(fields.id, updatedTrail.id);
           },
-          contributors: {
-            with: {
-              user: {
-                columns: CONTRIBUTOR_DB_FIELDS,
+          with: {
+            author: {
+              columns: CONTRIBUTOR_DB_FIELDS,
+            },
+            contributors: {
+              with: {
+                user: {
+                  columns: CONTRIBUTOR_DB_FIELDS,
+                },
               },
             },
+            category: {
+              columns: CATEGORY_DB_FIELDS,
+            },
           },
-          category: {
-            columns: CATEGORY_DB_FIELDS,
-          },
-        },
-      });
+        });
 
-      if (!data) {
+        if (!data) {
+          throw new Error('Erro ao atualizar trilha');
+        }
+
+        return data;
+      } catch (error) {
+        console.error(error);
+        tx.rollback();
         throw new Error('Erro ao atualizar trilha');
       }
-
-      return data;
-    } catch (error) {
-      console.error(error);
-      throw new Error('Erro ao atualizar trilha');
-    }
+    });
   }
 
   async getTrailWithTopicsById(id: number): Promise<TrailWithTopicArray> {
