@@ -2,20 +2,12 @@
 
 import { Button } from '@/shared/components/ui/button';
 import { useMutation } from '@tanstack/react-query';
-import Highlight from '@tiptap/extension-highlight';
-import Image from '@tiptap/extension-image';
-import TaskItem from '@tiptap/extension-task-item';
-import TaskList from '@tiptap/extension-task-list';
-import TextAlign from '@tiptap/extension-text-align';
-import TextStyle from '@tiptap/extension-text-style';
-import Youtube from '@tiptap/extension-youtube';
-import { EditorContent, useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import css from './editor.module.css';
-import LayeredImage from './layered-image-node';
-import { MenuBar } from './menu-bar';
+import { useRichTextEditor } from '../../hooks/use-rich-text-editor';
 import { NewImageContentDialogTrigger } from '../new-image-content-dialog-trigger';
 import { NewVideoContentDialogTrigger } from '../new-video-content-dialog-trigger';
+import { EditorContent } from './editor-content';
+import css from './editor.module.css';
+import { MenuBar } from './menu-bar';
 
 type TextEditorProps = {
   initialContent?: string;
@@ -31,35 +23,7 @@ const onSave = async (content?: string) => {
 };
 
 export function TextEditor({ initialContent }: TextEditorProps) {
-  const editor = useEditor({
-    extensions: [
-      TextStyle.configure(),
-      TextAlign.configure({
-        types: ['heading', 'paragraph'],
-      }),
-      Highlight,
-      Image,
-      StarterKit.configure({
-        bulletList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-        orderedList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-      }),
-      TaskList,
-      TaskItem.configure({
-        nested: true,
-      }),
-      Youtube.configure({
-        progressBarColor: 'hotpink',
-      }),
-      LayeredImage,
-    ],
-    content: initialContent,
-  });
+  const editor = useRichTextEditor({ initialContent });
 
   const saveMutation = useMutation({
     mutationFn: onSave,
@@ -72,7 +36,7 @@ export function TextEditor({ initialContent }: TextEditorProps) {
   return (
     <div className={css.editor}>
       <MenuBar editor={editor} />
-      <EditorContent editor={editor}>{null}</EditorContent>
+      <EditorContent editor={editor} />
 
       <div className="mt-4 flex gap-2">
         <Button
