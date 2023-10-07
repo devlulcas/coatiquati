@@ -1,6 +1,4 @@
-import type {
-  ContentRichText, UpdateContentRichText
-} from '@/modules/content/types/content';
+import type { ContentRichText, UpdateContentRichText } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentRichTextTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
@@ -12,7 +10,7 @@ import { eq } from 'drizzle-orm';
 export type RichTextContentRepository = {
   getContent(contentId: number): Promise<ContentRichText>;
   createContent(content: ContentRichText): Promise<ContentRichText>;
-  updateContent(content: UpdateContentRichText, by: Contributor["id"]): Promise<ContentRichText>;
+  updateContent(content: UpdateContentRichText, by: Contributor['id']): Promise<ContentRichText>;
   omitContent(contentId: number): Promise<void>;
 };
 
@@ -50,11 +48,14 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
    * Cria um conteúdo de texto complexo
    */
   async createContent(content: ContentRichText): Promise<ContentRichText> {
-    await db.insert(contentRichTextTable).values({
-      contentId: content.contentId,
-      asJson: content.asJson,
-      previewAsJson: content.asJson.content?.slice(0, 5) ?? {},
-    }).execute();
+    await db
+      .insert(contentRichTextTable)
+      .values({
+        contentId: content.contentId,
+        asJson: content.asJson,
+        previewAsJson: content.asJson.content?.slice(0, 5) ?? {},
+      })
+      .execute();
 
     const resultRichtext = await this.getContent(content.contentId);
 
@@ -64,45 +65,53 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
   /**
    * Atualiza um conteúdo de texto complexo
    */
-  async updateContent(content: UpdateContentRichText, by: Contributor["id"]): Promise<ContentRichText> {
-    const updatedAt = new Date().toISOString()
-    
-    const richText = content.asJson
+  async updateContent(content: UpdateContentRichText, by: Contributor['id']): Promise<ContentRichText> {
+    const updatedAt = new Date().toISOString();
 
-    if (typeof richText === "undefined") {
+    const richText = content.asJson;
+
+    if (typeof richText === 'undefined') {
       log.error('Erro ao atualizar conteúdo de rich text com id = ' + content.contentId);
       throw new Error('Erro ao atualizar conteúdo de rich text com id = ' + content.contentId);
     }
 
-    return db.transaction(async (tx) => {
+    return db.transaction(async tx => {
       try {
         const preview = richText?.content?.slice(0, 5) ?? {};
 
         const oldContent = await this.getContent(content.contentId);
 
-        await tx.update(contentRichTextTable).set({
-          asJson: richText,
-          previewAsJson: preview,
-          updatedAt
-        }).where(eq(contentRichTextTable.contentId, content.contentId)).execute();
-    
+        await tx
+          .update(contentRichTextTable)
+          .set({
+            asJson: richText,
+            previewAsJson: preview,
+            updatedAt,
+          })
+          .where(eq(contentRichTextTable.contentId, content.contentId))
+          .execute();
+
         const diff = diffJson(oldContent.asJson, richText);
 
-        await tx.update(contentContributionTable).set({
-          userId: by,
-          diff: diff,
-          contentId: content.contentId,
-          contributedAt: updatedAt,
-        }).where(eq(contentContributionTable.contentId, content.contentId)).execute();
+        await tx
+          .update(contentContributionTable)
+          .set({
+            userId: by,
+            diff: diff,
+            contentId: content.contentId,
+            contributedAt: updatedAt,
+          })
+          .where(eq(contentContributionTable.contentId, content.contentId))
+          .execute();
 
         const resultRichtext = await this.getContent(content.contentId);
-    
+
         return resultRichtext;
       } catch (error) {
         log.error('Erro ao atualizar conteúdo de rich text com id = ' + content.contentId);
         throw new Error('Erro ao atualizar conteúdo de rich text com id = ' + content.contentId);
       }
-    })
+    });
   }
 
   /**

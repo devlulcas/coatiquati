@@ -65,13 +65,7 @@ function ImageUploader({ onSave }: ImageUploaderProps) {
     <div className="p-2">
       {src ? (
         <div className="w-full flex">
-          <Image
-            src={src}
-            alt={altRef.current}
-            className="rounded-lg mx-auto"
-            width={500}
-            height={500}
-          />
+          <Image src={src} alt={altRef.current} className="rounded-lg mx-auto" width={500} height={500} />
         </div>
       ) : (
         <UploadDropzone
