@@ -13,7 +13,7 @@ import { useToast } from '@/shared/components/ui/use-toast';
 import { LayersIcon } from 'lucide-react';
 import { LayeredImageUploader } from '.';
 import { EditorActionButton } from '../editor/editor-action-button';
-import type { LayeredImage } from '../editor/layered-image-node';
+import type { LayeredImage } from '../layered-image-node';
 import { useLayeredImageControl } from './use-layered-image-control';
 
 type LayeredImageUploaderDialogTriggerProps = {
@@ -49,11 +49,7 @@ export function LayeredImageUploaderDialogTrigger({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        {typeof children !== 'undefined' ? (
-          children
-        ) : (
-          <EditorActionButton icon={<LayersIcon />} label="layers" />
-        )}
+        {typeof children !== 'undefined' ? children : <EditorActionButton icon={<LayersIcon />} label="layers" />}
       </DialogTrigger>
 
       <DialogContent className="min-w-fit max-w-[80vw]">

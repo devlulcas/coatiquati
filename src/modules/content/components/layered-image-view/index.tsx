@@ -1,7 +1,7 @@
 import { Button } from '@/shared/components/ui/button';
 import Image from 'next/image';
 import { useState } from 'react';
-import type { LayeredImage } from '../editor/layered-image-node';
+import type { LayeredImage } from '../layered-image-node';
 
 type LayeredImageViewProps = {
   layers: LayeredImage[];
