@@ -1,17 +1,17 @@
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
+import { log } from '@/modules/logging/lib/pino';
 import { CATEGORY_DB_FIELDS, TRAIL_DB_FIELDS } from '@/modules/trail/repositories/trail-repository';
 import type { UpdateUser, User, UserProfile } from '@/modules/user/types/user';
 import { eq } from 'drizzle-orm';
 import { userTableToUserMapper } from '../lib/user-table-to-user-mapper';
-import { log } from '@/modules/logging/lib/pino';
 
 export type UserRepository = {
   getUsers: (params: PaginationSchemaWithSearch) => Promise<User[]>;
   getUserById: (id: string) => Promise<User | null>;
   getUserProfile: (username: string) => Promise<UserProfile | null>;
-  updateUser: (id: string, updatedData: UpdateUser) => Promise<User>;
+  updateUser: (id: string, user: UpdateUser) => Promise<User>;
 };
 
 export const USER_DB_FIELDS = Object.freeze({
@@ -33,15 +33,15 @@ export const CONTRIBUTOR_DB_FIELDS = Object.freeze({
 
 export class DrizzleUserRepository implements UserRepository {
   /**
-   * Atualiza os dados do usuário
+   * Atualiza os dados do usuário. Apenas dados não sensíveis podem ser atualizados.
    */
-  async updateUser(id: string, updatedData: UpdateUser): Promise<User> {
+  async updateUser(id: string, user: UpdateUser): Promise<User> {
     const now = new Date().toISOString();
 
     try {
       await db
         .update(userTable)
-        .set({ ...updatedData, updatedAt: now })
+        .set({ ...user, updatedAt: now })
         .where(eq(userTable.id, id))
         .execute();
 
@@ -51,8 +51,7 @@ export class DrizzleUserRepository implements UserRepository {
         throw new Error('Usuário não encontrado');
       }
 
-      log.debug('User updated', data);
-      return userTableToUserMapper(data, false)
+      return userTableToUserMapper(data, false);
     } catch (error) {
       log.error(error);
       throw new Error('Erro ao atualizar usuário');
@@ -74,7 +73,6 @@ export class DrizzleUserRepository implements UserRepository {
         return null;
       }
 
-      log.debug('User found', data);
       return userTableToUserMapper(data, false);
     } catch (error) {
       log.error(error);
@@ -98,7 +96,6 @@ export class DrizzleUserRepository implements UserRepository {
       },
     });
 
-    log.debug('Users found', data);
     return data.map(user => userTableToUserMapper(user, true));
   }
 
@@ -142,7 +139,6 @@ export class DrizzleUserRepository implements UserRepository {
         authoredTrails: data.authoredTrails.map(trail => trail),
       };
 
-      log.debug('User profile found', result);
       return result;
     } catch (error) {
       log.error(error);
