@@ -15,9 +15,7 @@ export type UpdateUserSchema = z.infer<typeof updateUserUseCaseSchema>;
 
 export async function updateUserUseCase(params: UpdateUserSchema, session: Session): Promise<User> {
   if (isHighPrivilegeAdmin(session.user.role)) {
-    throw new Error(
-      'Peça para um administrador de servidor para alterar diretamente as permissões do seu usuário.',
-    );
+    throw new Error('Peça para um administrador de servidor para alterar diretamente as permissões do seu usuário.');
   }
 
   const validatedParams = updateUserUseCaseSchema.safeParse(params);
@@ -32,13 +30,8 @@ export async function updateUserUseCase(params: UpdateUserSchema, session: Sessi
 
   const repository = new DrizzleUserRepository();
 
-  try {
-    return repository.updateUser(validatedParams.data.userId, {
-      avatar: validatedParams.data.avatar,
-      username: validatedParams.data.username,
-    });
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao atualizar usuário');
-  }
+  return repository.updateUser(validatedParams.data.userId, {
+    avatar: validatedParams.data.avatar,
+    username: validatedParams.data.username,
+  });
 }

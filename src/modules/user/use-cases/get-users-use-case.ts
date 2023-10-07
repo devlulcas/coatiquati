@@ -16,10 +16,5 @@ export async function getUsersUseCase(params: GetUsersUseCaseSchema = {}): Promi
 
   const repository = new DrizzleUserRepository();
 
-  try {
-    return repository.getUsers(validatedParams.data);
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao buscar usuários');
-  }
+  return repository.getUsers(validatedParams.data);
 }

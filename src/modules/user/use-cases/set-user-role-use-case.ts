@@ -12,10 +12,7 @@ const setUserRoleUseCaseSchema = z.object({
 
 export type SetUserRoleSchema = z.infer<typeof setUserRoleUseCaseSchema>;
 
-export async function setUserRoleUseCase(
-  params: SetUserRoleSchema,
-  session: Session,
-): Promise<User> {
+export async function setUserRoleUseCase(params: SetUserRoleSchema, session: Session): Promise<User> {
   if (!isHighPrivilegeAdmin(session.user.role)) {
     throw new Error('Nível de permissões insuficiente para editar as permissões de um usuário.');
   }
@@ -48,10 +45,5 @@ export async function setUserRoleUseCase(
 
   const role = isAdmin(validatedParams.data.role) ? roles.ADMIN : roles.USER;
 
-  try {
-    return repository.updateUser(validatedParams.data.userId, { role });
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao buscar usuários');
-  }
+  return repository.updateUser(validatedParams.data.userId, { role });
 }

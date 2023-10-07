@@ -9,9 +9,7 @@ const getUserProfileUseCaseSchema = userSignInSchema.pick({
 
 type GetUserProfileUseCaseSchema = z.infer<typeof getUserProfileUseCaseSchema>;
 
-export async function getUserProfileUseCase(
-  params: GetUserProfileUseCaseSchema,
-): Promise<UserProfile | null> {
+export async function getUserProfileUseCase(params: GetUserProfileUseCaseSchema): Promise<UserProfile | null> {
   const validatedParams = getUserProfileUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
@@ -20,10 +18,5 @@ export async function getUserProfileUseCase(
 
   const repository = new DrizzleUserRepository();
 
-  try {
-    return repository.getUserProfile(validatedParams.data.username);
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao buscar usuários');
-  }
+  return repository.getUserProfile(validatedParams.data.username);
 }
