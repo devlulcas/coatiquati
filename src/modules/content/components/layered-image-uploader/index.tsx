@@ -1,21 +1,14 @@
 'use client';
 
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
-import {
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
+import { DndContext, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors } from '@dnd-kit/core';
 import {
   SortableContext,
   arrayMove,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import type { LayeredImage } from '../editor/layered-image-node';
+import type { LayeredImage } from '../layered-image-node';
 import { LayeredImageForm } from './layered-image-form';
 import { LayeredImagePreview } from './layered-image-preview';
 
@@ -26,12 +19,7 @@ type LayeredImageUploaderProps = {
   removeLayer: (id: string) => void;
 };
 
-export function LayeredImageUploader({
-  layers,
-  setLayers,
-  pushLayer,
-  removeLayer,
-}: LayeredImageUploaderProps) {
+export function LayeredImageUploader({ layers, setLayers, pushLayer, removeLayer }: LayeredImageUploaderProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -62,22 +50,14 @@ export function LayeredImageUploader({
         <ScrollArea className="h-[60vh] w-full min-w-fit flex flex-col rounded-md border p-4">
           <SortableContext items={layers} strategy={verticalListSortingStrategy}>
             {layers.map(layer => (
-              <LayeredImagePreview
-                key={layer.id}
-                value={layer}
-                onRemove={removeLayer}
-                className="mb-4"
-              />
+              <LayeredImagePreview key={layer.id} value={layer} onRemove={removeLayer} className="mb-4" />
             ))}
           </SortableContext>
         </ScrollArea>
       </DndContext>
 
       <div className="w-full h-full min-w-[25vw]">
-        <LayeredImageForm
-          onAdd={pushLayer}
-          defaultValue={{ id: '', src: '', alt: '', title: '' }}
-        />
+        <LayeredImageForm onAdd={pushLayer} defaultValue={{ id: '', src: '', alt: '', title: '' }} />
       </div>
     </>
   );

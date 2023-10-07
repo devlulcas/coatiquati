@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { LayeredImage } from '../editor/layered-image-node';
+import type { LayeredImage } from '../layered-image-node';
 
 export function useLayeredImageControl(defaultLayers: LayeredImage[] = []) {
   const [layers, setLayers] = useState<LayeredImage[]>(defaultLayers);

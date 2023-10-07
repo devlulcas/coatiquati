@@ -6,7 +6,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { TrashIcon } from 'lucide-react';
 import Image from 'next/image';
-import type { LayeredImage } from '../editor/layered-image-node';
+import type { LayeredImage } from '../layered-image-node';
 
 type LayeredImagePreviewProps = {
   onRemove: (id: string) => void;
@@ -32,14 +32,7 @@ export function LayeredImagePreview({ onRemove, value, className }: LayeredImage
       {...attributes}
       {...listeners}
     >
-      <Image
-        src={value.src}
-        alt={value.alt}
-        title={value.title}
-        width={150}
-        height={150}
-        className="rounded-lg"
-      />
+      <Image src={value.src} alt={value.alt} title={value.title} width={150} height={150} className="rounded-lg" />
 
       <div className="flex flex-col gap-2">
         <span>ID #{value.id}</span>

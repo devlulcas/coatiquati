@@ -1,21 +1,14 @@
 'use client';
 
 import { Button } from '@/shared/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
 import { nanoid } from '@/shared/utils/nanoid';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import type { LayeredImage } from '../editor/layered-image-node';
+import type { LayeredImage } from '../layered-image-node';
 
 const layeredImageSchema = z.object({
   src: z.string().url(),
