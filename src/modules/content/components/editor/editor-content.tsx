@@ -1,5 +1,4 @@
-import { Editor } from '@tiptap/react';
-import { EditorContent as TipTapEditorContent } from '@tiptap/react';
+import { Editor, EditorContent as TipTapEditorContent } from '@tiptap/react';
 
 type EditorContentProps = {
   editor: Editor | null;
