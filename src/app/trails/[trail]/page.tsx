@@ -20,11 +20,11 @@ export default async function Page({ params }: PageProps) {
 
   const session = await getPageSession();
 
-  const isAdmin = session && isAdminOrAbove(session.user.role);
+  const isAdmin = session !== null && isAdminOrAbove(session.user.role);
 
   return (
     <div className="py-8 container">
-      <TrailHeading trail={trailData} className="mb-8" />
+      <TrailHeading isAdmin={isAdmin} trail={trailData} className="mb-8" />
 
       {trailData.topics.length === 0 && (
         <p className="text-lg text-center">Nenhum tópico encontrado</p>

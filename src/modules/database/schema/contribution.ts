@@ -1,4 +1,4 @@
-import type { ParsedDiff } from 'diff';
+import type { Change } from 'diff';
 import { relations, sql } from 'drizzle-orm';
 import { blob, integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentTable } from './content';
@@ -15,10 +15,10 @@ export const trailContributionTable = sqliteTable(
     trailId: integer('trail_id')
       .references(() => contentTable.id)
       .notNull(),
-    userId: integer('user_id')
+    userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    diff: blob('blob', { mode: 'json' }).$type<ParsedDiff>(),
+    diff: blob('blob', { mode: 'json' }).$type<Change[]>(),
     contributedAt: text('contributed_at')
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -46,10 +46,10 @@ export const topicContributionTable = sqliteTable(
     topicId: integer('topic_id')
       .references(() => contentTable.id)
       .notNull(),
-    userId: integer('user_id')
+    userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    diff: blob('blob', { mode: 'json' }).$type<ParsedDiff>(),
+    diff: blob('blob', { mode: 'json' }).$type<Change[]>(),
     contributedAt: text('contributed_at')
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -77,10 +77,10 @@ export const contentContributionTable = sqliteTable(
     contentId: integer('content_id')
       .references(() => contentTable.id)
       .notNull(),
-    userId: integer('user_id')
+    userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    diff: blob('blob', { mode: 'json' }).$type<ParsedDiff>(),
+    diff: blob('blob', { mode: 'json' }).$type<Change[]>(),
     contributedAt: text('contributed_at')
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

@@ -24,6 +24,8 @@ export type TrailWithTopicArray = Trail & {
   topics: Topic[];
 };
 
-export type UpdateTrail = Updatable<TrailTable>;
+export type UpdateTrail = Omit<Updatable<TrailTable>, "authorId"> & {
+  contributorId: TrailTable["authorId"]
+};
 
 export type NewTrail = Creatable<NewTrailTable>;

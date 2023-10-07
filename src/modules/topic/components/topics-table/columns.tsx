@@ -40,20 +40,4 @@ export const topicsColumns: ColumnDef<Topic>[] = [
     id: 'edit',
     cell: ({ row }) => <EditTopicDialogTrigger topic={row.original} />,
   },
-  {
-    id: 'order',
-    cell: ({ row }) => {
-      return (
-        <div className="flex justify-center items-center flex-col">
-          <Button variant="ghost">
-            <ArrowUpIcon />
-          </Button>
-          <span className="text-sm">{row.index + 1}</span>
-          <Button variant="ghost">
-            <ArrowDownIcon />
-          </Button>
-        </div>
-      );
-    },
-  },
 ];

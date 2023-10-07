@@ -1,7 +1,4 @@
-import {
-  CONTENT_DB_FIELDS,
-  type ContentRepository,
-} from '@/modules/content/repositories/content-repository';
+import { CONTENT_DB_FIELDS, type ContentRepository } from '@/modules/content/repositories/content-repository';
 import type { Content } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { topicTable } from '@/modules/database/schema/topic';

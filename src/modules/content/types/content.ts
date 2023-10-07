@@ -13,6 +13,11 @@ import type {
 import type { Creatable, Updatable } from '@/modules/database/types/utils';
 import type { Contributor } from '@/modules/user/types/user';
 
+type UpdatableContent<T> = Partial<Omit<T, 'createdAt'>> & {
+  contentId: T extends { id: infer U } ? U : never;
+  updatedAt: string;
+};
+
 export type BaseContent = Omit<ContentTable, 'authorId' | 'contentType' | 'topicId'> & {
   author: Contributor;
   contributors: { user: Contributor }[];
@@ -30,7 +35,7 @@ export type ContentWithImage = BaseContent & {
 
 export type ContentWithRichText = BaseContent & {
   contentType: 'rich_text';
-  content: ContentRichTextTable;
+  content: ContentRichText;
 };
 
 export type ContentWithRichTextPreview = BaseContent & {
@@ -54,17 +59,17 @@ export type UpdateContent = Omit<Updatable<ContentTable>, 'authorId' | 'contentT
 
 export type ContentFile = ContentFileTable;
 export type NewContentFile = Creatable<NewContentFileTable>;
-export type UpdateContentFile = Updatable<ContentFileTable>;
+export type UpdateContentFile = UpdatableContent<ContentFileTable>;
 
 export type ContentRichTextPreview = Omit<ContentRichTextTable, 'asJson'>;
 export type ContentRichText = Omit<ContentRichTextTable, 'previewAsJson'>;
 export type NewContentRichText = Creatable<NewContentRichTextTable>;
-export type UpdateContentRichText = Updatable<ContentRichTextTable>;
+export type UpdateContentRichText = UpdatableContent<ContentRichTextTable>;
 
 export type ContentImage = ContentImageTable;
 export type NewContentImage = Creatable<NewContentImageTable>;
-export type UpdateContentImage = Updatable<ContentImageTable>;
+export type UpdateContentImage = UpdatableContent<ContentImageTable>;
 
 export type ContentVideo = ContentVideoTable;
 export type NewContentVideo = Creatable<NewContentVideoTable>;
-export type UpdateContentVideo = Updatable<ContentVideoTable>;
+export type UpdateContentVideo = UpdatableContent<ContentVideoTable>;

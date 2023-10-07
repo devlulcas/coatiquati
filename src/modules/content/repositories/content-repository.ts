@@ -2,6 +2,7 @@ import type {
   BaseContent,
   ContentFile,
   ContentImage,
+  ContentRichText,
   ContentRichTextPreview,
   ContentVideo,
   ContentWithFile,
@@ -112,19 +113,18 @@ export class DrizzleContentRepository implements ContentRepository {
   }
 
   async getContentWithRichTextPreview(content: BaseContent): Promise<ContentWithRichTextPreview> {
-    const resultRichtext: ContentRichTextPreview | undefined =
-      await db.query.contentRichTextTable.findFirst({
-        columns: {
-          id: true,
-          createdAt: true,
-          updatedAt: true,
-          contentId: true,
-          previewAsJson: true,
-        },
-        where(fields, operators) {
-          return operators.eq(fields.contentId, content.id);
-        },
-      });
+    const resultRichtext: ContentRichTextPreview | undefined = await db.query.contentRichTextTable.findFirst({
+      columns: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        contentId: true,
+        previewAsJson: true,
+      },
+      where(fields, operators) {
+        return operators.eq(fields.contentId, content.id);
+      },
+    });
 
     if (!resultRichtext) {
       throw new Error('Erro ao buscar conteúdo de rich text com id = ' + content.id);

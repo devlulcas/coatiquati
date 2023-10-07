@@ -38,6 +38,17 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
 
         <p className="text-lg break-all">{trail.description}</p>
 
+        <ul className='flex items-center'>
+          {trail.contributors.map(({ user }) => (
+            <li key={user.id} className='first:ml-0 -ml-2'>
+              <Avatar className="border border-foreground/25 rounded-full">
+                <AvatarImage src={user.avatar} alt={user.username} />
+                <AvatarFallback>{user.username}</AvatarFallback>
+              </Avatar>
+            </li>
+          ))}
+        </ul>
+
         <UpdatedAt updatedAt={trail.updatedAt} />
 
         {isAdmin && (
