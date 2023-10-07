@@ -3,14 +3,16 @@ import type { Content } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { topicTable } from '@/modules/database/schema/topic';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
+import { log } from '@/modules/logging/lib/pino';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
-import type { NewTopic, Topic, TopicWithContentArray } from '../types/topic';
+import type { NewTopic, Topic, TopicWithContentArray, UpdateTopic } from '../types/topic';
 
 export type TopicRepository = {
   createTopic: (topic: NewTopic) => Promise<Topic>;
   getTopics: (params: PaginationSchemaWithSearch) => Promise<Topic[]>;
-  updateTopic: (id: number, topic: Partial<NewTopic>) => Promise<Topic>;
+  getTopicById: (id: number) => Promise<Topic>;
+  updateTopic: (topic: UpdateTopic) => Promise<Topic>;
   getTopicWithContentArray: (id: number) => Promise<TopicWithContentArray>;
 };
 
@@ -57,7 +59,7 @@ export class DrizzleTopicRepository implements TopicRepository {
 
       return data;
     } catch (error) {
-      console.error(error);
+      log.error(error);
       throw new Error('Erro ao criar trilha');
     }
   }
@@ -88,7 +90,39 @@ export class DrizzleTopicRepository implements TopicRepository {
         },
       });
     } catch (error) {
-      console.error(error);
+      log.error(error);
+      throw new Error('Erro ao buscar trilhas');
+    }
+  }
+
+  async getTopicById(id: number): Promise<Topic> {
+    try {
+      const data = await db.query.topicTable.findFirst({
+        columns: TOPIC_DB_FIELDS,
+        where: (fields, operators) => {
+          return operators.eq(fields.id, id);
+        },
+        with: {
+          author: {
+            columns: CONTRIBUTOR_DB_FIELDS,
+          },
+          contributors: {
+            with: {
+              user: {
+                columns: CONTRIBUTOR_DB_FIELDS,
+              },
+            },
+          },
+        },
+      });
+
+      if (!data) {
+        throw new Error('Erro ao buscar trilha. Trilha não encontrada');
+      }
+
+      return data;
+    } catch (error) {
+      log.error(error);
       throw new Error('Erro ao buscar trilhas');
     }
   }
@@ -157,47 +191,28 @@ export class DrizzleTopicRepository implements TopicRepository {
 
       return dataWithFilledContents;
     } catch (error) {
-      console.error(error);
+      log.error(error);
       throw new Error('Erro ao buscar trilha');
     }
   }
 
-  async updateTopic(id: number, topic: Partial<NewTopic>): Promise<Topic> {
-    try {
-      const updatedTopic = db
-        .update(topicTable)
-        .set({ ...topic, updatedAt: new Date().toISOString() })
-        .where(eq(topicTable.id, id))
-        .returning()
-        .get();
+  async updateTopic(topic: UpdateTopic): Promise<Topic> {
+    const { id, contributorId, ...updatedData } = topic;
 
-      const data = await db.query.topicTable.findFirst({
-        columns: TOPIC_DB_FIELDS,
-        where: (fields, operators) => {
-          return operators.eq(fields.id, updatedTopic.id);
-        },
-        with: {
-          author: {
-            columns: CONTRIBUTOR_DB_FIELDS,
-          },
-          contributors: {
-            with: {
-              user: {
-                columns: CONTRIBUTOR_DB_FIELDS,
-              },
-            },
-          },
-        },
-      });
+    return db.transaction(async tx => {
+      try {
+        tx.update(topicTable)
+          .set({ ...updatedData, updatedAt: new Date().toISOString() })
+          .where(eq(topicTable.id, id))
+          .execute();
 
-      if (!data) {
+        const data = await this.getTopicById(id);
+
+        return data;
+      } catch (error) {
+        log.error(error);
         throw new Error('Erro ao atualizar trilha');
       }
-
-      return data;
-    } catch (error) {
-      console.error(error);
-      throw new Error('Erro ao atualizar trilha');
-    }
+    });
   }
 }

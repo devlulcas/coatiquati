@@ -1,7 +1,14 @@
+import type { Session } from '@/modules/auth/types/session';
+import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { DrizzleTrailRepository } from '../repositories/trail-repository';
 import { updateTrailUseCaseSchema, type UpdateTrailSchema } from '../schemas/edit-trail-schema';
+import type { UpdateTrail } from '../types/trail';
 
-export async function updateTrailUseCase(params: UpdateTrailSchema) {
+export async function updateTrailUseCase(params: UpdateTrailSchema, session: Session) {
+  if (!isAdminOrAbove(session.user.role)) {
+    throw new Error('Somente administradores podem editar trilhas.');
+  }
+
   const validatedParams = updateTrailUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
@@ -10,10 +17,15 @@ export async function updateTrailUseCase(params: UpdateTrailSchema) {
 
   const repository = new DrizzleTrailRepository();
 
-  try {
-    return repository.updateTrail(validatedParams.data.trailId, validatedParams.data.trail);
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao atualizar trilha');
-  }
+  const updatedTrail: UpdateTrail = {
+    id: validatedParams.data.id,
+    title: validatedParams.data.title,
+    description: validatedParams.data.description,
+    thumbnail: validatedParams.data.thumbnail,
+    status: validatedParams.data.status,
+    contributorId: session.user.id,
+    category: validatedParams.data.categoryId,
+  };
+
+  return repository.updateTrail(updatedTrail);
 }

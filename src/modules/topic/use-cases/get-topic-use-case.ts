@@ -9,9 +9,7 @@ const getTopicUseCaseSchema = z.object({
 
 type GetTopicUseCaseSchema = z.infer<typeof getTopicUseCaseSchema>;
 
-export async function getTopicUseCase(
-  params: GetTopicUseCaseSchema,
-): Promise<TopicWithContentArray> {
+export async function getTopicUseCase(params: GetTopicUseCaseSchema): Promise<TopicWithContentArray> {
   const validatedParams = getTopicUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
@@ -20,10 +18,5 @@ export async function getTopicUseCase(
 
   const repository = new DrizzleTopicRepository(new DrizzleContentRepository());
 
-  try {
-    return repository.getTopicWithContentArray(validatedParams.data.id);
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao buscar tópico');
-  }
+  return repository.getTopicWithContentArray(validatedParams.data.id);
 }

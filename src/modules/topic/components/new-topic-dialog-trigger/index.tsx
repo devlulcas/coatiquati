@@ -1,13 +1,7 @@
 'use client';
 
 import { Button } from '@/shared/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/shared/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { PlusIcon } from 'lucide-react';
 import type { NewTopicSchema } from '../../schemas/new-topic-schema';

@@ -10,7 +10,9 @@ export type Topic = Omit<TopicTable, 'authorId'> & {
 
 export type NewTopic = Creatable<NewTopicTable>;
 
-export type UpdateTopic = Updatable<TopicTable>;
+export type UpdateTopic = Omit<Updatable<TopicTable>, 'authorId'> & {
+  contributorId: TopicTable['authorId'];
+};
 
 export type TopicWithContentArray = Topic & {
   contents: Content[];

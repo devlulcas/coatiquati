@@ -1,13 +1,7 @@
 'use client';
 
 import { Button } from '@/shared/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/shared/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { PencilIcon } from 'lucide-react';
 import type { NewTopicSchema } from '../../schemas/new-topic-schema';
@@ -24,11 +18,11 @@ export function EditTopicDialogTrigger({ topic }: EditTopicDialogTriggerProps) {
 
   const onSubmit = async (data: NewTopicSchema) => {
     try {
-      await editTopicAction({ topic: data, topicId: topic.id });
-      toast({ title: 'Trilha editada com sucesso' });
+      await editTopicAction({ ...data, id: topic.id });
+      toast({ title: 'Tópico editado com sucesso' });
     } catch (error) {
       toast({
-        title: 'Erro ao editar trilha',
+        title: 'Erro ao editar tópico',
         description: error instanceof Error ? error.message : String(error),
         variant: 'destructive',
       });
@@ -46,7 +40,10 @@ export function EditTopicDialogTrigger({ topic }: EditTopicDialogTriggerProps) {
       <DialogContent className="min-w-fit">
         <DialogHeader>
           <DialogTitle className="mb-4 max-w-xs truncate">Editar {topic.title}</DialogTitle>
-          <TopicBaseForm defaultValues={topic} onSubmit={onSubmit} />
+          <TopicBaseForm
+            defaultValues={{ ...topic, thumbnail: topic.thumbnail ?? '/images/placeholder.png' }}
+            onSubmit={onSubmit}
+          />
         </DialogHeader>
       </DialogContent>
     </Dialog>

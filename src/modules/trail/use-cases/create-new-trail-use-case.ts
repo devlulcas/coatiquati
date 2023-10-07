@@ -1,34 +1,30 @@
+import type { Session } from '@/modules/auth/types/session';
+import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { type NewTrailTable } from '@/modules/database/schema/trail';
-import { z } from 'zod';
 import { DrizzleTrailRepository } from '../repositories/trail-repository';
-import { newTrailSchema } from '../schemas/new-trail-schema';
-import { type Trail } from '../types/trail';
+import { newTrailSchema, type NewTrailSchema } from '../schemas/new-trail-schema';
 
-const createNewTrailUseCaseSchema = z.object({
-  authorId: z.string({ required_error: 'O id do autor é obrigatório' }),
-  trail: newTrailSchema,
-});
+export async function createNewTrailUseCase(params: NewTrailSchema, session: Session) {
+  if (!isAdminOrAbove(session.user.role)) {
+    throw new Error('Somente administradores podem criar trilhas.');
+  }
 
-type CreateNewTrailUseCaseSchema = z.infer<typeof createNewTrailUseCaseSchema>;
-
-export async function createNewTrailUseCase(params: CreateNewTrailUseCaseSchema): Promise<Trail> {
-  const validatedParams = createNewTrailUseCaseSchema.safeParse(params);
+  const validatedParams = newTrailSchema.safeParse(params);
 
   if (!validatedParams.success) {
     throw new Error('Parâmetros inválidos');
   }
 
-  const newTrail: NewTrailTable = {
-    ...validatedParams.data.trail,
-    authorId: validatedParams.data.authorId,
-  };
-
   const repository = new DrizzleTrailRepository();
 
-  try {
-    return repository.createTrail(newTrail);
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao criar trilha');
-  }
+  const newTrail: NewTrailTable = {
+    title: validatedParams.data.title,
+    description: validatedParams.data.description,
+    thumbnail: validatedParams.data.thumbnail,
+    status: validatedParams.data.status,
+    authorId: session.user.id,
+    category: validatedParams.data.categoryId,
+  };
+
+  return repository.createTrail(newTrail);
 }

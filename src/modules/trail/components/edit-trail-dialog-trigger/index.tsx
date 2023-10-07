@@ -1,13 +1,7 @@
 'use client';
 
 import { Button } from '@/shared/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/shared/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { PencilIcon } from 'lucide-react';
 import type { NewTrailSchema } from '../../schemas/new-trail-schema';
@@ -24,7 +18,7 @@ export function EditTrailDialogTrigger({ trail }: EditTrailDialogTriggerProps) {
 
   const onSubmit = async (data: NewTrailSchema) => {
     try {
-      await editTrailAction({ trail: data, trailId: trail.id });
+      await editTrailAction({ ...data, id: trail.id });
       toast({ title: 'Trilha editada com sucesso' });
     } catch (error) {
       toast({

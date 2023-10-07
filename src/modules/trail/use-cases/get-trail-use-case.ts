@@ -17,10 +17,5 @@ export async function getTrailUseCase(params: GetTrailUseCaseSchema): Promise<Tr
 
   const repository = new DrizzleTrailRepository();
 
-  try {
-    return repository.getTrailWithTopicsById(validatedParams.data.id);
-  } catch (error) {
-    console.error(error);
-    throw new Error('Erro ao buscar trilha');
-  }
+  return repository.getTrailWithTopicsById(validatedParams.data.id);
 }

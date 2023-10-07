@@ -1,14 +1,7 @@
 'use client';
 
 import { Button } from '@/shared/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,7 +31,7 @@ export function TopicBaseForm({ defaultValues, onSubmit, className }: TopicBaseF
             <FormItem>
               <FormLabel>Título</FormLabel>
               <FormControl>
-                <Input placeholder="Trilha tal" {...field} />
+                <Input placeholder="Tópico tal" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -53,6 +46,20 @@ export function TopicBaseForm({ defaultValues, onSubmit, className }: TopicBaseF
               <FormLabel>Descrição</FormLabel>
               <FormControl>
                 <Input placeholder="Alguma descrição" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="thumbnail"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Thumbnail</FormLabel>
+              <FormControl>
+                <Input placeholder="https://..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
