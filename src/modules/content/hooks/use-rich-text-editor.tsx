@@ -12,9 +12,9 @@ import LayeredImage from '../components/layered-image-node';
 type UseRichTextEditorOptions = {
   initialContent?: Content;
   editable?: boolean;
-}
+};
 
-export function useRichTextEditor(options: UseRichTextEditorOptions = {editable: true, initialContent: undefined}) {
+export function useRichTextEditor(options: UseRichTextEditorOptions = { editable: true, initialContent: undefined }) {
   const editor = useEditor({
     extensions: [
       TextStyle.configure(),
@@ -45,7 +45,6 @@ export function useRichTextEditor(options: UseRichTextEditorOptions = {editable:
     content: options.initialContent,
     editable: options.editable,
   });
-
 
   return editor;
 }
