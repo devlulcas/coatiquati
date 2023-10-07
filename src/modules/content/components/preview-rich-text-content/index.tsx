@@ -1,3 +1,5 @@
+'use client';
+
 import type { Content } from '@tiptap/core';
 import { useRichTextEditor } from '../../hooks/use-rich-text-editor';
 import { EditorContent } from '../editor/editor-content';
