@@ -1,0 +1,21 @@
+.editor {
+  accent-color: hsl(var(--brand-600));
+  min-width: 100%;
+
+  & > div {
+    width: 100%;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    background-color: hsl(var(--background) / 85%);
+  }
+
+  & :global .tiptap {
+    min-width: 100%;
+    height: 100%;
+  }
+
+  & > div:focus-within {
+    border-color: hsl(var(--foreground / 50%));
+  }
+}
