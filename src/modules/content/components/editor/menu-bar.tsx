@@ -49,7 +49,7 @@ export function MenuBar({ editor }: MenuBarProps) {
   };
 
   return (
-    <div className="flex gap-1 flex-wrap w-full">
+    <div className="flex gap-2 flex-wrap w-full">
       <EditorActionButton
         icon={<BoldIcon />}
         label="negrito"
@@ -228,15 +228,9 @@ export function MenuBar({ editor }: MenuBarProps) {
         label="descer item"
       />
 
-      <EditorActionButton
-        onClick={setYoutubeVideo}
-        icon={<YoutubeIcon />}
-        label="vídeo do youtube"
-      />
+      <EditorActionButton onClick={setYoutubeVideo} icon={<YoutubeIcon />} label="vídeo do youtube" />
 
-      <LayeredImageUploaderDialogTrigger
-        onSave={layers => editor.chain().focus().setLayers({ layers }).run()}
-      />
+      <LayeredImageUploaderDialogTrigger onSave={layers => editor.chain().focus().setLayers({ layers }).run()} />
     </div>
   );
 }
