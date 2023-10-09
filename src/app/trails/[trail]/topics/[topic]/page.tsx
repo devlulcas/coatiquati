@@ -4,8 +4,9 @@ import type {
   ContentWithFile,
   ContentWithImage,
   ContentWithRichTextPreview,
-  ContentWithVideo
+  ContentWithVideo,
 } from '@/modules/content/types/content';
+import { ContributionOptionsButton } from '@/modules/topic/components/contribution-options-button';
 import { getTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -24,7 +25,7 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div className="py-8 container">
-      <header className="flex p-2 border rounded flex-col gap-2">
+      <header className="flex p-2 border bg-background/75 rounded flex-col gap-2">
         <h2 className="text-2xl font-bold mb-4">{topicData.title}</h2>
         <p className="text-lg text-muted-foreground">{topicData.description}</p>
 
@@ -35,9 +36,11 @@ export default async function Page({ params }: PageProps) {
             </li>
           ))}
         </ul>
+
+        <ContributionOptionsButton topicId={topicData.id} trailId={topicData.trailId} />
       </header>
 
-      <h3 className="text-xl font-bold mb-4">Conteúdos</h3>
+      <h3 className="text-xl font-bold mt-6 mb-4">Conteúdos</h3>
 
       <ul className="flex flex-col gap-3">
         {topicData.contents.map(content => (
@@ -46,6 +49,12 @@ export default async function Page({ params }: PageProps) {
             <RenderCorrectContentCard content={content} />
           </li>
         ))}
+
+        {topicData.contents.length === 0 && (
+          <li className="flex flex-col gap-2">
+            <p className="text-lg text-muted-foreground">Nenhum conteúdo encontrado</p>
+          </li>
+        )}
       </ul>
     </div>
   );
