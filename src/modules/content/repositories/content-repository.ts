@@ -11,14 +11,14 @@ import type {
   NewContent,
   UpdateContent,
 } from '@/modules/content/types/content';
-import { db } from '@/modules/database/db';
+import { db, type Database } from '@/modules/database/db';
 import { contentTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 
 export type ContentRepository = {
-  createBaseContent(content: NewContent): Promise<BaseContent>;
-  updateBaseContent(content: UpdateContent): Promise<BaseContent>;
+  createBaseContent(db: Database, content: NewContent): Promise<BaseContent>;
+  updateBaseContent(db: Database, content: UpdateContent): Promise<BaseContent>;
   getBaseContent(id: number): Promise<BaseContent>;
   getContentWithFile(content: BaseContent): Promise<ContentWithFile>;
   getContentWithImage(content: BaseContent): Promise<ContentWithImage>;
@@ -36,7 +36,7 @@ export const CONTENT_DB_FIELDS = Object.freeze({
 });
 
 export class DrizzleContentRepository implements ContentRepository {
-  async createBaseContent(content: NewContent): Promise<BaseContent> {
+  async createBaseContent(db: Database, content: NewContent): Promise<BaseContent> {
     const insertedContent = db
       .insert(contentTable)
       .values({
@@ -52,7 +52,7 @@ export class DrizzleContentRepository implements ContentRepository {
     return this.getBaseContent(insertedContent.id);
   }
 
-  async updateBaseContent(content: UpdateContent): Promise<BaseContent> {
+  async updateBaseContent(db: Database, content: UpdateContent): Promise<BaseContent> {
     const updatedAt = new Date().toISOString();
 
     return db.transaction(async tx => {
