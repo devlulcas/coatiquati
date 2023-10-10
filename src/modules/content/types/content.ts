@@ -48,14 +48,13 @@ export type ContentWithVideo = BaseContent & {
   content: ContentVideoTable;
 };
 
-export type Content =
-  | ContentWithFile
-  | ContentWithImage
-  | ContentWithRichTextPreview
-  | ContentWithVideo;
+export type Content = ContentWithFile | ContentWithImage | ContentWithRichTextPreview | ContentWithVideo;
 
 export type NewContent = Creatable<NewContentTable>;
-export type UpdateContent = Omit<Updatable<ContentTable>, 'authorId' | 'contentType'>;
+
+export type UpdateContent = Omit<Updatable<ContentTable>, 'authorId' | 'contentType'> & {
+  contributorId: ContentTable['authorId'];
+};
 
 export type ContentFile = ContentFileTable;
 export type NewContentFile = Creatable<NewContentFileTable>;
@@ -63,13 +62,19 @@ export type UpdateContentFile = UpdatableContent<ContentFileTable>;
 
 export type ContentRichTextPreview = Omit<ContentRichTextTable, 'asJson'>;
 export type ContentRichText = Omit<ContentRichTextTable, 'previewAsJson'>;
-export type NewContentRichText = Creatable<NewContentRichTextTable>;
-export type UpdateContentRichText = UpdatableContent<ContentRichTextTable>;
+export type NewContentRichText = Omit<Creatable<NewContentRichTextTable>, 'previewAsJson'>;
+export type UpdateContentRichText = Omit<UpdatableContent<ContentRichTextTable>, 'previewAsJson'> & {
+  contributorId: ContentTable['authorId'];
+};
 
 export type ContentImage = ContentImageTable;
 export type NewContentImage = Creatable<NewContentImageTable>;
-export type UpdateContentImage = UpdatableContent<ContentImageTable>;
+export type UpdateContentImage = UpdatableContent<ContentImageTable> & {
+  contributorId: ContentTable['authorId'];
+};
 
 export type ContentVideo = ContentVideoTable;
 export type NewContentVideo = Creatable<NewContentVideoTable>;
-export type UpdateContentVideo = UpdatableContent<ContentVideoTable>;
+export type UpdateContentVideo = UpdatableContent<ContentVideoTable> & {
+  contributorId: ContentTable['authorId'];
+};

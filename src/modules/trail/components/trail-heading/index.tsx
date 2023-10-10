@@ -22,7 +22,7 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
         alt={trail.title}
         height={10}
         width={10}
-        className="rounded-md z-[-2] absolute w-full h-full inset-0 blur-2xl opacity-75"
+        className="rounded-md z-[-2] absolute w-full h-full inset-0 blur-2xl opacity-75 animate-pulse"
       />
 
       <Image
@@ -30,7 +30,7 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
         alt={trail.title}
         height={320}
         width={320}
-        className="rounded-md border w-full lg:w-fit"
+        className="rounded-md border w-full h-auto lg:w-80 lg:h-80"
       />
 
       <div className="flex flex-col gap-4 w-full bg-background/50 p-4 rounded-md border">
@@ -38,9 +38,9 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
 
         <p className="text-lg break-all">{trail.description}</p>
 
-        <ul className='flex items-center'>
+        <ul className="flex items-center">
           {trail.contributors.map(({ user }) => (
-            <li key={user.id} className='first:ml-0 -ml-2'>
+            <li key={user.id} className="first:ml-0 -ml-2">
               <Avatar className="border border-foreground/25 rounded-full">
                 <AvatarImage src={user.avatar} alt={user.username} />
                 <AvatarFallback>{user.username}</AvatarFallback>
@@ -52,10 +52,7 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
         <UpdatedAt updatedAt={trail.updatedAt} />
 
         {isAdmin && (
-          <Link
-            href={createTrailUrl(trail.id, true)}
-            className="flex items-center gap-2 text-sm text-brand-300"
-          >
+          <Link href={createTrailUrl(trail.id, true)} className="flex items-center gap-2 text-sm text-brand-300">
             Visualizar trilha como administrador
           </Link>
         )}

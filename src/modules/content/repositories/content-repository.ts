@@ -2,18 +2,23 @@ import type {
   BaseContent,
   ContentFile,
   ContentImage,
-  ContentRichText,
   ContentRichTextPreview,
   ContentVideo,
   ContentWithFile,
   ContentWithImage,
   ContentWithRichTextPreview,
   ContentWithVideo,
+  NewContent,
+  UpdateContent,
 } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
+import { contentTable } from '@/modules/database/schema/content';
+import { contentContributionTable } from '@/modules/database/schema/contribution';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 
 export type ContentRepository = {
+  createBaseContent(content: NewContent): Promise<BaseContent>;
+  updateBaseContent(content: UpdateContent): Promise<BaseContent>;
   getBaseContent(id: number): Promise<BaseContent>;
   getContentWithFile(content: BaseContent): Promise<ContentWithFile>;
   getContentWithImage(content: BaseContent): Promise<ContentWithImage>;
@@ -31,6 +36,47 @@ export const CONTENT_DB_FIELDS = Object.freeze({
 });
 
 export class DrizzleContentRepository implements ContentRepository {
+  async createBaseContent(content: NewContent): Promise<BaseContent> {
+    const insertedContent = db
+      .insert(contentTable)
+      .values({
+        title: content.title,
+        active: content.active,
+        contentType: content.contentType,
+        authorId: content.authorId,
+        topicId: content.topicId,
+      })
+      .returning({ id: contentTable.id })
+      .get();
+
+    return this.getBaseContent(insertedContent.id);
+  }
+
+  async updateBaseContent(content: UpdateContent): Promise<BaseContent> {
+    const updatedAt = new Date().toISOString();
+
+    return db.transaction(async tx => {
+      tx.update(contentTable)
+        .set({
+          title: content.title,
+          active: content.active,
+          topicId: content.topicId,
+          updatedAt: updatedAt,
+        })
+        .execute();
+
+      tx.update(contentContributionTable)
+        .set({
+          contentId: content.id,
+          userId: content.contributorId,
+          contributedAt: updatedAt,
+        })
+        .execute();
+
+      return this.getBaseContent(content.id);
+    });
+  }
+
   async getBaseContent(id: number): Promise<BaseContent> {
     const result = await db.query.contentTable.findFirst({
       columns: CONTENT_DB_FIELDS,

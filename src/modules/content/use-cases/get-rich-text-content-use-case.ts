@@ -1,9 +1,8 @@
-import { z } from 'zod';
-
 import { DrizzleTopicRepository } from '@/modules/topic/repositories/topic-repository';
 import type { Topic } from '@/modules/topic/types/topic';
 import { DrizzleTrailRepository } from '@/modules/trail/repositories/trail-repository';
 import type { Trail } from '@/modules/trail/types/trail';
+import { z } from 'zod';
 import { DrizzleContentRepository } from '../repositories/content-repository';
 import { DrizzleRichTextContentRepository } from '../repositories/rich-text-content-repository';
 import type { ContentRichText } from '../types/content';

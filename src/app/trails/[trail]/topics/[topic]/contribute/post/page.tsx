@@ -1,4 +1,4 @@
-import { TextEditor } from '@/modules/content/components/editor';
+import { NewRichTextContentForm } from '@/modules/content/components/new-rich-text-content-form';
 import { getTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
 
 type PageProps = {
@@ -19,7 +19,7 @@ export default async function Page({ params }: PageProps) {
         <p className="text-lg text-muted-foreground break-words">{topicData.description}</p>
       </header>
 
-      <TextEditor />
+      <NewRichTextContentForm topicId={topicId} />
     </div>
   );
 }

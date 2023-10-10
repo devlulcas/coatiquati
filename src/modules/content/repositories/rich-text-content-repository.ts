@@ -1,16 +1,15 @@
-import type { ContentRichText, UpdateContentRichText } from '@/modules/content/types/content';
+import type { ContentRichText, NewContentRichText, UpdateContentRichText } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentRichTextTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
 import { log } from '@/modules/logging/lib/pino';
-import type { Contributor } from '@/modules/user/types/user';
 import { diffJson } from 'diff';
 import { eq } from 'drizzle-orm';
 
 export type RichTextContentRepository = {
   getContent(contentId: number): Promise<ContentRichText>;
-  createContent(content: ContentRichText): Promise<ContentRichText>;
-  updateContent(content: UpdateContentRichText, by: Contributor['id']): Promise<ContentRichText>;
+  createContent(content: NewContentRichText): Promise<ContentRichText>;
+  updateContent(content: UpdateContentRichText): Promise<ContentRichText>;
   omitContent(contentId: number): Promise<void>;
 };
 
@@ -47,17 +46,18 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
   /**
    * Cria um conteúdo de texto complexo
    */
-  async createContent(content: ContentRichText): Promise<ContentRichText> {
-    await db
+  async createContent(content: NewContentRichText): Promise<ContentRichText> {
+    const newContent = db
       .insert(contentRichTextTable)
       .values({
         contentId: content.contentId,
         asJson: content.asJson,
         previewAsJson: content.asJson.content?.slice(0, 5) ?? {},
       })
-      .execute();
+      .returning({ contentId: contentRichTextTable.contentId })
+      .get();
 
-    const resultRichtext = await this.getContent(content.contentId);
+    const resultRichtext = await this.getContent(newContent.contentId);
 
     return resultRichtext;
   }
@@ -65,7 +65,7 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
   /**
    * Atualiza um conteúdo de texto complexo
    */
-  async updateContent(content: UpdateContentRichText, by: Contributor['id']): Promise<ContentRichText> {
+  async updateContent(content: UpdateContentRichText): Promise<ContentRichText> {
     const updatedAt = new Date().toISOString();
 
     const richText = content.asJson;
@@ -86,7 +86,7 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
           .set({
             asJson: richText,
             previewAsJson: preview,
-            updatedAt,
+            updatedAt: updatedAt,
           })
           .where(eq(contentRichTextTable.contentId, content.contentId))
           .execute();
@@ -96,7 +96,7 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
         await tx
           .update(contentContributionTable)
           .set({
-            userId: by,
+            userId: content.contributorId,
             diff: diff,
             contentId: content.contentId,
             contributedAt: updatedAt,

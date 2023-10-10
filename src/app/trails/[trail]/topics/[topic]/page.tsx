@@ -1,4 +1,4 @@
-import { PreviewRichTextContent } from '@/modules/content/components/preview-rich-text-content';
+import { ReadonlyEditor } from '@/modules/content/components/readonly-editor';
 import type {
   Content,
   ContentWithFile,
@@ -119,7 +119,7 @@ function RenderRichTextContentCard({ content }: { content: ContentWithRichTextPr
   return (
     <div className="flex flex-col gap-2 p-2 border rounded">
       <h5 className="text-lg font-bold">{meta.title}</h5>
-      <PreviewRichTextContent richTextContent={data.previewAsJson} />
+      <ReadonlyEditor content={data.previewAsJson} />
       <Link href={`/contents/post/${meta.id}`} className="text-md text-muted-foreground">
         Ler mais
       </Link>
