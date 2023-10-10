@@ -31,3 +31,5 @@ export const db = drizzle(sqlite, {
     ...useSchema,
   },
 });
+
+export type Database = typeof db;
