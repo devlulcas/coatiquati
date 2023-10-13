@@ -1,5 +1,4 @@
 import { getPageSession } from '@/modules/auth/utils/get-page-session';
-import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import coatiSvg from '@/shared/assets/images/coati.svg';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,8 +6,6 @@ import { HeaderNav } from './header-nav';
 
 export async function Header() {
   const session = await getPageSession();
-
-  const hasAdminAccess = session !== null && isAdminOrAbove(session.user.role);
 
   return (
     <header className="z-50 top-0 sticky border-b h-[--header-height] bg-background/75 backdrop-blur-md">
@@ -18,7 +15,7 @@ export async function Header() {
           <h1 className="text-xs lg:text-xl font-bold">CoatiQuati</h1>
         </Link>
 
-        <HeaderNav hasAdminAccess={hasAdminAccess} isLoggedIn={session !== null} />
+        <HeaderNav user={session?.user} />
       </div>
     </header>
   );

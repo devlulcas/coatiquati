@@ -1,21 +1,18 @@
-'use client';
-
 import { SignOutForm } from '@/modules/auth/components/sign-out-form';
+import { isAdminOrAbove } from '@/modules/auth/utils/is';
+import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
+import type { User } from '@/modules/user/types/user';
 import { Button } from '@/shared/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/shared/components/ui/sheet';
 import { MenuIcon } from 'lucide-react';
 import Link from 'next/link';
-import { usePerfStore } from '../../stores/perf-mode-store';
 
 type HeaderNavProps = {
-  hasAdminAccess?: boolean;
-  isLoggedIn?: boolean;
+  user?: Pick<User, 'role' | 'username'>;
 };
 
-export function HeaderNav({ hasAdminAccess, isLoggedIn }: HeaderNavProps) {
-  const togglePerfMode = usePerfStore(state => state.togglePerfMode);
-  const perfMode = usePerfStore(state => state.perfMode);
-
+export function HeaderNav({ user }: HeaderNavProps) {
+  const hasAdminAccess = user && isAdminOrAbove(user.role);
   return (
     <>
       <Sheet>
@@ -43,12 +40,17 @@ export function HeaderNav({ hasAdminAccess, isLoggedIn }: HeaderNavProps) {
             </Button>
           )}
 
-          {isLoggedIn ? (
-            <Button className="w-full" variant="destructive" asChild>
-              <SignOutForm className="w-full" formClassName="w-full">
-                Sair
-              </SignOutForm>
-            </Button>
+          {typeof user !== 'undefined' ? (
+            <>
+              <Button className="w-full" variant="destructive" asChild>
+                <SignOutForm className="w-full" formClassName="w-full">
+                  Sair
+                </SignOutForm>
+              </Button>
+              <Button className="w-full" variant="secondary" asChild>
+                <Link href={createProfileUrl(user.username)}>Perfil</Link>
+              </Button>
+            </>
           ) : (
             <Button className="w-full" variant="secondary" asChild>
               <Link href="/sign-in">Entrar</Link>
@@ -72,19 +74,20 @@ export function HeaderNav({ hasAdminAccess, isLoggedIn }: HeaderNavProps) {
           </Button>
         )}
 
-        {isLoggedIn ? (
-          <Button variant="ghost" asChild>
-            <SignOutForm>Sair</SignOutForm>
-          </Button>
+        {typeof user !== 'undefined' ? (
+          <>
+            <Button variant="ghost" asChild>
+              <SignOutForm>Sair</SignOutForm>
+            </Button>
+            <Button variant="ghost" asChild>
+              <Link href={createProfileUrl(user.username)}>Perfil</Link>
+            </Button>
+          </>
         ) : (
           <Button variant="ghost" asChild>
             <Link href="/sign-in">Entrar</Link>
           </Button>
         )}
-
-        <Button variant="ghost" onClick={togglePerfMode}>
-          {perfMode ? 'Desativar' : 'Ativar'} modo de performance
-        </Button>
       </div>
     </>
   );
