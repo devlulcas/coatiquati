@@ -1,6 +1,6 @@
 import type { JSONContent } from '@tiptap/core';
 import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
-import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentCommentTable } from './comment';
 import { contentContributionTable } from './contribution';
 import { topicTable } from './topic';
@@ -46,6 +46,8 @@ export const contentTableRelations = relations(contentTable, ({ one, many }) => 
   }),
 }));
 
+// IMAGE
+
 export type ContentImageTable = InferSelectModel<typeof contentImageTable>;
 export type NewContentImageTable = InferInsertModel<typeof contentImageTable>;
 
@@ -68,6 +70,15 @@ export const contentImageTable = sqliteTable('content_image', {
     .notNull(),
 });
 
+export const contentImageTableRelations = relations(contentImageTable, ({ one }) => ({
+  content: one(contentTable, {
+    fields: [contentImageTable.contentId],
+    references: [contentTable.id],
+  }),
+}));
+
+// RICH TEXT
+
 export type ContentRichTextTable = InferSelectModel<typeof contentRichTextTable>;
 export type NewContentRichTextTable = InferInsertModel<typeof contentRichTextTable>;
 
@@ -79,8 +90,8 @@ export const contentRichTextTable = sqliteTable('content_rich_text', {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
-  previewAsJson: blob('preview_as_json').$type<JSONContent>().notNull(),
-  asJson: blob('as_json').$type<JSONContent>().notNull(),
+  previewAsJson: text('preview_as_json', { mode: 'json' }).$type<JSONContent>().notNull(),
+  asJson: text('as_json', { mode: 'json' }).$type<JSONContent>().notNull(),
   createdAt: text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
@@ -88,6 +99,15 @@ export const contentRichTextTable = sqliteTable('content_rich_text', {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });
+
+export const contentRichTextTableRelations = relations(contentRichTextTable, ({ one }) => ({
+  content: one(contentTable, {
+    fields: [contentRichTextTable.contentId],
+    references: [contentTable.id],
+  }),
+}));
+
+// FILE
 
 export type ContentFileTable = InferSelectModel<typeof contentFileTable>;
 export type NewContentFileTable = InferInsertModel<typeof contentFileTable>;
@@ -113,6 +133,15 @@ export const contentFileTable = sqliteTable('content_file', {
     .notNull(),
 });
 
+export const contentFileTableRelations = relations(contentFileTable, ({ one }) => ({
+  content: one(contentTable, {
+    fields: [contentFileTable.contentId],
+    references: [contentTable.id],
+  }),
+}));
+
+// VIDEO
+
 export type ContentVideoTable = InferSelectModel<typeof contentVideoTable>;
 export type NewContentVideoTable = InferInsertModel<typeof contentVideoTable>;
 
@@ -134,3 +163,10 @@ export const contentVideoTable = sqliteTable('content_video', {
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
 });
+
+export const contentVideoTableRelations = relations(contentVideoTable, ({ one }) => ({
+  content: one(contentTable, {
+    fields: [contentVideoTable.contentId],
+    references: [contentTable.id],
+  }),
+}));
