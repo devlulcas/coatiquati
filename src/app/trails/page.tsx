@@ -1,4 +1,6 @@
 import { TrailCard } from '@/modules/trail/components/trail-card';
+import { groupTrailsByCategory } from '@/modules/trail/lib/group-trails-by-category';
+import type { Trail } from '@/modules/trail/types/trail';
 import { getTrailsUseCase } from '@/modules/trail/use-cases/get-trails-use-case';
 import coatiSvg from '@/shared/assets/images/coati.svg';
 import { Button } from '@/shared/components/ui/button';
@@ -18,13 +20,11 @@ export default async function Page(props: PageProps) {
     search: props.searchParams.search,
   });
 
+ const trailsGroupedByCategory = groupTrailsByCategory(trails);
+
   return (
     <main className="py-8 container">
-      <form
-        action="/trails"
-        method="get"
-        className="flex items-center justify-center space-x-2 mb-8"
-      >
+      <form action="/trails" method="get" className="flex items-center justify-center space-x-2 mb-8">
         <Input type="text" name="search" placeholder="Buscar trilha" />
         <Button type="submit">Buscar</Button>
       </form>
@@ -37,11 +37,16 @@ export default async function Page(props: PageProps) {
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-        {trails.map(trail => (
-          <TrailCard key={trail.id} trail={trail} />
-        ))}
-      </div>
+      {trailsGroupedByCategory.map(([category, trails]) => (
+        <section key={category}>
+          <h2 className="text-2xl font-bold">{category}</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+            {trails.map(trail => (
+              <TrailCard key={trail.id} trail={trail} />
+            ))}
+          </div>
+        </section>
+      ))}
     </main>
   );
 }
