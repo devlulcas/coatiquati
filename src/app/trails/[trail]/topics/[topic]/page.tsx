@@ -8,6 +8,7 @@ import type {
 } from '@/modules/content/types/content';
 import { ContributionOptionsButton } from '@/modules/topic/components/contribution-options-button';
 import { getTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
+import { ArrowRightIcon, FileIcon, ImageIcon, TextIcon, VideoIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
@@ -16,6 +17,25 @@ type PageProps = {
   params: {
     topic: string;
   };
+};
+
+const contentTypeIcon = {
+  image: {
+    label: 'Imagem',
+    icon: <ImageIcon />,
+  },
+  rich_text: {
+    label: 'Texto',
+    icon: <TextIcon />,
+  },
+  video: {
+    label: 'Vídeo',
+    icon: <VideoIcon />,
+  },
+  file: {
+    label: 'Arquivo',
+    icon: <FileIcon />,
+  },
 };
 
 export default async function Page({ params }: PageProps) {
@@ -31,8 +51,12 @@ export default async function Page({ params }: PageProps) {
 
         <ul className="flex gap-2 items-center">
           {topicData.contents.map(content => (
-            <li key={content.id} className="px-2 py-1 border rounded-full bg-card/90 text-card-foreground">
-              {content.contentType}
+            <li
+              key={content.id}
+              className="px-2 py-1 flex items-center gap-2 border rounded-lg bg-card/90 text-card-foreground"
+            >
+              {contentTypeIcon[content.contentType].icon}
+              {contentTypeIcon[content.contentType].label}
             </li>
           ))}
         </ul>
@@ -44,8 +68,7 @@ export default async function Page({ params }: PageProps) {
 
       <ul className="flex flex-col gap-3">
         {topicData.contents.map(content => (
-          <li key={content.id} className="flex flex-col gap-2">
-            <h4 className="text-lg font-bold">{content.title}</h4>
+          <li key={content.id}>
             <RenderCorrectContentCard content={content} />
           </li>
         ))}
@@ -79,13 +102,12 @@ function RenderFileContentCard({ content }: { content: ContentWithFile }) {
   const { content: data, ...meta } = content;
 
   return (
-    <div className="flex flex-col gap-2 p-2 border rounded">
-      <h5 className="text-lg font-bold">{meta.title}</h5>
+    <RenderedContentWrapper title={meta.title}>
       <Link href={data.url} className="text-md text-muted-foreground">
         {data.filename} - <span className="p-1 border rounded">{data.filesize}</span>
       </Link>
       <p className="text-md text-muted-foreground">{data.visualDescription}</p>
-    </div>
+    </RenderedContentWrapper>
   );
 }
 
@@ -93,11 +115,10 @@ function RenderImageContentCard({ content }: { content: ContentWithImage }) {
   const { content: data, ...meta } = content;
 
   return (
-    <div className="flex flex-col gap-2 p-2 border rounded">
-      <h5 className="text-lg font-bold">{meta.title}</h5>
+    <RenderedContentWrapper title={meta.title}>
       <Image className="w-full rounded" alt={data.alt} src={data.src} width={1240} height={1080} />
       <p className="text-md text-muted-foreground">{data.description}</p>
-    </div>
+    </RenderedContentWrapper>
   );
 }
 
@@ -105,11 +126,10 @@ function RenderVideoContentCard({ content }: { content: ContentWithVideo }) {
   const { content: data, ...meta } = content;
 
   return (
-    <div className="flex flex-col gap-2 p-2 border rounded">
-      <h5 className="text-lg font-bold">{meta.title}</h5>
+    <RenderedContentWrapper title={meta.title}>
       <LiteYouTubeEmbed id={data.src} title={meta.title} />
       <p className="text-md text-muted-foreground">{data.description}</p>
-    </div>
+    </RenderedContentWrapper>
   );
 }
 
@@ -117,12 +137,20 @@ function RenderRichTextContentCard({ content }: { content: ContentWithRichTextPr
   const { content: data, ...meta } = content;
 
   return (
-    <div className="flex flex-col gap-2 p-2 border rounded">
-      <h5 className="text-lg font-bold">{meta.title}</h5>
+    <RenderedContentWrapper title={meta.title}>
       <ReadonlyEditor content={data.previewAsJson} />
-      <Link href={`/contents/post/${meta.id}`} className="text-md text-muted-foreground">
-        Ler mais
+      <Link href={`/contents/${meta.id}`} className="text-md text-muted-foreground flex items-center gap-2">
+        Ler mais <ArrowRightIcon size={16} />
       </Link>
-    </div>
+    </RenderedContentWrapper>
+  );
+}
+
+function RenderedContentWrapper({ children, title }: { children: React.ReactNode; title: string }) {
+  return (
+    <section className="flex flex-col gap-2 p-2 border rounded bg-background/50">
+      <h5 className="text-lg font-bold">{title}</h5>
+      {children}
+    </section>
   );
 }
