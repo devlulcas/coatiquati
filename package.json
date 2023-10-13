@@ -50,6 +50,7 @@
     "diff": "^5.1.0",
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.28.6",
+    "eslint-config-prettier": "^9.0.0",
     "framer-motion": "^10.16.4",
     "lucia": "^2.7.1",
     "lucide-react": "^0.263.1",
@@ -62,8 +63,7 @@
     "react-lite-youtube-embed": "^2.3.52",
     "tailwind-merge": "^1.14.0",
     "uploadthing": "^5.7.1",
-    "zod": "^3.22.4",
-    "zustand": "^4.4.3"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
@@ -77,7 +77,6 @@
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",
     "eslint-config-react": "^1.1.7",
-    "eslint-plugin-prettier": "^5.0.0",
     "pino-pretty": "^10.2.3",
     "postcss": "8.4.27",
     "prettier": "^3.0.3",
