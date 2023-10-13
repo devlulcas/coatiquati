@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { createTrailUrl } from '../../lib/create-trail-url';
 import type { Trail } from '../../types/trail';
+import { UserAvatar } from '@/shared/components/common/user-avatar';
 
 type TrailHeadingProps = {
   trail: Trail;
@@ -61,10 +62,7 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
           className="absolute top-4 left-4 flex items-center gap-2 group"
           href={createProfileUrl(trail.author.username)}
         >
-          <Avatar className="border border-foreground/25 rounded-full">
-            <AvatarImage src={trail.author.avatar} alt={trail.author.username} />
-            <AvatarFallback>{trail.author.username}</AvatarFallback>
-          </Avatar>
+          <UserAvatar user={trail.author} />
 
           <span className="text-sm transition-all -translate-x-full opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
             {trail.author.username}
