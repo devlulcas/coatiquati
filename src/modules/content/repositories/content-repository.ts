@@ -17,7 +17,7 @@ import { contentContributionTable } from '@/modules/database/schema/contribution
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 
 export type ContentRepository = {
-  createBaseContent(db: Database, content: NewContent): Promise<BaseContent>;
+  createBaseContent(db: Database, content: NewContent): Promise<number>;
   updateBaseContent(db: Database, content: UpdateContent): Promise<BaseContent>;
   getBaseContent(id: number): Promise<BaseContent>;
   getContentWithFile(content: BaseContent): Promise<ContentWithFile>;
@@ -36,8 +36,8 @@ export const CONTENT_DB_FIELDS = Object.freeze({
 });
 
 export class DrizzleContentRepository implements ContentRepository {
-  async createBaseContent(db: Database, content: NewContent): Promise<BaseContent> {
-    const insertedContent = db
+  async createBaseContent(idb: Database, content: NewContent): Promise<number> {
+    const insertedContent = idb
       .insert(contentTable)
       .values({
         title: content.title,
@@ -49,7 +49,7 @@ export class DrizzleContentRepository implements ContentRepository {
       .returning({ id: contentTable.id })
       .get();
 
-    return this.getBaseContent(insertedContent.id);
+    return insertedContent.id;
   }
 
   async updateBaseContent(db: Database, content: UpdateContent): Promise<BaseContent> {
@@ -179,7 +179,7 @@ export class DrizzleContentRepository implements ContentRepository {
     return {
       ...content,
       contentType: 'rich_text',
-      content: resultRichtext,
+      content: { ...resultRichtext, previewAsJson: JSON.parse(String(resultRichtext.previewAsJson)) },
     };
   }
 }
