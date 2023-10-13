@@ -2,7 +2,6 @@ import { db } from '@/modules/database/db';
 import { trailContributionTable } from '@/modules/database/schema/contribution';
 import { trailTable } from '@/modules/database/schema/trail';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
-import { log } from '@/modules/logging/lib/pino';
 import { TOPIC_DB_FIELDS } from '@/modules/topic/repositories/topic-repository';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
@@ -67,10 +66,8 @@ export class DrizzleTrailRepository implements TrailRepository {
         throw new Error('Erro ao criar trilha');
       }
 
-      log.debug('Trail created', data);
       return data;
     } catch (error) {
-      log.error(error);
       throw new Error('Erro ao criar trilha');
     }
   }
@@ -107,10 +104,8 @@ export class DrizzleTrailRepository implements TrailRepository {
         },
       });
 
-      log.debug('Trails found', data);
       return data;
     } catch (error) {
-      log.error(error);
       throw new Error('Erro ao buscar trilhas');
     }
   }
@@ -146,10 +141,8 @@ export class DrizzleTrailRepository implements TrailRepository {
         throw new Error('Trilha não encontrada');
       }
 
-      log.debug('Trail found', data);
       return data;
     } catch (error) {
-      log.error(error);
       throw new Error('Erro ao buscar trilhas');
     }
   }
@@ -171,12 +164,8 @@ export class DrizzleTrailRepository implements TrailRepository {
 
         const data = await this.getTrailById(id);
 
-        log.debug('Trail updated', data);
-
         return data;
       } catch (error) {
-        log.error(error);
-
         tx.rollback();
 
         throw new Error('Erro ao atualizar trilha');
@@ -230,10 +219,8 @@ export class DrizzleTrailRepository implements TrailRepository {
         throw new Error('Erro ao buscar trilha');
       }
 
-      log.debug('Trail found', data);
       return data;
     } catch (error) {
-      log.error(error);
       throw new Error('Erro ao buscar trilha');
     }
   }

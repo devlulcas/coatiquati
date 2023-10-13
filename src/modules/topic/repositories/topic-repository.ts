@@ -3,7 +3,6 @@ import type { Content } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { topicTable } from '@/modules/database/schema/topic';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
-import { log } from '@/modules/logging/lib/pino';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
 import type { NewTopic, Topic, TopicWithContentArray, UpdateTopic } from '../types/topic';
@@ -59,7 +58,6 @@ export class DrizzleTopicRepository implements TopicRepository {
 
       return data;
     } catch (error) {
-      log.error(error);
       throw new Error('Erro ao criar trilha');
     }
   }
@@ -90,7 +88,6 @@ export class DrizzleTopicRepository implements TopicRepository {
         },
       });
     } catch (error) {
-      log.error(error);
       throw new Error('Erro ao buscar trilhas');
     }
   }
@@ -122,7 +119,6 @@ export class DrizzleTopicRepository implements TopicRepository {
 
       return data;
     } catch (error) {
-      log.error(error);
       throw new Error('Erro ao buscar trilhas');
     }
   }
@@ -191,7 +187,6 @@ export class DrizzleTopicRepository implements TopicRepository {
 
       return dataWithFilledContents;
     } catch (error) {
-      log.error(error);
       throw new Error('Erro ao buscar trilha');
     }
   }
@@ -210,7 +205,6 @@ export class DrizzleTopicRepository implements TopicRepository {
 
         return data;
       } catch (error) {
-        log.error(error);
         throw new Error('Erro ao atualizar trilha');
       }
     });

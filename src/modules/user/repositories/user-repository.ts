@@ -1,7 +1,6 @@
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
-import { log } from '@/modules/logging/lib/pino';
 import { CATEGORY_DB_FIELDS, TRAIL_DB_FIELDS } from '@/modules/trail/repositories/trail-repository';
 import type { UpdateUser, User, UserProfile } from '@/modules/user/types/user';
 import { eq } from 'drizzle-orm';
@@ -53,7 +52,6 @@ export class DrizzleUserRepository implements UserRepository {
 
       return userTableToUserMapper(data, false);
     } catch (error) {
-      log.error(error);
       throw new Error('Erro ao atualizar usuário');
     }
   }
@@ -69,13 +67,11 @@ export class DrizzleUserRepository implements UserRepository {
       });
 
       if (!data) {
-        log.warn('User not found');
         return null;
       }
 
       return userTableToUserMapper(data, false);
     } catch (error) {
-      log.error(error);
       return null;
     }
   }
@@ -130,7 +126,6 @@ export class DrizzleUserRepository implements UserRepository {
       });
 
       if (!data) {
-        log.warn('User not found');
         return null;
       }
 
@@ -141,7 +136,6 @@ export class DrizzleUserRepository implements UserRepository {
 
       return result;
     } catch (error) {
-      log.error(error);
       return null;
     }
   }
