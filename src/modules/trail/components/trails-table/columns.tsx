@@ -38,6 +38,11 @@ export const trailsColumns: ColumnDef<Trail>[] = [
     cell: ({ row }) => new Date(row.original.updatedAt).toLocaleString(),
   },
   {
+    accessorKey: 'category',
+    header: ({ column }) => <SortedColumnHeader column={column}>Categoria</SortedColumnHeader>,
+    cell: ({ row }) => row.original.category || '-',
+  },
+  {
     accessorKey: 'thumbnail',
     header: 'Thumbnail',
     cell: ({ row }) => {
