@@ -2,7 +2,6 @@ import type { ContentRichText, NewContent, UpdateContent } from '@/modules/conte
 import { db } from '@/modules/database/db';
 import { contentRichTextTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
-import { log } from '@/modules/logging/lib/pino';
 import type { JSONContent } from '@tiptap/core';
 import { diffJson } from 'diff';
 import { eq } from 'drizzle-orm';
@@ -38,7 +37,6 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
     });
 
     if (!resultRichtext) {
-      log.error('Erro ao buscar conteúdo de rich text com id = ' + contentId);
       throw new Error('Erro ao buscar conteúdo de rich text com id = ' + contentId);
     }
 
@@ -51,28 +49,35 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
   async createContent(baseContent: NewContent, richText: JSONContent): Promise<ContentRichText> {
     const repository = new DrizzleContentRepository();
 
-    return db.transaction(async tx => {
+    const contentId = await db.transaction(async tx => {
       try {
-        const insertedContent = await repository.createBaseContent(tx, baseContent);
+        const insertedContentId = await repository.createBaseContent(tx, baseContent);
 
-        const newContent = tx
+        const preview = richText.content?.slice(0, 5) ?? {};
+
+        console.table({
+          contentId: insertedContentId,
+          asJson: richText,
+          previewAsJson: preview,
+        });
+
+        await tx
           .insert(contentRichTextTable)
           .values({
-            contentId: insertedContent.id,
+            contentId: insertedContentId,
             asJson: richText,
-            previewAsJson: richText.content?.slice(0, 5) ?? {},
+            previewAsJson: preview,
           })
-          .returning({ contentId: contentRichTextTable.contentId })
-          .get();
+          .execute();
 
-        const resultRichtext = await this.getContent(newContent.contentId);
-
-        return resultRichtext;
+        return insertedContentId;
       } catch (error) {
-        log.error('Erro ao criar conteúdo de rich text com id = ' + richText.contentId, error);
+        tx.rollback();
         throw new Error('Erro ao criar conteúdo de rich text com id = ' + richText.contentId);
       }
     });
+
+    return this.getContent(contentId);
   }
 
   /**
@@ -83,13 +88,12 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
     const repository = new DrizzleContentRepository();
 
     if (typeof richText === 'undefined') {
-      log.error('Erro ao atualizar conteúdo de rich text com id = ' + baseContent.id);
       throw new Error('Erro ao atualizar conteúdo de rich text com id = ' + baseContent.id);
     }
 
     return db.transaction(async tx => {
       try {
-        const preview = richText?.content?.slice(0, 5) ?? {};
+        const preview = richText.content?.slice(0, 5) ?? {};
 
         const oldContent = await this.getContent(baseContent.id);
 
@@ -122,7 +126,7 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
 
         return resultRichtext;
       } catch (error) {
-        log.error('Erro ao atualizar conteúdo de rich text com id = ' + baseContent.id);
+        tx.rollback();
         throw new Error('Erro ao atualizar conteúdo de rich text com id = ' + baseContent.id);
       }
     });
