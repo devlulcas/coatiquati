@@ -53,7 +53,11 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
       try {
         const insertedContentId = await repository.createBaseContent(tx, baseContent);
 
-        const preview = richText.content?.slice(0, 5) ?? {};
+        // Troca o conteúdo por um preview, limitando a 3 itens
+        const preview: JSONContent = {
+          ...richText,
+          content: richText.content?.slice(0, 3) ?? []
+        }
 
         console.table({
           contentId: insertedContentId,
