@@ -37,6 +37,11 @@ export const usersColumns: ColumnDef<User>[] = [
     cell: ({ row }) => <UserAvatar avatar={row.original.avatar} username={row.original.username} />,
   },
   {
+    id: 'verification_status',
+    header: 'Email verificado',
+    cell: ({ row }) => (row.original.emailVerified ? 'Verificado' : 'Não verificado'),
+  },
+  {
     id: 'edit',
     cell: ({ row }) => <EditUserRole user={row.original} />,
   },
