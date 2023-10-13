@@ -16,6 +16,7 @@ export function EditorActionButton({ icon, label, onClick, disabled, active, cla
   return (
     <Button
       onClick={onClick}
+      type="button"
       disabled={disabled}
       className={cn('gap-2 flex-1 min-w-fit', { 'bg-brand-500 text-brand-50': active }, className)}
     >
