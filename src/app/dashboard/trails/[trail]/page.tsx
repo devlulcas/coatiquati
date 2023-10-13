@@ -19,7 +19,7 @@ export default async function Page({ params }: PageProps) {
 
   if (!trailData) redirect('/dashboard');
 
-  const session = await getPageSession()
+  const session = await getPageSession();
 
   const isAdmin = session !== null && isAdminOrAbove(session.user.role);
 

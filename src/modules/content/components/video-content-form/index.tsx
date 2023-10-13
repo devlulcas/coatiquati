@@ -1,14 +1,7 @@
 'use client';
 
 import { Button } from '@/shared/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -72,16 +65,8 @@ export function VideoContentForm({ onSubmit, className, defaultValues }: VideoCo
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('flex h-full flex-col gap-4', className)}
-      >
-        <div
-          className={cn(
-            'aspect-video h-80 rounded-lg overflow-hidden ',
-            youtubeId ? 'bg-black' : 'bg-neutral-900',
-          )}
-        >
+      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('flex h-full flex-col gap-4', className)}>
+        <div className={cn('aspect-video h-80 rounded-lg overflow-hidden ', youtubeId ? 'bg-black' : 'bg-neutral-900')}>
           {youtubeId ? (
             <LiteYouTubeEmbed id={youtubeId} title={form.watch('title')} />
           ) : (
@@ -99,11 +84,7 @@ export function VideoContentForm({ onSubmit, className, defaultValues }: VideoCo
             <FormItem>
               <FormLabel>URL do vídeo no Youtube</FormLabel>
               <FormControl>
-                <Input
-                  type="url"
-                  placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                  {...field}
-                />
+                <Input type="url" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

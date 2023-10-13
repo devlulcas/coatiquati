@@ -1,14 +1,7 @@
 'use client';
 
 import { Button } from '@/shared/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/shared/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { cn } from '@/shared/utils/cn';
@@ -49,19 +42,10 @@ export function ImageContentForm({ onSubmit, className, defaultValues }: ImageCo
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('flex h-full flex-col gap-4', className)}
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('flex h-full flex-col gap-4', className)}>
         {src ? (
           <div className="w-full flex">
-            <Image
-              src={src}
-              alt={form.watch('alt')}
-              className="rounded-lg mx-auto"
-              width={500}
-              height={500}
-            />
+            <Image src={src} alt={form.watch('alt')} className="rounded-lg mx-auto" width={500} height={500} />
           </div>
         ) : (
           <UploadDropzone

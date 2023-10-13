@@ -20,7 +20,7 @@ export default async function Page(props: PageProps) {
     search: props.searchParams.search,
   });
 
- const trailsGroupedByCategory = groupTrailsByCategory(trails);
+  const trailsGroupedByCategory = groupTrailsByCategory(trails);
 
   return (
     <main className="py-8 container">

@@ -19,12 +19,9 @@ export const sensibleOperationTokenTable = sqliteTable('user_sensible_operation_
   }).notNull(),
 });
 
-export const sensibleOperationTokenTableRelations = relations(
-  sensibleOperationTokenTable,
-  ({ one }) => ({
-    user: one(userTable, {
-      fields: [sensibleOperationTokenTable.userId],
-      references: [userTable.id],
-    }),
+export const sensibleOperationTokenTableRelations = relations(sensibleOperationTokenTable, ({ one }) => ({
+  user: one(userTable, {
+    fields: [sensibleOperationTokenTable.userId],
+    references: [userTable.id],
   }),
-);
+}));

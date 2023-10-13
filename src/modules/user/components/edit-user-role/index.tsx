@@ -3,13 +3,7 @@
 import { roles } from '@/modules/auth/constants/roles';
 import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { Button } from '@/shared/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-} from '@/shared/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { SkullIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';

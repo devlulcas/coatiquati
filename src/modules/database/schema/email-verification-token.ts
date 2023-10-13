@@ -12,12 +12,9 @@ export const emailVerificationTokenTable = sqliteTable('user_email_verification_
   }).notNull(),
 });
 
-export const emailVerificationTokenTableRelations = relations(
-  emailVerificationTokenTable,
-  ({ one }) => ({
-    user: one(userTable, {
-      fields: [emailVerificationTokenTable.userId],
-      references: [userTable.id],
-    }),
+export const emailVerificationTokenTableRelations = relations(emailVerificationTokenTable, ({ one }) => ({
+  user: one(userTable, {
+    fields: [emailVerificationTokenTable.userId],
+    references: [userTable.id],
   }),
-);
+}));

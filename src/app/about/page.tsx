@@ -24,17 +24,14 @@ export default function Page() {
             {' '}
             mim (Lucas Alves Rego)
           </a>
-          , com o objetivo de ajudar pessoas interessadas em aprender algo novo e que não sabem por
-          onde começar. O projeto foi desenvolvido como o meu TCC e está em desenvolvimento.
+          , com o objetivo de ajudar pessoas interessadas em aprender algo novo e que não sabem por onde começar. O
+          projeto foi desenvolvido como o meu TCC e está em desenvolvimento.
         </p>
 
         <p>
-          <em className="text-brand-400 hover:text-brand-300 font-semibold">
-            Porque o nome CoatiQuati?
-          </em>
-          <br />O quati é um animal que vive na América do Sul e Central, e é conhecido por ser um
-          animal curioso e que gosta de se aventurar. O nome CoatiQuati é uma brincadeira com o nome
-          do animal em inglês e em português.
+          <em className="text-brand-400 hover:text-brand-300 font-semibold">Porque o nome CoatiQuati?</em>
+          <br />O quati é um animal que vive na América do Sul e Central, e é conhecido por ser um animal curioso e que
+          gosta de se aventurar. O nome CoatiQuati é uma brincadeira com o nome do animal em inglês e em português.
         </p>
 
         <Image src={coatiSvg} alt="Coati" className="mx-auto my-auto opacity-95" width={300} />

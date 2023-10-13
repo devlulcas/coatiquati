@@ -1,11 +1,7 @@
 import { relations, sql, type InferSelectModel } from 'drizzle-orm';
 import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import type { Role } from '../../auth/constants/roles';
-import {
-  contentContributionTable,
-  topicContributionTable,
-  trailContributionTable,
-} from './contribution';
+import { contentContributionTable, topicContributionTable, trailContributionTable } from './contribution';
 import { emailVerificationTokenTable } from './email-verification-token';
 import { passwordResetTokenTable } from './password-reset-token';
 import { sensibleOperationTokenTable } from './sensible-action-token';

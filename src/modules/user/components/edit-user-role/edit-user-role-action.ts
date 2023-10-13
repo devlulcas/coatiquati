@@ -1,10 +1,7 @@
 'use server';
 
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
-import {
-  setUserRoleUseCase,
-  type SetUserRoleSchema,
-} from '@/modules/user/use-cases/set-user-role-use-case';
+import { setUserRoleUseCase, type SetUserRoleSchema } from '@/modules/user/use-cases/set-user-role-use-case';
 import { revalidatePath } from 'next/cache';
 
 export async function editUserRoleAction(data: SetUserRoleSchema) {

@@ -17,6 +17,4 @@ export const createPaginationSchemaWithSearch = (take = 10, skip = 0) => {
 
 export type PaginationSchema = z.infer<ReturnType<typeof createPaginationSchema>>;
 
-export type PaginationSchemaWithSearch = z.infer<
-  ReturnType<typeof createPaginationSchemaWithSearch>
->;
+export type PaginationSchemaWithSearch = z.infer<ReturnType<typeof createPaginationSchemaWithSearch>>;

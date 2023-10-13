@@ -1,11 +1,11 @@
 import { db } from '@/modules/database/db';
 import { trailContributionTable } from '@/modules/database/schema/contribution';
-import { trailTable } from '@/modules/database/schema/trail';
+import { categoryTable, trailTable } from '@/modules/database/schema/trail';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { TOPIC_DB_FIELDS } from '@/modules/topic/repositories/topic-repository';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
-import type { NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
+import type { Category, NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
 
 export type TrailRepository = {
   createTrail: (trail: NewTrail) => Promise<Trail>;

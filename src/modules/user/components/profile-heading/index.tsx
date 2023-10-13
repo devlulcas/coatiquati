@@ -24,10 +24,7 @@ export function ProfileHeading({ user }: ProfileHeadingProps) {
         <h1 className="text-3xl font-bold mb-3">{user.username}</h1>
         <UserRoleBadge
           role={user.role}
-          className={[
-            'px-2 py-1 rounded-md text-white font-bold text-sm',
-            'bg-' + roleVisualIdentifier.color,
-          ]}
+          className={['px-2 py-1 rounded-md text-white font-bold text-sm', 'bg-' + roleVisualIdentifier.color]}
         />
       </div>
     </div>
