@@ -3,7 +3,10 @@ import { newContentSchema } from './new-content-schema';
 
 export const newRichTextContentSchema = newContentSchema.merge(
   z.object({
-    content: z.any(),
+    content: z.object({
+      type: z.literal('doc'),
+      content: z.array(z.any()),
+    }),
   }),
 );
 
