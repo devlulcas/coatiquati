@@ -6,6 +6,7 @@ import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagina
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
 import type { NewTopic, Topic, TopicWithContentArray, UpdateTopic } from '../types/topic';
+import { topicContributionTable } from '@/modules/database/schema/contribution';
 
 export type TopicRepository = {
   createTopic: (topic: NewTopic) => Promise<Topic>;
@@ -13,6 +14,8 @@ export type TopicRepository = {
   getTopicById: (id: number) => Promise<Topic>;
   updateTopic: (topic: UpdateTopic) => Promise<Topic>;
   getTopicWithContentArray: (id: number) => Promise<TopicWithContentArray>;
+  enableTopic: (id: number) => Promise<void>;
+  omitTopic: (id: number) => Promise<void>;
 };
 
 export const TOPIC_DB_FIELDS = Object.freeze({
@@ -29,28 +32,11 @@ export const TOPIC_DB_FIELDS = Object.freeze({
 export class DrizzleTopicRepository implements TopicRepository {
   constructor(private readonly contentRepository: ContentRepository) {}
 
-  async createTopic(topic: NewTopic): Promise<Topic> {
+  async createTopic(topic: NewTopic, database = db): Promise<Topic> {
     try {
-      const newTopic = db.insert(topicTable).values(topic).returning().get();
+      const newTopic = database.insert(topicTable).values(topic).returning({ id: topicTable.id }).get();
 
-      const data = await db.query.topicTable.findFirst({
-        columns: TOPIC_DB_FIELDS,
-        where: (fields, operators) => {
-          return operators.eq(fields.id, newTopic.id);
-        },
-        with: {
-          author: {
-            columns: CONTRIBUTOR_DB_FIELDS,
-          },
-          contributors: {
-            with: {
-              user: {
-                columns: CONTRIBUTOR_DB_FIELDS,
-              },
-            },
-          },
-        },
-      });
+      const data = await this.getTopicById(newTopic.id, database);
 
       if (!data) {
         throw new Error('Erro ao criar trilha');
@@ -58,13 +44,14 @@ export class DrizzleTopicRepository implements TopicRepository {
 
       return data;
     } catch (error) {
+      console.error(error);
       throw new Error('Erro ao criar trilha');
     }
   }
 
-  async getTopics(params: PaginationSchemaWithSearch): Promise<Topic[]> {
+  async getTopics(params: PaginationSchemaWithSearch, database = db): Promise<Topic[]> {
     try {
-      return db.query.topicTable.findMany({
+      return database.query.topicTable.findMany({
         columns: TOPIC_DB_FIELDS,
         limit: params.take,
         offset: params.skip,
@@ -88,13 +75,14 @@ export class DrizzleTopicRepository implements TopicRepository {
         },
       });
     } catch (error) {
+      console.error(error);
       throw new Error('Erro ao buscar trilhas');
     }
   }
 
-  async getTopicById(id: number): Promise<Topic> {
+  async getTopicById(id: number, database = db): Promise<Topic> {
     try {
-      const data = await db.query.topicTable.findFirst({
+      const data = await database.query.topicTable.findFirst({
         columns: TOPIC_DB_FIELDS,
         where: (fields, operators) => {
           return operators.eq(fields.id, id);
@@ -119,13 +107,14 @@ export class DrizzleTopicRepository implements TopicRepository {
 
       return data;
     } catch (error) {
+      console.error(error);
       throw new Error('Erro ao buscar trilhas');
     }
   }
 
-  async getTopicWithContentArray(id: number): Promise<TopicWithContentArray> {
+  async getTopicWithContentArray(id: number, database = db): Promise<TopicWithContentArray> {
     try {
-      const data = await db.query.topicTable.findFirst({
+      const data = await database.query.topicTable.findFirst({
         columns: TOPIC_DB_FIELDS,
         where: (fields, operators) => {
           return operators.eq(fields.id, id);
@@ -187,26 +176,52 @@ export class DrizzleTopicRepository implements TopicRepository {
 
       return dataWithFilledContents;
     } catch (error) {
+      console.error(error);
       throw new Error('Erro ao buscar trilha');
     }
   }
 
-  async updateTopic(topic: UpdateTopic): Promise<Topic> {
+  async updateTopic(topic: UpdateTopic, database = db): Promise<Topic> {
     const { id, contributorId, ...updatedData } = topic;
 
-    return db.transaction(async tx => {
+    return database.transaction(async tx => {
       try {
         tx.update(topicTable)
           .set({ ...updatedData, updatedAt: new Date().toISOString() })
           .where(eq(topicTable.id, id))
           .execute();
 
-        const data = await this.getTopicById(id);
+        tx
+          .update(topicContributionTable)
+          .set({ topicId: id, userId: contributorId })
+          .where(eq(topicContributionTable.topicId, id))
+          .execute();
+
+        const data = await this.getTopicById(id, tx);
 
         return data;
       } catch (error) {
+        console.error(error);
         throw new Error('Erro ao atualizar trilha');
       }
     });
+  }
+
+  async enableTopic(id: number, database = db): Promise<void> {
+    try {
+      await database.update(topicTable).set({ status: 'PUBLISHED' }).where(eq(topicTable.id, id)).execute();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Erro ao habilitar trilha');
+    }
+  }
+
+  async omitTopic(id: number, database = db): Promise<void> {
+    try {
+      await database.update(topicTable).set({ status: 'DRAFT' }).where(eq(topicTable.id, id)).execute();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Erro ao omitir trilha');
+    }
   }
 }
