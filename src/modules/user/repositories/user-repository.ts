@@ -1,4 +1,4 @@
-import { db } from '@/modules/database/db';
+import { db, type Database } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { CATEGORY_DB_FIELDS, TRAIL_DB_FIELDS } from '@/modules/trail/repositories/trail-repository';
@@ -7,10 +7,10 @@ import { eq } from 'drizzle-orm';
 import { userTableToUserMapper } from '../lib/user-table-to-user-mapper';
 
 export type UserRepository = {
-  getUsers: (params: PaginationSchemaWithSearch) => Promise<User[]>;
-  getUserById: (id: string) => Promise<User | null>;
-  getUserProfile: (username: string) => Promise<UserProfile | null>;
-  updateUser: (id: string, user: UpdateUser) => Promise<User>;
+  getUsers: (params: PaginationSchemaWithSearch, database: Database) => Promise<User[]>;
+  getUserById: (id: string, database: Database) => Promise<User | null>;
+  getUserProfile: (username: string, database: Database) => Promise<UserProfile | null>;
+  updateUser: (id: string, user: UpdateUser, database: Database) => Promise<User>;
 };
 
 export const USER_DB_FIELDS = Object.freeze({
@@ -34,17 +34,17 @@ export class DrizzleUserRepository implements UserRepository {
   /**
    * Atualiza os dados do usuário. Apenas dados não sensíveis podem ser atualizados.
    */
-  async updateUser(id: string, user: UpdateUser): Promise<User> {
+  async updateUser(id: string, user: UpdateUser, database = db): Promise<User> {
     const now = new Date().toISOString();
 
     try {
-      await db
+      await database
         .update(userTable)
         .set({ ...user, updatedAt: now })
         .where(eq(userTable.id, id))
         .execute();
 
-      const data = await db.query.userTable.findFirst({ columns: USER_DB_FIELDS });
+      const data = await database.query.userTable.findFirst({ columns: USER_DB_FIELDS });
 
       if (!data) {
         throw new Error('Usuário não encontrado');
@@ -52,6 +52,7 @@ export class DrizzleUserRepository implements UserRepository {
 
       return userTableToUserMapper(data, false);
     } catch (error) {
+      console.error(error);
       throw new Error('Erro ao atualizar usuário');
     }
   }
@@ -59,9 +60,9 @@ export class DrizzleUserRepository implements UserRepository {
   /**
    * Busca o usuário pelo id
    */
-  async getUserById(id: string): Promise<User | null> {
+  async getUserById(id: string, database = db): Promise<User | null> {
     try {
-      const data = await db.query.userTable.findFirst({
+      const data = await database.query.userTable.findFirst({
         columns: USER_DB_FIELDS,
         where: (fields, operators) => operators.eq(fields.id, id),
       });
@@ -72,6 +73,7 @@ export class DrizzleUserRepository implements UserRepository {
 
       return userTableToUserMapper(data, false);
     } catch (error) {
+      console.error(error);
       return null;
     }
   }
@@ -79,8 +81,8 @@ export class DrizzleUserRepository implements UserRepository {
   /**
    * Busca os usuários de acordo com os parâmetros
    */
-  async getUsers(params: PaginationSchemaWithSearch): Promise<User[]> {
-    const data = await db.query.userTable.findMany({
+  async getUsers(params: PaginationSchemaWithSearch, database = db): Promise<User[]> {
+    const data = await database.query.userTable.findMany({
       columns: USER_DB_FIELDS,
       limit: params.take,
       offset: params.skip,
@@ -98,9 +100,9 @@ export class DrizzleUserRepository implements UserRepository {
   /**
    * Busca o perfil do usuário pelo username
    */
-  async getUserProfile(username: string): Promise<UserProfile | null> {
+  async getUserProfile(username: string, database = db): Promise<UserProfile | null> {
     try {
-      const data = await db.query.userTable.findFirst({
+      const data = await database.query.userTable.findFirst({
         columns: USER_DB_FIELDS,
         where: (fields, operators) => operators.eq(fields.username, username),
         with: {
@@ -136,6 +138,7 @@ export class DrizzleUserRepository implements UserRepository {
 
       return result;
     } catch (error) {
+      console.error(error);
       return null;
     }
   }
