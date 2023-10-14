@@ -1,7 +1,7 @@
 import type { Session } from '@/modules/auth/types/session';
 import { DrizzleRichTextContentRepository } from '../repositories/rich-text-content-repository';
 import { newRichTextContentSchema, type NewRichTextContentSchema } from '../schemas/new-rich-text-content-schema';
-import type { ContentRichText } from '../types/content';
+import type { ContentRichText, NewContent } from '../types/content';
 
 export async function createNewRichTextContentUseCase(
   params: NewRichTextContentSchema,
@@ -15,15 +15,14 @@ export async function createNewRichTextContentUseCase(
 
   const repository = new DrizzleRichTextContentRepository();
 
-  const newRichTextContent = await repository.createContent(
-    {
-      authorId: session.userId,
-      contentType: 'rich_text',
-      title: validatedParams.data.title,
-      topicId: validatedParams.data.topicId,
-    },
-    validatedParams.data.content,
-  );
+  const newBaseContent: NewContent = {
+    authorId: session.userId,
+    contentType: 'rich_text',
+    title: validatedParams.data.title,
+    topicId: validatedParams.data.topicId,
+  };
+
+  const newRichTextContent = await repository.createContent(newBaseContent, validatedParams.data.content);
 
   return newRichTextContent;
 }
