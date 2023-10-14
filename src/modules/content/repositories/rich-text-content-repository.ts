@@ -5,13 +5,12 @@ import { contentContributionTable } from '@/modules/database/schema/contribution
 import type { JSONContent } from '@tiptap/core';
 import { diffJson } from 'diff';
 import { eq } from 'drizzle-orm';
-import { DrizzleContentRepository } from './content-repository';
+import type { DrizzleBaseContentRepository } from './base-content-repository';
 
 export type RichTextContentRepository = {
   getContent(contentId: number): Promise<ContentRichText>;
   createContent(baseContent: NewContent, richText: JSONContent): Promise<ContentRichText>;
   updateContent(baseContent: UpdateContent, richText: JSONContent): Promise<ContentRichText>;
-  omitContent(contentId: number): Promise<void>;
 };
 
 export const RTE_CONTENT_DB_FIELDS = Object.freeze({
@@ -22,11 +21,13 @@ export const RTE_CONTENT_DB_FIELDS = Object.freeze({
 });
 
 export class DrizzleRichTextContentRepository implements RichTextContentRepository {
+  constructor(private readonly baseContentRepository: DrizzleBaseContentRepository) {}
+
   /**
    * Busca um conteúdo de texto complexo com base no seu id
    */
-  async getContent(contentId: number): Promise<ContentRichText> {
-    const resultRichtext: ContentRichText | undefined = await db.query.contentRichTextTable.findFirst({
+  async getContent(contentId: number, database = db): Promise<ContentRichText> {
+    const resultRichtext: ContentRichText | undefined = await database.query.contentRichTextTable.findFirst({
       columns: {
         ...RTE_CONTENT_DB_FIELDS,
         asJson: true,
@@ -46,24 +47,16 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
   /**
    * Cria um conteúdo de texto complexo
    */
-  async createContent(baseContent: NewContent, richText: JSONContent): Promise<ContentRichText> {
-    const repository = new DrizzleContentRepository();
-
-    const contentId = await db.transaction(async tx => {
+  async createContent(baseContent: NewContent, richText: JSONContent, database = db): Promise<ContentRichText> {
+    const contentId = await database.transaction(async tx => {
       try {
-        const insertedContentId = await repository.createBaseContent(tx, baseContent);
+        const insertedContentId = await this.baseContentRepository.createBaseContent(baseContent, tx);
 
         // Troca o conteúdo por um preview, limitando a 3 itens
         const preview: JSONContent = {
           ...richText,
           content: richText.content?.slice(0, 3) ?? [],
         };
-
-        console.table({
-          contentId: insertedContentId,
-          asJson: richText,
-          previewAsJson: preview,
-        });
 
         await tx
           .insert(contentRichTextTable)
@@ -87,21 +80,20 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
   /**
    * Atualiza um conteúdo de texto complexo
    */
-  async updateContent(baseContent: UpdateContent, richText: JSONContent): Promise<ContentRichText> {
+  async updateContent(baseContent: UpdateContent, richText: JSONContent, database = db): Promise<ContentRichText> {
     const updatedAt = new Date().toISOString();
-    const repository = new DrizzleContentRepository();
 
     if (typeof richText === 'undefined') {
       throw new Error('Erro ao atualizar conteúdo de rich text com id = ' + baseContent.id);
     }
 
-    return db.transaction(async tx => {
+    return database.transaction(async tx => {
       try {
         const preview = richText.content?.slice(0, 5) ?? {};
 
-        const oldContent = await this.getContent(baseContent.id);
+        const oldContent = await this.getContent(baseContent.id, tx);
 
-        await repository.updateBaseContent(tx, baseContent);
+        await this.baseContentRepository.updateBaseContent(baseContent, tx);
 
         await tx
           .update(contentRichTextTable)
@@ -126,7 +118,7 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
           .where(eq(contentContributionTable.contentId, baseContent.id))
           .execute();
 
-        const resultRichtext = await this.getContent(baseContent.id);
+        const resultRichtext = await this.getContent(baseContent.id, tx);
 
         return resultRichtext;
       } catch (error) {
@@ -134,13 +126,5 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
         throw new Error('Erro ao atualizar conteúdo de rich text com id = ' + baseContent.id);
       }
     });
-  }
-
-  /**
-   * Remove um conteúdo de texto complexo
-   */
-  async omitContent(contentId: number): Promise<void> {
-    await db.delete(contentRichTextTable).where(eq(contentRichTextTable.contentId, contentId)).execute();
-    return;
   }
 }
