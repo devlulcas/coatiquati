@@ -6,6 +6,7 @@ import { TOPIC_DB_FIELDS } from '@/modules/topic/repositories/topic-repository';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
 import type { NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
+import { contentStatus } from '@/shared/constants/content-status';
 
 export type TrailRepository = {
   createTrail: (trail: NewTrail) => Promise<Trail>;
@@ -59,8 +60,13 @@ export class DrizzleTrailRepository implements TrailRepository {
    * Habilita uma trilha
    */
   async enableTrail(id: number, database = db): Promise<void> {
+    const updatedAt = new Date().toISOString();
     try {
-      await database.update(trailTable).set({ status: 'PUBLISHED' }).where(eq(trailTable.id, id)).execute();
+      await database
+        .update(trailTable)
+        .set({ status: contentStatus.PUBLISHED, updatedAt })
+        .where(eq(trailTable.id, id))
+        .execute();
     } catch (error) {
       console.error(error);
       throw new Error('Erro ao habilitar trilha');
@@ -199,14 +205,18 @@ export class DrizzleTrailRepository implements TrailRepository {
    * Atualiza uma trilha e a lista de contribuidores
    */
   async updateTrail(trail: UpdateTrail, database = db): Promise<Trail> {
-    const { contributorId, id, ...updatedData } = { ...trail, updatedAt: new Date().toISOString() };
+    const { contributorId, id, ...updatedData } = trail;
+    const updatedAt = new Date().toISOString();
 
     return database.transaction(async tx => {
       try {
-        tx.update(trailTable).set(updatedData).where(eq(trailTable.id, id)).execute();
+        tx.update(trailTable)
+          .set({ ...updatedData, updatedAt })
+          .where(eq(trailTable.id, id))
+          .execute();
 
         tx.update(trailContributionTable)
-          .set({ trailId: id, userId: contributorId })
+          .set({ trailId: id, userId: contributorId, contributedAt: updatedAt })
           .where(eq(trailContributionTable.trailId, id))
           .execute();
 
@@ -225,8 +235,13 @@ export class DrizzleTrailRepository implements TrailRepository {
    * Omite uma trilha
    */
   async omitTrail(id: number, database = db): Promise<void> {
+    const updatedAt = new Date().toISOString();
     try {
-      await database.update(trailTable).set({ status: 'DRAFT' }).where(eq(trailTable.id, id)).execute();
+      await database
+        .update(trailTable)
+        .set({ status: contentStatus.DRAFT, updatedAt })
+        .where(eq(trailTable.id, id))
+        .execute();
     } catch (error) {
       console.error(error);
       throw new Error('Erro ao omitir trilha');

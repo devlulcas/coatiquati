@@ -35,12 +35,12 @@ export class DrizzleUserRepository implements UserRepository {
    * Atualiza os dados do usuário. Apenas dados não sensíveis podem ser atualizados.
    */
   async updateUser(id: string, user: UpdateUser, database = db): Promise<User> {
-    const now = new Date().toISOString();
+    const updatedAt = new Date().toISOString();
 
     try {
       await database
         .update(userTable)
-        .set({ ...user, updatedAt: now })
+        .set({ ...user, updatedAt })
         .where(eq(userTable.id, id))
         .execute();
 

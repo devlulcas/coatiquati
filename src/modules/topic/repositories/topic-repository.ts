@@ -7,6 +7,7 @@ import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-reposito
 import { eq } from 'drizzle-orm';
 import type { NewTopic, Topic, TopicWithContentArray, UpdateTopic } from '../types/topic';
 import { topicContributionTable } from '@/modules/database/schema/contribution';
+import { contentStatus } from '@/shared/constants/content-status';
 
 export type TopicRepository = {
   createTopic: (topic: NewTopic) => Promise<Topic>;
@@ -184,16 +185,17 @@ export class DrizzleTopicRepository implements TopicRepository {
   async updateTopic(topic: UpdateTopic, database = db): Promise<Topic> {
     const { id, contributorId, ...updatedData } = topic;
 
+    const updatedAt = new Date().toISOString();
+
     return database.transaction(async tx => {
       try {
         tx.update(topicTable)
-          .set({ ...updatedData, updatedAt: new Date().toISOString() })
+          .set({ ...updatedData, updatedAt })
           .where(eq(topicTable.id, id))
           .execute();
 
-        tx
-          .update(topicContributionTable)
-          .set({ topicId: id, userId: contributorId })
+        tx.update(topicContributionTable)
+          .set({ topicId: id, userId: contributorId, contributedAt: updatedAt })
           .where(eq(topicContributionTable.topicId, id))
           .execute();
 
@@ -208,8 +210,9 @@ export class DrizzleTopicRepository implements TopicRepository {
   }
 
   async enableTopic(id: number, database = db): Promise<void> {
+    const updatedAt = new Date().toISOString();
     try {
-      await database.update(topicTable).set({ status: 'PUBLISHED' }).where(eq(topicTable.id, id)).execute();
+      await database.update(topicTable).set({ status: contentStatus.PUBLISHED, updatedAt }).where(eq(topicTable.id, id)).execute();
     } catch (error) {
       console.error(error);
       throw new Error('Erro ao habilitar trilha');
@@ -217,8 +220,9 @@ export class DrizzleTopicRepository implements TopicRepository {
   }
 
   async omitTopic(id: number, database = db): Promise<void> {
+    const updatedAt = new Date().toISOString();
     try {
-      await database.update(topicTable).set({ status: 'DRAFT' }).where(eq(topicTable.id, id)).execute();
+      await database.update(topicTable).set({ status: contentStatus.DRAFT, updatedAt }).where(eq(topicTable.id, id)).execute();
     } catch (error) {
       console.error(error);
       throw new Error('Erro ao omitir trilha');
