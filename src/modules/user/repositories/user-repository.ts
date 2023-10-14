@@ -7,10 +7,10 @@ import { eq } from 'drizzle-orm';
 import { userTableToUserMapper } from '../lib/user-table-to-user-mapper';
 
 export type UserRepository = {
-  getUsers: (params: PaginationSchemaWithSearch, database: Database) => Promise<User[]>;
-  getUserById: (id: string, database: Database) => Promise<User | null>;
-  getUserProfile: (username: string, database: Database) => Promise<UserProfile | null>;
-  updateUser: (id: string, user: UpdateUser, database: Database) => Promise<User>;
+  getUsers: (params: PaginationSchemaWithSearch) => Promise<User[]>;
+  getUserById: (id: string) => Promise<User | null>;
+  getUserProfile: (username: string) => Promise<UserProfile | null>;
+  updateUser: (id: string, user: UpdateUser) => Promise<User>;
 };
 
 export const USER_DB_FIELDS = Object.freeze({

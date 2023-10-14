@@ -8,13 +8,13 @@ import { eq } from 'drizzle-orm';
 import type { NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
 
 export type TrailRepository = {
-  createTrail: (trail: NewTrail, database: Database) => Promise<Trail>;
-  getTrails: (params: PaginationSchemaWithSearch, database: Database) => Promise<Trail[]>;
-  getTrailById: (id: number, database: Database) => Promise<Trail>;
-  updateTrail: (trail: UpdateTrail, database: Database) => Promise<Trail>;
-  getTrailWithTopicsById: (id: number, database: Database) => Promise<TrailWithTopicArray>;
-  enableTrail: (id: number, database: Database) => Promise<void>;
-  omitTrail: (id: number, database: Database) => Promise<void>;
+  createTrail: (trail: NewTrail) => Promise<Trail>;
+  getTrails: (params: PaginationSchemaWithSearch) => Promise<Trail[]>;
+  getTrailById: (id: number) => Promise<Trail>;
+  updateTrail: (trail: UpdateTrail) => Promise<Trail>;
+  getTrailWithTopicsById: (id: number) => Promise<TrailWithTopicArray>;
+  enableTrail: (id: number) => Promise<void>;
+  omitTrail: (id: number) => Promise<void>;
 };
 
 export const TRAIL_DB_FIELDS = Object.freeze({
