@@ -1,7 +1,7 @@
 import type { Session } from '@/modules/auth/types/session';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { DrizzleTrailRepository } from '../repositories/trail-repository';
-import { updateTrailUseCaseSchema, type UpdateTrailSchema } from '../schemas/edit-trail-schema';
+import { updateTrailSchema, type UpdateTrailSchema } from '../schemas/edit-trail-schema';
 import type { UpdateTrail } from '../types/trail';
 
 export async function updateTrailUseCase(params: UpdateTrailSchema, session: Session) {
@@ -9,7 +9,7 @@ export async function updateTrailUseCase(params: UpdateTrailSchema, session: Ses
     throw new Error('Somente administradores podem editar trilhas.');
   }
 
-  const validatedParams = updateTrailUseCaseSchema.safeParse(params);
+  const validatedParams = updateTrailSchema.safeParse(params);
 
   if (!validatedParams.success) {
     throw new Error('Parâmetros inválidos');
