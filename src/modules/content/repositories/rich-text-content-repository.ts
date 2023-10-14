@@ -80,7 +80,7 @@ export class DrizzleRichTextContentRepository implements RichTextContentReposito
   /**
    * Atualiza um conteúdo de texto complexo
    */
-  async updateContent(baseContent: UpdateContent, richText: JSONContent, database = db): Promise<ContentRichText> {
+  async updateContent(baseContent: UpdateContent, richText?: JSONContent, database = db): Promise<ContentRichText> {
     const updatedAt = new Date().toISOString();
 
     if (typeof richText === 'undefined') {

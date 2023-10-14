@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { DrizzleContentRepository } from '../repositories/content-repository';
 import { DrizzleRichTextContentRepository } from '../repositories/rich-text-content-repository';
 import type { ContentRichText } from '../types/content';
+import { DrizzleBaseContentRepository } from '../repositories/base-content-repository';
 
 const getRichTextContentUseCaseSchema = z.object({
   id: z.number({ required_error: 'O id do conteúdo é obrigatório' }),
@@ -24,13 +25,13 @@ export async function getRichTextContentUseCase(params: GetRichTextContentUseCas
     throw new Error('Parâmetros inválidos');
   }
 
-  const textContentRepository = new DrizzleRichTextContentRepository();
+  const repository = new DrizzleRichTextContentRepository(new DrizzleBaseContentRepository());
   const topicRepository = new DrizzleTopicRepository(new DrizzleContentRepository());
   const trailRepository = new DrizzleTrailRepository();
 
   try {
     const [content, topic] = await Promise.all([
-      textContentRepository.getContent(validatedParams.data.id),
+      repository.getContent(validatedParams.data.id),
       topicRepository.getTopicById(validatedParams.data.id),
     ]);
 
