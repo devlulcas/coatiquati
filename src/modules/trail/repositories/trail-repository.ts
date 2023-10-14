@@ -1,18 +1,20 @@
-import { db } from '@/modules/database/db';
+import { db, type Database } from '@/modules/database/db';
 import { trailContributionTable } from '@/modules/database/schema/contribution';
-import { categoryTable, trailTable } from '@/modules/database/schema/trail';
+import { trailTable } from '@/modules/database/schema/trail';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { TOPIC_DB_FIELDS } from '@/modules/topic/repositories/topic-repository';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
-import type { Category, NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
+import type { NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
 
 export type TrailRepository = {
-  createTrail: (trail: NewTrail) => Promise<Trail>;
-  getTrails: (params: PaginationSchemaWithSearch) => Promise<Trail[]>;
-  getTrailById: (id: number) => Promise<Trail>;
-  updateTrail: (trail: UpdateTrail) => Promise<Trail>;
-  getTrailWithTopicsById: (id: number) => Promise<TrailWithTopicArray>;
+  createTrail: (trail: NewTrail, database: Database) => Promise<Trail>;
+  getTrails: (params: PaginationSchemaWithSearch, database: Database) => Promise<Trail[]>;
+  getTrailById: (id: number, database: Database) => Promise<Trail>;
+  updateTrail: (trail: UpdateTrail, database: Database) => Promise<Trail>;
+  getTrailWithTopicsById: (id: number, database: Database) => Promise<TrailWithTopicArray>;
+  enableTrail: (id: number, database: Database) => Promise<void>;
+  omitTrail: (id: number, database: Database) => Promise<void>;
 };
 
 export const TRAIL_DB_FIELDS = Object.freeze({
@@ -36,15 +38,43 @@ export class DrizzleTrailRepository implements TrailRepository {
   /**
    * Cria uma nova trilha e adiciona o autor como contribuidor
    */
-  async createTrail(trail: NewTrail): Promise<Trail> {
+  async createTrail(trail: NewTrail, database = db): Promise<Trail> {
     try {
-      const newTrail = db.insert(trailTable).values(trail).returning().get();
+      const newTrail = database.insert(trailTable).values(trail).returning({ id: trailTable.id }).get();
 
-      const data = await db.query.trailTable.findFirst({
+      const data = await this.getTrailById(newTrail.id, database);
+
+      if (!data) {
+        throw new Error('Erro ao criar trilha');
+      }
+
+      return data;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Erro ao criar trilha');
+    }
+  }
+
+  /**
+   * Habilita uma trilha
+   */
+  async enableTrail(id: number, database = db): Promise<void> {
+    try {
+      await database.update(trailTable).set({ status: 'PUBLISHED' }).where(eq(trailTable.id, id)).execute();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Erro ao habilitar trilha');
+    }
+  }
+
+  /**
+   * Busca uma trilha pelo id
+   */
+  async getTrailById(id: number, database = db): Promise<Trail> {
+    try {
+      const data = await database.query.trailTable.findFirst({
         columns: TRAIL_DB_FIELDS,
-        where: (fields, operators) => {
-          return operators.eq(fields.id, newTrail.id);
-        },
+        where: (fields, operators) => operators.eq(fields.id, id),
         with: {
           author: {
             columns: CONTRIBUTOR_DB_FIELDS,
@@ -63,21 +93,22 @@ export class DrizzleTrailRepository implements TrailRepository {
       });
 
       if (!data) {
-        throw new Error('Erro ao criar trilha');
+        throw new Error('Trilha não encontrada');
       }
 
       return data;
     } catch (error) {
-      throw new Error('Erro ao criar trilha');
+      console.error(error);
+      throw new Error('Erro ao buscar trilhas');
     }
   }
 
   /**
    * Busca as trilhas com paginação e busca
    */
-  async getTrails(params: PaginationSchemaWithSearch): Promise<Trail[]> {
+  async getTrails(params: PaginationSchemaWithSearch, database = db): Promise<Trail[]> {
     try {
-      const data = db.query.trailTable.findMany({
+      const data = database.query.trailTable.findMany({
         columns: TRAIL_DB_FIELDS,
         limit: params.take,
         offset: params.skip,
@@ -106,79 +137,17 @@ export class DrizzleTrailRepository implements TrailRepository {
 
       return data;
     } catch (error) {
+      console.error(error);
       throw new Error('Erro ao buscar trilhas');
     }
-  }
-
-  /**
-   * Busca uma trilha pelo id
-   */
-  async getTrailById(id: number): Promise<Trail> {
-    try {
-      const data = await db.query.trailTable.findFirst({
-        columns: TRAIL_DB_FIELDS,
-        where: (fields, operators) => {
-          return operators.eq(fields.id, id);
-        },
-        with: {
-          author: {
-            columns: CONTRIBUTOR_DB_FIELDS,
-          },
-          contributors: {
-            with: {
-              user: {
-                columns: CONTRIBUTOR_DB_FIELDS,
-              },
-            },
-          },
-          category: {
-            columns: CATEGORY_DB_FIELDS,
-          },
-        },
-      });
-
-      if (!data) {
-        throw new Error('Trilha não encontrada');
-      }
-
-      return data;
-    } catch (error) {
-      throw new Error('Erro ao buscar trilhas');
-    }
-  }
-
-  /**
-   * Atualiza uma trilha e a lista de contribuidores
-   */
-  async updateTrail(trail: UpdateTrail): Promise<Trail> {
-    const { contributorId, id, ...updatedData } = { ...trail, updatedAt: new Date().toISOString() };
-
-    return db.transaction(async tx => {
-      try {
-        tx.update(trailTable).set(updatedData).where(eq(trailTable.id, id)).execute();
-
-        tx.update(trailContributionTable)
-          .set({ trailId: id, userId: contributorId })
-          .where(eq(trailContributionTable.trailId, id))
-          .execute();
-
-        const data = await this.getTrailById(id);
-
-        return data;
-      } catch (error) {
-        tx.rollback();
-
-        throw new Error('Erro ao atualizar trilha');
-      }
-    });
   }
 
   /**
    * Busca a trilha e inclui os tópicos relacionados
    */
-  async getTrailWithTopicsById(id: number): Promise<TrailWithTopicArray> {
+  async getTrailWithTopicsById(id: number, database = db): Promise<TrailWithTopicArray> {
     try {
-      const data = await db.query.trailTable.findFirst({
+      const data = await database.query.trailTable.findFirst({
         columns: TRAIL_DB_FIELDS,
         where: (fields, operators) => {
           return operators.eq(fields.id, id);
@@ -221,7 +190,46 @@ export class DrizzleTrailRepository implements TrailRepository {
 
       return data;
     } catch (error) {
+      console.error(error);
       throw new Error('Erro ao buscar trilha');
+    }
+  }
+
+  /**
+   * Atualiza uma trilha e a lista de contribuidores
+   */
+  async updateTrail(trail: UpdateTrail, database = db): Promise<Trail> {
+    const { contributorId, id, ...updatedData } = { ...trail, updatedAt: new Date().toISOString() };
+
+    return database.transaction(async tx => {
+      try {
+        tx.update(trailTable).set(updatedData).where(eq(trailTable.id, id)).execute();
+
+        tx.update(trailContributionTable)
+          .set({ trailId: id, userId: contributorId })
+          .where(eq(trailContributionTable.trailId, id))
+          .execute();
+
+        const data = await this.getTrailById(id, tx);
+
+        return data;
+      } catch (error) {
+        console.error(error);
+        tx.rollback();
+        throw new Error('Erro ao atualizar trilha');
+      }
+    });
+  }
+
+  /**
+   * Omite uma trilha
+   */
+  async omitTrail(id: number, database = db): Promise<void> {
+    try {
+      await database.update(trailTable).set({ status: 'DRAFT' }).where(eq(trailTable.id, id)).execute();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Erro ao omitir trilha');
     }
   }
 }

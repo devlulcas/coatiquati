@@ -15,9 +15,7 @@ type TrailBaseFormProps = {
   className?: ClassValue;
 };
 
-export function TrailBaseForm(props: TrailBaseFormProps) {
-  const { defaultValues, onSubmit, className } = props;
-
+export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseFormProps) {
   const form = useForm<NewTrailSchema>({
     resolver: zodResolver(newTrailSchema),
     defaultValues,

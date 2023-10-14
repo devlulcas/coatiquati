@@ -1,6 +1,5 @@
 'use client';
 
-import { ContentStatusBadge } from '@/shared/components/common/content-status-badge';
 import { SortedColumnHeader } from '@/shared/components/common/data-table';
 import { Button } from '@/shared/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
@@ -9,12 +8,13 @@ import Link from 'next/link';
 import { createTrailUrl } from '../../lib/create-trail-url';
 import { type Trail } from '../../types/trail';
 import { EditTrailDialogTrigger } from '../edit-trail-dialog-trigger';
+import { ToggleTrailStatusForm } from '../toggle-trail-status-form';
 
 export const trailsColumns: ColumnDef<Trail>[] = [
   {
     accessorKey: 'status',
     header: ({ column }) => <SortedColumnHeader column={column}>Status</SortedColumnHeader>,
-    cell: ({ row }) => <ContentStatusBadge status={row.original.status} />,
+    cell: ({ row }) => <ToggleTrailStatusForm trail={row.original} />,
   },
   {
     accessorKey: 'title',
