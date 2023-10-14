@@ -18,7 +18,6 @@ export const trailContributionTable = sqliteTable(
     userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    diff: blob('blob', { mode: 'json' }).$type<Change[]>(),
     contributedAt: text('contributed_at')
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -49,7 +48,6 @@ export const topicContributionTable = sqliteTable(
     userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    diff: blob('blob', { mode: 'json' }).$type<Change[]>(),
     contributedAt: text('contributed_at')
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
