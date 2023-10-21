@@ -8,6 +8,7 @@ const pretty = {
   options: {
     colorize: true,
     ignore: 'pid,hostname',
+    levelFirst: true,
   },
 };
 
