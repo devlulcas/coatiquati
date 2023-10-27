@@ -1,12 +1,12 @@
-"use client"
+'use client';
 
-import { ContentStatusBadge } from "@/shared/components/common/content-status-badge";
-import { Button } from "@/shared/components/ui/button";
-import { useToast } from "@/shared/components/ui/use-toast";
-import { contentStatus } from "@/shared/constants/content-status";
-import { useTransition } from "react";
-import type { Trail } from "../../types/trail";
-import { toggleTrailStatusAction } from "./toggle-trail-status-action";
+import { ContentStatusBadge } from '@/shared/components/common/content-status-badge';
+import { Button } from '@/shared/components/ui/button';
+import { useToast } from '@/shared/components/ui/use-toast';
+import { contentStatus } from '@/shared/constants/content-status';
+import { useTransition } from 'react';
+import type { Trail } from '../../types/trail';
+import { toggleTrailStatusAction } from './toggle-trail-status-action';
 
 type ToggleTrailStatusFormProps = {
   trail: Trail;
@@ -33,10 +33,10 @@ export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
 
   return (
     <div className="flex gap-2 items-center">
-    <ContentStatusBadge status={trail.status} />
-    <Button isLoading={isLoading} onClick={onSubmit}>
-      {trail.status === contentStatus.PUBLISHED ? 'Omitir' : 'Publicar'}
-    </Button>
+      <ContentStatusBadge status={trail.status} />
+      <Button isLoading={isLoading} onClick={onSubmit}>
+        {trail.status === contentStatus.PUBLISHED ? 'Omitir' : 'Publicar'}
+      </Button>
     </div>
-  )
+  );
 }

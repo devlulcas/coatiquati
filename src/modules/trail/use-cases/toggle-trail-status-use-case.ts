@@ -20,11 +20,11 @@ export async function toggleTrailStatusUseCase(params: TrailWithIdSchema, sessio
 
   if (trail.status === 'PUBLISHED') {
     return repository.omitTrail(validatedParams.data.id);
-  } 
-  
+  }
+
   if (trail.status === 'DRAFT') {
     return repository.enableTrail(validatedParams.data.id);
-  } 
+  }
 
   throw new Error('Status inválido');
 }

@@ -8,7 +8,7 @@ import type { DrizzleBaseContentRepository } from './base-content-repository';
 export type VideoContentRepository = {
   getContent(contentId: number): Promise<ContentVideo>;
   createContent(baseContent: NewContent, video: NewContentVideo): Promise<ContentVideo>;
-  updateContent(baseContent: UpdateContent, video?: ContentVideo): Promise<ContentVideo> 
+  updateContent(baseContent: UpdateContent, video?: ContentVideo): Promise<ContentVideo>;
 };
 
 export const VIDEO_CONTENT_DB_FIELDS = Object.freeze({

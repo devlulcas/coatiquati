@@ -212,7 +212,11 @@ export class DrizzleTopicRepository implements TopicRepository {
   async enableTopic(id: number, database = db): Promise<void> {
     const updatedAt = new Date().toISOString();
     try {
-      await database.update(topicTable).set({ status: contentStatus.PUBLISHED, updatedAt }).where(eq(topicTable.id, id)).execute();
+      await database
+        .update(topicTable)
+        .set({ status: contentStatus.PUBLISHED, updatedAt })
+        .where(eq(topicTable.id, id))
+        .execute();
     } catch (error) {
       console.error(error);
       throw new Error('Erro ao habilitar trilha');
@@ -222,7 +226,11 @@ export class DrizzleTopicRepository implements TopicRepository {
   async omitTopic(id: number, database = db): Promise<void> {
     const updatedAt = new Date().toISOString();
     try {
-      await database.update(topicTable).set({ status: contentStatus.DRAFT, updatedAt }).where(eq(topicTable.id, id)).execute();
+      await database
+        .update(topicTable)
+        .set({ status: contentStatus.DRAFT, updatedAt })
+        .where(eq(topicTable.id, id))
+        .execute();
     } catch (error) {
       console.error(error);
       throw new Error('Erro ao omitir trilha');

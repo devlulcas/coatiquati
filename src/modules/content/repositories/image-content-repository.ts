@@ -8,7 +8,7 @@ import type { DrizzleBaseContentRepository } from './base-content-repository';
 export type ImageContentRepository = {
   getContent(contentId: number): Promise<ContentImage>;
   createContent(baseContent: NewContent, image: NewContentImage): Promise<ContentImage>;
-  updateContent(baseContent: UpdateContent, image?: ContentImage): Promise<ContentImage> 
+  updateContent(baseContent: UpdateContent, image?: ContentImage): Promise<ContentImage>;
 };
 
 export const IMAGE_CONTENT_DB_FIELDS = Object.freeze({

@@ -7,7 +7,7 @@ import type {
   ContentWithFile,
   ContentWithImage,
   ContentWithRichTextPreview,
-  ContentWithVideo
+  ContentWithVideo,
 } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 
