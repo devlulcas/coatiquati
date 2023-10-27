@@ -1,3 +1,4 @@
+import type { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type { ContentRichText, NewContent, UpdateContent } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentRichTextTable } from '@/modules/database/schema/content';
@@ -5,7 +6,6 @@ import { contentContributionTable } from '@/modules/database/schema/contribution
 import type { JSONContent } from '@tiptap/core';
 import { diffJson } from 'diff';
 import { eq } from 'drizzle-orm';
-import type { DrizzleBaseContentRepository } from './base-content-repository';
 
 export type RichTextContentRepository = {
   getContent(contentId: number): Promise<ContentRichText>;

@@ -12,7 +12,7 @@ import {
 import { useToast } from '@/shared/components/ui/use-toast';
 import { LayersIcon } from 'lucide-react';
 import { LayeredImageUploader } from '.';
-import { EditorActionButton } from '../editor/editor-action-button';
+import { EditorActionButton } from '@/modules/rich-text-content/components/editor/editor-action-button';
 import type { LayeredImage } from '../layered-image-node';
 import { useLayeredImageControl } from './use-layered-image-control';
 

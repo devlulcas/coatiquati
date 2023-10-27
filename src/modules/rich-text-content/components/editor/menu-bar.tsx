@@ -29,9 +29,9 @@ import {
   WrapTextIcon,
   YoutubeIcon,
 } from 'lucide-react';
-import { LayeredImageUploaderDialogTrigger } from '../layered-image-uploader/layered-image-uploader-dialog-trigger';
 import { EditorActionButton } from './editor-action-button';
 import { ImageUploaderDialogTrigger } from './image-uploader-dialog-trigger';
+import { LayeredImageUploaderDialogTrigger } from '@/modules/content/components/layered-image-uploader/layered-image-uploader-dialog-trigger';
 
 type MenuBarProps = {
   editor: Editor | null;

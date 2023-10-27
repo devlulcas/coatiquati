@@ -1,4 +1,4 @@
-import { NewRichTextContentForm } from '@/modules/content/components/new-rich-text-content-form';
+import { NewRichTextContentForm } from '@/modules/rich-text-content/components/new-rich-text-content-form';
 import { getTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
 
 type PageProps = {

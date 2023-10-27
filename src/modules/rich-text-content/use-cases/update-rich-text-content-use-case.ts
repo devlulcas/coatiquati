@@ -1,11 +1,11 @@
 import type { Session } from '@/modules/auth/types/session';
-import { DrizzleRichTextContentRepository } from '../repositories/rich-text-content-repository';
-import type { ContentRichText, NewContent, UpdateContent } from '../types/content';
+import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import type { ContentRichText, UpdateContent } from '@/modules/content/types/content';
+import { DrizzleRichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
 import {
   updateRichTextContentSchema,
   type UpdateRichTextContentSchema,
-} from '../schemas/edit-rich-text-content-schema';
-import { DrizzleBaseContentRepository } from '../repositories/base-content-repository';
+} from '@/modules/rich-text-content/schemas/edit-rich-text-content-schema';
 
 export async function updateRichTextContentUseCase(
   params: UpdateRichTextContentSchema,

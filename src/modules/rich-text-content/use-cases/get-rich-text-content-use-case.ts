@@ -3,10 +3,10 @@ import type { Topic } from '@/modules/topic/types/topic';
 import { DrizzleTrailRepository } from '@/modules/trail/repositories/trail-repository';
 import type { Trail } from '@/modules/trail/types/trail';
 import { z } from 'zod';
-import { DrizzleContentRepository } from '../repositories/content-repository';
-import { DrizzleRichTextContentRepository } from '../repositories/rich-text-content-repository';
-import type { ContentRichText } from '../types/content';
-import { DrizzleBaseContentRepository } from '../repositories/base-content-repository';
+import { DrizzleContentRepository } from '@/modules/content/repositories/content-repository';
+import { DrizzleRichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
+import type { ContentRichText } from '@/modules/content/types/content';
+import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 
 const getRichTextContentUseCaseSchema = z.object({
   id: z.number({ required_error: 'O id do conteúdo é obrigatório' }),

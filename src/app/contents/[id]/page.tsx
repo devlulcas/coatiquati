@@ -1,4 +1,4 @@
-import RichTextContentPage from '@/modules/content/components/rich-text-content-page';
+import RichTextContentPage from '@/modules/rich-text-content/components/rich-text-content-page';
 
 type PageProps = {
   params: {

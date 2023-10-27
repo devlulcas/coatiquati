@@ -1,4 +1,4 @@
-import { ReadonlyEditor } from '@/modules/content/components/readonly-editor';
+import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 import type {
   Content,
   ContentWithFile,

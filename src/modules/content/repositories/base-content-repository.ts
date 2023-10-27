@@ -1,21 +1,12 @@
 import type {
   BaseContent,
-  ContentFile,
-  ContentImage,
-  ContentRichTextPreview,
-  ContentVideo,
-  ContentWithFile,
-  ContentWithImage,
-  ContentWithRichTextPreview,
-  ContentWithVideo,
   NewContent,
-  UpdateContent,
+  UpdateContent
 } from '@/modules/content/types/content';
-import { db, type Database } from '@/modules/database/db';
+import { db } from '@/modules/database/db';
 import { contentTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
-import { contentStatus } from '@/shared/constants/content-status';
 import { eq } from 'drizzle-orm';
 
 export type BaseContentRepository = {

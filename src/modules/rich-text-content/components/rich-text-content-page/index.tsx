@@ -1,6 +1,6 @@
-import { getRichTextContentUseCase } from '@/modules/content/use-cases/get-rich-text-content-use-case';
+import { getRichTextContentUseCase } from '@/modules/rich-text-content/use-cases/get-rich-text-content-use-case';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
-import { ReadonlyEditor } from '../readonly-editor';
+import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 
 type RichTextContentPageProps = {
   contentId: number;

@@ -9,7 +9,7 @@ import { Editor } from '@tiptap/react';
 import { ImagePlusIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import { UploadDropzone } from '../generic-upload-component-pack';
+import { UploadDropzone } from '@/modules/content/components/generic-upload-component-pack';
 import { EditorActionButton } from './editor-action-button';
 
 type ImageUploaderProps = {

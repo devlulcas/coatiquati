@@ -1,8 +1,8 @@
 import type { Session } from '@/modules/auth/types/session';
-import { DrizzleRichTextContentRepository } from '../repositories/rich-text-content-repository';
-import { newRichTextContentSchema, type NewRichTextContentSchema } from '../schemas/new-rich-text-content-schema';
-import type { ContentRichText, NewContent } from '../types/content';
-import { DrizzleBaseContentRepository } from '../repositories/base-content-repository';
+import { DrizzleRichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
+import { newRichTextContentSchema, type NewRichTextContentSchema } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
+import type { ContentRichText, NewContent } from '@/modules/content/types/content';
+import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 
 export async function createNewRichTextContentUseCase(
   params: NewRichTextContentSchema,

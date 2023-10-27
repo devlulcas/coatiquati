@@ -7,7 +7,7 @@ import TextStyle from '@tiptap/extension-text-style';
 import Youtube from '@tiptap/extension-youtube';
 import { useEditor, type Content } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import LayeredImage from '../components/layered-image-node';
+import LayeredImage from '@/modules/content/components/layered-image-node';
 
 type UseRichTextEditorOptions = {
   initialContent?: Content;
