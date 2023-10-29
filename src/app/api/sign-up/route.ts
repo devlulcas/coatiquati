@@ -2,6 +2,8 @@ import { roles } from '@/modules/auth/constants/roles';
 import { userSignUpSchema } from '@/modules/auth/schemas/user-sign-up-schema';
 import { auth } from '@/modules/auth/services/lucia';
 import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
+import { sendMail } from '@/modules/notification/lib/mail';
+import { signUpMailTemplate } from '@/modules/notification/templates/mail';
 import { formDataToObject } from '@/shared/utils/form-data-to-object';
 import { NextResponse, type NextRequest } from 'next/server';
 
@@ -43,6 +45,8 @@ export const POST = async (request: NextRequest) => {
     const authRequest = handleApiAuthRequest(request);
 
     authRequest.setSession(session);
+
+    sendMail(email, 'Welcome to Coati', signUpMailTemplate(username));
 
     return new Response(null, {
       status: 302,
