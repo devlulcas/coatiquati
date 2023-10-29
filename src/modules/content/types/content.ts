@@ -68,13 +68,9 @@ export type UpdateContentRichText = Omit<UpdatableContent<ContentRichTextTable>,
 };
 
 export type ContentImage = ContentImageTable;
-export type NewContentImage = Creatable<NewContentImageTable>;
-export type UpdateContentImage = UpdatableContent<ContentImageTable> & {
-  contributorId: ContentTable['authorId'];
-};
+export type NewContentImage = Omit<Creatable<NewContentImageTable>, 'contentId'>;
+export type UpdateContentImage = Omit<UpdatableContent<ContentImageTable>, 'contentId' | 'updatedAt'>;
 
 export type ContentVideo = ContentVideoTable;
-export type NewContentVideo = Creatable<NewContentVideoTable>;
-export type UpdateContentVideo = UpdatableContent<ContentVideoTable> & {
-  contributorId: ContentTable['authorId'];
-};
+export type NewContentVideo = Omit<Creatable<NewContentVideoTable>, 'contentId'>;
+export type UpdateContentVideo = Omit<UpdatableContent<ContentVideoTable>, 'contentId' | 'updatedAt'>;

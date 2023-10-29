@@ -1,5 +1,7 @@
 'use client';
 
+import { UploadDropzone } from '@/modules/content/components/generic-upload-component-pack';
+import { newImageContentSchema } from '@/modules/image-content/schemas/new-image-content-schema';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
@@ -10,23 +12,18 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { UploadDropzone } from '../generic-upload-component-pack';
 
-const imageContentSchema = z.object({
-  url: z.string().url(),
-  title: z.string(),
-  alt: z.string(),
-});
+const imageContentSchema = newImageContentSchema;
 
 type ImageContentSchema = z.infer<typeof imageContentSchema>;
 
-type ImageContentFormProps = {
+type ImageContentBaseFormProps = {
   onSubmit: (data: ImageContentSchema) => void | Promise<void>;
   defaultValues?: Partial<ImageContentSchema>;
   className?: string;
 };
 
-export function ImageContentForm({ onSubmit, className, defaultValues }: ImageContentFormProps) {
+export function ImageContentBaseForm({ onSubmit, className, defaultValues }: ImageContentBaseFormProps) {
   const { toast } = useToast();
 
   const form = useForm<ImageContentSchema>({
@@ -34,10 +31,10 @@ export function ImageContentForm({ onSubmit, className, defaultValues }: ImageCo
     defaultValues: defaultValues,
   });
 
-  const [src, setSrc] = useState<string | undefined>(defaultValues?.url);
+  const [src, setSrc] = useState<string | undefined>(defaultValues?.src);
 
   if (src) {
-    form.setValue('url', src);
+    form.setValue('src', src);
   }
 
   return (
@@ -95,6 +92,20 @@ export function ImageContentForm({ onSubmit, className, defaultValues }: ImageCo
               <FormLabel>Título</FormLabel>
               <FormControl>
                 <Input type="text" placeholder="Gato" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Descrição</FormLabel>
+              <FormControl>
+                <Input type="text" placeholder="A imagem fala sobre..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

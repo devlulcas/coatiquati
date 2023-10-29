@@ -1,14 +1,20 @@
-import type { ContentImage, NewContent, NewContentImage, UpdateContent } from '@/modules/content/types/content';
+import type { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import type {
+  ContentImage,
+  NewContent,
+  NewContentImage,
+  UpdateContent,
+  UpdateContentImage,
+} from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentImageTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
 import { eq } from 'drizzle-orm';
-import type { DrizzleBaseContentRepository } from './base-content-repository';
 
 export type ImageContentRepository = {
   getContent(contentId: number): Promise<ContentImage>;
   createContent(baseContent: NewContent, image: NewContentImage): Promise<ContentImage>;
-  updateContent(baseContent: UpdateContent, image?: ContentImage): Promise<ContentImage>;
+  updateContent(baseContent: UpdateContent, image?: UpdateContentImage): Promise<ContentImage>;
 };
 
 export const IMAGE_CONTENT_DB_FIELDS = Object.freeze({
@@ -36,7 +42,7 @@ export class DrizzleImageContentRepository implements ImageContentRepository {
     });
 
     if (!resultImage) {
-      throw new Error('Erro ao buscar conteúdo de rich text com id = ' + contentId);
+      throw new Error('Erro ao buscar conteúdo de imagem com id = ' + contentId);
     }
 
     return resultImage;
@@ -63,7 +69,7 @@ export class DrizzleImageContentRepository implements ImageContentRepository {
         return insertedContentId;
       } catch (error) {
         tx.rollback();
-        throw new Error('Erro ao criar conteúdo de imagem com id = ' + image.contentId);
+        throw new Error('Erro ao criar conteúdo de imagem');
       }
     });
 
@@ -73,7 +79,7 @@ export class DrizzleImageContentRepository implements ImageContentRepository {
   /**
    * Atualiza um conteúdo de texto complexo
    */
-  async updateContent(baseContent: UpdateContent, image?: ContentImage, database = db): Promise<ContentImage> {
+  async updateContent(baseContent: UpdateContent, image?: UpdateContentImage, database = db): Promise<ContentImage> {
     const updatedAt = new Date().toISOString();
 
     if (typeof image === 'undefined') {

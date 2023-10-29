@@ -1,6 +1,6 @@
 'use client';
 
-import { ContentStatusBadge } from '@/shared/components/common/content-status-badge';
+import { ContentStatusBadge } from '@/modules/content/components/content-status-badge';
 import { SortedColumnHeader } from '@/shared/components/common/data-table';
 import { Button } from '@/shared/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';

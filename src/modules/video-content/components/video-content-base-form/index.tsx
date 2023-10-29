@@ -1,67 +1,47 @@
 'use client';
 
+import { newVideoContentSchema } from '@/modules/video-content/schemas/new-video-content-schema';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { ClassValue } from 'clsx';
 import { VideoOffIcon } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { useMemo } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 import { z } from 'zod';
 
-const videoContentSchema = z.object({
-  url: z
-    .string()
-    .url()
-    .refine(url => {
-      try {
-        const urlObject = new URL(url);
+const videoContentFormSchema = newVideoContentSchema;
 
-        const validHostnames = ['www.youtube.com', 'youtube.com', 'youtu.be'];
+type VideoContentBaseFormSchema = z.infer<typeof videoContentFormSchema>;
 
-        return validHostnames.includes(urlObject.hostname);
-      } catch (error) {
-        return false;
-      }
-    }),
-  title: z.string(),
-  alt: z.string(),
-});
-
-function extractYoutubeVideoId(url: string) {
-  try {
-    const urlObject = new URL(url);
-
-    if (urlObject.hostname === 'youtu.be') {
-      return urlObject.pathname.replace('/', '');
-    }
-
-    return urlObject.searchParams.get('v');
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
-type VideoContentSchema = z.infer<typeof videoContentSchema>;
-
-type VideoContentFormProps = {
-  onSubmit: (data: VideoContentSchema) => void | Promise<void>;
-  defaultValues?: Partial<VideoContentSchema>;
-  className?: string;
+type VideoContentBaseFormProps = {
+  defaultValues?: Partial<VideoContentBaseFormSchema>;
+  onSubmit: SubmitHandler<VideoContentBaseFormSchema>;
+  className?: ClassValue;
 };
 
-export function VideoContentForm({ onSubmit, className, defaultValues }: VideoContentFormProps) {
-  const form = useForm<VideoContentSchema>({
-    resolver: zodResolver(videoContentSchema),
+export function VideoContentBaseForm({ onSubmit, className, defaultValues }: VideoContentBaseFormProps) {
+  const form = useForm<VideoContentBaseFormSchema>({
+    resolver: zodResolver(videoContentFormSchema),
     defaultValues: defaultValues,
   });
 
-  const url = form.watch('url');
+  const url = form.watch('src');
 
-  const youtubeId = extractYoutubeVideoId(url);
+  const youtubeId = useMemo(() => {
+    try {
+      const urlObject = new URL(url);
+      if (urlObject.hostname === 'youtu.be') return urlObject.pathname.replace('/', '');
+      return urlObject.searchParams.get('v');
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }, [url]);
 
   return (
     <Form {...form}>
@@ -79,7 +59,7 @@ export function VideoContentForm({ onSubmit, className, defaultValues }: VideoCo
 
         <FormField
           control={form.control}
-          name="url"
+          name="src"
           render={({ field }) => (
             <FormItem>
               <FormLabel>URL do vídeo no Youtube</FormLabel>
@@ -113,6 +93,20 @@ export function VideoContentForm({ onSubmit, className, defaultValues }: VideoCo
               <FormLabel>Título</FormLabel>
               <FormControl>
                 <Input type="text" placeholder="Gato" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Descrição</FormLabel>
+              <FormControl>
+                <Input type="text" placeholder="O vídeo fala sobre..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

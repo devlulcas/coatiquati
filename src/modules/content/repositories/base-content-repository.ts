@@ -1,8 +1,4 @@
-import type {
-  BaseContent,
-  NewContent,
-  UpdateContent
-} from '@/modules/content/types/content';
+import type { BaseContent, NewContent, UpdateContent } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';

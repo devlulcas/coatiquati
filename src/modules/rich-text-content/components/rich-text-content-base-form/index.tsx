@@ -10,7 +10,10 @@ import { type ClassValue } from 'clsx';
 import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import type { z } from 'zod';
-import { newRichTextContentSchema, type NewRichTextContentSchema } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
+import {
+  newRichTextContentSchema,
+  type NewRichTextContentSchema,
+} from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
 import { Editor } from '@/modules/rich-text-content/components/editor';
 
 const newRichTextContentFormSchema = newRichTextContentSchema.omit({ content: true });

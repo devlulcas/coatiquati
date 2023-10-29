@@ -1,14 +1,20 @@
-import type { ContentVideo, NewContent, NewContentVideo, UpdateContent } from '@/modules/content/types/content';
+import type { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import type {
+  ContentVideo,
+  NewContent,
+  NewContentVideo,
+  UpdateContent,
+  UpdateContentVideo,
+} from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentVideoTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
 import { eq } from 'drizzle-orm';
-import type { DrizzleBaseContentRepository } from './base-content-repository';
 
 export type VideoContentRepository = {
   getContent(contentId: number): Promise<ContentVideo>;
   createContent(baseContent: NewContent, video: NewContentVideo): Promise<ContentVideo>;
-  updateContent(baseContent: UpdateContent, video?: ContentVideo): Promise<ContentVideo>;
+  updateContent(baseContent: UpdateContent, video?: UpdateContentVideo): Promise<ContentVideo>;
 };
 
 export const VIDEO_CONTENT_DB_FIELDS = Object.freeze({
@@ -36,7 +42,7 @@ export class DrizzleVideoContentRepository implements VideoContentRepository {
     });
 
     if (!resultVideo) {
-      throw new Error('Erro ao buscar conteúdo de rich text com id = ' + contentId);
+      throw new Error('Erro ao buscar conteúdo de vídeo com id = ' + contentId);
     }
 
     return resultVideo;
@@ -63,7 +69,7 @@ export class DrizzleVideoContentRepository implements VideoContentRepository {
         return insertedContentId;
       } catch (error) {
         tx.rollback();
-        throw new Error('Erro ao criar conteúdo de video com id = ' + video.contentId);
+        throw new Error('Erro ao criar conteúdo de video');
       }
     });
 
@@ -73,11 +79,11 @@ export class DrizzleVideoContentRepository implements VideoContentRepository {
   /**
    * Atualiza um conteúdo de texto complexo
    */
-  async updateContent(baseContent: UpdateContent, video?: ContentVideo, database = db): Promise<ContentVideo> {
+  async updateContent(baseContent: UpdateContent, video?: UpdateContentVideo, database = db): Promise<ContentVideo> {
     const updatedAt = new Date().toISOString();
 
     if (typeof video === 'undefined') {
-      throw new Error('Erro ao atualizar conteúdo de rich text com id = ' + baseContent.id);
+      throw new Error('Erro ao atualizar conteúdo de vídeo com id = ' + baseContent.id);
     }
 
     return database.transaction(async tx => {

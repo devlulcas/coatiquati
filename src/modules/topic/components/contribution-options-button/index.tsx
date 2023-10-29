@@ -1,7 +1,7 @@
 'use client';
 
-import { NewImageContentDialogTrigger } from '@/modules/content/components/new-image-content-dialog-trigger';
-import { NewVideoContentDialogTrigger } from '@/modules/content/components/new-video-content-dialog-trigger';
+import { NewImageContentDialogTrigger } from '@/modules/image-content/components/new-image-content-dialog-trigger';
+import { NewVideoContentDialogTrigger } from '@/modules/video-content/components/new-video-content-dialog-trigger';
 import { Button } from '@/shared/components/ui/button';
 import { AnimatePresence, motion, useCycle } from 'framer-motion';
 import { ScrollTextIcon } from 'lucide-react';
@@ -16,7 +16,7 @@ type ContributionOptionsButtonProps = {
 export function ContributionOptionsButton({ topicId, trailId }: ContributionOptionsButtonProps) {
   const [isOpen, toggleOpen] = useCycle(false, true);
 
-  const url = createTopicUrl(topicId, trailId);
+  const topicUrl = createTopicUrl(topicId, trailId);
 
   return (
     <div className="flex gap-1 w-fit">
@@ -40,7 +40,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               transition={{ duration: 0.2, delay: 0.1 }}
             >
               <Button className="flex gap-2 items-center justify-center" asChild>
-                <Link href={url + '/contribute/post'}>
+                <Link href={topicUrl + '/contribute/post'}>
                   <ScrollTextIcon />
                   Postagem
                 </Link>
@@ -53,7 +53,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               exit={{ x: -100, opacity: 0 }}
               transition={{ duration: 0.2, delay: 0.2 }}
             >
-              <NewImageContentDialogTrigger />
+              <NewImageContentDialogTrigger topicId={topicId} />
             </motion.li>
 
             <motion.li
@@ -62,7 +62,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               exit={{ x: -100, opacity: 0 }}
               transition={{ duration: 0.2, delay: 0.2 }}
             >
-              <NewVideoContentDialogTrigger />
+              <NewVideoContentDialogTrigger topicId={topicId} />
             </motion.li>
           </motion.ul>
         )}

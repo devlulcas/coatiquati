@@ -1,6 +1,6 @@
 'use client';
 
-import { ContentStatusBadge } from '@/shared/components/common/content-status-badge';
+import { ContentStatusBadge } from '@/modules/content/components/content-status-badge';
 import { Button } from '@/shared/components/ui/button';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { contentStatus } from '@/shared/constants/content-status';
