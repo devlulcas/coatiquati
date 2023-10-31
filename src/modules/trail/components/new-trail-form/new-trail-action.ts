@@ -7,7 +7,7 @@ import { createNewTrailUseCase } from '../../use-cases/create-new-trail-use-case
 
 export async function newTrailAction(data: NewTrailSchema) {
   const session = await getActionSession();
-
+  console.log(session);
   if (!session) {
     throw new Error('Você precisa estar logado para criar uma nova trilha.');
   }

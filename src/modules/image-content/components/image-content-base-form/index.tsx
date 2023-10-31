@@ -39,7 +39,11 @@ export function ImageContentBaseForm({ onSubmit, className, defaultValues }: Ima
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('flex h-full flex-col gap-4', className)}>
+      <form
+        method="POST"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn('flex h-full flex-col gap-4', className)}
+      >
         {src ? (
           <div className="w-full flex">
             <Image src={src} alt={form.watch('alt')} className="rounded-lg mx-auto" width={500} height={500} />

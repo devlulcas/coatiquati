@@ -45,7 +45,11 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('flex h-full flex-col gap-4', className)}>
+      <form
+        method="POST"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className={cn('flex h-full flex-col gap-4', className)}
+      >
         <div className={cn('aspect-video h-80 rounded-lg overflow-hidden ', youtubeId ? 'bg-black' : 'bg-neutral-900')}>
           {youtubeId ? (
             <LiteYouTubeEmbed id={youtubeId} title={form.watch('title')} />

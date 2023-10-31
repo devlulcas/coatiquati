@@ -23,7 +23,7 @@ export function TopicBaseForm({ defaultValues, onSubmit, className }: TopicBaseF
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8', className)}>
+      <form method="POST" onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8', className)}>
         <FormField
           control={form.control}
           name="title"

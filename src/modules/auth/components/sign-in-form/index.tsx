@@ -59,6 +59,7 @@ export function SignInForm() {
     <div className="flex items-center justify-center flex-col h-[--view-height]">
       <Form {...form}>
         <form
+          method="POST"
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4 h-fit bg-card border rounded-md shadow-md px-4 py-6 min-w-[400px]"
           action="/api/sign-in"

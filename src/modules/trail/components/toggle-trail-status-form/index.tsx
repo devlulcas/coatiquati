@@ -34,7 +34,7 @@ export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
   return (
     <div className="flex gap-2 items-center">
       <ContentStatusBadge status={trail.status} />
-      <Button isLoading={isLoading} onClick={onSubmit}>
+      <Button type="button" isLoading={isLoading} onClick={onSubmit}>
         {trail.status === contentStatus.PUBLISHED ? 'Omitir' : 'Publicar'}
       </Button>
     </div>

@@ -23,7 +23,7 @@ export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseF
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8 w-full', className)}>
+      <form method="POST" onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8 w-full', className)}>
         <FormField
           control={form.control}
           name="title"

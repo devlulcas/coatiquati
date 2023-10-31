@@ -27,7 +27,7 @@ export function AuthForm({ children, action, ...rest }: FormProps) {
   };
 
   return (
-    <form {...rest} action={action} method="post" onSubmit={handleOnSubmit}>
+    <form {...rest} action={action} method="POST" onSubmit={handleOnSubmit}>
       {children}
     </form>
   );
