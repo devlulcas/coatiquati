@@ -21,7 +21,7 @@ export async function createNewImageContentUseCase(
 
   const newBaseContent: NewContent = {
     authorId: session.userId,
-    contentType: 'rich_text',
+    contentType: 'image',
     title: validatedParams.data.title,
     topicId: validatedParams.data.topicId,
   };

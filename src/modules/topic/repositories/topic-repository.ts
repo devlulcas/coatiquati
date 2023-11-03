@@ -1,13 +1,13 @@
 import { CONTENT_DB_FIELDS, type ContentRepository } from '@/modules/content/repositories/content-repository';
 import type { Content } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
+import { topicContributionTable } from '@/modules/database/schema/contribution';
 import { topicTable } from '@/modules/database/schema/topic';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
+import { contentStatus } from '@/shared/constants/content-status';
 import { eq } from 'drizzle-orm';
 import type { NewTopic, Topic, TopicWithContentArray, UpdateTopic } from '../types/topic';
-import { topicContributionTable } from '@/modules/database/schema/contribution';
-import { contentStatus } from '@/shared/constants/content-status';
 
 export type TopicRepository = {
   createTopic: (topic: NewTopic) => Promise<Topic>;
@@ -178,7 +178,7 @@ export class DrizzleTopicRepository implements TopicRepository {
       return dataWithFilledContents;
     } catch (error) {
       console.error(error);
-      throw new Error('Erro ao buscar trilha');
+      throw error;
     }
   }
 

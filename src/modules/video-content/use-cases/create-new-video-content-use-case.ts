@@ -21,7 +21,7 @@ export async function createNewVideoContentUseCase(
 
   const newBaseContent: NewContent = {
     authorId: session.userId,
-    contentType: 'rich_text',
+    contentType: 'video',
     title: validatedParams.data.title,
     topicId: validatedParams.data.topicId,
   };

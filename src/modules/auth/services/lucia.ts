@@ -8,9 +8,7 @@ import 'lucia/polyfill/node';
 export const auth = lucia({
   env: env.NODE_ENV === 'production' ? 'PROD' : 'DEV',
   middleware: nextjs_future(),
-  sessionCookie: {
-    expires: false,
-  },
+  sessionCookie: { expires: false },
   adapter: betterSqlite3(sqlite, {
     user: 'user',
     key: 'user_key',

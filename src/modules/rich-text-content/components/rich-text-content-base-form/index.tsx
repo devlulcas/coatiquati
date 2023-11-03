@@ -10,13 +10,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Content } from '@tiptap/core';
 import { type ClassValue } from 'clsx';
-import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import type { z } from 'zod';
 
-const newRichTextContentFormSchema = newRichTextContentSchema.omit({ content: true });
+const newRichTextContentFormSchema = newRichTextContentSchema;
 type NewRichTextContentFormSchema = z.infer<typeof newRichTextContentFormSchema>;
 
 type RichTextContentBaseFormProps = {
@@ -28,15 +26,13 @@ type RichTextContentBaseFormProps = {
 export function RichTextContentBaseForm(props: RichTextContentBaseFormProps) {
   const { defaultValues, onSubmit, className } = props;
 
-  const [content, setContent] = useState<Content>(null);
-
   const form = useForm<NewRichTextContentFormSchema>({
     resolver: zodResolver(newRichTextContentFormSchema),
     defaultValues,
   });
 
   const innerOnSubmit = form.handleSubmit(data => {
-    onSubmit({ ...data, content });
+    onSubmit(data);
   });
 
   return (
@@ -59,7 +55,7 @@ export function RichTextContentBaseForm(props: RichTextContentBaseFormProps) {
         <Editor
           initialContent={defaultValues?.content}
           onDelayedChange={editor => {
-            setContent(editor.getJSON());
+            form.setValue('content', JSON.parse(JSON.stringify(editor.getJSON())));
           }}
         />
 

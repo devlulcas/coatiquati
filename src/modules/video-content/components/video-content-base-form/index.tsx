@@ -10,9 +10,8 @@ import type { ClassValue } from 'clsx';
 import { VideoOffIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import LiteYouTubeEmbed from 'react-lite-youtube-embed';
-import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 import { z } from 'zod';
+import { YouTubeEmbed } from '../youtube-embed';
 
 const videoContentFormSchema = newVideoContentSchema;
 
@@ -52,7 +51,7 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
       >
         <div className={cn('aspect-video h-80 rounded-lg overflow-hidden ', youtubeId ? 'bg-black' : 'bg-neutral-900')}>
           {youtubeId ? (
-            <LiteYouTubeEmbed id={youtubeId} title={form.watch('title')} />
+            <YouTubeEmbed id={youtubeId} title={form.watch('title')} />
           ) : (
             <div className="flex items-center justify-center gap-4 h-full">
               <VideoOffIcon className="w-16 h-16 text-neutral-500" />

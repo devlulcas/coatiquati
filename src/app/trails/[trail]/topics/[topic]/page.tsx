@@ -1,4 +1,3 @@
-import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 import type {
   Content,
   ContentWithFile,
@@ -6,12 +5,13 @@ import type {
   ContentWithRichTextPreview,
   ContentWithVideo,
 } from '@/modules/content/types/content';
+import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 import { ContributionOptionsButton } from '@/modules/topic/components/contribution-options-button';
 import { getTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
+import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { ArrowRightIcon, FileIcon, ImageIcon, TextIcon, VideoIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 
 type PageProps = {
   params: {
@@ -127,7 +127,7 @@ function RenderVideoContentCard({ content }: { content: ContentWithVideo }) {
 
   return (
     <RenderedContentWrapper title={meta.title}>
-      <LiteYouTubeEmbed id={data.src} title={meta.title} />
+      <YouTubeEmbed id={data.src} title={meta.title} />
       <p className="text-md text-muted-foreground">{data.description}</p>
     </RenderedContentWrapper>
   );

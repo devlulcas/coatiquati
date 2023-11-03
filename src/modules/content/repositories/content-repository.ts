@@ -48,6 +48,15 @@ export class DrizzleContentRepository implements ContentRepository {
 
   async getContentWithImage(content: BaseContent, database = db): Promise<ContentWithImage> {
     const resultImage: ContentImage | undefined = await database.query.contentImageTable.findFirst({
+      columns: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        contentId: true,
+        alt: true,
+        description: true,
+        src: true,
+      },
       where(fields, operators) {
         return operators.eq(fields.contentId, content.id);
       },
@@ -66,6 +75,15 @@ export class DrizzleContentRepository implements ContentRepository {
 
   async getContentWithVideo(content: BaseContent, database = db): Promise<ContentWithVideo> {
     const resultVideo: ContentVideo | undefined = await database.query.contentVideoTable.findFirst({
+      columns: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        contentId: true,
+        alt: true,
+        description: true,
+        src: true,
+      },
       where(fields, operators) {
         return operators.eq(fields.contentId, content.id);
       },
@@ -103,7 +121,7 @@ export class DrizzleContentRepository implements ContentRepository {
     return {
       ...content,
       contentType: 'rich_text',
-      content: { ...resultRichtext, previewAsJson: JSON.parse(String(resultRichtext.previewAsJson)) },
+      content: { ...resultRichtext, previewAsJson: JSON.parse(JSON.stringify(resultRichtext.previewAsJson)) },
     };
   }
 }

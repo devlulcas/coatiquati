@@ -1,6 +1,5 @@
 import { TrailCard } from '@/modules/trail/components/trail-card';
 import { groupTrailsByCategory } from '@/modules/trail/lib/group-trails-by-category';
-import type { Trail } from '@/modules/trail/types/trail';
 import { getTrailsUseCase } from '@/modules/trail/use-cases/get-trails-use-case';
 import coatiSvg from '@/shared/assets/images/coati.svg';
 import { Button } from '@/shared/components/ui/button';
@@ -12,8 +11,6 @@ type PageProps = {
     search?: string;
   };
 };
-
-export const revalidate = 60;
 
 export default async function Page(props: PageProps) {
   const trails = await getTrailsUseCase({
