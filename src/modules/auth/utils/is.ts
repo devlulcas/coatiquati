@@ -1,4 +1,5 @@
 import { roles } from '../constants/roles';
+import type { Session } from '../types/session';
 
 export const isAdmin = (role: string) => {
   return role === roles.ADMIN;
@@ -10,6 +11,10 @@ export const isUser = (role: string) => {
 
 export const isHighPrivilegeAdmin = (role: string) => {
   return role === roles.HIGH_PRIVILEGE_ADMIN;
+};
+
+export const isAuthenticated = (session: Session) => {
+  return session.userId !== null;
 };
 
 export const isAdminOrAbove = (role: string) => {

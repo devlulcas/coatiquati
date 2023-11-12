@@ -1,16 +1,21 @@
 import type { Session } from '@/modules/auth/types/session';
+import { isAuthenticated } from '@/modules/auth/utils/is';
+import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import type { ContentRichText, NewContent } from '@/modules/content/types/content';
 import { DrizzleRichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
 import {
   newRichTextContentSchema,
   type NewRichTextContentSchema,
 } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
-import type { ContentRichText, NewContent } from '@/modules/content/types/content';
-import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 
 export async function createNewRichTextContentUseCase(
   params: NewRichTextContentSchema,
   session: Session,
 ): Promise<ContentRichText> {
+  if (!isAuthenticated(session)) {
+    throw new Error('Usuário não autenticado');
+  }
+
   const validatedParams = newRichTextContentSchema.safeParse(params);
 
   if (!validatedParams.success) {

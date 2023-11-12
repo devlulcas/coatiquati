@@ -19,3 +19,10 @@ export const secretCodeMailTemplate = (name: string, code: string) => html`
   <p><strong>${code}</strong></p>
   <p>Se você não solicitou um código secreto, desconsidere este e-mail.</p>
 `;
+
+export const emailVerificationLinkMailTemplate = (name: string, link: string) => html`
+  <h1>Olá, ${name}!</h1>
+  <p>Para verificar sua conta, clique no link abaixo:</p>
+  <p><a href="${link}">${link}</a></p>
+  <p>Se você não solicitou a verificação de conta, desconsidere este e-mail.</p>
+`;

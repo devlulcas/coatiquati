@@ -1,4 +1,5 @@
 import type { Session } from '@/modules/auth/types/session';
+import { isAuthenticated } from '@/modules/auth/utils/is';
 import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type { ContentRichText, UpdateContent } from '@/modules/content/types/content';
 import { DrizzleRichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
@@ -11,6 +12,10 @@ export async function updateRichTextContentUseCase(
   params: UpdateRichTextContentSchema,
   session: Session,
 ): Promise<ContentRichText> {
+  if (!isAuthenticated(session)) {
+    throw new Error('Usuário não autenticado');
+  }
+
   const validatedParams = updateRichTextContentSchema.safeParse(params);
 
   if (!validatedParams.success) {

@@ -35,11 +35,10 @@ export const globalFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       console.log('Upload complete for userId:', metadata.userId);
-
       console.log('file url', file.url);
     }),
   newImageContent: f({
-    image: { maxFileSize: '2MB' },
+    image: { maxFileSize: '4MB' },
   })
     .middleware(async ({ req }) => {
       const user = await authHandler(req);
@@ -52,7 +51,6 @@ export const globalFileRouter = {
     })
     .onUploadComplete(async ({ metadata, file }) => {
       console.log('Upload complete for userId:', metadata.userId);
-
       console.log('file url', file.url);
     }),
 } satisfies FileRouter;
