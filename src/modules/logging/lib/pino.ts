@@ -1,7 +1,5 @@
-import { env } from '@/env';
+import { PHASE_DEVELOPMENT_SERVER } from 'next/dist/shared/lib/constants';
 import { pino } from 'pino';
-
-const isProduction = env.NODE_ENV === 'production';
 
 const pretty = {
   target: 'pino-pretty',
@@ -13,5 +11,5 @@ const pretty = {
 };
 
 export const log = pino({
-  transport: isProduction ? undefined : pretty,
+  transport: PHASE_DEVELOPMENT_SERVER ? undefined : pretty,
 });
