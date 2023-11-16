@@ -1,4 +1,4 @@
-import type { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type {
   ContentVideo,
   NewContent,
@@ -9,6 +9,7 @@ import type {
 import { db } from '@/modules/database/db';
 import { contentVideoTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
+import { log } from '@/modules/logging/lib/pino';
 import { eq } from 'drizzle-orm';
 
 export const VIDEO_CONTENT_DB_FIELDS = Object.freeze({
@@ -22,11 +23,8 @@ export const VIDEO_CONTENT_DB_FIELDS = Object.freeze({
 });
 
 export class VideoContentRepository {
-  constructor(private readonly baseContentRepository: BaseContentRepository) {}
+  constructor(private readonly baseContentRepository: BaseContentRepository = new BaseContentRepository()) {}
 
-  /**
-   * Busca um conteúdo de vídeo com base no seu id
-   */
   async getContent(contentId: number, database = db): Promise<ContentVideo> {
     const resultVideo: ContentVideo | undefined = await database.query.contentVideoTable.findFirst({
       columns: VIDEO_CONTENT_DB_FIELDS,
@@ -36,15 +34,13 @@ export class VideoContentRepository {
     });
 
     if (!resultVideo) {
+      log.error('Erro ao buscar conteúdo de vídeo', { contentId });
       throw new Error('Erro ao buscar conteúdo de vídeo com id = ' + contentId);
     }
 
     return resultVideo;
   }
 
-  /**
-   * Cria um conteúdo de vídeo
-   */
   async createContent(baseContent: NewContent, video: NewContentVideo, database = db): Promise<ContentVideo> {
     const contentId = await database.transaction(async tx => {
       try {
@@ -62,6 +58,7 @@ export class VideoContentRepository {
 
         return insertedContentId;
       } catch (error) {
+        log.error('Erro ao criar conteúdo de vídeo', { baseContent, video, error });
         tx.rollback();
         throw new Error('Erro ao criar conteúdo de video');
       }
@@ -70,9 +67,6 @@ export class VideoContentRepository {
     return this.getContent(contentId);
   }
 
-  /**
-   * Atualiza um conteúdo de texto complexo
-   */
   async updateContent(baseContent: UpdateContent, video?: UpdateContentVideo, database = db): Promise<ContentVideo> {
     const updatedAt = new Date().toISOString();
 
@@ -109,6 +103,7 @@ export class VideoContentRepository {
 
         return resultVideo;
       } catch (error) {
+        log.error('Erro ao atualizar conteúdo de vídeo', { baseContent, video, error });
         tx.rollback();
         throw new Error('Erro ao atualizar conteúdo de video com id = ' + baseContent.id);
       }
