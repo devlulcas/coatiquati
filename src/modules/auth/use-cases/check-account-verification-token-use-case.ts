@@ -26,6 +26,11 @@ export async function checkAccountVerificationTokenUseCase(
 
   try {
     const userId = await emailVerificationService.validateEmailVerificationToken(token);
+
+    if (userId === null) {
+      return null;
+    }
+
     const user = await auth.getUser(userId);
 
     await auth.invalidateAllUserSessions(user.userId);

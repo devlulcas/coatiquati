@@ -3,6 +3,7 @@ import {
   emailVerificationTokenTable,
   type EmailVerificationToken,
 } from '@/modules/database/schema/email-verification-token';
+import { log } from '@/modules/logging/lib/pino';
 import { eq } from 'drizzle-orm';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
 
@@ -29,7 +30,7 @@ export class DrizzleEmailVerificationTokenRepository implements EmailVerificatio
 
       return verificationToken ? verificationToken : null;
     } catch (error) {
-      console.error('createVerificationToken', error);
+      log.error('createVerificationToken', error);
       return null;
     }
   }
@@ -44,7 +45,7 @@ export class DrizzleEmailVerificationTokenRepository implements EmailVerificatio
 
       return results;
     } catch (error) {
-      console.error('getVerificationTokensByUserId', error);
+      log.error('getVerificationTokensByUserId', { error });
       return [];
     }
   }
@@ -71,7 +72,7 @@ export class DrizzleEmailVerificationTokenRepository implements EmailVerificatio
         return storedToken;
       } catch (error) {
         tx.rollback();
-        console.error('getVerificationTokenById', error);
+        log.error('getVerificationTokenById - rollback', error);
         return null;
       }
     });

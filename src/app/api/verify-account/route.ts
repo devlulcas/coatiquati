@@ -2,7 +2,7 @@ import { checkAccountVerificationTokenUseCase } from '@/modules/auth/use-cases/c
 import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
 import { NextResponse, type NextRequest } from 'next/server';
 
-export const POST = async (request: NextRequest) => {
+export const GET = async (request: NextRequest) => {
   const token = request.nextUrl.searchParams.get('token') ?? '';
 
   try {
@@ -14,9 +14,7 @@ export const POST = async (request: NextRequest) => {
 
     return new Response(null, {
       status: 302,
-      headers: {
-        Location: '/',
-      },
+      headers: { Location: '/' },
     });
   } catch (e) {
     console.error(e);

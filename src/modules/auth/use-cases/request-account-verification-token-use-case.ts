@@ -8,11 +8,11 @@ import { isAuthenticated } from '../utils/is';
 
 export async function requestAccountVerificationTokenUseCase(session: Session): Promise<{ message: string }> {
   if (!isAuthenticated(session)) {
-    throw new Error('Usuário não autenticado');
+    throw new Error('Usuário não autenticado. A confirmação de e-mail só pode ser feita por usuários autenticados.');
   }
 
   if (session.user.emailVerified) {
-    return { message: 'Email já verificado' };
+    return { message: 'Email já verificado.' };
   }
 
   const emailVerificationTokenRepository = new DrizzleEmailVerificationTokenRepository();
@@ -28,7 +28,6 @@ export async function requestAccountVerificationTokenUseCase(session: Session): 
   }
 
   const emailVerificationURL = new URL('verify-account', env.NEXT_PUBLIC_WEBSITE);
-
   emailVerificationURL.searchParams.set('token', token);
 
   try {
