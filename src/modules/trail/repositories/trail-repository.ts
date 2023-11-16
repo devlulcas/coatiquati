@@ -2,6 +2,7 @@ import { db } from '@/modules/database/db';
 import { trailContributionTable } from '@/modules/database/schema/contribution';
 import { trailTable } from '@/modules/database/schema/trail';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
+import { log } from '@/modules/logging/lib/pino';
 import { TOPIC_DB_FIELDS } from '@/modules/topic/repositories/topic-repository';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { contentStatus } from '@/shared/constants/content-status';
@@ -32,16 +33,10 @@ export class TrailRepository {
   async createTrail(trail: NewTrail, database = db): Promise<Trail> {
     try {
       const newTrail = database.insert(trailTable).values(trail).returning({ id: trailTable.id }).get();
-
       const data = await this.getTrailById(newTrail.id, database);
-
-      if (!data) {
-        throw new Error('Erro ao criar trilha');
-      }
-
       return data;
     } catch (error) {
-      console.error(error);
+      log.error('Erro ao criar trilha', { error, trail });
       throw new Error('Erro ao criar trilha');
     }
   }
@@ -58,7 +53,7 @@ export class TrailRepository {
         .where(eq(trailTable.id, id))
         .execute();
     } catch (error) {
-      console.error(error);
+      log.error('Erro ao habilitar trilha', { error, id });
       throw new Error('Erro ao habilitar trilha');
     }
   }
@@ -94,8 +89,8 @@ export class TrailRepository {
 
       return data;
     } catch (error) {
-      console.error(error);
-      throw new Error('Erro ao buscar trilhas');
+      log.error('Erro ao buscar a trilha desejada', { error, id });
+      throw new Error('Erro ao buscar a trilha desejada');
     }
   }
 
@@ -133,7 +128,7 @@ export class TrailRepository {
 
       return data;
     } catch (error) {
-      console.error(error);
+      log.error('Erro ao buscar trilhas', { error, params });
       throw new Error('Erro ao buscar trilhas');
     }
   }
@@ -181,12 +176,12 @@ export class TrailRepository {
       });
 
       if (!data) {
-        throw new Error('Erro ao buscar trilha');
+        throw new Error('Trilha não encontrada');
       }
 
       return data;
     } catch (error) {
-      console.error(error);
+      log.error('Erro ao buscar a trilha desejada', { error, id });
       throw new Error('Erro ao buscar trilha');
     }
   }
@@ -214,7 +209,7 @@ export class TrailRepository {
 
         return data;
       } catch (error) {
-        console.error(error);
+        log.error('Erro ao atualizar trilha', { error, trail });
         tx.rollback();
         throw new Error('Erro ao atualizar trilha');
       }
@@ -233,7 +228,7 @@ export class TrailRepository {
         .where(eq(trailTable.id, id))
         .execute();
     } catch (error) {
-      console.error(error);
+      log.error('Erro ao omitir trilha', { error, id });
       throw new Error('Erro ao omitir trilha');
     }
   }
