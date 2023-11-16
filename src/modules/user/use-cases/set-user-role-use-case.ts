@@ -14,7 +14,7 @@ const setUserRoleUseCaseSchema = z.object({
 export type SetUserRoleSchema = z.infer<typeof setUserRoleUseCaseSchema>;
 
 export class SetUserRoleUseCase {
-  constructor(private readonly repository: UserRepository = new UserRepository()) {}
+  constructor(private readonly userRepository: UserRepository = new UserRepository()) {}
 
   async execute(params: SetUserRoleSchema, session: Session): Promise<User> {
     if (!isHighPrivilegeAdmin(session.user.role)) {
@@ -43,7 +43,7 @@ export class SetUserRoleUseCase {
       throw new Error('Você não pode editar suas próprias permissões.');
     }
 
-    const targetUser = await this.repository.getUserById(validatedParams.data.userId);
+    const targetUser = await this.userRepository.getUserById(validatedParams.data.userId);
 
     if (!targetUser) {
       log.warn('Usuário não encontrado', {
@@ -71,6 +71,6 @@ export class SetUserRoleUseCase {
       throw new Error('Não é possível alterar a permissão de um administrador de nível tão alto.');
     }
 
-    return this.repository.updateUser(validatedParams.data.userId, { role: desiredRole });
+    return this.userRepository.updateUser(validatedParams.data.userId, { role: desiredRole });
   }
 }

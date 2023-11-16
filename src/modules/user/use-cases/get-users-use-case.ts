@@ -8,7 +8,7 @@ const getUsersUseCaseSchema = createPaginationSchemaWithSearch(20, 0);
 type GetUsersUseCaseSchema = Partial<z.infer<typeof getUsersUseCaseSchema>>;
 
 export class GetUsersUseCase {
-  constructor(private readonly repository: UserRepository = new UserRepository()) {}
+  constructor(private readonly userRepository: UserRepository = new UserRepository()) {}
 
   async execute(params?: GetUsersUseCaseSchema): Promise<User[]> {
     const validatedParams = getUsersUseCaseSchema.safeParse(params ?? {});
@@ -17,6 +17,6 @@ export class GetUsersUseCase {
       throw new Error('Parâmetros inválidos para busca de usuários');
     }
 
-    return this.repository.getUsers(validatedParams.data);
+    return this.userRepository.getUsers(validatedParams.data);
   }
 }

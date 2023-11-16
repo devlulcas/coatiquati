@@ -15,7 +15,7 @@ const updateUserUseCaseSchema = z.object({
 export type UpdateUserSchema = z.infer<typeof updateUserUseCaseSchema>;
 
 export class UpdateUserUseCase {
-  constructor(private readonly repository: UserRepository = new UserRepository()) {}
+  constructor(private readonly userRepository: UserRepository = new UserRepository()) {}
 
   async execute(params: UpdateUserSchema, session: Session): Promise<User> {
     if (isHighPrivilegeAdmin(session.user.role)) {
@@ -39,7 +39,7 @@ export class UpdateUserUseCase {
       throw new Error('Você não pode editar dados de outros usuários.');
     }
 
-    return this.repository.updateUser(validatedParams.data.userId, {
+    return this.userRepository.updateUser(validatedParams.data.userId, {
       avatar: validatedParams.data.avatar,
       username: validatedParams.data.username,
     });

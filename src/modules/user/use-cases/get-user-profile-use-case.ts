@@ -10,7 +10,7 @@ const getUserProfileUseCaseSchema = userSignInSchema.pick({
 type GetUserProfileUseCaseSchema = z.infer<typeof getUserProfileUseCaseSchema>;
 
 export class GetUserProfileUseCase {
-  constructor(private readonly repository: UserRepository = new UserRepository()) {}
+  constructor(private readonly userRepository: UserRepository = new UserRepository()) {}
 
   async execute(params: GetUserProfileUseCaseSchema): Promise<UserProfile | null> {
     const validatedParams = getUserProfileUseCaseSchema.safeParse(params);
@@ -19,6 +19,6 @@ export class GetUserProfileUseCase {
       throw new Error('Parâmetros de busca de perfil inválidos');
     }
 
-    return this.repository.getUserProfile(validatedParams.data.username);
+    return this.userRepository.getUserProfile(validatedParams.data.username);
   }
 }
