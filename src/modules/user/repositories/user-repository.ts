@@ -1,17 +1,11 @@
-import { db, type Database } from '@/modules/database/db';
+import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
+import { log } from '@/modules/logging/lib/pino';
 import { CATEGORY_DB_FIELDS, TRAIL_DB_FIELDS } from '@/modules/trail/repositories/trail-repository';
 import type { UpdateUser, User, UserProfile } from '@/modules/user/types/user';
 import { eq } from 'drizzle-orm';
 import { userTableToUserMapper } from '../lib/user-table-to-user-mapper';
-
-export type UserRepository = {
-  getUsers: (params: PaginationSchemaWithSearch) => Promise<User[]>;
-  getUserById: (id: string) => Promise<User | null>;
-  getUserProfile: (username: string) => Promise<UserProfile | null>;
-  updateUser: (id: string, user: UpdateUser) => Promise<User>;
-};
 
 export const USER_DB_FIELDS = Object.freeze({
   id: true,
@@ -30,10 +24,7 @@ export const CONTRIBUTOR_DB_FIELDS = Object.freeze({
   avatar: true,
 });
 
-export class DrizzleUserRepository implements UserRepository {
-  /**
-   * Atualiza os dados do usuário. Apenas dados não sensíveis podem ser atualizados.
-   */
+export class UserRepository {
   async updateUser(id: string, user: UpdateUser, database = db): Promise<User> {
     const updatedAt = new Date().toISOString();
 
@@ -52,14 +43,11 @@ export class DrizzleUserRepository implements UserRepository {
 
       return userTableToUserMapper(data, false);
     } catch (error) {
-      console.error(error);
+      log.error(error);
       throw new Error('Erro ao atualizar usuário');
     }
   }
 
-  /**
-   * Busca o usuário pelo id
-   */
   async getUserById(id: string, database = db): Promise<User | null> {
     try {
       const data = await database.query.userTable.findFirst({
@@ -73,14 +61,11 @@ export class DrizzleUserRepository implements UserRepository {
 
       return userTableToUserMapper(data, false);
     } catch (error) {
-      console.error(error);
+      log.error(error);
       return null;
     }
   }
 
-  /**
-   * Busca os usuários de acordo com os parâmetros
-   */
   async getUsers(params: PaginationSchemaWithSearch, database = db): Promise<User[]> {
     const data = await database.query.userTable.findMany({
       columns: USER_DB_FIELDS,
@@ -97,9 +82,6 @@ export class DrizzleUserRepository implements UserRepository {
     return data.map(user => userTableToUserMapper(user, true));
   }
 
-  /**
-   * Busca o perfil do usuário pelo username
-   */
   async getUserProfile(username: string, database = db): Promise<UserProfile | null> {
     try {
       const data = await database.query.userTable.findFirst({
@@ -128,6 +110,7 @@ export class DrizzleUserRepository implements UserRepository {
       });
 
       if (!data) {
+        log.warn(`User ${username} not found`);
         return null;
       }
 
@@ -138,7 +121,7 @@ export class DrizzleUserRepository implements UserRepository {
 
       return result;
     } catch (error) {
-      console.error(error);
+      log.error(error);
       return null;
     }
   }

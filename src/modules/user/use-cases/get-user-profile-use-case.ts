@@ -1,6 +1,6 @@
 import { userSignInSchema } from '@/modules/auth/schemas/user-sign-in-schema';
 import { z } from 'zod';
-import { DrizzleUserRepository } from '../repositories/user-repository';
+import { UserRepository } from '../repositories/user-repository';
 import { type UserProfile } from '../types/user';
 
 const getUserProfileUseCaseSchema = userSignInSchema.pick({
@@ -9,14 +9,16 @@ const getUserProfileUseCaseSchema = userSignInSchema.pick({
 
 type GetUserProfileUseCaseSchema = z.infer<typeof getUserProfileUseCaseSchema>;
 
-export async function getUserProfileUseCase(params: GetUserProfileUseCaseSchema): Promise<UserProfile | null> {
-  const validatedParams = getUserProfileUseCaseSchema.safeParse(params);
+export class GetUserProfileUseCase {
+  constructor(private readonly repository: UserRepository = new UserRepository()) {}
 
-  if (!validatedParams.success) {
-    throw new Error('Parâmetros inválidos');
+  async execute(params: GetUserProfileUseCaseSchema): Promise<UserProfile | null> {
+    const validatedParams = getUserProfileUseCaseSchema.safeParse(params);
+
+    if (!validatedParams.success) {
+      throw new Error('Parâmetros de busca de perfil inválidos');
+    }
+
+    return this.repository.getUserProfile(validatedParams.data.username);
   }
-
-  const repository = new DrizzleUserRepository();
-
-  return repository.getUserProfile(validatedParams.data.username);
 }

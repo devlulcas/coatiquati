@@ -1,6 +1,7 @@
+import { roles } from '@/modules/auth/constants/roles';
 import { TrailCard } from '@/modules/trail/components/trail-card';
 import { ProfileHeading } from '@/modules/user/components/profile-heading';
-import { getUserProfileUseCase } from '@/modules/user/use-cases/get-user-profile-use-case';
+import { GetUserProfileUseCase } from '@/modules/user/use-cases/get-user-profile-use-case';
 
 type PageProps = {
   params: {
@@ -8,10 +9,9 @@ type PageProps = {
   };
 };
 
-export const revalidate = 60;
-
 export default async function Page({ params }: PageProps) {
-  const profile = await getUserProfileUseCase({
+  const getUserProfileUseCase = new GetUserProfileUseCase();
+  const profile = await getUserProfileUseCase.execute({
     username: params.username,
   });
 
@@ -19,11 +19,14 @@ export default async function Page({ params }: PageProps) {
     throw new Error('Profile not found');
   }
 
+  // Usuários comuns não podem criar trilhas
+  const hasAuthoredTrails = profile.authoredTrails.length > 0 && profile.role !== roles.USER;
+
   return (
     <main className="py-8 container">
       <ProfileHeading user={profile} />
 
-      {profile.authoredTrails.length > 0 && (
+      {hasAuthoredTrails && (
         <section className="mt-8">
           <h2 className="text-xl font-bold">Trilhas autoradas</h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">

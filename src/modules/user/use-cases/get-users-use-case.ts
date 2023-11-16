@@ -1,20 +1,22 @@
 import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { z } from 'zod';
-import { DrizzleUserRepository } from '../repositories/user-repository';
+import { UserRepository } from '../repositories/user-repository';
 import { type User } from '../types/user';
 
 const getUsersUseCaseSchema = createPaginationSchemaWithSearch(20, 0);
 
 type GetUsersUseCaseSchema = Partial<z.infer<typeof getUsersUseCaseSchema>>;
 
-export async function getUsersUseCase(params: GetUsersUseCaseSchema = {}): Promise<User[]> {
-  const validatedParams = getUsersUseCaseSchema.safeParse(params);
+export class GetUsersUseCase {
+  constructor(private readonly repository: UserRepository = new UserRepository()) {}
 
-  if (!validatedParams.success) {
-    throw new Error('Parâmetros inválidos');
+  async execute(params?: GetUsersUseCaseSchema): Promise<User[]> {
+    const validatedParams = getUsersUseCaseSchema.safeParse(params ?? {});
+
+    if (!validatedParams.success) {
+      throw new Error('Parâmetros inválidos para busca de usuários');
+    }
+
+    return this.repository.getUsers(validatedParams.data);
   }
-
-  const repository = new DrizzleUserRepository();
-
-  return repository.getUsers(validatedParams.data);
 }
