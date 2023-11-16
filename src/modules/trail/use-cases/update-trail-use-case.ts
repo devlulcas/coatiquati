@@ -1,6 +1,6 @@
 import type { Session } from '@/modules/auth/types/session';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
-import { DrizzleTrailRepository } from '../repositories/trail-repository';
+import { TrailRepository } from '../repositories/trail-repository';
 import { updateTrailSchema, type UpdateTrailSchema } from '../schemas/edit-trail-schema';
 import type { UpdateTrail } from '../types/trail';
 
@@ -15,7 +15,7 @@ export async function updateTrailUseCase(params: UpdateTrailSchema, session: Ses
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = new DrizzleTrailRepository();
+  const repository = new TrailRepository();
 
   const updatedTrail: UpdateTrail = {
     id: validatedParams.data.id,

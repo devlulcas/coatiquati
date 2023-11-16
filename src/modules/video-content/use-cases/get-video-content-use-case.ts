@@ -1,11 +1,11 @@
-import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
-import { DrizzleContentRepository } from '@/modules/content/repositories/content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { ContentRepository } from '@/modules/content/repositories/content-repository';
 import type { ContentVideo } from '@/modules/content/types/content';
-import { DrizzleTopicRepository } from '@/modules/topic/repositories/topic-repository';
+import { TopicRepository } from '@/modules/topic/repositories/topic-repository';
 import type { Topic } from '@/modules/topic/types/topic';
-import { DrizzleTrailRepository } from '@/modules/trail/repositories/trail-repository';
+import { TrailRepository } from '@/modules/trail/repositories/trail-repository';
 import type { Trail } from '@/modules/trail/types/trail';
-import { DrizzleVideoContentRepository } from '@/modules/video-content/repositories/video-content-repository';
+import { VideoContentRepository } from '@/modules/video-content/repositories/video-content-repository';
 import { z } from 'zod';
 
 const getVideoContentUseCaseSchema = z.object({
@@ -25,9 +25,9 @@ export async function getVideoContentUseCase(params: GetVideoContentUseCaseSchem
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = new DrizzleVideoContentRepository(new DrizzleBaseContentRepository());
-  const topicRepository = new DrizzleTopicRepository(new DrizzleContentRepository());
-  const trailRepository = new DrizzleTrailRepository();
+  const repository = new VideoContentRepository(new BaseContentRepository());
+  const topicRepository = new TopicRepository(new ContentRepository());
+  const trailRepository = new TrailRepository();
 
   try {
     const [content, topic] = await Promise.all([

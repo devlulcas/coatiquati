@@ -1,7 +1,7 @@
 import type { Session } from '@/modules/auth/types/session';
-import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type { ContentVideo, NewContent } from '@/modules/content/types/content';
-import { DrizzleVideoContentRepository } from '@/modules/video-content/repositories/video-content-repository';
+import { VideoContentRepository } from '@/modules/video-content/repositories/video-content-repository';
 import {
   newVideoContentSchema,
   type NewVideoContentSchema,
@@ -17,7 +17,7 @@ export async function createNewVideoContentUseCase(
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = new DrizzleVideoContentRepository(new DrizzleBaseContentRepository());
+  const repository = new VideoContentRepository(new BaseContentRepository());
 
   const newBaseContent: NewContent = {
     authorId: session.userId,

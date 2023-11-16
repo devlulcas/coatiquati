@@ -1,7 +1,7 @@
 import { env } from '@/env';
 import { sendMail } from '@/modules/notification/lib/mail';
 import { emailVerificationLinkMailTemplate } from '@/modules/notification/templates/mail';
-import { DrizzleEmailVerificationTokenRepository } from '../repositories/email-verification-token-repository';
+import { EmailVerificationTokenRepository } from '../repositories/email-verification-token-repository';
 import { EmailVerificationService } from '../services/email-verification-service';
 import type { Session } from '../types/session';
 import { isAuthenticated } from '../utils/is';
@@ -15,7 +15,7 @@ export async function requestAccountVerificationTokenUseCase(session: Session): 
     return { message: 'Email já verificado.' };
   }
 
-  const emailVerificationTokenRepository = new DrizzleEmailVerificationTokenRepository();
+  const emailVerificationTokenRepository = new EmailVerificationTokenRepository();
   const emailVerificationService = new EmailVerificationService(emailVerificationTokenRepository);
 
   const token = await emailVerificationService.generateEmailVerificationToken(session.user.userId).catch(error => {

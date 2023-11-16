@@ -1,22 +1,12 @@
-import { db, type Database } from '@/modules/database/db';
+import { db } from '@/modules/database/db';
 import { trailContributionTable } from '@/modules/database/schema/contribution';
 import { trailTable } from '@/modules/database/schema/trail';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { TOPIC_DB_FIELDS } from '@/modules/topic/repositories/topic-repository';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
+import { contentStatus } from '@/shared/constants/content-status';
 import { eq } from 'drizzle-orm';
 import type { NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
-import { contentStatus } from '@/shared/constants/content-status';
-
-export type TrailRepository = {
-  createTrail: (trail: NewTrail) => Promise<Trail>;
-  getTrails: (params: PaginationSchemaWithSearch) => Promise<Trail[]>;
-  getTrailById: (id: number) => Promise<Trail>;
-  updateTrail: (trail: UpdateTrail) => Promise<Trail>;
-  getTrailWithTopicsById: (id: number) => Promise<TrailWithTopicArray>;
-  enableTrail: (id: number) => Promise<void>;
-  omitTrail: (id: number) => Promise<void>;
-};
 
 export const TRAIL_DB_FIELDS = Object.freeze({
   id: true,
@@ -35,7 +25,7 @@ export const CATEGORY_DB_FIELDS = Object.freeze({
   updatedAt: true,
 });
 
-export class DrizzleTrailRepository implements TrailRepository {
+export class TrailRepository {
   /**
    * Cria uma nova trilha e adiciona o autor como contribuidor
    */

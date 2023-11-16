@@ -1,6 +1,6 @@
 import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { z } from 'zod';
-import { DrizzleTrailRepository } from '../repositories/trail-repository';
+import { TrailRepository } from '../repositories/trail-repository';
 import type { Trail } from '../types/trail';
 
 const getTrailsUseCaseSchema = createPaginationSchemaWithSearch(30);
@@ -14,7 +14,7 @@ export async function getTrailsUseCase(params: GetTrailsUseCaseSchema = {}): Pro
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = new DrizzleTrailRepository();
+  const repository = new TrailRepository();
 
   return repository.getTrails(validatedParams.data);
 }

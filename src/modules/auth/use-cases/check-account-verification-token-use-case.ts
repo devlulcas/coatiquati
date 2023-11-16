@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { DrizzleEmailVerificationTokenRepository } from '../repositories/email-verification-token-repository';
+import { EmailVerificationTokenRepository } from '../repositories/email-verification-token-repository';
 import { EmailVerificationService } from '../services/email-verification-service';
 import { auth } from '../services/lucia';
 import type { Session } from '../types/session';
@@ -21,7 +21,7 @@ export async function checkAccountVerificationTokenUseCase(
 
   const token = validatedParams.data.token;
 
-  const emailVerificationTokenRepository = new DrizzleEmailVerificationTokenRepository();
+  const emailVerificationTokenRepository = new EmailVerificationTokenRepository();
   const emailVerificationService = new EmailVerificationService(emailVerificationTokenRepository);
 
   try {

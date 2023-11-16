@@ -1,4 +1,4 @@
-import type { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import type { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type {
   ContentImage,
   NewContent,
@@ -11,12 +11,6 @@ import { contentImageTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
 import { eq } from 'drizzle-orm';
 
-export type ImageContentRepository = {
-  getContent(contentId: number): Promise<ContentImage>;
-  createContent(baseContent: NewContent, image: NewContentImage): Promise<ContentImage>;
-  updateContent(baseContent: UpdateContent, image?: UpdateContentImage): Promise<ContentImage>;
-};
-
 export const IMAGE_CONTENT_DB_FIELDS = Object.freeze({
   id: true,
   createdAt: true,
@@ -27,8 +21,8 @@ export const IMAGE_CONTENT_DB_FIELDS = Object.freeze({
   alt: true,
 });
 
-export class DrizzleImageContentRepository implements ImageContentRepository {
-  constructor(private readonly baseContentRepository: DrizzleBaseContentRepository) {}
+export class ImageContentRepository {
+  constructor(private readonly baseContentRepository: BaseContentRepository) {}
 
   /**
    * Busca um conteúdo de imagem com base no seu id

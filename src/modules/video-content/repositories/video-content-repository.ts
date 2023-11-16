@@ -1,4 +1,4 @@
-import type { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import type { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type {
   ContentVideo,
   NewContent,
@@ -11,12 +11,6 @@ import { contentVideoTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
 import { eq } from 'drizzle-orm';
 
-export type VideoContentRepository = {
-  getContent(contentId: number): Promise<ContentVideo>;
-  createContent(baseContent: NewContent, video: NewContentVideo): Promise<ContentVideo>;
-  updateContent(baseContent: UpdateContent, video?: UpdateContentVideo): Promise<ContentVideo>;
-};
-
 export const VIDEO_CONTENT_DB_FIELDS = Object.freeze({
   id: true,
   createdAt: true,
@@ -27,8 +21,8 @@ export const VIDEO_CONTENT_DB_FIELDS = Object.freeze({
   alt: true,
 });
 
-export class DrizzleVideoContentRepository implements VideoContentRepository {
-  constructor(private readonly baseContentRepository: DrizzleBaseContentRepository) {}
+export class VideoContentRepository {
+  constructor(private readonly baseContentRepository: BaseContentRepository) {}
 
   /**
    * Busca um conteúdo de vídeo com base no seu id

@@ -1,6 +1,6 @@
-import { DrizzleContentRepository } from '@/modules/content/repositories/content-repository';
+import { ContentRepository } from '@/modules/content/repositories/content-repository';
 import { z } from 'zod';
-import { DrizzleTopicRepository } from '../repositories/topic-repository';
+import { TopicRepository } from '../repositories/topic-repository';
 import type { TopicWithContentArray } from '../types/topic';
 
 const getTopicUseCaseSchema = z.object({
@@ -16,7 +16,7 @@ export async function getTopicUseCase(params: GetTopicUseCaseSchema): Promise<To
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = new DrizzleTopicRepository(new DrizzleContentRepository());
+  const repository = new TopicRepository(new ContentRepository());
 
   return repository.getTopicWithContentArray(validatedParams.data.id);
 }

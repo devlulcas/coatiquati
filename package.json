@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit --pretty --project tsconfig.json",
+    "typecheck": "tsc --noEmit --pretty --project tsconfig.json",
     "pretty": "prettier --write .",
     "fix": "eslint --fix .",
     "sanitize": "prettier --write . && eslint --fix . && tsc --noEmit && vitest run",

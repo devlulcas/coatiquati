@@ -1,7 +1,7 @@
 import type { Session } from '@/modules/auth/types/session';
-import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type { ContentImage, UpdateContent, UpdateContentImage } from '@/modules/content/types/content';
-import { DrizzleImageContentRepository } from '@/modules/image-content/repositories/image-content-repository';
+import { ImageContentRepository } from '@/modules/image-content/repositories/image-content-repository';
 import {
   updateImageContentSchema,
   type UpdateImageContentSchema,
@@ -17,7 +17,7 @@ export async function updateImageContentUseCase(
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = new DrizzleImageContentRepository(new DrizzleBaseContentRepository());
+  const repository = new ImageContentRepository(new BaseContentRepository());
 
   const newBaseContent: UpdateContent = {
     contributorId: session.userId,

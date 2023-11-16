@@ -5,14 +5,6 @@ import { contentContributionTable } from '@/modules/database/schema/contribution
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
 
-export type BaseContentRepository = {
-  createBaseContent(content: NewContent): Promise<number>;
-  updateBaseContent(content: UpdateContent): Promise<BaseContent>;
-  getBaseContent(id: number): Promise<BaseContent>;
-  omitBaseContent(id: number): Promise<void>;
-  enableBaseContent: (id: number) => Promise<void>;
-};
-
 export const CONTENT_DB_FIELDS = Object.freeze({
   id: true,
   createdAt: true,
@@ -22,7 +14,7 @@ export const CONTENT_DB_FIELDS = Object.freeze({
   contentType: true,
 });
 
-export class DrizzleBaseContentRepository implements BaseContentRepository {
+export class BaseContentRepository {
   async createBaseContent(content: NewContent, database = db): Promise<number> {
     const insertedContent = database
       .insert(contentTable)

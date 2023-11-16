@@ -1,6 +1,6 @@
 import type { Session } from '@/modules/auth/types/session';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
-import { DrizzleTrailRepository } from '../repositories/trail-repository';
+import { TrailRepository } from '../repositories/trail-repository';
 import { trailWithIdSchema, type TrailWithIdSchema } from '../schemas/trail-with-id-schema';
 
 export async function toggleTrailStatusUseCase(params: TrailWithIdSchema, session: Session) {
@@ -14,7 +14,7 @@ export async function toggleTrailStatusUseCase(params: TrailWithIdSchema, sessio
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = new DrizzleTrailRepository();
+  const repository = new TrailRepository();
 
   const trail = await repository.getTrailById(validatedParams.data.id);
 

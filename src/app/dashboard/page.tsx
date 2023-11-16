@@ -1,14 +1,15 @@
 import { TrailsTable } from '@/modules/trail/components/trails-table';
 import { getTrailsUseCase } from '@/modules/trail/use-cases/get-trails-use-case';
 import { UsersTable } from '@/modules/user/components/users-table';
-import { getUsersUseCase } from '@/modules/user/use-cases/get-users-use-case';
+import { GetUsersUseCase } from '@/modules/user/use-cases/get-users-use-case';
 import { Button } from '@/shared/components/ui/button';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function Page() {
   const trailsData = await getTrailsUseCase();
-  const users = await getUsersUseCase();
+  const getUsersUseCase = new GetUsersUseCase() 
+  const users = await getUsersUseCase.execute();
 
   return (
     <div className="flex flex-col gap-8">

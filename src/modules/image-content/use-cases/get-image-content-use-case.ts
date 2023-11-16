@@ -1,10 +1,10 @@
-import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
-import { DrizzleContentRepository } from '@/modules/content/repositories/content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { ContentRepository } from '@/modules/content/repositories/content-repository';
 import type { ContentImage } from '@/modules/content/types/content';
-import { DrizzleImageContentRepository } from '@/modules/image-content/repositories/image-content-repository';
-import { DrizzleTopicRepository } from '@/modules/topic/repositories/topic-repository';
+import { ImageContentRepository } from '@/modules/image-content/repositories/image-content-repository';
+import { TopicRepository } from '@/modules/topic/repositories/topic-repository';
 import type { Topic } from '@/modules/topic/types/topic';
-import { DrizzleTrailRepository } from '@/modules/trail/repositories/trail-repository';
+import { TrailRepository } from '@/modules/trail/repositories/trail-repository';
 import type { Trail } from '@/modules/trail/types/trail';
 import { z } from 'zod';
 
@@ -25,9 +25,9 @@ export async function getImageContentUseCase(params: GetImageContentUseCaseSchem
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = new DrizzleImageContentRepository(new DrizzleBaseContentRepository());
-  const topicRepository = new DrizzleTopicRepository(new DrizzleContentRepository());
-  const trailRepository = new DrizzleTrailRepository();
+  const repository = new ImageContentRepository(new BaseContentRepository());
+  const topicRepository = new TopicRepository(new ContentRepository());
+  const trailRepository = new TrailRepository();
 
   try {
     const [content, topic] = await Promise.all([

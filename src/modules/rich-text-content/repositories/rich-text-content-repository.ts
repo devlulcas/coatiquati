@@ -1,4 +1,4 @@
-import type { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import type { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type { ContentRichText, NewContent, UpdateContent } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentRichTextTable } from '@/modules/database/schema/content';
@@ -7,12 +7,6 @@ import type { JSONContent } from '@tiptap/core';
 import { diffJson } from 'diff';
 import { eq } from 'drizzle-orm';
 
-export type RichTextContentRepository = {
-  getContent(contentId: number): Promise<ContentRichText>;
-  createContent(baseContent: NewContent, richText: JSONContent): Promise<ContentRichText>;
-  updateContent(baseContent: UpdateContent, richText: JSONContent): Promise<ContentRichText>;
-};
-
 export const RTE_CONTENT_DB_FIELDS = Object.freeze({
   id: true,
   createdAt: true,
@@ -20,8 +14,8 @@ export const RTE_CONTENT_DB_FIELDS = Object.freeze({
   contentId: true,
 });
 
-export class DrizzleRichTextContentRepository implements RichTextContentRepository {
-  constructor(private readonly baseContentRepository: DrizzleBaseContentRepository) {}
+export class RichTextContentRepository  {
+  constructor(private readonly baseContentRepository: BaseContentRepository) {}
 
   /**
    * Busca um conteúdo de texto complexo com base no seu id

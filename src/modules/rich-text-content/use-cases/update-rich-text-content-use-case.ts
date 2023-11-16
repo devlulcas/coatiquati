@@ -1,8 +1,8 @@
 import type { Session } from '@/modules/auth/types/session';
 import { isAuthenticated } from '@/modules/auth/utils/is';
-import { DrizzleBaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type { ContentRichText, UpdateContent } from '@/modules/content/types/content';
-import { DrizzleRichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
+import { RichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
 import {
   updateRichTextContentSchema,
   type UpdateRichTextContentSchema,
@@ -22,7 +22,7 @@ export async function updateRichTextContentUseCase(
     throw new Error('Parâmetros inválidos');
   }
 
-  const repository = new DrizzleRichTextContentRepository(new DrizzleBaseContentRepository());
+  const repository = new RichTextContentRepository(new BaseContentRepository());
 
   const newBaseContent: UpdateContent = {
     contributorId: session.userId,

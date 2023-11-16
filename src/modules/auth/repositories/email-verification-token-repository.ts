@@ -7,13 +7,7 @@ import { log } from '@/modules/logging/lib/pino';
 import { eq } from 'drizzle-orm';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
 
-export type EmailVerificationTokenRepository = {
-  getVerificationTokensByUserId(db: Database, userId: string): Promise<EmailVerificationToken[]>;
-  getVerificationTokenById(db: Database, tokenId: string): Promise<EmailVerificationToken | null>;
-  createVerificationToken(db: Database, userId: string, token: string): Promise<EmailVerificationToken | null>;
-};
-
-export class DrizzleEmailVerificationTokenRepository implements EmailVerificationTokenRepository {
+export class EmailVerificationTokenRepository {
   async createVerificationToken(db: Database, userId: string, token: string): Promise<EmailVerificationToken | null> {
     try {
       const results = await db

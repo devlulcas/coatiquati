@@ -9,16 +9,6 @@ import { contentStatus } from '@/shared/constants/content-status';
 import { eq } from 'drizzle-orm';
 import type { NewTopic, Topic, TopicWithContentArray, UpdateTopic } from '../types/topic';
 
-export type TopicRepository = {
-  createTopic: (topic: NewTopic) => Promise<Topic>;
-  getTopics: (params: PaginationSchemaWithSearch) => Promise<Topic[]>;
-  getTopicById: (id: number) => Promise<Topic>;
-  updateTopic: (topic: UpdateTopic) => Promise<Topic>;
-  getTopicWithContentArray: (id: number) => Promise<TopicWithContentArray>;
-  enableTopic: (id: number) => Promise<void>;
-  omitTopic: (id: number) => Promise<void>;
-};
-
 export const TOPIC_DB_FIELDS = Object.freeze({
   id: true,
   title: true,
@@ -30,7 +20,7 @@ export const TOPIC_DB_FIELDS = Object.freeze({
   trailId: true,
 });
 
-export class DrizzleTopicRepository implements TopicRepository {
+export class TopicRepository {
   constructor(private readonly contentRepository: ContentRepository) {}
 
   async createTopic(topic: NewTopic, database = db): Promise<Topic> {

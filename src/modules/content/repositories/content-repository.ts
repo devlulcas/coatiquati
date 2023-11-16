@@ -11,13 +11,6 @@ import type {
 } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 
-export type ContentRepository = {
-  getContentWithFile(content: BaseContent): Promise<ContentWithFile>;
-  getContentWithImage(content: BaseContent): Promise<ContentWithImage>;
-  getContentWithVideo(content: BaseContent): Promise<ContentWithVideo>;
-  getContentWithRichTextPreview(content: BaseContent): Promise<ContentWithRichTextPreview>;
-};
-
 export const CONTENT_DB_FIELDS = Object.freeze({
   id: true,
   createdAt: true,
@@ -27,7 +20,7 @@ export const CONTENT_DB_FIELDS = Object.freeze({
   contentType: true,
 });
 
-export class DrizzleContentRepository implements ContentRepository {
+export class ContentRepository {
   async getContentWithFile(content: BaseContent, database = db): Promise<ContentWithFile> {
     const resultFile: ContentFile | undefined = await database.query.contentFileTable.findFirst({
       where(fields, operators) {
