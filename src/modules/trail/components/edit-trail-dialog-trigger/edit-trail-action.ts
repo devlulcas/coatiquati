@@ -3,7 +3,7 @@
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { revalidatePath } from 'next/cache';
 import type { UpdateTrailSchema } from '../../schemas/edit-trail-schema';
-import { updateTrailUseCase } from '../../use-cases/update-trail-use-case';
+import { UpdateTrailUseCase } from '../../use-cases/update-trail-use-case';
 
 export async function editTrailAction(data: UpdateTrailSchema) {
   const session = await getActionSession();
@@ -12,7 +12,8 @@ export async function editTrailAction(data: UpdateTrailSchema) {
     throw new Error('Você precisa estar logado para editar uma trilha.');
   }
 
-  await updateTrailUseCase(data, session);
+  const updateTrailUseCase = new UpdateTrailUseCase();
+  await updateTrailUseCase.execute(data, session);
 
   revalidatePath('/trails');
   revalidatePath('/dashboard');

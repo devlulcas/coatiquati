@@ -3,7 +3,7 @@
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { revalidatePath } from 'next/cache';
 import type { UpdateTopicSchema } from '../../schemas/edit-topic-schema';
-import { updateTopicUseCase } from '../../use-cases/update-topic-use-case';
+import { UpdateTopicUseCase } from '../../use-cases/update-topic-use-case';
 
 export async function editTopicAction(data: UpdateTopicSchema) {
   const session = await getActionSession();
@@ -12,7 +12,8 @@ export async function editTopicAction(data: UpdateTopicSchema) {
     throw new Error('Você precisa estar logado para editar um tópico.');
   }
 
-  await updateTopicUseCase(data, session);
+  const updateTopicUseCase = new UpdateTopicUseCase();
+  await updateTopicUseCase.execute(data, session);
 
   revalidatePath('/trails/' + data.trailId);
   revalidatePath('/dashboard/trails/' + data.trailId);

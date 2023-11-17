@@ -7,14 +7,16 @@ const getTrailsUseCaseSchema = createPaginationSchemaWithSearch(30);
 
 type GetTrailsUseCaseSchema = Partial<z.infer<typeof getTrailsUseCaseSchema>>;
 
-export async function getTrailsUseCase(params: GetTrailsUseCaseSchema = {}): Promise<Trail[]> {
-  const validatedParams = getTrailsUseCaseSchema.safeParse(params);
+export class GetTrailsUseCase {
+  constructor(private readonly trailRepository: TrailRepository = new TrailRepository()) {}
 
-  if (!validatedParams.success) {
-    throw new Error('Parâmetros inválidos');
+  async execute(params: GetTrailsUseCaseSchema = {}): Promise<Trail[]> {
+    const validatedParams = getTrailsUseCaseSchema.safeParse(params);
+
+    if (!validatedParams.success) {
+      throw new Error('Parâmetros inválidos para buscar trilhas.');
+    }
+
+    return this.trailRepository.getTrails(validatedParams.data);
   }
-
-  const repository = new TrailRepository();
-
-  return repository.getTrails(validatedParams.data);
 }

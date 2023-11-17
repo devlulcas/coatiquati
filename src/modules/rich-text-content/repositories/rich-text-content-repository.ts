@@ -1,4 +1,4 @@
-import type { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type { ContentRichText, NewContent, UpdateContent } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentRichTextTable } from '@/modules/database/schema/content';
@@ -14,8 +14,8 @@ export const RTE_CONTENT_DB_FIELDS = Object.freeze({
   contentId: true,
 });
 
-export class RichTextContentRepository  {
-  constructor(private readonly baseContentRepository: BaseContentRepository) {}
+export class RichTextContentRepository {
+  constructor(private readonly baseContentRepository: BaseContentRepository = new BaseContentRepository()) {}
 
   /**
    * Busca um conteúdo de texto complexo com base no seu id

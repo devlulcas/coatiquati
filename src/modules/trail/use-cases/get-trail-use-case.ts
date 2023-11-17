@@ -8,14 +8,16 @@ const getTrailUseCaseSchema = z.object({
 
 type GetTrailUseCaseSchema = z.infer<typeof getTrailUseCaseSchema>;
 
-export async function getTrailUseCase(params: GetTrailUseCaseSchema): Promise<TrailWithTopicArray> {
-  const validatedParams = getTrailUseCaseSchema.safeParse(params);
+export class GetTrailUseCase {
+  constructor(private readonly trailRepository: TrailRepository = new TrailRepository()) {}
 
-  if (!validatedParams.success) {
-    throw new Error('Parâmetros inválidos');
+  async execute(params: GetTrailUseCaseSchema): Promise<TrailWithTopicArray> {
+    const validatedParams = getTrailUseCaseSchema.safeParse(params);
+
+    if (!validatedParams.success) {
+      throw new Error('Parâmetros inválidos para buscar trilha.');
+    }
+
+    return this.trailRepository.getTrailWithTopicsById(validatedParams.data.id);
   }
-
-  const repository = new TrailRepository();
-
-  return repository.getTrailWithTopicsById(validatedParams.data.id);
 }
