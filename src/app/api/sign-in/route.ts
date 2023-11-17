@@ -15,7 +15,6 @@ export const POST = async (request: NextRequest) => {
   }
 
   const username = formDataResult.data.username.toLowerCase().trim();
-
   const password = formDataResult.data.password;
 
   try {

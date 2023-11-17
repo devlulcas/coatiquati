@@ -10,28 +10,24 @@ import {
 export class CreateNewVideoContentUseCase {
   constructor(private readonly videoContentRepository: VideoContentRepository = new VideoContentRepository()) {}
 
-  async execute(
-    params: NewVideoContentSchema,
-    session: Session,
-  ): Promise<ContentVideo> {
+  async execute(params: NewVideoContentSchema, session: Session): Promise<ContentVideo> {
     const validatedParams = newVideoContentSchema.safeParse(params);
-  
+
     if (!validatedParams.success) {
       throw new Error('Parâmetros inválidos para cadastro de conteúdo de vídeo.');
     }
-  
+
     const newBaseContent: NewContent = {
       authorId: session.userId,
       contentType: 'video',
       title: validatedParams.data.title,
       topicId: validatedParams.data.topicId,
     };
-  
+
     const newVideoContent = await this.videoContentRepository.createContent(newBaseContent, validatedParams.data);
-  
+
     log.info('Conteúdo de vídeo criado com sucesso', { contentId: newVideoContent.contentId, userId: session.userId });
 
     return newVideoContent;
   }
-  
 }

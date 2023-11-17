@@ -2,7 +2,7 @@ import { getPageSession } from '@/modules/auth/utils/get-page-session';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { TopicCardItem } from '@/modules/topic/components/topic-card-item';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
-import { getTrailUseCase } from '@/modules/trail/use-cases/get-trail-use-case';
+import { GetTrailUseCase } from '@/modules/trail/use-cases/get-trail-use-case';
 import { redirect } from 'next/navigation';
 
 type PageProps = {
@@ -14,7 +14,8 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const trailId = Number(params.trail);
 
-  const trailData = await getTrailUseCase({ id: trailId });
+  const getTrailUseCase = new GetTrailUseCase();
+  const trailData = await getTrailUseCase.execute({ id: trailId });
 
   if (!trailData) redirect('/');
 

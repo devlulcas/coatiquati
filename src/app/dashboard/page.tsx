@@ -1,5 +1,5 @@
 import { TrailsTable } from '@/modules/trail/components/trails-table';
-import { getTrailsUseCase } from '@/modules/trail/use-cases/get-trails-use-case';
+import { GetTrailsUseCase } from '@/modules/trail/use-cases/get-trails-use-case';
 import { UsersTable } from '@/modules/user/components/users-table';
 import { GetUsersUseCase } from '@/modules/user/use-cases/get-users-use-case';
 import { Button } from '@/shared/components/ui/button';
@@ -7,8 +7,9 @@ import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function Page() {
-  const trailsData = await getTrailsUseCase();
-  const getUsersUseCase = new GetUsersUseCase() 
+  const getTrailsUseCase = new GetTrailsUseCase();
+  const trailsData = await getTrailsUseCase.execute();
+  const getUsersUseCase = new GetUsersUseCase();
   const users = await getUsersUseCase.execute();
 
   return (

@@ -7,7 +7,7 @@ import type {
 } from '@/modules/content/types/content';
 import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 import { ContributionOptionsButton } from '@/modules/topic/components/contribution-options-button';
-import { getTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
+import { GetTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { ArrowRightIcon, FileIcon, ImageIcon, TextIcon, VideoIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -41,7 +41,8 @@ const contentTypeIcon = {
 export default async function Page({ params }: PageProps) {
   const topicId = Number(params.topic);
 
-  const topicData = await getTopicUseCase({ id: topicId });
+  const getTopicUseCase = new GetTopicUseCase();
+  const topicData = await getTopicUseCase.execute({ id: topicId });
 
   return (
     <div className="py-8 container">

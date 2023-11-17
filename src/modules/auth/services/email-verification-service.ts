@@ -8,7 +8,9 @@ type EmailVerificationToken = string;
 type UserId = string;
 
 export class EmailVerificationService {
-  constructor(private emailVerificationTokenRepository: EmailVerificationTokenRepository = new EmailVerificationTokenRepository()) {}
+  constructor(
+    private emailVerificationTokenRepository: EmailVerificationTokenRepository = new EmailVerificationTokenRepository(),
+  ) {}
 
   /**
    * Gera um token de verificação de email para o usuário.

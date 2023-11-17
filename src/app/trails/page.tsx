@@ -1,6 +1,6 @@
 import { TrailCard } from '@/modules/trail/components/trail-card';
 import { groupTrailsByCategory } from '@/modules/trail/lib/group-trails-by-category';
-import { getTrailsUseCase } from '@/modules/trail/use-cases/get-trails-use-case';
+import { GetTrailsUseCase } from '@/modules/trail/use-cases/get-trails-use-case';
 import coatiSvg from '@/shared/assets/images/coati.svg';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
@@ -13,10 +13,8 @@ type PageProps = {
 };
 
 export default async function Page(props: PageProps) {
-  const trails = await getTrailsUseCase({
-    search: props.searchParams.search,
-  });
-
+  const getTrailsUseCase = new GetTrailsUseCase();
+  const trails = await getTrailsUseCase.execute({ search: props.searchParams.search });
   const trailsGroupedByCategory = groupTrailsByCategory(trails);
 
   return (

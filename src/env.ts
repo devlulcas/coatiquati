@@ -9,7 +9,10 @@ export const env = createEnv({
     UPLOADTHING_APP_ID: z.string().min(1),
     MAIL_HOST: z.string().min(1),
     MAIL_PORT: z.string(),
-    MAIL_SECURE: z.string().refine((v) => ['true', 'false'].includes(v)).transform((v) => v === 'true'),
+    MAIL_SECURE: z
+      .string()
+      .refine(v => ['true', 'false'].includes(v))
+      .transform(v => v === 'true'),
     MAIL_USER: z.string().min(1),
     MAIL_PASS: z.string().min(1),
     MAIL_FROM: z.string().min(1),

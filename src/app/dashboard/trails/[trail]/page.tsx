@@ -3,7 +3,7 @@ import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { NewTrailDialogTrigger } from '@/modules/topic/components/new-topic-dialog-trigger';
 import { TopicsTable } from '@/modules/topic/components/topics-table';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
-import { getTrailUseCase } from '@/modules/trail/use-cases/get-trail-use-case';
+import { GetTrailUseCase } from '@/modules/trail/use-cases/get-trail-use-case';
 import { redirect } from 'next/navigation';
 
 type PageProps = {
@@ -15,7 +15,8 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const trailId = Number(params.trail);
 
-  const trailData = await getTrailUseCase({ id: trailId });
+  const getTrailUseCase = new GetTrailUseCase();
+  const trailData = await getTrailUseCase.execute({ id: trailId });
 
   if (!trailData) redirect('/dashboard');
 

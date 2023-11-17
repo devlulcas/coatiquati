@@ -1,13 +1,14 @@
-import { getRichTextContentUseCase } from '@/modules/rich-text-content/use-cases/get-rich-text-content-use-case';
-import { TrailHeading } from '@/modules/trail/components/trail-heading';
 import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
+import { GetRichTextContentUseCase } from '@/modules/rich-text-content/use-cases/get-rich-text-content-use-case';
+import { TrailHeading } from '@/modules/trail/components/trail-heading';
 
 type RichTextContentPageProps = {
   contentId: number;
 };
 
 export default async function RichTextContentPage({ contentId }: RichTextContentPageProps) {
-  const postData = await getRichTextContentUseCase({ id: contentId });
+  const getRichTextContentUseCase = new GetRichTextContentUseCase();
+  const postData = await getRichTextContentUseCase.execute({ id: contentId });
 
   return (
     <div className="py-8 container">

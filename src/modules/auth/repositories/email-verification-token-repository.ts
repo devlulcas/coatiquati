@@ -29,7 +29,7 @@ export class EmailVerificationTokenRepository {
     }
   }
 
-  async getVerificationTokensByUserId(userId: string,database = db): Promise<EmailVerificationToken[]> {
+  async getVerificationTokensByUserId(userId: string, database = db): Promise<EmailVerificationToken[]> {
     try {
       const results = database
         .select()
@@ -65,7 +65,7 @@ export class EmailVerificationTokenRepository {
 
         return storedToken;
       } catch (error) {
-        log.error("Erro ao buscar token de verificação de e-mail", { error });
+        log.error('Erro ao buscar token de verificação de e-mail', { error });
         tx.rollback();
         return null;
       }

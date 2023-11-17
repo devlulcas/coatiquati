@@ -11,6 +11,6 @@ export async function newVideoContentAction(data: NewVideoContentSchema) {
     throw new Error('Você precisa estar logado para criar um conteúdo.');
   }
 
-  const createNewVideoContentUseCase = new CreateNewVideoContentUseCase()
+  const createNewVideoContentUseCase = new CreateNewVideoContentUseCase();
   await createNewVideoContentUseCase.execute(data, session);
 }
