@@ -1,4 +1,4 @@
-import { type Database } from '@/modules/database/db';
+import { db, type Database } from '@/modules/database/db';
 import {
   emailVerificationTokenTable,
   type EmailVerificationToken,
@@ -8,9 +8,9 @@ import { eq } from 'drizzle-orm';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
 
 export class EmailVerificationTokenRepository {
-  async createVerificationToken(db: Database, userId: string, token: string): Promise<EmailVerificationToken | null> {
+  async createVerificationToken(userId: string, token: string, database = db): Promise<EmailVerificationToken | null> {
     try {
-      const results = await db
+      const results = await database
         .insert(emailVerificationTokenTable)
         .values({
           id: token,
@@ -29,9 +29,9 @@ export class EmailVerificationTokenRepository {
     }
   }
 
-  async getVerificationTokensByUserId(db: Database, userId: string): Promise<EmailVerificationToken[]> {
+  async getVerificationTokensByUserId(userId: string,database = db): Promise<EmailVerificationToken[]> {
     try {
-      const results = db
+      const results = database
         .select()
         .from(emailVerificationTokenTable)
         .where(eq(emailVerificationTokenTable.userId, userId))
@@ -44,8 +44,8 @@ export class EmailVerificationTokenRepository {
     }
   }
 
-  async getVerificationTokenById(db: Database, tokenId: string): Promise<EmailVerificationToken | null> {
-    const results = await db.transaction(async tx => {
+  async getVerificationTokenById(tokenId: string, database = db): Promise<EmailVerificationToken | null> {
+    const results = await database.transaction(async tx => {
       try {
         const storedToken = tx
           .select()
@@ -55,7 +55,7 @@ export class EmailVerificationTokenRepository {
 
         if (!storedToken) throw new Error('Invalid token');
 
-        const results = await db
+        const results = await tx
           .delete(emailVerificationTokenTable)
           .where(eq(emailVerificationTokenTable.userId, storedToken.userId))
           .returning({ deletedId: emailVerificationTokenTable.id })
@@ -65,12 +65,12 @@ export class EmailVerificationTokenRepository {
 
         return storedToken;
       } catch (error) {
+        log.error("Erro ao buscar token de verificação de e-mail", { error });
         tx.rollback();
-        log.error('getVerificationTokenById - rollback', error);
         return null;
       }
     });
 
-    return results ? results : null;
+    return results;
   }
 }

@@ -2,13 +2,13 @@ import { db } from '@/modules/database/db';
 import { log } from '@/modules/logging/lib/pino';
 import { generateRandomString, isWithinExpiration } from 'lucia/utils';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
-import type { EmailVerificationTokenRepository } from '../repositories/email-verification-token-repository';
+import { EmailVerificationTokenRepository } from '../repositories/email-verification-token-repository';
 
 type EmailVerificationToken = string;
 type UserId = string;
 
 export class EmailVerificationService {
-  constructor(private emailVerificationTokenRepository: EmailVerificationTokenRepository) {}
+  constructor(private emailVerificationTokenRepository: EmailVerificationTokenRepository = new EmailVerificationTokenRepository()) {}
 
   /**
    * Gera um token de verificação de email para o usuário.
@@ -17,7 +17,7 @@ export class EmailVerificationService {
    * @returns O token de verificação de email ou null se não for possível gerar um token
    */
   async generateEmailVerificationToken(userId: string): Promise<EmailVerificationToken | null> {
-    const storedUserTokens = await this.emailVerificationTokenRepository.getVerificationTokensByUserId(db, userId);
+    const storedUserTokens = await this.emailVerificationTokenRepository.getVerificationTokensByUserId(userId, db);
 
     // Se o token for válido por mais da metade do tempo de expiração, ele é reutilizável
     if (storedUserTokens.length > 0) {
@@ -31,10 +31,10 @@ export class EmailVerificationService {
     const newToken = generateRandomString(63);
 
     try {
-      const r = await this.emailVerificationTokenRepository.createVerificationToken(db, userId, newToken);
-      return newToken;
+      const insertedToken = await this.emailVerificationTokenRepository.createVerificationToken(userId, newToken, db);
+      return insertedToken ? insertedToken.id : null;
     } catch (error) {
-      log.error('Error while creating email verification token', { error });
+      log.error('Erro ao tentar criar token de verificação de e-mail', { error });
       return null;
     }
   }
@@ -45,7 +45,7 @@ export class EmailVerificationService {
    * @returns O id do usuário associado ao token. Retorna null se o token for inválido.
    */
   async validateEmailVerificationToken(token: string): Promise<UserId | null> {
-    const storedToken = await this.emailVerificationTokenRepository.getVerificationTokenById(db, token);
+    const storedToken = await this.emailVerificationTokenRepository.getVerificationTokenById(token, db);
 
     if (!storedToken) {
       log.warn('Invalid email verification token ', { token });

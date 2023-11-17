@@ -10,45 +10,44 @@ const accountVerificationTokenSchema = z.object({
 
 type AccountVerificationTokenSchema = z.infer<typeof accountVerificationTokenSchema>;
 
-export async function checkAccountVerificationTokenUseCase(
-  params: AccountVerificationTokenSchema,
-): Promise<Session | null> {
-  const validatedParams = accountVerificationTokenSchema.safeParse(params);
+export class CheckAccountVerificationTokenUseCase {
+  constructor(private readonly emailVerificationServive: EmailVerificationService = new EmailVerificationService()) {}
 
-  if (!validatedParams.success) {
-    throw new Error('Invalid params');
-  }
+  async execute(params: AccountVerificationTokenSchema): Promise<Session | null> {
+    const validatedParams = accountVerificationTokenSchema.safeParse(params);
 
-  const token = validatedParams.data.token;
-
-  const emailVerificationTokenRepository = new EmailVerificationTokenRepository();
-  const emailVerificationService = new EmailVerificationService(emailVerificationTokenRepository);
-
-  try {
-    const userId = await emailVerificationService.validateEmailVerificationToken(token);
-
-    if (userId === null) {
-      return null;
+    if (!validatedParams.success) {
+      throw new Error('Invalid params');
     }
 
-    const user = await auth.getUser(userId);
+    const token = validatedParams.data.token;
 
-    await auth.invalidateAllUserSessions(user.userId);
+    try {
+      const userId = await this.emailVerificationServive.validateEmailVerificationToken(token);
 
-    await auth.updateUserAttributes(user.userId, {
-      email_verified: true,
-    });
+      if (userId === null) {
+        return null;
+      }
 
-    const session = await auth.createSession({
-      userId: user.userId,
-      attributes: {
-        id: user.userId,
-      },
-    });
+      const user = await auth.getUser(userId);
 
-    return session;
-  } catch (error) {
-    console.error(error);
-    return null;
+      await auth.invalidateAllUserSessions(user.userId);
+
+      await auth.updateUserAttributes(user.userId, {
+        email_verified: true,
+      });
+
+      const session = await auth.createSession({
+        userId: user.userId,
+        attributes: {
+          id: user.userId,
+        },
+      });
+
+      return session;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
 }

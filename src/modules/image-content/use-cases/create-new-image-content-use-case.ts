@@ -6,27 +6,29 @@ import {
   newImageContentSchema,
   type NewImageContentSchema,
 } from '@/modules/image-content/schemas/new-image-content-schema';
+import { log } from '@/modules/logging/lib/pino';
 
-export async function createNewImageContentUseCase(
-  params: NewImageContentSchema,
-  session: Session,
-): Promise<ContentImage> {
-  const validatedParams = newImageContentSchema.safeParse(params);
+export class CreateNewImageContentUseCase {
+  constructor(private readonly imageContentRepository: ImageContentRepository = new ImageContentRepository()) {}
 
-  if (!validatedParams.success) {
-    throw new Error('Parâmetros inválidos');
+  async execute(params: NewImageContentSchema, session: Session): Promise<ContentImage> {
+    const validatedParams = newImageContentSchema.safeParse(params);
+
+    if (!validatedParams.success) {
+      throw new Error('Parâmetros inválidos');
+    }
+
+    const newBaseContent: NewContent = {
+      authorId: session.userId,
+      contentType: 'image',
+      title: validatedParams.data.title,
+      topicId: validatedParams.data.topicId,
+    };
+
+    const newImageContent = await this.imageContentRepository.createContent(newBaseContent, validatedParams.data);
+
+    log.info('Conteúdo de imagem criado com sucesso.', { newImageContentId: newImageContent.id });
+
+    return newImageContent;
   }
-
-  const repository = new ImageContentRepository(new BaseContentRepository());
-
-  const newBaseContent: NewContent = {
-    authorId: session.userId,
-    contentType: 'image',
-    title: validatedParams.data.title,
-    topicId: validatedParams.data.topicId,
-  };
-
-  const newImageContent = await repository.createContent(newBaseContent, validatedParams.data);
-
-  return newImageContent;
 }

@@ -1,4 +1,4 @@
-import type { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import type {
   ContentImage,
   NewContent,
@@ -22,7 +22,7 @@ export const IMAGE_CONTENT_DB_FIELDS = Object.freeze({
 });
 
 export class ImageContentRepository {
-  constructor(private readonly baseContentRepository: BaseContentRepository) {}
+  constructor(private readonly baseContentRepository: BaseContentRepository = new BaseContentRepository()) {}
 
   /**
    * Busca um conteúdo de imagem com base no seu id
