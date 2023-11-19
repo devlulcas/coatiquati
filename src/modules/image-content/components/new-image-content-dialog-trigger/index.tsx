@@ -6,6 +6,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { ImagePlusIcon } from 'lucide-react';
+import { useState } from 'react';
 import { newImageContentAction } from './new-image-content-action';
 
 type NewImageContentDialogTriggerProps = {
@@ -14,11 +15,13 @@ type NewImageContentDialogTriggerProps = {
 
 export function NewImageContentDialogTrigger({ topicId }: NewImageContentDialogTriggerProps) {
   const { toast } = useToast();
+  const [isOpen, setIsOpen] = useState(false);
 
   const onSubmit = async (data: NewImageContentSchema) => {
     try {
       await newImageContentAction(data);
       toast({ title: 'Conteúdo de imagem criado com sucesso' });
+      setIsOpen(false);
     } catch (error) {
       toast({
         title: 'Erro ao criar conteúdo de imagem criado',
@@ -29,7 +32,7 @@ export function NewImageContentDialogTrigger({ topicId }: NewImageContentDialogT
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button className="flex gap-2 items-center justify-center">
           <ImagePlusIcon /> Contribuir com uma imagem

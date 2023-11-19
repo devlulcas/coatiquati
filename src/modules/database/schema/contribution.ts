@@ -1,6 +1,5 @@
-import type { Change } from 'diff';
 import { relations, sql } from 'drizzle-orm';
-import { blob, integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentTable } from './content';
 import { topicTable } from './topic';
 import { trailTable } from './trail';
@@ -78,7 +77,6 @@ export const contentContributionTable = sqliteTable(
     userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    diff: blob('blob', { mode: 'json' }).$type<Change[]>(),
     contributedAt: text('contributed_at')
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

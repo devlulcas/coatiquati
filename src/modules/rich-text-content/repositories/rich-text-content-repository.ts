@@ -2,9 +2,8 @@ import { BaseContentRepository } from '@/modules/content/repositories/base-conte
 import type { ContentRichText, NewContent, UpdateContent } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentRichTextTable } from '@/modules/database/schema/content';
-import { contentContributionTable } from '@/modules/database/schema/contribution';
+import { log } from '@/modules/logging/lib/pino';
 import type { JSONContent } from '@tiptap/core';
-import { diffJson } from 'diff';
 import { eq } from 'drizzle-orm';
 
 export const RTE_CONTENT_DB_FIELDS = Object.freeze({
@@ -32,6 +31,7 @@ export class RichTextContentRepository {
     });
 
     if (!resultRichtext) {
+      log.error('Erro ao buscar conteúdo de rich text', { contentId });
       throw new Error('Erro ao buscar conteúdo de rich text com id = ' + contentId);
     }
 
@@ -63,6 +63,7 @@ export class RichTextContentRepository {
 
         return insertedContentId;
       } catch (error) {
+        log.error('Erro ao criar conteúdo de rich text.', { baseContent, richText, error });
         tx.rollback();
         throw new Error('Erro ao criar conteúdo de rich text com id = ' + richText.contentId);
       }
@@ -83,9 +84,10 @@ export class RichTextContentRepository {
 
     return database.transaction(async tx => {
       try {
-        const preview = richText.content?.slice(0, 5) ?? {};
-
-        const oldContent = await this.getContent(baseContent.id, tx);
+        const preview: JSONContent = {
+          ...richText,
+          content: richText.content?.slice(0, 3) ?? [],
+        };
 
         await this.baseContentRepository.updateBaseContent(baseContent, tx);
 
@@ -99,23 +101,11 @@ export class RichTextContentRepository {
           .where(eq(contentRichTextTable.contentId, baseContent.id))
           .execute();
 
-        const diff = diffJson(oldContent.asJson, richText);
-
-        await tx
-          .update(contentContributionTable)
-          .set({
-            userId: baseContent.contributorId,
-            diff: diff,
-            contentId: baseContent.id,
-            contributedAt: updatedAt,
-          })
-          .where(eq(contentContributionTable.contentId, baseContent.id))
-          .execute();
-
         const resultRichtext = await this.getContent(baseContent.id, tx);
 
         return resultRichtext;
       } catch (error) {
+        log.error('Erro ao atualizar conteúdo de rich text.', { baseContent, richText, error });
         tx.rollback();
         throw new Error('Erro ao atualizar conteúdo de rich text com id = ' + baseContent.id);
       }

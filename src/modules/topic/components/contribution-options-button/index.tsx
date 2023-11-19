@@ -40,7 +40,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               transition={{ duration: 0.2, delay: 0.1 }}
             >
               <Button className="flex gap-2 items-center justify-center" asChild>
-                <Link href={topicUrl + '/contribute/post'}>
+                <Link href={topicUrl + '/contribute/rich_text'}>
                   <ScrollTextIcon />
                   Postagem
                 </Link>

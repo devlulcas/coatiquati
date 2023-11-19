@@ -8,7 +8,7 @@ import type {
 } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentImageTable } from '@/modules/database/schema/content';
-import { contentContributionTable } from '@/modules/database/schema/contribution';
+import { log } from '@/modules/logging/lib/pino';
 import { eq } from 'drizzle-orm';
 
 export const IMAGE_CONTENT_DB_FIELDS = Object.freeze({
@@ -62,8 +62,9 @@ export class ImageContentRepository {
 
         return insertedContentId;
       } catch (error) {
+        log.error('Erro ao criar conteúdo de imagem.', { baseContent, image, error });
         tx.rollback();
-        throw new Error('Erro ao criar conteúdo de imagem');
+        throw new Error('Erro ao criar conteúdo de imagem.');
       }
     });
 
@@ -95,20 +96,11 @@ export class ImageContentRepository {
           .where(eq(contentImageTable.contentId, baseContent.id))
           .execute();
 
-        await tx
-          .update(contentContributionTable)
-          .set({
-            userId: baseContent.contributorId,
-            contentId: baseContent.id,
-            contributedAt: updatedAt,
-          })
-          .where(eq(contentContributionTable.contentId, baseContent.id))
-          .execute();
-
         const resultImage = await this.getContent(baseContent.id, tx);
 
         return resultImage;
       } catch (error) {
+        log.error('Erro ao atualizar conteúdo de imagem.', { baseContent, image, error });
         tx.rollback();
         throw new Error('Erro ao atualizar conteúdo de imagem com id = ' + baseContent.id);
       }

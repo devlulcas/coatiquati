@@ -1,7 +1,9 @@
 import type { BaseContent, NewContent, UpdateContent } from '@/modules/content/types/content';
+import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
 import { contentTable } from '@/modules/database/schema/content';
 import { contentContributionTable } from '@/modules/database/schema/contribution';
+import { log } from '@/modules/logging/lib/pino';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
 
@@ -15,6 +17,8 @@ export const CONTENT_DB_FIELDS = Object.freeze({
 });
 
 export class BaseContentRepository {
+  constructor(private readonly contributionRepository = new ContributionRepository()) {}
+
   async createBaseContent(content: NewContent, database = db): Promise<number> {
     const insertedContent = database
       .insert(contentTable)
@@ -27,6 +31,8 @@ export class BaseContentRepository {
       })
       .returning({ id: contentTable.id })
       .get();
+
+    this.contributionRepository.contributeInContent(insertedContent.id, content.authorId, database);
 
     return insertedContent.id;
   }
@@ -88,8 +94,8 @@ export class BaseContentRepository {
     try {
       await database.update(contentTable).set({ active: true, updatedAt }).where(eq(contentTable.id, id)).execute();
     } catch (error) {
-      console.error(error);
-      throw new Error('Erro ao habilitar trilha');
+      log.error('Erro ao habilitar trilha.', { id, error });
+      throw new Error('Erro ao habilitar trilha.');
     }
   }
 
@@ -98,8 +104,8 @@ export class BaseContentRepository {
     try {
       await database.update(contentTable).set({ active: false, updatedAt }).where(eq(contentTable.id, id)).execute();
     } catch (error) {
-      console.error(error);
-      throw new Error('Erro ao omitir trilha');
+      log.error('Erro ao desabilitar trilha.', { id, error });
+      throw new Error('Erro ao desabilitar trilha.');
     }
   }
 }

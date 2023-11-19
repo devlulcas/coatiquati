@@ -1,6 +1,5 @@
 'use client';
 
-import { PinConfirmationDialog } from '@/modules/auth/components/pin-confirmation-dialog';
 import { userSignUpSchema } from '@/modules/auth/schemas/user-sign-up-schema';
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -13,24 +12,28 @@ import {
 } from '@/shared/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
+import { useToast } from '@/shared/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PencilIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { type User } from '../../types/user';
+import { editUserAction } from './edit-user-action';
 
 const editUserDialogSchema = userSignUpSchema.omit({ password: true });
+
+type EditUserFormValues = z.infer<typeof editUserDialogSchema>;
 
 type EditUserDialogTriggerProps = {
   user: User;
 };
 
 export function EditUserDialogTrigger({ user }: EditUserDialogTriggerProps) {
-  const [waintingForPin, setWaintingForPin] = useState(false);
-  const [pin, setPin] = useState<string | null>(null);
+  const { toast } = useToast();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const form = useForm<z.infer<typeof editUserDialogSchema>>({
+  const form = useForm<EditUserFormValues>({
     resolver: zodResolver(editUserDialogSchema),
     defaultValues: {
       email: user.email,
@@ -38,20 +41,22 @@ export function EditUserDialogTrigger({ user }: EditUserDialogTriggerProps) {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof editUserDialogSchema>) => {
-    if (!pin) {
-      setWaintingForPin(true);
-      return;
+  const onSubmit = async (data: EditUserFormValues) => {
+    try {
+      await editUserAction(data);
+      toast({ title: `Usuário ${data.username} alterado com sucesso` });
+      setIsOpen(false);
+    } catch (error) {
+      toast({
+        title: 'Erro ao criar conteúdo de vídeo criado',
+        description: error instanceof Error ? error.message : String(error),
+        variant: 'destructive',
+      });
     }
-
-    console.log({
-      ...data,
-      pin,
-    });
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost">
           Editar
@@ -98,17 +103,6 @@ export function EditUserDialogTrigger({ user }: EditUserDialogTriggerProps) {
                 </Button>
               </form>
             </Form>
-
-            <PinConfirmationDialog
-              isOpen={waintingForPin}
-              onConfirm={({ pin }) => {
-                setPin(pin);
-              }}
-              onCancel={() => {
-                setWaintingForPin(false);
-                setPin('');
-              }}
-            />
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
