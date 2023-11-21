@@ -15,7 +15,7 @@ export const trailTable = sqliteTable('trail', {
   description: text('description').notNull(),
   thumbnail: text('thumbnail').notNull(),
   status: text('status').$type<ContentStatus>().default(contentStatus.DRAFT).notNull(),
-  category: integer('category_id').references(() => categoryTable.id, {
+  category: integer('category_id').references(() => categoryTable.name, {
     onDelete: 'set null',
     onUpdate: 'cascade',
   }),
@@ -36,7 +36,7 @@ export const trailTable = sqliteTable('trail', {
 export const trailTableRelations = relations(trailTable, ({ many, one }) => ({
   category: one(categoryTable, {
     fields: [trailTable.category],
-    references: [categoryTable.id],
+    references: [categoryTable.name],
   }),
   subscriptions: many(trailSubscriptionTable),
   topics: many(topicTable),
@@ -51,8 +51,7 @@ export type CategoryTable = InferSelectModel<typeof categoryTable>;
 export type NewCategoryTable = InferInsertModel<typeof categoryTable>;
 
 export const categoryTable = sqliteTable('category', {
-  id: integer('id').primaryKey().notNull(),
-  name: text('name').notNull().unique(),
+  name: text('name').primaryKey().notNull().unique(),
   authorId: text('user_id')
     .notNull()
     .references(() => userTable.id, {
