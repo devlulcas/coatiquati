@@ -38,7 +38,11 @@ export function RenderedContentWrapper({ children, title, by, content }: Rendere
         <div className="flex flex-col justify-between">
           <h5 className="text-lg font-bold">{title}</h5>
           <Link className="text-md text-muted-foreground" href={createProfileUrl(by.username)}>
-            por {by.username}
+            por{' '}
+            <span className="text-brand-500">
+              {by.username} {isContentOwner && '(você)'}
+            </span>
+            <span className="sr-only">Ver perfil de {by.username}</span>
           </Link>
         </div>
 

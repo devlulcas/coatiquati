@@ -1,13 +1,13 @@
+import { ContributorList } from '@/modules/user/components/contributor-list';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { UpdatedAt } from '@/shared/components/common/updated-at';
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
+import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { cn } from '@/shared/utils/cn';
 import type { ClassValue } from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createTrailUrl } from '../../lib/create-trail-url';
 import type { Trail } from '../../types/trail';
-import { UserAvatar } from '@/shared/components/common/user-avatar';
 
 type TrailHeadingProps = {
   trail: Trail;
@@ -39,16 +39,10 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
 
         <p className="text-lg break-all">{trail.description}</p>
 
-        <ul className="flex items-center">
-          {trail.contributors.map(({ user }) => (
-            <li key={user.id} className="first:ml-0 -ml-2">
-              <Avatar className="border border-foreground/25 rounded-full">
-                <AvatarImage src={user.avatar} alt={user.username} />
-                <AvatarFallback>{user.username}</AvatarFallback>
-              </Avatar>
-            </li>
-          ))}
-        </ul>
+        <section className="flex flex-col gap-2">
+          <h2 className="text-xl font-bold flex items-center gap-2">{trail.contributors.length} contribuidores</h2>
+          <ContributorList contributors={trail.contributors.map(contributor => contributor.user)} />
+        </section>
 
         <UpdatedAt updatedAt={trail.updatedAt} />
 

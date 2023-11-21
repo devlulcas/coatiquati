@@ -1,3 +1,4 @@
+import { ContributorList } from '@/modules/user/components/contributor-list';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
@@ -21,26 +22,27 @@ export function TrailCard({ trail }: TrailCardProps) {
         <Link href={trailSlug}>
           <Image fill alt={trail.title} src={trail.thumbnail} className="object-cover object-center w-full" />
         </Link>
+        <div className="absolute bottom-2 left-2 flex gap-2">
+          {trail.category && (
+            <Link
+              className="p-1 text-sm text-primary-foreground bg-primary rounded-md"
+              href={createTrailCategoryUrl(trail.category.id)}
+            >
+              {trail.category.name}
+            </Link>
+          )}
 
-        {trail.author && (
-          <div className="absolute bottom-2 left-2 flex gap-2">
-            {trail.category && (
-              <Link
-                className="p-1 text-sm text-primary-foreground bg-primary rounded-md"
-                href={createTrailCategoryUrl(trail.category.id)}
-              >
-                {trail.category.name}
-              </Link>
-            )}
-
+          {trail.author && (
             <Link href={userProfileSlug}>
               <Avatar>
                 <AvatarFallback>{trail.author.username.slice(0, 2)}</AvatarFallback>
                 <AvatarImage src={trail.author.avatar} alt={trail.author.username} />
               </Avatar>
             </Link>
-          </div>
-        )}
+          )}
+
+          <ContributorList contributors={trail.contributors.map(contributor => contributor.user)} />
+        </div>
       </div>
 
       <div className="p-4 w-full h-fit flex flex-col justify-between">

@@ -157,7 +157,7 @@ function RenderImageContentCard({ content }: { content: ContentWithImage }) {
       by={meta.author}
       content={{ id: data.contentId, type: meta.contentType }}
     >
-      <Image className="w-full rounded" alt={data.alt} src={data.src} width={1240} height={1080} />
+      <Image title={meta.title} className="w-full rounded" alt={data.alt} src={data.src} width={1240} height={1080} />
       <p className="text-md text-muted-foreground">{data.description}</p>
     </RenderedContentWrapper>
   );
