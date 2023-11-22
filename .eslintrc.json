@@ -1,6 +1,15 @@
 {
   "extends": ["next/core-web-vitals", "prettier"],
+  "plugins": ["@typescript-eslint"],
   "rules": {
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports",
+        "disallowTypeAnnotations": true,
+        "fixStyle": "inline-type-imports"
+      }
+    ],
     "sort-imports": [
       "error",
       {

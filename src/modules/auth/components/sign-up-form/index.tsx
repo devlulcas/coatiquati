@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { userSignUpSchema } from '../../schemas/user-sign-up-schema';
 
 export function SignUpForm() {

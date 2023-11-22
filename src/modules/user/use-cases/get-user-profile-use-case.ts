@@ -1,5 +1,5 @@
 import { userSignInSchema } from '@/modules/auth/schemas/user-sign-in-schema';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { UserRepository } from '../repositories/user-repository';
 import { type UserProfile } from '../types/user';
 

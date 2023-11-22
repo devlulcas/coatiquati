@@ -1,6 +1,6 @@
 import { useToast } from '@/shared/components/ui/use-toast';
 import { generateComponents } from '@uploadthing/react';
-import type React from 'react';
+import React from 'react';
 import type { GlobalFileRouter } from '../../lib/global-file-router';
 
 const {

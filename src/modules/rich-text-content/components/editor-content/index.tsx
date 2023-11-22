@@ -1,5 +1,5 @@
 import { cn } from '@/shared/utils/cn';
-import { Editor, EditorContent as TipTapEditorContent } from '@tiptap/react';
+import { type Editor, EditorContent as TipTapEditorContent } from '@tiptap/react';
 import css from './editor-content.module.css';
 
 type EditorContentProps = {

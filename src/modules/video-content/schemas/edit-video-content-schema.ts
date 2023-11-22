@@ -1,7 +1,7 @@
 import { contentWithIdSchema } from '@/modules/content/schemas/content-with-id-schema';
 import { newContentSchema } from '@/modules/content/schemas/new-content-schema';
 import { newVideoContentSchema } from '@/modules/video-content/schemas/new-video-content-schema';
-import { z } from 'zod';
+import { type z } from 'zod';
 
 export const updateVideoContentSchema = newVideoContentSchema
   .partial()

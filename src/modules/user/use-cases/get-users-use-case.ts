@@ -1,5 +1,5 @@
 import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { UserRepository } from '../repositories/user-repository';
 import { type User } from '../types/user';
 

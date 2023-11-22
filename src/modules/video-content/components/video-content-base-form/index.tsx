@@ -10,7 +10,7 @@ import type { ClassValue } from 'clsx';
 import { VideoOffIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { YouTubeEmbed } from '../youtube-embed';
 
 const videoContentFormSchema = newVideoContentSchema;

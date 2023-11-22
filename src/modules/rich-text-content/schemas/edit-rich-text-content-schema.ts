@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 import { contentWithIdSchema } from '@/modules/content/schemas/content-with-id-schema';
 import { newContentSchema } from '@/modules/content/schemas/new-content-schema';
 import { newRichTextContentSchema } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';

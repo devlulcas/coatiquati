@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { roles } from '../constants/roles';
+import { type roles } from '../constants/roles';
 import { getPageSession } from './get-page-session';
 
 type ProtectWithRedirectParams = {

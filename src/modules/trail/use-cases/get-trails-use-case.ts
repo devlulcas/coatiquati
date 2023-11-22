@@ -1,5 +1,5 @@
 import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { TrailRepository } from '../repositories/trail-repository';
 import type { Trail } from '../types/trail';
 

@@ -9,7 +9,7 @@ import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { userSignInSchema } from '../../schemas/user-sign-in-schema';
 
 export function SignInForm() {

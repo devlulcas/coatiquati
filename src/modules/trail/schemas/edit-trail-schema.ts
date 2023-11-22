@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 import { newTrailSchema } from './new-trail-schema';
 import { trailWithIdSchema } from './trail-with-id-schema';
 

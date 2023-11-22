@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { type z } from 'zod';
 
 const imageContentSchema = newImageContentSchema;
 

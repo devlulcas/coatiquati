@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/com
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { Editor } from '@tiptap/react';
+import { type Editor } from '@tiptap/react';
 import { ImagePlusIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
