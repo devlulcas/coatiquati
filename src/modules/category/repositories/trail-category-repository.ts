@@ -1,7 +1,7 @@
 import { db } from '@/modules/database/db';
 import { categoryTable } from '@/modules/database/schema/trail';
 import { log } from '@/modules/logging/lib/pino';
-import { ilike } from 'drizzle-orm';
+import { like } from 'drizzle-orm';
 import type { NewTrailCategorySchema } from '../schemas/new-trail-category-schema';
 import type { TrailCategory } from '../types/trail-category';
 
@@ -24,7 +24,7 @@ export class TrailCategoryRepository {
       return database
         .select({ name: categoryTable.name })
         .from(categoryTable)
-        .where(ilike(categoryTable.name, params.search))
+        .where(like(categoryTable.name, params.search))
         .all();
     } catch (error) {
       log.error('Falha ao buscar categorias.', { error });
