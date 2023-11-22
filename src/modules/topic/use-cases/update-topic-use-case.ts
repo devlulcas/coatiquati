@@ -2,7 +2,7 @@ import type { Session } from '@/modules/auth/types/session';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { TopicRepository } from '../repositories/topic-repository';
-import { updateTopicUseCaseSchema, type UpdateTopicSchema } from '../schemas/edit-topic-schema';
+import { type UpdateTopicSchema, updateTopicUseCaseSchema } from '../schemas/edit-topic-schema';
 import { type Topic, type UpdateTopic } from '../types/topic';
 
 export class UpdateTopicUseCase {

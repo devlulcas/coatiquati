@@ -11,7 +11,7 @@ import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type ClassValue } from 'clsx';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import type { z } from 'zod';
 
 const newRichTextContentFormSchema = newRichTextContentSchema;

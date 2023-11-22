@@ -1,5 +1,5 @@
 import type { JSONContent } from '@tiptap/core';
-import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { type InferInsertModel, type InferSelectModel, relations, sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentCommentTable } from './comment';
 import { contentContributionTable } from './contribution';

@@ -1,7 +1,7 @@
-import { db, type Database } from '@/modules/database/db';
+import { type Database, db } from '@/modules/database/db';
 import {
-  emailVerificationTokenTable,
   type EmailVerificationToken,
+  emailVerificationTokenTable,
 } from '@/modules/database/schema/email-verification-token';
 import { log } from '@/modules/logging/lib/pino';
 import { eq } from 'drizzle-orm';

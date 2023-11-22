@@ -1,6 +1,6 @@
 import { CheckAccountVerificationTokenUseCase } from '@/modules/auth/use-cases/check-account-verification-token-use-case';
 import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (request: NextRequest) => {
   const token = request.nextUrl.searchParams.get('token') ?? '';

@@ -1,4 +1,4 @@
-import { relations, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { type InferInsertModel, type InferSelectModel, relations } from 'drizzle-orm';
 import { blob, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { userTable } from './user';
 

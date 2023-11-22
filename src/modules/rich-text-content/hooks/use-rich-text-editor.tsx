@@ -5,7 +5,7 @@ import TaskList from '@tiptap/extension-task-list';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Youtube from '@tiptap/extension-youtube';
-import { useEditor, type Content } from '@tiptap/react';
+import { type Content, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import LayeredImage from '@/modules/content/components/layered-image-node';
 

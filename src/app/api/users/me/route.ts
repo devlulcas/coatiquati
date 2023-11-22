@@ -1,6 +1,6 @@
 import { auth } from '@/modules/auth/services/lucia';
 import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export const GET = async (request: NextRequest) => {
   const authRequest = handleApiAuthRequest(request);

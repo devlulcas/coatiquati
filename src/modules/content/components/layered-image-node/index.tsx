@@ -1,5 +1,5 @@
 import { Button } from '@/shared/components/ui/button';
-import { Node, mergeAttributes, type NodeViewProps } from '@tiptap/core';
+import { mergeAttributes, Node, type NodeViewProps } from '@tiptap/core';
 import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react';
 import { GripIcon, PencilIcon } from 'lucide-react';
 import { LayeredImageUploaderDialogTrigger } from '../layered-image-uploader/layered-image-uploader-dialog-trigger';

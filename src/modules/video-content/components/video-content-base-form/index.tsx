@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { ClassValue } from 'clsx';
 import { VideoOffIcon } from 'lucide-react';
 import { useMemo } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { YouTubeEmbed } from '../youtube-embed';
 

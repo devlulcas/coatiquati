@@ -2,7 +2,7 @@
 
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { revalidatePath } from 'next/cache';
-import { UpdateUserUseCase, type UpdateUserSchema } from '../../use-cases/update-user-use-case';
+import { type UpdateUserSchema, UpdateUserUseCase } from '../../use-cases/update-user-use-case';
 
 export async function editUserAction(data: Omit<UpdateUserSchema, 'userId'>) {
   const session = await getActionSession();
