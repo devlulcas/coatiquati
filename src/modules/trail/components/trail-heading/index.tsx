@@ -16,6 +16,8 @@ type TrailHeadingProps = {
 };
 
 export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
+  const allContributors = [trail.author, ...trail.contributors.map(contributor => contributor.user)];
+
   return (
     <div className={cn('relative w-full min-h-80 flex flex-col lg:flex-row gap-4', className)}>
       <Image
@@ -41,7 +43,7 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
 
         <section className="flex flex-col gap-2">
           <h2 className="text-xl font-bold flex items-center gap-2">{trail.contributors.length} contribuidores</h2>
-          <ContributorList contributors={trail.contributors.map(contributor => contributor.user)} />
+          <ContributorList contributors={allContributors} />
         </section>
 
         <UpdatedAt updatedAt={trail.updatedAt} />
