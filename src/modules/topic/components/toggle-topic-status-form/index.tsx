@@ -5,25 +5,25 @@ import { Button } from '@/shared/components/ui/button';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { contentStatus } from '@/shared/constants/content-status';
 import { useTransition } from 'react';
-import type { Trail } from '../../types/trail';
-import { toggleTrailStatusAction } from './toggle-trail-status-action';
+import type { Topic } from '../../types/topic';
+import { toggleTopicStatusAction } from './toggle-topic-status-action';
 
-type ToggleTrailStatusFormProps = {
-  trail: Trail;
+type ToggleTopicStatusFormProps = {
+  topic: Topic;
 };
 
-export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
+export function ToggleTopicStatusForm({ topic }: ToggleTopicStatusFormProps) {
   const [isLoading, startTransition] = useTransition();
   const { toast } = useToast();
 
   const onSubmit = () => {
     startTransition(async () => {
       try {
-        await toggleTrailStatusAction(trail);
-        toast({ title: `${trail.title} teve ser estado de publicação invertido` });
+        await toggleTopicStatusAction(topic);
+        toast({ title: `${topic.title} teve ser estado de publicação invertido` });
       } catch (error) {
         toast({
-          title: 'Erro ao alterar estado de publicação da trilha',
+          title: 'Erro ao alterar estado de publicação do tópico',
           description: error instanceof Error ? error.message : String(error),
           variant: 'destructive',
         });
@@ -40,8 +40,8 @@ export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
         className="flex gap-2 items-center"
         onClick={onSubmit}
       >
-        <ContentStatusBadge status={trail.status} />
-        {trail.status === contentStatus.PUBLISHED ? 'Omitir' : 'Publicar'}
+        <ContentStatusBadge status={topic.status} />
+        {topic.status === contentStatus.PUBLISHED ? 'Omitir' : 'Publicar'}
       </Button>
     </div>
   );

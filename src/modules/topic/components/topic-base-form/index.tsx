@@ -1,12 +1,13 @@
 'use client';
 
+import { ImageUploaderInput } from '@/modules/media/components/image-uploader-input';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type ClassValue } from 'clsx';
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { newTopicSchema, type NewTopicSchema } from '../../schemas/new-topic-schema';
 
 type TopicBaseFormProps = {
@@ -59,7 +60,11 @@ export function TopicBaseForm({ defaultValues, onSubmit, className }: TopicBaseF
             <FormItem>
               <FormLabel>Thumbnail</FormLabel>
               <FormControl>
-                <Input placeholder="https://..." {...field} />
+                <ImageUploaderInput
+                  endpoint="newImageMedia"
+                  value={form.watch('thumbnail')}
+                  setValue={form.setValue.bind(form, 'thumbnail')}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

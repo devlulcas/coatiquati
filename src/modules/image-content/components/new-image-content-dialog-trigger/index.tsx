@@ -2,18 +2,17 @@
 
 import { ImageContentBaseForm } from '@/modules/image-content/components/image-content-base-form';
 import type { NewImageContentSchema } from '@/modules/image-content/schemas/new-image-content-schema';
-import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { ImagePlusIcon } from 'lucide-react';
 import { useState } from 'react';
 import { newImageContentAction } from './new-image-content-action';
 
 type NewImageContentDialogTriggerProps = {
   topicId: number;
+  children: React.ReactNode;
 };
 
-export function NewImageContentDialogTrigger({ topicId }: NewImageContentDialogTriggerProps) {
+export function NewImageContentDialogTrigger({ topicId, children }: NewImageContentDialogTriggerProps) {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,11 +32,7 @@ export function NewImageContentDialogTrigger({ topicId }: NewImageContentDialogT
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="flex gap-2 items-center justify-center">
-          <ImagePlusIcon /> Contribuir com uma imagem
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent className="min-w-fit">
         <DialogHeader>

@@ -63,15 +63,6 @@ export default async function Page({ params }: PageProps) {
       <header className="flex p-2 border bg-background/75 rounded flex-col gap-2">
         <h2 className="text-2xl font-bold mb-2">{topicData.title}</h2>
         <p className="text-lg text-muted-foreground">{topicData.description}</p>
-
-        <div className="flex gap-2">
-          <Button asChild variant="secondary" className="flex gap-2 items-center">
-            <Link href={createTrailUrl(topicData.trailId)}>
-              <ArrowLeftIcon size={16} />
-              Voltar para a trilha
-            </Link>
-          </Button>
-        </div>
       </header>
 
       <div className="flex p-2 border bg-background/75 rounded flex-col gap-2">
@@ -94,7 +85,16 @@ export default async function Page({ params }: PageProps) {
         </div>
 
         <span>Contribua você também com imagens, vídeos, links e textos dos seus estudos neste tópico:</span>
-        <ContributionOptionsButton topicId={topicData.id} trailId={topicData.trailId} />
+        <div className="flex gap-2 items-center flex-wrap">
+          <Button asChild variant="secondary" className="flex gap-2 items-center">
+            <Link href={createTrailUrl(topicData.trailId)}>
+              <ArrowLeftIcon size={16} />
+              Voltar
+            </Link>
+          </Button>
+          <span>ou</span>
+          <ContributionOptionsButton topicId={topicData.id} trailId={topicData.trailId} />
+        </div>
       </div>
 
       <h3 className="text-xl font-bold mt-6 mb-4">Conteúdos</h3>

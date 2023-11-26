@@ -19,13 +19,22 @@ export class TrailCategoryRepository {
     }
   }
 
-  async getCategories(params: { search: string }, database = db): Promise<TrailCategory[]> {
+  async searchCategories(params: { search: string }, database = db): Promise<TrailCategory[]> {
     try {
       return database
         .select({ name: categoryTable.name })
         .from(categoryTable)
-        .where(like(categoryTable.name, params.search))
+        .where(like(categoryTable.name, `%${params.search}%`))
         .all();
+    } catch (error) {
+      log.error('Falha ao buscar categorias.', { error });
+      throw new Error('Falha ao buscar categorias.');
+    }
+  }
+
+  async getCategories(database = db): Promise<TrailCategory[]> {
+    try {
+      return database.select({ name: categoryTable.name }).from(categoryTable).all();
     } catch (error) {
       log.error('Falha ao buscar categorias.', { error });
       throw new Error('Falha ao buscar categorias.');

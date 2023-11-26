@@ -1,13 +1,7 @@
-import { z } from 'zod';
+import { type z } from 'zod';
 import { newTopicSchema } from './new-topic-schema';
+import { topicWithIdSchema } from './topic-with-id-schema';
 
-export const updateTopicUseCaseSchema = newTopicSchema.partial().merge(
-  z.object({
-    id: z.number({
-      required_error: 'O ID do tópico é obrigatório.',
-      invalid_type_error: 'O ID do tópico deve ser um número.',
-    }),
-  }),
-);
+export const updateTopicSchema = newTopicSchema.partial().merge(topicWithIdSchema);
 
-export type UpdateTopicSchema = z.infer<typeof updateTopicUseCaseSchema>;
+export type UpdateTopicSchema = z.infer<typeof updateTopicSchema>;

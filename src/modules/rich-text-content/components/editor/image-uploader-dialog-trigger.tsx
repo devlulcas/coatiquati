@@ -1,5 +1,6 @@
 'use client';
 
+import { UploadDropzone } from '@/modules/media/components/generic-upload-component-pack';
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
@@ -9,7 +10,6 @@ import { type Editor } from '@tiptap/react';
 import { ImagePlusIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import { UploadDropzone } from '@/modules/content/components/generic-upload-component-pack';
 import { EditorActionButton } from './editor-action-button';
 
 type ImageUploaderProps = {

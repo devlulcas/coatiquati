@@ -1,6 +1,5 @@
 'use client';
 
-import { ContentStatusBadge } from '@/modules/content/components/content-status-badge';
 import { SortedColumnHeader } from '@/shared/components/common/data-table';
 import { Button } from '@/shared/components/ui/button';
 import { type ColumnDef } from '@tanstack/react-table';
@@ -9,12 +8,13 @@ import Link from 'next/link';
 import { createTopicUrl } from '../../lib/create-topic-url';
 import { type Topic } from '../../types/topic';
 import { EditTopicDialogTrigger } from '../edit-topic-dialog-trigger';
+import { ToggleTopicStatusForm } from '../toggle-topic-status-form';
 
 export const topicsColumns: ColumnDef<Topic>[] = [
   {
     accessorKey: 'status',
     header: ({ column }) => <SortedColumnHeader column={column}>Status</SortedColumnHeader>,
-    cell: ({ row }) => <ContentStatusBadge status={row.original.status} />,
+    cell: ({ row }) => <ToggleTopicStatusForm topic={row.original} />,
   },
   {
     accessorKey: 'title',

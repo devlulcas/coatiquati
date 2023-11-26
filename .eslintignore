@@ -10,3 +10,4 @@ yarn.lock
 package-lock.json
 package.json
 next-env.d.ts
+tsconfig.json

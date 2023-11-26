@@ -2,18 +2,17 @@
 
 import { VideoContentBaseForm } from '@/modules/video-content/components/video-content-base-form';
 import type { NewVideoContentSchema } from '@/modules/video-content/schemas/new-video-content-schema';
-import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { VideoIcon } from 'lucide-react';
 import { useState } from 'react';
 import { newVideoContentAction } from './new-video-content-action';
 
 type NewVideoContentDialogTriggerProps = {
   topicId: number;
+  children: React.ReactNode;
 };
 
-export function NewVideoContentDialogTrigger({ topicId }: NewVideoContentDialogTriggerProps) {
+export function NewVideoContentDialogTrigger({ topicId, children }: NewVideoContentDialogTriggerProps) {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -34,9 +33,7 @@ export function NewVideoContentDialogTrigger({ topicId }: NewVideoContentDialogT
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="flex gap-2 items-center justify-center">
-          <VideoIcon /> Contribuir com um vídeo
-        </Button>
+        {children}
       </DialogTrigger>
 
       <DialogContent className="min-w-fit">

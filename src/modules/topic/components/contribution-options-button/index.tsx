@@ -4,7 +4,7 @@ import { NewImageContentDialogTrigger } from '@/modules/image-content/components
 import { NewVideoContentDialogTrigger } from '@/modules/video-content/components/new-video-content-dialog-trigger';
 import { Button } from '@/shared/components/ui/button';
 import { AnimatePresence, motion, useCycle } from 'framer-motion';
-import { ScrollTextIcon } from 'lucide-react';
+import { ImagePlusIcon, ScrollTextIcon, VideoIcon } from 'lucide-react';
 import Link from 'next/link';
 import { createTopicUrl } from '../../lib/create-topic-url';
 
@@ -31,7 +31,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex gap-2 ml-3"
+            className="flex gap-2 ml-3 flex-wrap"
           >
             <motion.li
               initial={{ x: -100, opacity: 0 }}
@@ -42,7 +42,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               <Button className="flex gap-2 items-center justify-center" asChild>
                 <Link href={topicUrl + '/contribute/rich_text'}>
                   <ScrollTextIcon />
-                  Postagem
+                  <span className="sr-only lg:not-sr-only">Postagem</span>
                 </Link>
               </Button>
             </motion.li>
@@ -53,7 +53,12 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               exit={{ x: -100, opacity: 0 }}
               transition={{ duration: 0.2, delay: 0.2 }}
             >
-              <NewImageContentDialogTrigger topicId={topicId} />
+              <NewImageContentDialogTrigger topicId={topicId}>
+                <Button className="flex gap-2 items-center justify-center">
+                  <ImagePlusIcon />
+                  <span className="sr-only lg:not-sr-only">Contribuir com uma imagem</span>
+                </Button>
+              </NewImageContentDialogTrigger>
             </motion.li>
 
             <motion.li
@@ -62,7 +67,12 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               exit={{ x: -100, opacity: 0 }}
               transition={{ duration: 0.2, delay: 0.2 }}
             >
-              <NewVideoContentDialogTrigger topicId={topicId} />
+              <NewVideoContentDialogTrigger topicId={topicId}>
+                <Button className="flex gap-2 items-center justify-center">
+                  <VideoIcon />
+                  <span className="sr-only lg:not-sr-only">Contribuir com um vídeo</span>
+                </Button>
+              </NewVideoContentDialogTrigger>
             </motion.li>
           </motion.ul>
         )}

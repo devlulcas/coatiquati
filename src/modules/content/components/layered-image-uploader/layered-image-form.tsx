@@ -1,5 +1,6 @@
 'use client';
 
+import { ImageUploaderInput } from '@/modules/media/components/image-uploader-input';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
@@ -44,18 +45,10 @@ export function LayeredImageForm({ onAdd, defaultValue, className }: LayeredImag
         className={cn('flex h-full flex-col gap-4 p-4 border rounded-lg', className)}
         action="/api/sign-in"
       >
-        <FormField
-          control={form.control}
-          name="src"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>URL da imagem</FormLabel>
-              <FormControl>
-                <Input type="url" placeholder="https://placekitten.com/500" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <ImageUploaderInput
+          endpoint="textEditorImage"
+          value={form.watch('src')}
+          setValue={form.setValue.bind(form, 'src')}
         />
 
         <FormField
@@ -86,7 +79,13 @@ export function LayeredImageForm({ onAdd, defaultValue, className }: LayeredImag
           )}
         />
 
-        <Button variant="secondary" className="w-full mt-auto" type="submit">
+        <Button
+          variant="secondary"
+          className="w-full mt-auto"
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          isLoading={form.formState.isSubmitting}
+        >
           Adicionar camada
         </Button>
       </form>

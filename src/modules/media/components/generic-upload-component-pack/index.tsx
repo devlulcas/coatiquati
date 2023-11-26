@@ -1,7 +1,9 @@
+import type { GlobalFileRouter } from '@/modules/media/lib/global-file-router';
+import { Badge } from '@/shared/components/ui/badge';
+import { Progress } from '@/shared/components/ui/progress';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { generateComponents } from '@uploadthing/react';
 import React from 'react';
-import type { GlobalFileRouter } from '../../lib/global-file-router';
 
 const {
   UploadButton: UploadButtonRaw,
@@ -15,7 +17,7 @@ export const UploadButton = (props: React.ComponentPropsWithoutRef<typeof Upload
     <UploadButtonRaw
       appearance={{
         button:
-          'px-4 transition-colors ut-ready:bg-brand-600 ut-ready:text-brand-50 ut-uploading:cursor-not-allowed rounded bg-primary text-primary-foreground bg-none',
+          'px-4 transition-colors ut-ready:bg-brand-600 focus-within:ring-brand-300 ut-ready:text-brand-50 w-fit ut-uploading:after:bg-brand-600 ut-uploading:cursor-not-allowed ut-button:ut-readying:bg-brand-500/50 rounded bg-primary text-primary-foreground bg-none',
         container: 'w-full',
         allowedContent: 'text-white mt-2 text-sm',
       }}
@@ -37,7 +39,7 @@ export const UploadButton = (props: React.ComponentPropsWithoutRef<typeof Upload
       content={{
         button({ ready }) {
           if (ready) {
-            return 'Suba seu arquivo .md aqui';
+            return 'Suba seu arquivo aqui';
           }
 
           return 'Estamos nos preparando';
@@ -80,13 +82,15 @@ export const UploadDropzone = (props: React.ComponentPropsWithoutRef<typeof Uplo
           variant: 'destructive',
         });
       }}
+      appearance={{
+        button:
+          'px-4 transition-colors ut-ready:bg-brand-600 focus-within:ring-brand-300 ut-ready:text-brand-50 w-fit ut-uploading:after:bg-brand-600 ut-uploading:cursor-not-allowed ut-button:ut-readying:bg-brand-500/50 rounded bg-primary text-primary-foreground bg-none',
+        container: 'w-full',
+        allowedContent: 'text-white mt-2 text-sm',
+      }}
       content={{
         button({ ready }) {
-          if (ready) {
-            return 'Suba seu arquivo .md aqui';
-          }
-
-          return 'Estamos nos preparando';
+          return ready ? 'Clique pra salvar o arquivo' : 'Estamos nos preparando';
         },
         label({ ready, isUploading, uploadProgress }) {
           if (!ready) {
@@ -94,10 +98,20 @@ export const UploadDropzone = (props: React.ComponentPropsWithoutRef<typeof Uplo
           }
 
           if (isUploading) {
-            return 'Fazendo upload do arquivo... ' + uploadProgress + '%';
+            return (
+              <div className="flex items-center flex-col justify-center">
+                <span className="text-brand-500">Fazendo upload do arquivo...</span>
+                <div className="flex items-center gap-2 justify-center w-full">
+                  <Progress className="ml-2" value={uploadProgress} />
+                  <Badge>{uploadProgress}%</Badge>
+                </div>
+              </div>
+            );
           }
 
-          return 'Arrasta e solta o arquivo aqui, ou clica pra selecionar o arquivo';
+          return (
+            <span className="text-brand-500">Arrasta e solta o arquivo aqui, ou clica pra selecionar o arquivo</span>
+          );
         },
         allowedContent({ ready, fileTypes, isUploading, uploadProgress }) {
           if (!ready) {
