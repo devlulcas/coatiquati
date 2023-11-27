@@ -32,17 +32,12 @@ export const newTrailSchema = z.object({
       invalid_type_error: 'O status deve ser um dos status válidos.',
     })
     .default(contentStatus.DRAFT),
-  categoryId: z
-    .number({
-      invalid_type_error: 'O ID da categoria deve ser um número.',
-    })
-    .int({
-      message: 'O ID da categoria deve ser um número inteiro.',
-    })
-    .positive({
-      message: 'O ID da categoria deve ser um número positivo.',
-    })
-    .optional(),
+  category: z
+    .string()
+    .min(3, { message: 'Nome da categoria deve ter no mínimo 3 caracteres.' })
+    .max(50, { message: 'Nome da categoria deve ter no máximo 50 caracteres.' })
+    .optional()
+    .nullable(),
 });
 
 export type NewTrailSchema = z.infer<typeof newTrailSchema>;

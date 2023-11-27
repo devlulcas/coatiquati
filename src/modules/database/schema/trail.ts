@@ -1,4 +1,4 @@
-import { type InferInsertModel, type InferSelectModel, relations, sql } from 'drizzle-orm';
+import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentStatus, type ContentStatus } from '../../../shared/constants/content-status';
 import { trailContributionTable } from './contribution';
@@ -15,7 +15,7 @@ export const trailTable = sqliteTable('trail', {
   description: text('description').notNull(),
   thumbnail: text('thumbnail').notNull(),
   status: text('status').$type<ContentStatus>().default(contentStatus.DRAFT).notNull(),
-  category: integer('category_id').references(() => categoryTable.name, {
+  category: text('category_id').references(() => categoryTable.name, {
     onDelete: 'set null',
     onUpdate: 'cascade',
   }),

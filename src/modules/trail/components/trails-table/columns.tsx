@@ -21,16 +21,14 @@ export const trailsColumns: ColumnDef<Trail>[] = [
     header: 'Título',
     cell: ({ row }) => (
       <Button variant="link" asChild>
-        <Link className="break-all" href={createTrailUrl(row.original.id, true)}>
-          {row.original.title}
-        </Link>
+        <Link href={createTrailUrl(row.original.id, true)}>{row.original.title}</Link>
       </Button>
     ),
   },
   {
     accessorKey: 'description',
     header: 'Descrição',
-    cell: ({ row }) => <p className="break-all">{row.original.description}</p>,
+    cell: ({ row }) => <p>{row.original.description}</p>,
   },
   {
     accessorKey: 'updatedAt',

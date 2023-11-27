@@ -1,5 +1,6 @@
 import { db } from '@/modules/database/db';
 import { categoryTable } from '@/modules/database/schema/trail';
+import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
 import { like } from 'drizzle-orm';
 import type { NewTrailCategorySchema } from '../schemas/new-trail-category-schema';
@@ -19,22 +20,19 @@ export class TrailCategoryRepository {
     }
   }
 
-  async searchCategories(params: { search: string }, database = db): Promise<TrailCategory[]> {
-    try {
-      return database
-        .select({ name: categoryTable.name })
-        .from(categoryTable)
-        .where(like(categoryTable.name, `%${params.search}%`))
-        .all();
-    } catch (error) {
-      log.error('Falha ao buscar categorias.', { error });
-      throw new Error('Falha ao buscar categorias.');
-    }
-  }
+  async getCategories(params?: Partial<PaginationSchemaWithSearch>, database = db): Promise<TrailCategory[]> {
+    const search = params?.search || null;
+    const skip = params?.skip || 0;
+    const take = params?.take || 40;
 
-  async getCategories(database = db): Promise<TrailCategory[]> {
     try {
-      return database.select({ name: categoryTable.name }).from(categoryTable).all();
+      let query = database.select({ name: categoryTable.name }).from(categoryTable).offset(skip).limit(take);
+
+      if (search) {
+        query = query.where(like(categoryTable.name, `%${search}%`));
+      }
+
+      return query.all();
     } catch (error) {
       log.error('Falha ao buscar categorias.', { error });
       throw new Error('Falha ao buscar categorias.');

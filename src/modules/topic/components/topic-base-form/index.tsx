@@ -24,7 +24,7 @@ export function TopicBaseForm({ defaultValues, onSubmit, className }: TopicBaseF
 
   return (
     <Form {...form}>
-      <form method="POST" onSubmit={form.handleSubmit(onSubmit)} className={cn('space-y-8', className)}>
+      <form method="POST" onSubmit={form.handleSubmit(onSubmit)} className={cn('flex flex-col gap-3', className)}>
         <FormField
           control={form.control}
           name="title"
@@ -71,7 +71,10 @@ export function TopicBaseForm({ defaultValues, onSubmit, className }: TopicBaseF
           )}
         />
 
-        <Button className="w-full" type="submit" isLoading={form.formState.isSubmitting}>
+        <Button className="w-full" type="submit" isLoading={form.formState.isSubmitting}
+          disabled={form.formState.isSubmitting}
+          
+        >
           Salvar
         </Button>
       </form>

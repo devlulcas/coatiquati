@@ -25,7 +25,7 @@ export class CreateNewTrailUseCase {
       thumbnail: validatedParams.data.thumbnail,
       status: validatedParams.data.status,
       authorId: session.user.id,
-      category: validatedParams.data.categoryId,
+      category: validatedParams.data.category,
     };
 
     const trail = await this.trailRepository.createTrail(newTrail);

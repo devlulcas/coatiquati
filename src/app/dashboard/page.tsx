@@ -1,3 +1,4 @@
+import { TrailCategoryForm } from '@/modules/category/components/trail-category-form';
 import { TrailsTable } from '@/modules/trail/components/trails-table';
 import { GetTrailsUseCase } from '@/modules/trail/use-cases/get-trails-use-case';
 import { UsersTable } from '@/modules/user/components/users-table';
@@ -26,6 +27,11 @@ export default async function Page() {
           </Button>
         </div>
         <TrailsTable data={trailsData} />
+      </section>
+
+      <section>
+        <h2 className="text-xl mb-4">Categorias</h2>
+        <TrailCategoryForm />
       </section>
 
       <section>
