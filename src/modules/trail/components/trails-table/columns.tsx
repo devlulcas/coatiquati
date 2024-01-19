@@ -38,7 +38,7 @@ export const trailsColumns: ColumnDef<Trail>[] = [
   {
     accessorKey: 'category',
     header: ({ column }) => <SortedColumnHeader column={column}>Categoria</SortedColumnHeader>,
-    cell: ({ row }) => row.original.category || '-',
+    cell: ({ row }) => row.original.category?.name || '-',
   },
   {
     accessorKey: 'thumbnail',

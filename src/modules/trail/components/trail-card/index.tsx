@@ -22,21 +22,29 @@ export function TrailCard({ trail }: TrailCardProps) {
         <Link href={trailSlug}>
           <Image fill alt={trail.title} src={trail.thumbnail} className="object-cover object-center w-full" />
         </Link>
-        <div className="absolute bottom-2 left-2 flex gap-2">
+
+        <div className="absolute top-2 right-2">
           {trail.category && (
             <Link
-              className="p-1 text-sm text-primary-foreground bg-primary rounded-md"
-              href={createTrailCategoryUrl(trail.category.id)}
+              className="p-1 h-fit text-sm text-primary-foreground bg-primary rounded-md"
+              href={createTrailCategoryUrl(trail.category.name)}
             >
               {trail.category.name}
             </Link>
           )}
-
+        </div>
+        <div className="absolute bottom-2 left-2 flex gap-2">
           {trail.author && (
             <Link href={userProfileSlug}>
-              <Avatar>
-                <AvatarFallback>{trail.author.username.slice(0, 2)}</AvatarFallback>
-                <AvatarImage src={trail.author.avatar} alt={trail.author.username} />
+              <Avatar className="rounded-full rounded-bl-none">
+                <AvatarFallback className="rounded-full rounded-bl-none">
+                  {trail.author.username.slice(0, 2)}
+                </AvatarFallback>
+                <AvatarImage
+                  className="rounded-full rounded-bl-none"
+                  src={trail.author.avatar}
+                  alt={trail.author.username}
+                />
               </Avatar>
             </Link>
           )}

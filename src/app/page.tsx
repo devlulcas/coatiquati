@@ -1,9 +1,15 @@
 import { Marquee } from '@/modules/home/components/marquee';
+import { TrailCard } from '@/modules/trail/components/trail-card';
+import { GetRecentTrailsUseCase } from '@/modules/trail/use-cases/get-recent-trails-use-case';
 import blobImage from '@/shared/assets/images/blob-hq.png';
 import { FootprintsIcon } from 'lucide-react';
 import Image from 'next/image';
 
+const recentTrailsUseCase = new GetRecentTrailsUseCase();
+
 export default async function Page() {
+  const trails = await recentTrailsUseCase.execute();
+
   return (
     <div className="pt-12 h-[--view-height] flex flex-col">
       <div className="flex flex-col container">
@@ -22,6 +28,12 @@ export default async function Page() {
           Conheça as trilhas
           <FootprintsIcon />
         </a>
+
+        <main className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+          {trails.map(trail => (
+            <TrailCard key={trail.id} trail={trail} />
+          ))}
+        </main>
 
         <div className="overflow-hidden outline absolute h-[--safe-screen-height] inset-0 z-[-1]">
           <Image

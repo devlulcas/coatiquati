@@ -8,7 +8,7 @@ import type { GlobalFileRouterEndpoints } from '../../lib/global-file-router';
 import { UploadButton, UploadDropzone } from '../generic-upload-component-pack';
 
 type ImageUploaderInputProps = {
-  value: string;
+  value?: string;
   setValue: (url: string) => void;
   endpoint: GlobalFileRouterEndpoints;
 };

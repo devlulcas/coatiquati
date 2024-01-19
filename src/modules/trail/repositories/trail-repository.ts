@@ -6,7 +6,7 @@ import { log } from '@/modules/logging/lib/pino';
 import { TOPIC_DB_FIELDS } from '@/modules/topic/repositories/topic-repository';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { contentStatus } from '@/shared/constants/content-status';
-import { eq } from 'drizzle-orm';
+import { asc, eq } from 'drizzle-orm';
 import type { NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
 
 export const TRAIL_DB_FIELDS = Object.freeze({
@@ -130,6 +130,43 @@ export class TrailRepository {
     } catch (error) {
       log.error('Erro ao buscar trilhas', { error, params });
       throw new Error('Erro ao buscar trilhas');
+    }
+  }
+
+  /**
+   * Busca as trilhas com paginação e busca
+   */
+  async getRecentTrails(database = db): Promise<Trail[]> {
+    try {
+      const data = database.query.trailTable.findMany({
+        columns: TRAIL_DB_FIELDS,
+        limit: 5,
+        offset: 0,
+        where: (fields, operators) => {
+          return operators.not(operators.eq(fields.status, contentStatus.DRAFT));
+        },
+        orderBy: [asc(trailTable.createdAt)],
+        with: {
+          author: {
+            columns: CONTRIBUTOR_DB_FIELDS,
+          },
+          contributors: {
+            with: {
+              user: {
+                columns: CONTRIBUTOR_DB_FIELDS,
+              },
+            },
+          },
+          category: {
+            columns: CATEGORY_DB_FIELDS,
+          },
+        },
+      });
+
+      return data;
+    } catch (error) {
+      log.error('Erro ao buscar trilhas recentes', { error });
+      throw new Error('Erro ao buscar trilhas recentes');
     }
   }
 

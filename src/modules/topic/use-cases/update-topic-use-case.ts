@@ -2,7 +2,7 @@ import type { Session } from '@/modules/auth/types/session';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { TopicRepository } from '../repositories/topic-repository';
-import { type UpdateTopicSchema, updateTopicUseCaseSchema } from '../schemas/edit-topic-schema';
+import { updateTopicSchema, type UpdateTopicSchema } from '../schemas/edit-topic-schema';
 import { type Topic, type UpdateTopic } from '../types/topic';
 
 export class UpdateTopicUseCase {
@@ -13,7 +13,7 @@ export class UpdateTopicUseCase {
       throw new Error('Você precisa ser um administrador para atualizar um tópico.');
     }
 
-    const validatedParams = updateTopicUseCaseSchema.safeParse(params);
+    const validatedParams = updateTopicSchema.safeParse(params);
 
     if (!validatedParams.success) {
       throw new Error('Parâmetros inválidos para atualizar um tópico.');

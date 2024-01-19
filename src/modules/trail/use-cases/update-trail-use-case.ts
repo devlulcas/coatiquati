@@ -26,7 +26,7 @@ export class UpdateTrailUseCase {
       thumbnail: validatedParams.data.thumbnail,
       status: validatedParams.data.status,
       contributorId: session.user.id,
-      category: validatedParams.data.categoryId,
+      category: validatedParams.data.category,
     };
 
     const trail = await this.trailRepository.updateTrail(updatedTrail);

@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { EmailVerificationTokenRepository } from '../repositories/email-verification-token-repository';
 import { EmailVerificationService } from '../services/email-verification-service';
 import { auth } from '../services/lucia';
 import type { Session } from '../types/session';
@@ -31,10 +30,15 @@ export class CheckAccountVerificationTokenUseCase {
 
       const user = await auth.getUser(userId);
 
+      console.log('>>>>>>>>>>>>> user', user);
+
       await auth.invalidateAllUserSessions(user.userId);
 
       await auth.updateUserAttributes(user.userId, {
-        email_verified: true,
+        email_verified: Number(true),
+        role: user.role,
+        email: user.email,
+        username: user.username,
       });
 
       const session = await auth.createSession({

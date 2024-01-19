@@ -7,4 +7,4 @@ export const topicWithIdSchema = z.object({
   }),
 });
 
-export type TrailWithIdSchema = z.infer<typeof topicWithIdSchema>;
+export type TopicWithIdSchema = z.infer<typeof topicWithIdSchema>;

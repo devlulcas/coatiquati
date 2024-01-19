@@ -1,7 +1,5 @@
-import { db } from '@/modules/database/db';
 import { log } from '@/modules/logging/lib/pino';
-import { generateRandomString, isWithinExpiration } from 'lucia/utils';
-import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
+import { isWithinExpiration } from 'lucia/utils';
 import { EmailVerificationTokenRepository } from '../repositories/email-verification-token-repository';
 
 type EmailVerificationToken = string;
@@ -19,21 +17,8 @@ export class EmailVerificationService {
    * @returns O token de verificação de email ou null se não for possível gerar um token
    */
   async generateEmailVerificationToken(userId: string): Promise<EmailVerificationToken | null> {
-    const storedUserTokens = await this.emailVerificationTokenRepository.getVerificationTokensByUserId(userId, db);
-
-    // Se o token for válido por mais da metade do tempo de expiração, ele é reutilizável
-    if (storedUserTokens.length > 0) {
-      const reusableStoredToken = storedUserTokens.find(token => {
-        return isWithinExpiration(Number(token.expires) - EMAIL_VERIFICATION_TOKEN_EXPIRES_IN / 2);
-      });
-
-      if (reusableStoredToken) return reusableStoredToken.id;
-    }
-
-    const newToken = generateRandomString(63);
-
     try {
-      const insertedToken = await this.emailVerificationTokenRepository.createVerificationToken(userId, newToken, db);
+      const insertedToken = await this.emailVerificationTokenRepository.createVerificationToken(userId);
       return insertedToken ? insertedToken.id : null;
     } catch (error) {
       log.error('Erro ao tentar criar token de verificação de e-mail', { error });
@@ -47,7 +32,7 @@ export class EmailVerificationService {
    * @returns O id do usuário associado ao token. Retorna null se o token for inválido.
    */
   async validateEmailVerificationToken(token: string): Promise<UserId | null> {
-    const storedToken = await this.emailVerificationTokenRepository.getVerificationTokenById(token, db);
+    const storedToken = await this.emailVerificationTokenRepository.getVerificationTokenById(token);
 
     if (!storedToken) {
       log.warn('Invalid email verification token ', { token });
@@ -55,11 +40,9 @@ export class EmailVerificationService {
     }
 
     // Converte de BigInt para Number
-    const tokenExpires = Number(storedToken.expires);
-
-    if (!isWithinExpiration(tokenExpires)) {
+    if (!isWithinExpiration(storedToken.expires.getTime())) {
       const now = Date.now();
-      const timeLeft = tokenExpires - now;
+      const timeLeft = storedToken.expires.getTime() - now;
       log.warn('Expired email verification token ', { token, timeLeft });
       return null;
     }

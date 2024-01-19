@@ -39,17 +39,15 @@ export function TrailCategorySearchInput({ className, setValue, value }: TrailCa
     <div className={cn('relative', className)}>
       <Input
         type="text"
-        className="border rounded-md w-full p-3 pl-10"
+        className="border rounded-md w-full mb-2"
         placeholder="Pesquisar categoria"
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
 
-      <div className="absolute inset-0 flex items-center justify-center">
-        {trailCategorySearchQuery.isLoading && (
-          <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary" />
-        )}
-      </div>
+      {trailCategorySearchQuery.isLoading && (
+        <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary" />
+      )}
 
       {trailCategorySearchQuery.isSuccess && trailCategorySearchQuery.data.length > 0 && (
         <div className="border rounded-md p-3 flex flex-col gap-2 bg-muted">
@@ -59,8 +57,14 @@ export function TrailCategorySearchInput({ className, setValue, value }: TrailCa
             <button
               key={trailCategory.name}
               type="button"
-              className="flex items-center gap-2 text-sm text-muted-foreground"
-              onClick={() => setValue?.(trailCategory.name)}
+              className={cn(
+                'flex items-center gap-2 text-sm text-muted-foreground',
+                trailCategory.name === value && 'text-primary',
+              )}
+              onClick={() => {
+                setValue?.(trailCategory.name);
+                setSearch(trailCategory.name);
+              }}
             >
               <span>{trailCategory.name}</span>
             </button>

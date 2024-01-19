@@ -1,21 +1,39 @@
-import { type Database, db } from '@/modules/database/db';
+import { db } from '@/modules/database/db';
 import {
-  type EmailVerificationToken,
   emailVerificationTokenTable,
+  type EmailVerificationToken,
 } from '@/modules/database/schema/email-verification-token';
 import { log } from '@/modules/logging/lib/pino';
 import { eq } from 'drizzle-orm';
+import { generateRandomString, isWithinExpiration } from 'lucia/utils';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
 
 export class EmailVerificationTokenRepository {
-  async createVerificationToken(userId: string, token: string, database = db): Promise<EmailVerificationToken | null> {
+  async createVerificationToken(userId: string, database = db): Promise<EmailVerificationToken | null> {
     try {
+      const storedUserTokens = database
+        .select()
+        .from(emailVerificationTokenTable)
+        .where(eq(emailVerificationTokenTable.userId, userId))
+        .all();
+
+      // Se o token for válido por mais da metade do tempo de expiração, ele é reutilizável
+      if (storedUserTokens.length > 0) {
+        const reusableStoredToken = storedUserTokens.find(token => {
+          return isWithinExpiration(token.expires.getTime() - EMAIL_VERIFICATION_TOKEN_EXPIRES_IN / 2);
+        });
+
+        if (reusableStoredToken) return reusableStoredToken;
+      }
+
+      const newToken = generateRandomString(63);
+
       const results = await database
         .insert(emailVerificationTokenTable)
         .values({
-          id: token,
+          id: newToken,
           userId: userId,
-          expires: BigInt(new Date().getTime() + EMAIL_VERIFICATION_TOKEN_EXPIRES_IN),
+          expires: new Date(Date.now() + EMAIL_VERIFICATION_TOKEN_EXPIRES_IN),
         })
         .returning()
         .execute();
@@ -26,21 +44,6 @@ export class EmailVerificationTokenRepository {
     } catch (error) {
       log.error('createVerificationToken', error);
       return null;
-    }
-  }
-
-  async getVerificationTokensByUserId(userId: string, database = db): Promise<EmailVerificationToken[]> {
-    try {
-      const results = database
-        .select()
-        .from(emailVerificationTokenTable)
-        .where(eq(emailVerificationTokenTable.userId, userId))
-        .all();
-
-      return results;
-    } catch (error) {
-      log.error('getVerificationTokensByUserId', { error });
-      return [];
     }
   }
 

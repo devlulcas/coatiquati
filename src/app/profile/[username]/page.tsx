@@ -12,7 +12,7 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const getUserProfileUseCase = new GetUserProfileUseCase();
   const profile = await getUserProfileUseCase.execute({
-    username: params.username,
+    username: decodeURIComponent(params.username),
   });
 
   if (!profile) {
