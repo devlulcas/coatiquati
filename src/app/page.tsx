@@ -29,11 +29,14 @@ export default async function Page() {
           <FootprintsIcon />
         </a>
 
-        <main className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-          {trails.map(trail => (
-            <TrailCard key={trail.id} trail={trail} />
-          ))}
-        </main>
+        <div>
+          <h2 className="text-2xl font-bold mt-8">Trilhas recentes</h2>
+          <main className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
+            {trails.map(trail => (
+              <TrailCard key={trail.id} trail={trail} />
+            ))}
+          </main>
+        </div>
 
         <div className="overflow-hidden outline absolute h-[--safe-screen-height] inset-0 z-[-1]">
           <Image

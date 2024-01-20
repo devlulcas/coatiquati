@@ -1,20 +1,10 @@
-import type {
-  Content,
-  ContentWithFile,
-  ContentWithImage,
-  ContentWithRichTextPreview,
-  ContentWithVideo,
-} from '@/modules/content/types/content';
-import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
+import { RenderCorrectContentCard } from '@/modules/content-renderer/components/render-correct-content-card';
 import { ContributionOptionsButton } from '@/modules/topic/components/contribution-options-button';
 import { GetTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
 import { createTrailUrl } from '@/modules/trail/lib/create-trail-url';
-import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { Button } from '@/shared/components/ui/button';
-import { ArrowLeftIcon, ArrowRightIcon, FileIcon, ImageIcon, TextIcon, VideoIcon } from 'lucide-react';
-import Image from 'next/image';
+import { ArrowLeftIcon, FileIcon, ImageIcon, TextIcon, VideoIcon } from 'lucide-react';
 import Link from 'next/link';
-import { RenderedContentWrapper } from './rendered-content-wrapper';
 
 type PageProps = {
   params: {
@@ -113,84 +103,5 @@ export default async function Page({ params }: PageProps) {
         )}
       </ul>
     </div>
-  );
-}
-
-function RenderCorrectContentCard({ content }: { content: Content }) {
-  switch (content.contentType) {
-    case 'file':
-      return <RenderFileContentCard content={content} />;
-    case 'image':
-      return <RenderImageContentCard content={content} />;
-    case 'video':
-      return <RenderVideoContentCard content={content} />;
-    case 'rich_text':
-      return <RenderRichTextContentCard content={content} />;
-    default:
-      throw new Error('Tipo de conteúdo inválido');
-  }
-}
-
-function RenderFileContentCard({ content }: { content: ContentWithFile }) {
-  const { content: data, ...meta } = content;
-
-  return (
-    <RenderedContentWrapper
-      title={meta.title}
-      by={meta.author}
-      content={{ id: data.contentId, type: meta.contentType }}
-    >
-      <Link href={data.url} className="text-md text-muted-foreground">
-        {data.filename} - <span className="p-1 border rounded">{data.filesize}</span>
-      </Link>
-      <p className="text-md text-muted-foreground">{data.visualDescription}</p>
-    </RenderedContentWrapper>
-  );
-}
-
-function RenderImageContentCard({ content }: { content: ContentWithImage }) {
-  const { content: data, ...meta } = content;
-
-  return (
-    <RenderedContentWrapper
-      title={meta.title}
-      by={meta.author}
-      content={{ id: data.contentId, type: meta.contentType }}
-    >
-      <Image title={meta.title} className="w-full rounded" alt={data.alt} src={data.src} width={1240} height={1080} />
-      <p className="text-md text-muted-foreground">{data.description}</p>
-    </RenderedContentWrapper>
-  );
-}
-
-function RenderVideoContentCard({ content }: { content: ContentWithVideo }) {
-  const { content: data, ...meta } = content;
-
-  return (
-    <RenderedContentWrapper
-      title={meta.title}
-      by={meta.author}
-      content={{ id: data.contentId, type: meta.contentType }}
-    >
-      <YouTubeEmbed id={data.src} title={meta.title} />
-      <p className="text-md text-muted-foreground">{data.description}</p>
-    </RenderedContentWrapper>
-  );
-}
-
-function RenderRichTextContentCard({ content }: { content: ContentWithRichTextPreview }) {
-  const { content: data, ...meta } = content;
-
-  return (
-    <RenderedContentWrapper
-      title={meta.title}
-      by={meta.author}
-      content={{ id: data.contentId, type: meta.contentType }}
-    >
-      <ReadonlyEditor content={data.previewAsJson} />
-      <Link href={`/contents/${meta.id}`} className="text-md text-muted-foreground flex items-center gap-2">
-        Ler mais <ArrowRightIcon size={16} />
-      </Link>
-    </RenderedContentWrapper>
   );
 }

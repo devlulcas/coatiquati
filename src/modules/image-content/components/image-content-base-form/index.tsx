@@ -5,7 +5,6 @@ import { ImageUploaderInput } from '@/modules/media/components/image-uploader-in
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
-import { useToast } from '@/shared/components/ui/use-toast';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -22,8 +21,6 @@ type ImageContentBaseFormProps = {
 };
 
 export function ImageContentBaseForm({ onSubmit, className, defaultValues }: ImageContentBaseFormProps) {
-  const { toast } = useToast();
-
   const form = useForm<ImageContentSchema>({
     resolver: zodResolver(imageContentSchema),
     defaultValues: defaultValues,

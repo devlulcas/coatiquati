@@ -1,10 +1,14 @@
 'use client';
 
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
+import { AddNewCommentForm } from '@/modules/comments/components/add-new-comment-form';
+import { useCommentsQuery } from '@/modules/comments/hooks/use-comments-query';
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import type { Contributor } from '@/modules/user/types/user';
+import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
+import { Separator } from '@/shared/components/ui/separator';
 import { PencilIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -24,6 +28,8 @@ export function RenderedContentWrapper({ children, title, by, content }: Rendere
 
   const isContentOwner = currentUserDataQuery.isSuccess && currentUserDataQuery.data.id === by.id;
   const isAdmin = currentUserDataQuery.isSuccess && isAdminOrAbove(currentUserDataQuery.data.role);
+
+  const commentsQuery = useCommentsQuery(content.id, null);
 
   return (
     <section className="flex flex-col gap-2 border rounded bg-background/50">
@@ -56,7 +62,34 @@ export function RenderedContentWrapper({ children, title, by, content }: Rendere
         )}
       </header>
 
-      <div className="p-2 flex flex-col gap-3">{children}</div>
+      <div className="p-2 flex flex-col gap-3 relative">{children}</div>
+
+      <footer className="p-2">
+        <Separator className="my-4" />
+
+        <AddNewCommentForm contentId={content.id} parentCommentId={null} />
+
+        <Separator className="my-4" />
+
+        <ul className="flex flex-col gap-8 mt-8">
+          {commentsQuery.isSuccess &&
+            commentsQuery.data.map(comment => (
+              <li key={comment.id} className="border rounded bg-secondary/50 p-4">
+                <div className="-mt-10 mb-5 border rounded-full flex p-1 bg-secondary/50 backdrop-blur-sm gap-2 items-center w-fit">
+                  <UserAvatar user={comment.author} />
+
+                  <div className="pr-1">
+                    <Link className="text-brand-500" href={createProfileUrl(comment.author.username)}>
+                      Comentário de {comment.author.username}{' '}
+                      <span className="font-bold">{comment.author.id === by.id && '(autor)'}</span>
+                    </Link>
+                  </div>
+                </div>
+                <p>{comment.content}</p>
+              </li>
+            ))}
+        </ul>
+      </footer>
     </section>
   );
 }

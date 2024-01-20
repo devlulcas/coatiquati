@@ -43,7 +43,7 @@ export function ImageUploaderInput({ endpoint, value, setValue }: ImageUploaderI
     <>
       {value ? (
         <div className="w-full flex relative">
-          <Image src={value} alt="Imagem" className="rounded-lg mx-auto" width={500} height={500} />
+          <Image src={value} alt="Imagem" className="rounded-lg mx-auto max-h-80 w-auto" width={500} height={500} />
 
           <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
             <UploadButton endpoint={endpoint} onClientUploadComplete={setValueCallback} />
