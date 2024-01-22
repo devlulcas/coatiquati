@@ -1,15 +1,7 @@
 import { db } from '@/modules/database/db';
-import {
-  contentCommentTable,
-  type ContentCommentTable,
-  type ContentNewCommentTable,
-} from '@/modules/database/schema/comment';
+import { contentCommentTable, type ContentNewCommentTable } from '@/modules/database/schema/comment';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
-import type { Contributor } from '@/modules/user/types/user';
-
-type CommentWithAuthor = Omit<ContentCommentTable, 'authorId' | 'deletedAt'> & {
-  author: Contributor;
-};
+import type { CommentWithAuthor } from '../types/comment';
 
 export const COMMENT_DB_FIELDS = Object.freeze({
   id: true,

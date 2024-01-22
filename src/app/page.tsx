@@ -2,6 +2,13 @@ import { Marquee } from '@/modules/home/components/marquee';
 import { TrailCard } from '@/modules/trail/components/trail-card';
 import { GetRecentTrailsUseCase } from '@/modules/trail/use-cases/get-recent-trails-use-case';
 import blobImage from '@/shared/assets/images/blob-hq.png';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/shared/components/ui/carousel';
 import { FootprintsIcon } from 'lucide-react';
 import Image from 'next/image';
 
@@ -11,7 +18,7 @@ export default async function Page() {
   const trails = await recentTrailsUseCase.execute();
 
   return (
-    <div className="pt-12 h-[--view-height] flex flex-col">
+    <div className="pt-12 h-full lg:h-[--view-height] flex flex-col justify-between">
       <div className="flex flex-col container">
         <h1 className="text-5xl lg:text-6xl font-black">CoatiQuati! Aprenda mais ensinando.</h1>
 
@@ -31,11 +38,18 @@ export default async function Page() {
 
         <div>
           <h2 className="text-2xl font-bold mt-8">Trilhas recentes</h2>
-          <main className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-4">
-            {trails.map(trail => (
-              <TrailCard key={trail.id} trail={trail} />
-            ))}
-          </main>
+
+          <Carousel className="my-2">
+            <CarouselContent>
+              {trails.map(trail => (
+                <CarouselItem key={trail.id} className="sm:basis-1/2 lg:basis-1/5">
+                  <TrailCard trail={trail} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
 
         <div className="overflow-hidden outline absolute h-[--safe-screen-height] inset-0 z-[-1]">
@@ -48,7 +62,6 @@ export default async function Page() {
       </div>
 
       <Marquee
-        className="mt-auto"
         words={[
           'matemática',
           'física',

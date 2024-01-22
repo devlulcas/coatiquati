@@ -9,6 +9,8 @@ export async function Header() {
 
   return (
     <header className="z-50 top-0 sticky border-b h-[--header-height] bg-background/75 backdrop-blur-md">
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-foreground/5 z-[-1]" />
+
       <div className="flex items-center justify-between container h-full">
         <Link href="/" className="flex items-center justify-center gap-2">
           <Image src={coatiSvg} alt="CoatiQuati" height={34} />

@@ -1,6 +1,8 @@
 'use client';
 
 import type { ContentWithImage } from '@/modules/content/types/content';
+import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
+import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
@@ -11,8 +13,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/shared/components/ui/resizable';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
+import { useMediaQuery } from '@/shared/hooks/use-media-query';
 import { ZoomInIcon } from 'lucide-react';
+import Link from 'next/link';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 
@@ -22,6 +27,8 @@ type ZoomedImageProps = {
 
 export function ZoomedImage({ content }: ZoomedImageProps) {
   const { content: data, ...meta } = content;
+
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   return (
     <Dialog>
@@ -38,23 +45,55 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
           <DialogDescription className="text-md text-muted-foreground">{data.description}</DialogDescription>
         </DialogHeader>
 
-        <div className="flex gap-2 divide-x">
-          <Zoom>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img alt={data.alt} src={data.src} width={1240} height={1080} />
-          </Zoom>
+        <ResizablePanelGroup className="min-h-[75dvh]" direction={isDesktop ? 'horizontal' : 'vertical'}>
+          <ResizablePanel className="max-h-[75dvh]">
+            <Zoom>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img alt={data.alt} src={data.src} width={1240} height={1080} />
+            </Zoom>
+          </ResizablePanel>
+          <ResizableHandle withHandle className="mx-2" />
+          <ResizablePanel>
+            <aside className="bg-secondary text-secondary-foreground p-4 rounded border flex flex-col gap-2 w-full">
+              <h4 className="text-md font-bold">{meta.title}</h4>
 
-          <aside className="bg-secondary text-secondary-foreground p-4 rounded border flex flex-col gap-2 w-fit">
-            <h4 className="text-md font-bold">{meta.title}</h4>
+              <ScrollArea className="h-1/2 py-2">
+                <span className="text-muted-foreground">Descrição: </span>
+                {data.description}
+              </ScrollArea>
 
-            <ScrollArea className="h-1/2 w-[12vw] text-sm border-y border-white/10 p-2">{data.description}</ScrollArea>
+              <p className="whitespace-break-spaces">
+                <span className="text-muted-foreground">Autor: </span>
+                <span className="truncate">{meta.author.username}</span>
+              </p>
 
-            <p className="whitespace-break-spaces">
-              <span className="text-md text-muted-foreground">Autor: </span>
-              <span className="text-sm block truncate">{meta.author.username}</span>
-            </p>
-          </aside>
-        </div>
+              <p className="whitespace-break-spaces">
+                <span className="text-muted-foreground">Criado em: </span>
+                {new Date(meta.createdAt).toLocaleDateString()}
+              </p>
+
+              <p className="whitespace-break-spaces">
+                <span className="text-muted-foreground">Modificado em: </span>
+                {new Date(meta.updatedAt).toLocaleDateString()}
+              </p>
+
+              <ul>
+                {meta.contributors.map(contributor => (
+                  <li
+                    key={contributor.user.id}
+                    className="flex gap-2 items-center border border-primary/20 p-1 rounded overflow-x-clip"
+                  >
+                    <UserAvatar user={contributor.user} className="rounded" />
+                    <Link className="truncate" href={createProfileUrl(contributor.user.username)}>
+                      {contributor.user.username}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+
         <DialogFooter>
           {meta.author && <span className="text-md text-muted-foreground">Por {meta.author.username}</span>}
         </DialogFooter>

@@ -119,6 +119,9 @@ dependencies:
   drizzle-orm:
     specifier: ^0.28.6
     version: 0.28.6(@types/better-sqlite3@7.6.7)(better-sqlite3@9.2.2)
+  embla-carousel-react:
+    specifier: 8.0.0-rc19
+    version: 8.0.0-rc19(react@18.2.0)
   framer-motion:
     specifier: ^10.16.4
     version: 10.16.4(react-dom@18.2.0)(react@18.2.0)
@@ -158,6 +161,9 @@ dependencies:
   react-medium-image-zoom:
     specifier: ^5.1.10
     version: 5.1.10(react-dom@18.2.0)(react@18.2.0)
+  react-resizable-panels:
+    specifier: ^1.0.9
+    version: 1.0.9(react-dom@18.2.0)(react@18.2.0)
   recharts:
     specifier: ^2.10.1
     version: 2.10.1(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0)
@@ -173,6 +179,9 @@ dependencies:
   uploadthing:
     specifier: ^5.7.4
     version: 5.7.4
+  vaul:
+    specifier: ^0.8.8
+    version: 0.8.8(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -4303,6 +4312,28 @@ packages:
   /electron-to-chromium@1.4.580:
     resolution: {integrity: sha512-T5q3pjQon853xxxHUq3ZP68ZpvJHuSMY2+BZaW3QzjS4HvNuvsMmZ/+lU+nCrftre1jFZ+OSlExynXWBihnXzw==}
 
+  /embla-carousel-react@8.0.0-rc19(react@18.2.0):
+    resolution: {integrity: sha512-4BBj1HvlUqhWXFyDJOL/JbQ74jtekfdH646B1wQzM9QmWn6CEcbD/SmovKqc6B5jYTKaaGEGEEw7bpUJRajA8w==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.1 || ^18.0.0
+    dependencies:
+      embla-carousel: 8.0.0-rc19
+      embla-carousel-reactive-utils: 8.0.0-rc19(embla-carousel@8.0.0-rc19)
+      react: 18.2.0
+    dev: false
+
+  /embla-carousel-reactive-utils@8.0.0-rc19(embla-carousel@8.0.0-rc19):
+    resolution: {integrity: sha512-ed9NppY0OxTtrSIwTCYNcMLlQfSNcNy8Zsw8uIG0te3qrhvQ2ePPsbcElK2SRAV8VMU6G7JQweQIb6amzYMDXA==}
+    peerDependencies:
+      embla-carousel: 8.0.0-rc19
+    dependencies:
+      embla-carousel: 8.0.0-rc19
+    dev: false
+
+  /embla-carousel@8.0.0-rc19:
+    resolution: {integrity: sha512-PAChVyYoVZo8subkBN8LjZ7+0vk4CmVvMnxH0Y2ux76VUEUBl1wk5xDo8+MUhH5MXU6ZrgkBpMe++bKob1Z+2g==}
+    dev: false
+
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
     dev: false
@@ -7097,6 +7128,16 @@ packages:
       use-sidecar: 1.1.2(@types/react@18.2.20)(react@18.2.0)
     dev: false
 
+  /react-resizable-panels@1.0.9(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-QPfW3L7yetEC6z04G9AYYFz5kBklh8rTWcOsVFImYMNUVhr1Y1r9Qc/20Yks2tA+lXMBWCUz4fkGEvbS7tpBSg==}
+    peerDependencies:
+      react: ^16.14.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /react-smooth@2.0.5(prop-types@15.8.1)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-BMP2Ad42tD60h0JW6BFaib+RJuV5dsXJK9Baxiv/HlNFjvRLqA9xrNKxVWnUIZPQfzUwGXIlU/dSYLU+54YGQA==}
     peerDependencies:
@@ -8116,6 +8157,20 @@ packages:
     dependencies:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
+    dev: false
+
+  /vaul@0.8.8(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-Z9K2b90M/LtY/sRyM1yfA8Y4mHC/5WIqhO2u7Byr49r5LQXkLGdVXiehsnjtws9CL+DyknwTuRMJXlCOHTqg/g==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    dependencies:
+      '@radix-ui/react-dialog': 1.0.4(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
     dev: false
 
   /victory-vendor@36.6.12:

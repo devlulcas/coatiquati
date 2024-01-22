@@ -1,7 +1,6 @@
 'use client';
 
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
-import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Textarea } from '@/shared/components/ui/textarea';
@@ -15,6 +14,7 @@ import type { z } from 'zod';
 import { COMMENTS_QUERY_KEY } from '../../hooks/use-comments-query';
 import { newCommentSchema } from '../../schemas/new-comment-schema';
 import { addNewCommentAction } from './add-new-comment-action';
+import { CircularProgress } from './circular-progress';
 
 const formSchema = newCommentSchema;
 
@@ -52,9 +52,11 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
 
   const currentUserDataQuery = useCurrentUserDataQuery();
 
-  const contentLength = form.watch('content')?.length ?? 0;
-  const maximumContentLength = 180;
-  const percentageOfContentFilled = useMemo(() => (contentLength / maximumContentLength) * 100, [contentLength]);
+  const content = form.watch('content') ?? '';
+
+  const maximumContentLength = 100;
+
+  const overflowingText = useMemo(() => content.slice(maximumContentLength), [content]);
 
   if (typeof currentUserDataQuery.data === 'undefined') {
     return null;
@@ -73,28 +75,32 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
               </FormLabel>
               <FormControl>
                 <div className="flex flex-col space-y-2 items-start border border-secondary/25 bg-secondary/30 rounded-md p-1 w-full">
-                  <div className="flex space-x-2 w-full">
-                    <UserAvatar user={currentUserDataQuery.data} />
-
+                  <div className="w-full">
                     <Textarea
                       placeholder="Dê um retorno sobre o conteúdo compatilhado..."
                       className="resize-none"
                       {...field}
                     />
+
+                    {overflowingText.length > 0 && (
+                      <p className="text-red-600 mt-2 p-2 bg-destructive/30 border border-destructive rounded relative">
+                        {overflowingText}
+
+                        <span className="absolute top-1/2 -translate-y-1/2 right-1 bg-destructive/50 text-white px-2 py-1 rounded">
+                          {overflowingText.length} acima do limite
+                        </span>
+                      </p>
+                    )}
                   </div>
 
                   <div className="ml-auto flex items-center gap-2">
-                    <div className="border rounded-full w-8 h-8 bg-gray-50 flex items-center justify-center">
-                      <div
-                        style={{
-                          width: `${percentageOfContentFilled}%`,
-                          aspectRatio: '1/1',
-                        }}
-                        className="rounded-full bg-gray-500"
-                      ></div>
-                    </div>
+                    <span className="text-sm">
+                      {content.length} / {maximumContentLength}
+                    </span>
 
-                    <Button type="submit" className="flex items-center gap-2">
+                    <CircularProgress size={30} width={6} max={maximumContentLength} value={content.length} />
+
+                    <Button type="submit" className="flex items-center gap-2" size="sm">
                       Enviar
                       <SendIcon size={16} />
                     </Button>

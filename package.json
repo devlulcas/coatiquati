@@ -54,6 +54,7 @@
     "clsx": "^2.0.0",
     "diff": "^5.1.0",
     "drizzle-orm": "^0.28.6",
+    "embla-carousel-react": "8.0.0-rc19",
     "framer-motion": "^10.16.4",
     "lucia": "^2.7.3",
     "lucide-react": "^0.263.1",
@@ -67,11 +68,13 @@
     "react-hook-form": "^7.48.2",
     "react-lite-youtube-embed": "^2.3.52",
     "react-medium-image-zoom": "^5.1.10",
+    "react-resizable-panels": "^1.0.9",
     "recharts": "^2.10.1",
     "resend": "^2.1.0",
     "sanitize-html": "^2.11.0",
     "tailwind-merge": "^1.14.0",
     "uploadthing": "^5.7.4",
+    "vaul": "^0.8.8",
     "zod": "^3.22.4"
   },
   "devDependencies": {

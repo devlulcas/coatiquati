@@ -17,10 +17,10 @@ export function TrailCard({ trail }: TrailCardProps) {
   const userProfileSlug = trail.author ? createProfileUrl(trail.author.username) : '/';
 
   return (
-    <article className="flex flex-col justify-center items-center w-full bg-card text-card-foreground rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out border">
-      <div className="relative h-[250px] w-full">
+    <article className="flex max-w-xs flex-col justify-center items-center w-full bg-card text-card-foreground rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out border">
+      <div className="relative w-full h-48">
         <Link href={trailSlug}>
-          <Image fill alt={trail.title} src={trail.thumbnail} className="object-cover object-center w-full" />
+          <Image fill alt={trail.title} src={trail.thumbnail} className="object-contain w-full" />
         </Link>
 
         <div className="absolute top-2 right-2">
@@ -57,21 +57,24 @@ export function TrailCard({ trail }: TrailCardProps) {
 
       <div className="p-4 w-full h-fit flex flex-col justify-between">
         <div>
-          <h2 className="text-xl font-black uppercase min-h-[2lh] line-clamp-2 break-words">{trail.title}</h2>
+          <h2 className="text-base lg:text-xl font-black uppercase min-h-[2lh] line-clamp-2 break-words">
+            {trail.title}
+          </h2>
+
           <p className="mt-2 text-sm text-card-foreground/75 w-full min-h-[3lh] line-clamp-3 break-words">
             {trail.description}
           </p>
 
-          <time className="block mt-2 text-xs text-card-foreground-500" dateTime={trail.updatedAt}>
+          <time className="block mt-1 lg:mt-2 text-xs text-card-foreground-500" dateTime={trail.updatedAt}>
             Atualizado em {new Date(trail.updatedAt).toLocaleString()}
           </time>
         </div>
 
-        <div className="w-full flex gap-2 mt-2">
-          <Button size="sm" asChild className="w-full">
+        <div className="w-full flex gap-2 mt-1">
+          <Button size="sm" asChild className="w-full items-center gap-2">
             <Link href={trailSlug}>
               Ver mais
-              <ArrowRightIcon size={18} />
+              <ArrowRightIcon size={16} />
             </Link>
           </Button>
         </div>

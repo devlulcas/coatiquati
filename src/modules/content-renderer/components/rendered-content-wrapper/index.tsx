@@ -2,6 +2,7 @@
 
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { AddNewCommentForm } from '@/modules/comments/components/add-new-comment-form';
+import { CommentBlock } from '@/modules/comments/components/comment-block';
 import { useCommentsQuery } from '@/modules/comments/hooks/use-comments-query';
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
@@ -10,7 +11,6 @@ import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { Separator } from '@/shared/components/ui/separator';
 import { PencilIcon } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 type RenderedContentWrapperProps = {
@@ -34,20 +34,14 @@ export function RenderedContentWrapper({ children, title, by, content }: Rendere
   return (
     <section className="flex flex-col gap-2 border rounded bg-background/50">
       <header className="flex gap-2 p-2 border-b">
-        <Image
-          className="rounded w-14 h-14"
-          alt={by.username}
-          src={by.avatar ?? '/user-avatar.png'}
-          width={48}
-          height={48}
-        />
+        <UserAvatar className="border border-secondary-foreground/25 rounded text-xs w-8 h-8" user={by} />
+
         <div className="flex flex-col justify-between">
           <h5 className="text-lg font-bold">{title}</h5>
-          <Link className="text-md text-muted-foreground" href={createProfileUrl(by.username)}>
-            por{' '}
-            <span className="text-brand-500">
-              {by.username} {isContentOwner && '(você)'}
-            </span>
+
+          <Link className="text-sm text-muted-foreground" href={createProfileUrl(by.username)}>
+            por <span className="text-brand-500">{by.username}</span>
+            {isContentOwner && '(você)'}
             <span className="sr-only">Ver perfil de {by.username}</span>
           </Link>
         </div>
@@ -71,22 +65,10 @@ export function RenderedContentWrapper({ children, title, by, content }: Rendere
 
         <Separator className="my-4" />
 
-        <ul className="flex flex-col gap-8 mt-8">
+        <ul className="flex flex-col gap-2">
           {commentsQuery.isSuccess &&
             commentsQuery.data.map(comment => (
-              <li key={comment.id} className="border rounded bg-secondary/50 p-4">
-                <div className="-mt-10 mb-5 border rounded-full flex p-1 bg-secondary/50 backdrop-blur-sm gap-2 items-center w-fit">
-                  <UserAvatar user={comment.author} />
-
-                  <div className="pr-1">
-                    <Link className="text-brand-500" href={createProfileUrl(comment.author.username)}>
-                      Comentário de {comment.author.username}{' '}
-                      <span className="font-bold">{comment.author.id === by.id && '(autor)'}</span>
-                    </Link>
-                  </div>
-                </div>
-                <p>{comment.content}</p>
-              </li>
+              <CommentBlock key={comment.id} comment={comment} by={by} content={content} />
             ))}
         </ul>
       </footer>
