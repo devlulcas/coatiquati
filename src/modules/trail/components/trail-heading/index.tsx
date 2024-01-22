@@ -6,8 +6,8 @@ import { cn } from '@/shared/utils/cn';
 import type { ClassValue } from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
-import { createTrailUrl } from '../../lib/create-trail-url';
 import type { Trail } from '../../types/trail';
+import { VisualizeTrailAsAdmin } from './visualize-trail-as-admin';
 
 type TrailHeadingProps = {
   trail: Trail;
@@ -48,11 +48,7 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
 
         <UpdatedAt updatedAt={trail.updatedAt} />
 
-        {isAdmin && (
-          <Link href={createTrailUrl(trail.id, true)} className="flex items-center gap-2 text-sm text-brand-300">
-            Visualizar trilha como administrador
-          </Link>
-        )}
+        <VisualizeTrailAsAdmin trailId={trail.id} />
 
         <Link
           className="absolute top-4 left-4 flex items-center gap-2 group"

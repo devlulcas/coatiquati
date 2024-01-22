@@ -1,4 +1,4 @@
-import { type InferInsertModel, type InferSelectModel, relations, sql } from 'drizzle-orm';
+import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { foreignKey, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentTable } from './content';
 import { userTable } from './user';
@@ -44,7 +44,37 @@ export const contentCommentTable = sqliteTable(
   }),
 );
 
-export const contentCommentTableRelations = relations(contentCommentTable, ({ one }) => ({
+export const contentCommentVotingTable = sqliteTable('content_comment_voting', {
+  id: integer('id').primaryKey().notNull(),
+  commentId: integer('comment_id')
+    .notNull()
+    .references(() => contentCommentTable.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  userId: text('user_id')
+    .notNull()
+    .references(() => userTable.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  vote: integer('vote').notNull(),
+  createdAt: text('created_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: text('updated_at')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
+export const contentCommentVotingTableRelations = relations(contentCommentVotingTable, ({ one }) => ({
+  comment: one(contentCommentTable, {
+    fields: [contentCommentVotingTable.commentId],
+    references: [contentCommentTable.id],
+  }),
+}));
+
+export const contentCommentTableRelations = relations(contentCommentTable, ({ one, many }) => ({
   content: one(contentTable, {
     fields: [contentCommentTable.contentId],
     references: [contentTable.id],
@@ -53,4 +83,9 @@ export const contentCommentTableRelations = relations(contentCommentTable, ({ on
     fields: [contentCommentTable.authorId],
     references: [userTable.id],
   }),
+  parentComment: one(contentCommentTable, {
+    fields: [contentCommentTable.parentCommentId],
+    references: [contentCommentTable.id],
+  }),
+  votes: many(contentCommentVotingTable),
 }));

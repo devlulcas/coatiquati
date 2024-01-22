@@ -4,7 +4,7 @@ import { auth } from '@/modules/auth/services/lucia';
 import { RequestAccountVerificationTokenUseCase } from '@/modules/auth/use-cases/request-account-verification-token-use-case';
 import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
 import { formDataToObject } from '@/shared/utils/form-data-to-object';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
   const formData = await request.formData();
@@ -30,7 +30,7 @@ export const POST = async (request: NextRequest) => {
         username: username,
         email,
         role: roles.USER,
-        email_verified: null,
+        email_verified: Number(false),
       },
     });
 

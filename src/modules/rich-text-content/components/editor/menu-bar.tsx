@@ -31,7 +31,6 @@ import {
 } from 'lucide-react';
 import { EditorActionButton } from './editor-action-button';
 import { ImageUploaderDialogTrigger } from './image-uploader-dialog-trigger';
-import { LayeredImageUploaderDialogTrigger } from '@/modules/content/components/layered-image-uploader/layered-image-uploader-dialog-trigger';
 
 type MenuBarProps = {
   editor: Editor | null;
@@ -229,8 +228,6 @@ export function MenuBar({ editor }: MenuBarProps) {
       />
 
       <EditorActionButton onClick={setYoutubeVideo} icon={<YoutubeIcon />} label="vídeo do youtube" />
-
-      <LayeredImageUploaderDialogTrigger onSave={layers => editor.chain().focus().setLayers({ layers }).run()} />
     </div>
   );
 }

@@ -71,7 +71,11 @@ function InnerCommentBlock({ comment, by, content }: CommentBlockProps) {
               respostas
             </Button>
 
-            <CommentVoteBlock voteCount={comment.upvotes - comment.downvotes} commentId={comment.id} />
+            <CommentVoteBlock
+              contentId={content.id}
+              voteCount={comment.upvotes - comment.downvotes}
+              commentId={comment.id}
+            />
           </div>
         </div>
       </div>

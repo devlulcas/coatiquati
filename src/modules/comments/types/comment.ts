@@ -3,4 +3,5 @@ import type { Contributor } from '@/modules/user/types/user';
 
 export type CommentWithAuthor = Omit<ContentCommentTable, 'authorId' | 'deletedAt'> & {
   author: Contributor;
+  currentUserVote?: number;
 };
