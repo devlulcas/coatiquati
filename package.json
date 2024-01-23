@@ -102,8 +102,8 @@
     "pino-pretty": "^10.2.3",
     "postcss": "8.4.27",
     "prettier": "^3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.7",
-    "tailwindcss": "3.3.3",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "tailwindcss": "3.4.1",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.1.6",
     "vitest": "^0.34.6"

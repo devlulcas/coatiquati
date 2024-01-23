@@ -9,11 +9,11 @@ export default function Page() {
   };
 
   return (
-    <main className="flex justify-center gap-4 lg:gap-8 min-h-[--view-height] flex-col lg:flex-row container">
+    <main className="flex justify-center gap-2 lg:gap-8 min-h-[--view-height] flex-col lg:flex-row container">
       <div className="lg:w-1/2 p-4 border bg-background/50 my-4 rounded-lg flex flex-col">
         <h1 className="text-4xl font-bold">Sobre o projeto</h1>
 
-        <p className="prose my-8 text-justify text-lg">
+        <p className="prose my-8 text-justify text-white text-lg">
           CoatiQuati é um projeto de
           <a className="text-brand-400 hover:text-brand-300" href={links.github}>
             {' '}
@@ -34,7 +34,7 @@ export default function Page() {
           gosta de se aventurar. O nome CoatiQuati é uma brincadeira com o nome do animal em inglês e em português.
         </p>
 
-        <Image src={coatiSvg} alt="Coati" className="mx-auto my-auto opacity-95" width={300} />
+        <Image src={coatiSvg} alt="Coati" className="mx-auto mt-8 opacity-95" width={300} />
       </div>
 
       <Image
