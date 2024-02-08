@@ -4,26 +4,26 @@ import { CommentRepository } from '../repositories/comment-repository';
 import { CommentVoteRepository } from '../repositories/comment-vote-repository';
 import type { CommentWithAuthor } from '../types/comment';
 
-export class GetCommentsOnContentUseCase {
+export class GetCommentResponsesUseCase {
   constructor(
     private readonly commentRepository: CommentRepository = new CommentRepository(),
     private readonly commentVoteRepository: CommentVoteRepository = new CommentVoteRepository(),
   ) {}
 
-  execute(contentId: number, session: Session | null): CommentWithAuthor[] {
-    const comment = this.commentRepository.getCommentsByContentId(contentId);
+  execute(commentId: number, session: Session | null): CommentWithAuthor[] {
+    const responses = this.commentRepository.getCommentResponsesByCommentId(commentId);
 
     if (session && isAuthenticated(session)) {
-      const votes = comment.map(comment => {
+      const votes = responses.map(comment => {
         const vote = this.commentVoteRepository.getUserVote(comment.id, session.userId);
         return vote === undefined ? 0 : vote;
       });
 
-      return comment.map((comment, index) => ({ ...comment, userVote: votes[index] }));
+      return responses.map((response, index) => ({ ...response, userVote: votes[index] }));
     }
 
-    return comment;
+    return responses;
   }
 }
 
-export const getCommentsOnContentUseCase = new GetCommentsOnContentUseCase();
+export const getCommentResponsesUseCase = new GetCommentResponsesUseCase();

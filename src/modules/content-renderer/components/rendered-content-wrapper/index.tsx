@@ -23,7 +23,7 @@ type RenderedContentWrapperProps = {
   };
 };
 
-export function RenderedContentWrapper({ children, title, by, content }: RenderedContentWrapperProps) {
+export function RenderedContentWrapper({ children, title, by, content, co }: RenderedContentWrapperProps) {
   const currentUserDataQuery = useCurrentUserDataQuery();
 
   const isContentOwner = currentUserDataQuery.isSuccess && currentUserDataQuery.data.id === by.id;

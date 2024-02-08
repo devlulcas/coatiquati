@@ -26,6 +26,8 @@ export class RequestAccountVerificationTokenUseCase {
         return null;
       });
 
+    log.info('Token gerado', { token });
+
     if (!token) {
       throw new Error('Erro ao gerar token.');
     }

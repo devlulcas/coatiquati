@@ -48,7 +48,7 @@ export function MenuBar({ editor }: MenuBarProps) {
   };
 
   return (
-    <div className="flex gap-2 flex-wrap w-full">
+    <div className="flex rounded overflow-clip flex-wrap w-full">
       <EditorActionButton
         icon={<BoldIcon />}
         label="negrito"

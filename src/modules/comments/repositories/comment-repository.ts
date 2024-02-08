@@ -4,22 +4,9 @@ import {
   contentCommentVotingTable,
   type ContentNewCommentTable,
 } from '@/modules/database/schema/comment';
-import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
-import { and, eq } from 'drizzle-orm';
-import type { CommentWithAuthor } from '../types/comment';
-
-export const COMMENT_DB_FIELDS = Object.freeze({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  contentId: true,
-  content: true,
-  parentCommentId: true,
-  upvotes: true,
-  downvotes: true,
-  edited: true,
-  originalContent: true,
-});
+import { userTable } from '@/modules/database/schema/user';
+import { and, asc, eq, isNull, sql } from 'drizzle-orm';
+import type { CommentWithAuthor, CommentWithAuthorSelect } from '../types/comment';
 
 export class CommentRepository {
   async addCommentInContent(comment: ContentNewCommentTable, database = db): Promise<void> {
@@ -36,195 +23,92 @@ export class CommentRepository {
     }
   }
 
-  async getCommentsByContentId(contentId: number, userId?: string, database = db): Promise<CommentWithAuthor[]> {
-    const comments = await database.query.contentCommentTable.findMany({
-      columns: COMMENT_DB_FIELDS,
-      where(fields, operators) {
-        return operators.and(
-          operators.eq(fields.contentId, contentId),
-          operators.isNull(fields.parentCommentId),
-          operators.isNull(fields.deletedAt),
-        );
-      },
-      with: {
+  getCommentsByContentId(contentId: number, database = db): CommentWithAuthor[] {
+    const comments = database
+      .select({
+        id: contentCommentTable.id,
+        createdAt: contentCommentTable.createdAt,
+        updatedAt: contentCommentTable.updatedAt,
+        contentId: contentCommentTable.contentId,
+        content: contentCommentTable.content,
+        parentCommentId: contentCommentTable.parentCommentId,
+        upvotes: sql<number>`CAST(COUNT(CASE WHEN ${contentCommentVotingTable.vote} = 1 THEN 1 ELSE NULL END) as int)`,
+        downvotes: sql<number>`CAST(COUNT(CASE WHEN ${contentCommentVotingTable.vote} = -1 THEN 1 ELSE NULL END) as int)`,
         author: {
-          columns: CONTRIBUTOR_DB_FIELDS,
+          id: userTable.id,
+          username: userTable.username,
+          avatar: userTable.avatar,
         },
-        votes: userId
-          ? {
-              columns: {
-                vote: true,
-              },
-              where: (fields, operators) => {
-                return operators.eq(fields.userId, userId);
-              },
-            }
-          : undefined,
-      },
-    });
-
-    if (!comments.length) {
-      throw new Error('Erro ao buscar comentários');
-    }
-
-    return comments.map(comment => ({
-      id: comment.id,
-      createdAt: comment.createdAt,
-      updatedAt: comment.updatedAt,
-      contentId: comment.contentId,
-      content: comment.content,
-      parentCommentId: comment.parentCommentId,
-      upvotes: comment.upvotes,
-      author: {
-        id: comment.author.id,
-        username: comment.author.username,
-        avatar: comment.author.avatar,
-      },
-      downvotes: comment.downvotes,
-      edited: comment.edited,
-      originalContent: comment.originalContent,
-      currentUserVote: comment.votes?.at(0)?.vote,
-    }));
-  }
-
-  async getCommentResponsesByCommentId(
-    commentId: number,
-    userId?: string,
-    database = db,
-  ): Promise<CommentWithAuthor[]> {
-    const comments = await database.query.contentCommentTable.findMany({
-      columns: COMMENT_DB_FIELDS,
-      where(fields, operators) {
-        return operators.and(operators.eq(fields.parentCommentId, commentId), operators.isNull(fields.deletedAt));
-      },
-      with: {
-        author: {
-          columns: CONTRIBUTOR_DB_FIELDS,
-        },
-        votes: userId
-          ? {
-              columns: {
-                vote: true,
-              },
-              where: (fields, operators) => {
-                return operators.eq(fields.userId, userId);
-              },
-            }
-          : undefined,
-      },
-    });
-
-    if (!comments.length) {
-      throw new Error('Erro ao buscar comentários');
-    }
-
-    return comments.map(comment => ({
-      id: comment.id,
-      createdAt: comment.createdAt,
-      updatedAt: comment.updatedAt,
-      contentId: comment.contentId,
-      content: comment.content,
-      parentCommentId: comment.parentCommentId,
-      upvotes: comment.upvotes,
-      author: {
-        id: comment.author.id,
-        username: comment.author.username,
-        avatar: comment.author.avatar,
-      },
-      downvotes: comment.downvotes,
-      edited: comment.edited,
-      originalContent: comment.originalContent,
-      currentUserVote: comment.votes?.at(0)?.vote,
-    }));
-  }
-
-  async upvoteComment(userId: string, commentId: number, database = db): Promise<void> {
-    return this.voteComment(userId, commentId, 1, database);
-  }
-
-  async downvoteComment(userId: string, commentId: number, database = db): Promise<void> {
-    return this.voteComment(userId, commentId, -1, database);
-  }
-
-  private async voteComment(userId: string, commentId: number, vote: 1 | -1, database = db): Promise<void> {
-    const updatedAt = new Date().toISOString();
-
-    const comment = database
-      .select({ upvotes: contentCommentTable.upvotes, downvotes: contentCommentTable.downvotes })
+      })
       .from(contentCommentTable)
-      .where(eq(contentCommentTable.id, commentId))
-      .get();
+      .where(
+        and(
+          eq(contentCommentTable.contentId, contentId),
+          isNull(contentCommentTable.parentCommentId),
+          isNull(contentCommentTable.deletedAt),
+        ),
+      )
+      .leftJoin(userTable, eq(userTable.id, contentCommentTable.authorId))
+      .leftJoin(contentCommentVotingTable, eq(contentCommentVotingTable.commentId, contentCommentTable.id))
+      .groupBy(contentCommentTable.id)
+      .orderBy(contentCommentTable.createdAt, asc(contentCommentTable.createdAt))
+      .all();
 
-    if (!comment) {
-      throw new Error('Erro ao votar no comentário. Comentário não encontrado');
-    }
+    return comments.map(comment => this.toCommentWithAuthor(comment));
+  }
 
-    const voting = database
-      .select({ vote: contentCommentVotingTable.vote })
-      .from(contentCommentVotingTable)
-      .where(and(eq(contentCommentVotingTable.userId, userId), eq(contentCommentVotingTable.commentId, commentId)))
-      .get();
+  getCommentResponsesByCommentId(commentId: number, database = db): CommentWithAuthor[] {
+    const comments = database
+      .select({
+        id: contentCommentTable.id,
+        createdAt: contentCommentTable.createdAt,
+        updatedAt: contentCommentTable.updatedAt,
+        contentId: contentCommentTable.contentId,
+        content: contentCommentTable.content,
+        parentCommentId: contentCommentTable.parentCommentId,
+        upvotes: sql<number>`CAST(COUNT(CASE WHEN ${contentCommentVotingTable.vote} = 1 THEN 1 ELSE NULL END) as int)`,
+        downvotes: sql<number>`CAST(COUNT(CASE WHEN ${contentCommentVotingTable.vote} = -1 THEN 1 ELSE NULL END) as int)`,
+        author: {
+          id: userTable.id,
+          username: userTable.username,
+          avatar: userTable.avatar,
+        },
+      })
+      .from(contentCommentTable)
+      .where(
+        and(
+          eq(contentCommentTable.parentCommentId, commentId),
+          isNull(contentCommentTable.parentCommentId),
+          isNull(contentCommentTable.deletedAt),
+        ),
+      )
+      .leftJoin(userTable, eq(userTable.id, contentCommentTable.authorId))
+      .leftJoin(contentCommentVotingTable, eq(contentCommentVotingTable.commentId, contentCommentTable.id))
+      .groupBy(contentCommentTable.id)
+      .orderBy(contentCommentTable.createdAt, asc(contentCommentTable.createdAt))
+      .all();
 
-    // Vote = 1 (upvote), -1 (downvote), 0 (remove vote)
-    const voteValue = voting ? voting.vote : 0;
-    const hasVoted = Boolean(voting);
-    const firstKey = vote === 1 ? 'upvotes' : 'downvotes';
-    const secondKey = vote === 1 ? 'downvotes' : 'upvotes';
+    return comments.map(comment => this.toCommentWithAuthor(comment));
+  }
 
-    await database.transaction(async tx => {
-      try {
-        // Vote (click on upvote or downvote)
-        if (!hasVoted) {
-          await database
-            .update(contentCommentTable)
-            .set({ [firstKey]: comment[firstKey] + 1, updatedAt })
-            .where(eq(contentCommentTable.id, commentId))
-            .execute();
-
-          await database
-            .insert(contentCommentVotingTable)
-            .values({ userId, commentId, vote, updatedAt })
-            .returning({ id: contentCommentVotingTable.id })
-            .execute();
-        }
-
-        // Undo current vote (click on upvote or downvote)
-        else if (hasVoted && voteValue === vote) {
-          await database
-            .update(contentCommentTable)
-            .set({ [firstKey]: comment[firstKey] - 1, updatedAt })
-            .where(eq(contentCommentTable.id, commentId))
-            .execute();
-
-          await database
-            .update(contentCommentVotingTable)
-            .set({ vote: 0, updatedAt })
-            .where(
-              and(eq(contentCommentVotingTable.userId, userId), eq(contentCommentVotingTable.commentId, commentId)),
-            )
-            .execute();
-        }
-
-        // Change vote (click on upvote or downvote)
-        else if (hasVoted && voteValue !== vote) {
-          await database
-            .update(contentCommentTable)
-            .set({ [firstKey]: comment[firstKey] + 1, [secondKey]: comment[secondKey] - 1, updatedAt })
-            .where(eq(contentCommentTable.id, commentId))
-            .execute();
-
-          await database
-            .update(contentCommentVotingTable)
-            .set({ vote, updatedAt })
-            .where(
-              and(eq(contentCommentVotingTable.userId, userId), eq(contentCommentVotingTable.commentId, commentId)),
-            )
-            .execute();
-        }
-      } catch (error) {
-        tx.rollback();
-        throw error;
-      }
-    });
+  toCommentWithAuthor(fromDatabase: CommentWithAuthorSelect): CommentWithAuthor {
+    return {
+      id: fromDatabase.id,
+      createdAt: fromDatabase.createdAt,
+      updatedAt: fromDatabase.updatedAt,
+      contentId: fromDatabase.contentId,
+      content: fromDatabase.content,
+      parentCommentId: fromDatabase.parentCommentId,
+      upvotes: fromDatabase.upvotes,
+      downvotes: fromDatabase.downvotes,
+      currentUserVote: 0,
+      downvoteCount: fromDatabase.downvotes,
+      upvoteCount: fromDatabase.upvotes,
+      author: {
+        id: fromDatabase.author!.id,
+        username: fromDatabase.author!.username,
+        avatar: fromDatabase.author!.avatar,
+      },
+    };
   }
 }

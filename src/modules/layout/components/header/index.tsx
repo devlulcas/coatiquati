@@ -8,16 +8,18 @@ export async function Header() {
   const session = await getPageSession();
 
   return (
-    <header className="z-50 top-0 sticky border-b h-[--header-height] bg-background/75 backdrop-blur-md">
-      <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-transparent to-foreground/5 z-[-1]" />
+    <header className="sticky top-0 z-50 h-[--header-height] border-b bg-background/50 backdrop-blur-lg">
+      <div className="absolute inset-0 z-[-1] bg-gradient-to-b from-background/50 via-transparent to-foreground/5" />
 
-      <div className="flex items-center justify-between container h-full">
+      <div className="container flex h-full items-center justify-between">
         <Link href="/" className="flex items-center justify-center gap-2">
           <Image src={coatiSvg} alt="CoatiQuati" height={34} />
-          <h1 className="text-xs lg:text-xl font-bold">CoatiQuati</h1>
+          <h1 className="text-xs font-bold lg:text-xl">CoatiQuati</h1>
         </Link>
 
-        <HeaderNav user={session?.user} />
+        <div className="flex items-center space-x-2">
+          <HeaderNav user={session?.user} />
+        </div>
       </div>
     </header>
   );

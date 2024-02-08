@@ -15,6 +15,11 @@ type TrailCardProps = {
 export function TrailCard({ trail }: TrailCardProps) {
   const trailSlug = createTrailUrl(trail.id);
   const userProfileSlug = trail.author ? createProfileUrl(trail.author.username) : '/';
+  const updatedAt = new Date(trail.updatedAt).toLocaleString('pt-BR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
   return (
     <article className="flex max-w-xs flex-col justify-center items-center w-full bg-card text-card-foreground rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out border">
@@ -66,7 +71,7 @@ export function TrailCard({ trail }: TrailCardProps) {
           </p>
 
           <time className="block mt-1 lg:mt-2 text-xs text-card-foreground-500" dateTime={trail.updatedAt}>
-            Atualizado em {new Date(trail.updatedAt).toLocaleString()}
+            Atualizado em {updatedAt}
           </time>
         </div>
 

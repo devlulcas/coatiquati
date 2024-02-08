@@ -74,7 +74,7 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
                 {parentCommentId ? 'Comentário resposta' : 'Compartilhe sua opinião sobre o conteúdo'}
               </FormLabel>
               <FormControl>
-                <div className="flex flex-col space-y-2 items-start border border-secondary/25 bg-secondary/30 rounded-md p-1 w-full">
+                <div className="flex w-full flex-col items-start space-y-2 rounded-md border border-secondary/25 bg-secondary/30 p-1">
                   <div className="w-full">
                     <Textarea
                       placeholder="Dê um retorno sobre o conteúdo compatilhado..."
@@ -83,10 +83,10 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
                     />
 
                     {overflowingText.length > 0 && (
-                      <p className="text-red-600 mt-2 p-2 bg-destructive/30 border border-destructive rounded relative">
+                      <p className="relative mt-2 rounded border border-destructive bg-destructive/30 p-2 text-red-600">
                         {overflowingText}
 
-                        <span className="absolute top-1/2 -translate-y-1/2 right-1 bg-destructive/50 text-white px-2 py-1 rounded">
+                        <span className="absolute right-1 top-1/2 -translate-y-1/2 rounded bg-destructive/50 px-2 py-1 text-white">
                           {overflowingText.length} acima do limite
                         </span>
                       </p>

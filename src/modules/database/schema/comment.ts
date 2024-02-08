@@ -24,17 +24,13 @@ export const contentCommentTable = sqliteTable(
       }),
     content: text('content').notNull(),
     parentCommentId: integer('parent_comment_id'),
-    upvotes: integer('upvotes').notNull().default(0),
-    downvotes: integer('downvotes').notNull().default(0),
-    edited: integer('edited', { mode: 'boolean' }).notNull().default(false),
-    originalContent: text('original_content'),
     createdAt: text('created_at')
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: text('updated_at')
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    deletedAt: text('deleted_at'),
+    deletedAt: text('deleted_at').default(sql`CURRENT_TIMESTAMP`),
   },
   table => ({
     parentCommentReference: foreignKey(() => ({
@@ -71,6 +67,10 @@ export const contentCommentVotingTableRelations = relations(contentCommentVoting
   comment: one(contentCommentTable, {
     fields: [contentCommentVotingTable.commentId],
     references: [contentCommentTable.id],
+  }),
+  user: one(userTable, {
+    fields: [contentCommentVotingTable.userId],
+    references: [userTable.id],
   }),
 }));
 

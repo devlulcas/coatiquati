@@ -18,10 +18,11 @@ export function EditorActionButton({ icon, label, onClick, disabled, active, cla
       onClick={onClick}
       type="button"
       disabled={disabled}
-      className={cn('gap-2 flex-1 min-w-fit', { 'bg-brand-500 text-brand-50': active }, className)}
+      className={cn('gap-2 rounded-none flex-1 min-w-fit border', { 'bg-brand-500 text-brand-50': active }, className)}
+      aria-label={label}
+      title={label}
     >
       {icon}
-      <span className="sr-only whitespace-nowrap min-w-fit lg:not-sr-only">{label}</span>
     </Button>
   );
 }

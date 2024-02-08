@@ -5,14 +5,18 @@ import {
 } from '@/modules/database/schema/email-verification-token';
 import { log } from '@/modules/logging/lib/pino';
 import { eq } from 'drizzle-orm';
-import { generateRandomString, isWithinExpiration } from 'lucia/utils';
+import { isWithinExpiration } from 'lucia/utils';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
 
 export class EmailVerificationTokenRepository {
   async createVerificationToken(userId: string, database = db): Promise<EmailVerificationToken | null> {
     try {
       const storedUserTokens = database
-        .select()
+        .select({
+          id: emailVerificationTokenTable.id,
+          userId: emailVerificationTokenTable.userId,
+          expiresAt: emailVerificationTokenTable.expiresAt,
+        })
         .from(emailVerificationTokenTable)
         .where(eq(emailVerificationTokenTable.userId, userId))
         .all();
@@ -20,20 +24,21 @@ export class EmailVerificationTokenRepository {
       // Se o token for válido por mais da metade do tempo de expiração, ele é reutilizável
       if (storedUserTokens.length > 0) {
         const reusableStoredToken = storedUserTokens.find(token => {
-          return isWithinExpiration(token.expires.getTime() - EMAIL_VERIFICATION_TOKEN_EXPIRES_IN / 2);
+          return isWithinExpiration(token.expiresAt.getTime() - EMAIL_VERIFICATION_TOKEN_EXPIRES_IN / 2);
         });
 
         if (reusableStoredToken) return reusableStoredToken;
       }
 
-      const newToken = generateRandomString(63);
+      const newToken = new Crypto().getRandomValues(new Uint8Array(32)).join('').slice(0, 63);
+      console.log('newToken', newToken);
 
       const results = await database
         .insert(emailVerificationTokenTable)
         .values({
           id: newToken,
           userId: userId,
-          expires: new Date(Date.now() + EMAIL_VERIFICATION_TOKEN_EXPIRES_IN),
+          expiresAt: new Date(Date.now() + EMAIL_VERIFICATION_TOKEN_EXPIRES_IN),
         })
         .returning()
         .execute();
@@ -42,7 +47,7 @@ export class EmailVerificationTokenRepository {
 
       return verificationToken ? verificationToken : null;
     } catch (error) {
-      log.error('createVerificationToken', error);
+      log.error('createVerificationToken:' + (error instanceof Error ? error.message : String(error)));
       return null;
     }
   }

@@ -40,9 +40,9 @@ export class EmailVerificationService {
     }
 
     // Converte de BigInt para Number
-    if (!isWithinExpiration(storedToken.expires.getTime())) {
+    if (!isWithinExpiration(storedToken.expiresAt.getTime())) {
       const now = Date.now();
-      const timeLeft = storedToken.expires.getTime() - now;
+      const timeLeft = storedToken.expiresAt.getTime() - now;
       log.warn('Expired email verification token ', { token, timeLeft });
       return null;
     }

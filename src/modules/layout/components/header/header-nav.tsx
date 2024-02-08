@@ -15,6 +15,10 @@ export function HeaderNav({ user }: HeaderNavProps) {
   const hasAdminAccess = user && isAdminOrAbove(user.role);
   return (
     <>
+      <Button variant="link" asChild className="lg:hidden">
+        <Link href="/trails">Trilhas</Link>
+      </Button>
+
       <Sheet>
         <SheetTrigger className="lg:hidden">
           <MenuIcon />
@@ -24,7 +28,7 @@ export function HeaderNav({ user }: HeaderNavProps) {
         <SheetContent
           hideCloseButton
           side="bottom"
-          className="lg:hidden flex flex-col items-center justify-center gap-4 bg-background/75 backdrop-blur-md"
+          className="flex flex-col items-center justify-center gap-4 bg-background/75 backdrop-blur-md lg:hidden"
         >
           <Button className="w-full" variant="secondary" asChild>
             <Link href="/trails">Trilhas</Link>
@@ -59,7 +63,7 @@ export function HeaderNav({ user }: HeaderNavProps) {
         </SheetContent>
       </Sheet>
 
-      <div className="hidden lg:flex flex-row items-center gap-2">
+      <div className="hidden flex-row items-center gap-2 lg:flex">
         <Button variant="ghost" asChild>
           <Link href="/trails">Trilhas</Link>
         </Button>
@@ -81,6 +85,9 @@ export function HeaderNav({ user }: HeaderNavProps) {
             </Button>
             <Button variant="ghost" asChild>
               <Link href={createProfileUrl(user.username)}>Perfil</Link>
+            </Button>
+            <Button variant="ghost" asChild>
+              <Link href="/feedback">Feedback</Link>
             </Button>
           </>
         ) : (
