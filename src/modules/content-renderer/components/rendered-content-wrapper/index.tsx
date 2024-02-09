@@ -23,7 +23,7 @@ type RenderedContentWrapperProps = {
   };
 };
 
-export function RenderedContentWrapper({ children, title, by, content, co }: RenderedContentWrapperProps) {
+export function RenderedContentWrapper({ children, title, by, content }: RenderedContentWrapperProps) {
   const currentUserDataQuery = useCurrentUserDataQuery();
 
   const isContentOwner = currentUserDataQuery.isSuccess && currentUserDataQuery.data.id === by.id;
@@ -32,9 +32,9 @@ export function RenderedContentWrapper({ children, title, by, content, co }: Ren
   const commentsQuery = useCommentsQuery(content.id, null);
 
   return (
-    <section className="flex flex-col gap-2 border rounded bg-background/50">
-      <header className="flex gap-2 p-2 border-b">
-        <UserAvatar className="border border-secondary-foreground/25 rounded text-xs w-8 h-8" user={by} />
+    <section className="flex flex-col gap-2 rounded border bg-background/50">
+      <header className="flex gap-2 border-b p-2">
+        <UserAvatar className="h-8 w-8 rounded border border-secondary-foreground/25 text-xs" user={by} />
 
         <div className="flex flex-col justify-between">
           <h5 className="text-lg font-bold">{title}</h5>
@@ -56,7 +56,7 @@ export function RenderedContentWrapper({ children, title, by, content, co }: Ren
         )}
       </header>
 
-      <div className="p-2 flex flex-col gap-3 relative">{children}</div>
+      <div className="relative flex flex-col gap-3 p-2">{children}</div>
 
       <footer className="p-2">
         <Separator className="my-4" />

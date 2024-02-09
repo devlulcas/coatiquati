@@ -11,7 +11,7 @@ export async function upvoteCommentAction(commentId: number) {
     throw new Error('Você precisa estar logado para votar.');
   }
 
-  await upvoteCommentUseCase(commentId, session);
+  await upvoteCommentUseCase.execute(commentId, session);
 }
 
 export async function downvoteCommentAction(commentId: number) {
@@ -21,5 +21,5 @@ export async function downvoteCommentAction(commentId: number) {
     throw new Error('Você precisa estar logado para votar.');
   }
 
-  await downvoteCommentUseCase(commentId, session);
+  await downvoteCommentUseCase.execute(commentId, session);
 }

@@ -1,10 +1,11 @@
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
+'use client';
+
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import type { Contributor } from '@/modules/user/types/user';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import Link from 'next/link';
+import { useCommentsQuery } from '../../hooks/use-comments-query';
 import type { CommentWithAuthor } from '../../types/comment';
-import { getCommentsOnContentUseCase } from '../../use-cases/get-comments-on-content-use-case';
 import { AnswerCommentDrawerTrigger } from '../answer-comment-drawer-trigger';
 import { CommentVoteBlock } from '../comment-vote-block';
 
@@ -16,10 +17,8 @@ type CommentBlockProps = {
   };
 };
 
-export async function CommentBlock({ comment, by, content }: CommentBlockProps) {
-  const session = await getPageSession();
-
-  const responses = comment.parentCommentId ? getCommentsOnContentUseCase.execute(content.id, session) : null;
+export function CommentBlock({ comment, by, content }: CommentBlockProps) {
+  const commentsQuery = useCommentsQuery(content.id, comment.id);
 
   return (
     <li key={comment.id} id={'#' + comment.id} className="mt-2">
@@ -53,7 +52,15 @@ export async function CommentBlock({ comment, by, content }: CommentBlockProps) 
         </div>
       </div>
 
-      {responses && responses.length > 0 && (
+      {commentsQuery.isLoading && <div className="p-2 text-muted-foreground">Carregando respostas...</div>}
+
+      {commentsQuery.isError && <div className="text-error p-2">Erro ao carregar respostas.</div>}
+
+      {commentsQuery.isSuccess && commentsQuery.data.length === 0 && (
+        <div className="p-2 text-muted-foreground">Nenhuma resposta.</div>
+      )}
+
+      {commentsQuery.isSuccess && commentsQuery.data.length > 0 && (
         <div className="border-l border-primary/10 pl-2">
           <ul>
             {responses.map(response => (

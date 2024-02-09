@@ -11,5 +11,5 @@ export async function addNewCommentAction(data: NewCommentSchema) {
     throw new Error('Você precisa estar logado para comentar.');
   }
 
-  await commentOnContentUseCase(data, session);
+  await commentOnContentUseCase.execute(data, session);
 }
