@@ -22,68 +22,70 @@ export function TrailCard({ trail }: TrailCardProps) {
   });
 
   return (
-    <article className="flex max-w-xs flex-col justify-center items-center w-full bg-card text-card-foreground rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out border">
-      <div className="relative w-full h-48">
-        <Link href={trailSlug}>
-          <Image fill alt={trail.title} src={trail.thumbnail} className="object-contain w-full" />
-        </Link>
+    <div className="coati-animated-line rounded-xl bg-gradient-to-r from-brand-500 via-purple-600 to-brand-500 p-[1px]">
+      <article className="flex w-full max-w-xs flex-col items-center justify-center overflow-hidden rounded-xl border bg-card text-card-foreground shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg">
+        <div className="relative h-48 w-full">
+          <Link href={trailSlug}>
+            <Image fill alt={trail.title} src={trail.thumbnail} className="w-full object-contain" />
+          </Link>
 
-        <div className="absolute top-2 right-2">
-          {trail.category && (
-            <Link
-              className="px-2 py-1 h-fit text-xs text-primary-foreground bg-primary rounded-md"
-              href={createTrailCategoryUrl(trail.category.name)}
-            >
-              {trail.category.name}
-            </Link>
-          )}
+          <div className="absolute right-2 top-2">
+            {trail.category && (
+              <Link
+                className="h-fit rounded-md bg-primary px-2 py-1 text-xs text-primary-foreground"
+                href={createTrailCategoryUrl(trail.category.name)}
+              >
+                {trail.category.name}
+              </Link>
+            )}
+          </div>
+
+          <div className="absolute bottom-2 left-2 flex gap-2">
+            {trail.author && (
+              <Link href={userProfileSlug}>
+                <Avatar className="rounded-full rounded-bl-none">
+                  <AvatarFallback className="rounded-full rounded-bl-none">
+                    {trail.author.username.slice(0, 2)}
+                  </AvatarFallback>
+
+                  <AvatarImage
+                    className="rounded-full rounded-bl-none"
+                    src={trail.author.avatar}
+                    alt={trail.author.username}
+                  />
+                </Avatar>
+              </Link>
+            )}
+
+            <ContributorList contributors={trail.contributors.map(contributor => contributor.user)} />
+          </div>
         </div>
 
-        <div className="absolute bottom-2 left-2 flex gap-2">
-          {trail.author && (
-            <Link href={userProfileSlug}>
-              <Avatar className="rounded-full rounded-bl-none">
-                <AvatarFallback className="rounded-full rounded-bl-none">
-                  {trail.author.username.slice(0, 2)}
-                </AvatarFallback>
+        <div className="flex h-fit w-full flex-col justify-between p-4">
+          <div>
+            <h2 className="line-clamp-2 min-h-[2lh] break-words text-base font-black uppercase lg:text-xl">
+              {trail.title}
+            </h2>
 
-                <AvatarImage
-                  className="rounded-full rounded-bl-none"
-                  src={trail.author.avatar}
-                  alt={trail.author.username}
-                />
-              </Avatar>
-            </Link>
-          )}
+            <p className="mt-2 line-clamp-3 min-h-[3lh] w-full break-words text-sm text-card-foreground/75">
+              {trail.description}
+            </p>
 
-          <ContributorList contributors={trail.contributors.map(contributor => contributor.user)} />
+            <time className="text-card-foreground-500 mt-1 block text-xs lg:mt-2" dateTime={trail.updatedAt}>
+              Atualizado em {updatedAt}
+            </time>
+          </div>
+
+          <div className="mt-1 flex w-full gap-2">
+            <Button size="sm" asChild className="w-full items-center gap-2">
+              <Link href={trailSlug}>
+                Ver mais
+                <ArrowRightIcon size={16} />
+              </Link>
+            </Button>
+          </div>
         </div>
-      </div>
-
-      <div className="p-4 w-full h-fit flex flex-col justify-between">
-        <div>
-          <h2 className="text-base lg:text-xl font-black uppercase min-h-[2lh] line-clamp-2 break-words">
-            {trail.title}
-          </h2>
-
-          <p className="mt-2 text-sm text-card-foreground/75 w-full min-h-[3lh] line-clamp-3 break-words">
-            {trail.description}
-          </p>
-
-          <time className="block mt-1 lg:mt-2 text-xs text-card-foreground-500" dateTime={trail.updatedAt}>
-            Atualizado em {updatedAt}
-          </time>
-        </div>
-
-        <div className="w-full flex gap-2 mt-1">
-          <Button size="sm" asChild className="w-full items-center gap-2">
-            <Link href={trailSlug}>
-              Ver mais
-              <ArrowRightIcon size={16} />
-            </Link>
-          </Button>
-        </div>
-      </div>
-    </article>
+      </article>
+    </div>
   );
 }

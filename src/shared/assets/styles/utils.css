@@ -1,0 +1,25 @@
+.coati-animated-line {
+  position: relative;
+  overflow-x: hidden;
+}
+
+.coati-animated-line::after {
+  content: '';
+  position: absolute;
+  width: 50px;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, hsl(var(--brand-500)) 50%, transparent);
+  animation: travel ease 5s infinite;
+}
+
+@keyframes travel {
+  0%,
+  100% {
+    transform: translateX(-75%);
+  }
+  50% {
+    transform: translateX(75%);
+  }
+}

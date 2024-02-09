@@ -7,6 +7,7 @@ import { cn } from '@/shared/utils/cn';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '../shared/assets/styles/globals.css';
+import '../shared/assets/styles/utils.css';
 
 const inter = Inter({ subsets: ['latin'] });
 

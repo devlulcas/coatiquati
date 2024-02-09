@@ -9,37 +9,28 @@ type TrailCardCarouselSectionProps = { trails: Trail[] } & React.HTMLAttributes<
 
 export function TrailCardCarouselSection({ trails, ...rest }: TrailCardCarouselSectionProps) {
   const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if (!api) {
-      return;
-    }
-
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-
-    api.on('select', () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
+    if (!api) return;
   }, [api]);
+
+  if (trails.length === 0) return null;
 
   return (
     <section {...rest}>
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <h2 className="text-2xl font-bold">Trilhas recentes</h2>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => api?.scrollPrev()}
-            className="h-8 w-8 flex items-center justify-center border bg-card text-card-foreground rounded-full"
+            className="flex h-8 w-8 items-center justify-center rounded-full border bg-card text-card-foreground"
           >
             <ArrowLeftIcon size={16} />
           </button>
           <button
             onClick={() => api?.scrollNext()}
-            className="h-8 w-8 flex items-center justify-center border bg-card text-card-foreground rounded-full"
+            className="flex h-8 w-8 items-center justify-center rounded-full border bg-card text-card-foreground"
           >
             <ArrowRightIcon size={16} />
           </button>
