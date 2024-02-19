@@ -40,7 +40,7 @@ export const contentCommentTable = sqliteTable(
   }),
 );
 
-export const contentCommentVotingTable = sqliteTable('content_comment_voting', {
+export const commentVoteTable = sqliteTable('comment_vote', {
   id: integer('id').primaryKey().notNull(),
   commentId: integer('comment_id')
     .notNull()
@@ -63,13 +63,13 @@ export const contentCommentVotingTable = sqliteTable('content_comment_voting', {
     .notNull(),
 });
 
-export const contentCommentVotingTableRelations = relations(contentCommentVotingTable, ({ one }) => ({
+export const commentVoteTableRelations = relations(commentVoteTable, ({ one }) => ({
   comment: one(contentCommentTable, {
-    fields: [contentCommentVotingTable.commentId],
+    fields: [commentVoteTable.commentId],
     references: [contentCommentTable.id],
   }),
   user: one(userTable, {
-    fields: [contentCommentVotingTable.userId],
+    fields: [commentVoteTable.userId],
     references: [userTable.id],
   }),
 }));
@@ -87,5 +87,5 @@ export const contentCommentTableRelations = relations(contentCommentTable, ({ on
     fields: [contentCommentTable.parentCommentId],
     references: [contentCommentTable.id],
   }),
-  votes: many(contentCommentVotingTable),
+  votes: many(commentVoteTable),
 }));

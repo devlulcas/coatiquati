@@ -9,6 +9,19 @@ type Params = {
 export const GET = async (request: NextRequest, params: Params) => {
   const authRequest = handleApiAuthRequest(request);
   const session = await authRequest.validate();
-  const comments = getCommentsOnContentUseCase.execute(+params.contentId, session);
+  const contentId = +params.contentId;
+
+  if (isNaN(contentId)) {
+    const errorMessage = { error: 'O id do conteúdo é inválido.' };
+
+    return new NextResponse(JSON.stringify(errorMessage), {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
+  const comments = getCommentsOnContentUseCase.execute(contentId, session);
   return NextResponse.json(comments);
 };

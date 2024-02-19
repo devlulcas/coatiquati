@@ -9,6 +9,7 @@ type Params = {
 export const GET = async (request: NextRequest, params: Params) => {
   const authRequest = handleApiAuthRequest(request);
   const session = await authRequest.validate();
+  console.log('session', session);
   const comments = getCommentResponsesUseCase.execute(+params.commentId, session);
   return NextResponse.json(comments);
 };
