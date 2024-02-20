@@ -13,8 +13,6 @@ export class GetCommentsOnContentUseCase {
   execute(contentId: number, session: Session | null): CommentWithAuthor[] {
     const comment = this.commentRepository.getCommentsByContentId(contentId);
 
-    console.log('comment', comment);
-
     if (session && isAuthenticated(session)) {
       const votes = comment.map(comment => {
         const vote = this.commentVoteRepository.getUserVote(comment.id, session.userId);

@@ -1,34 +1,27 @@
+import { env } from '@/env';
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
-import type { CommentWithAuthor } from '../types/comment';
 
 export const COMMENTS_QUERY_KEY = 'comments';
 
 type CommentsQueryOptions = Pick<UseQueryOptions, 'enabled'>;
 
-const fetchCommentsOnContent = async (contentId: number) => {
-  const response = await fetch(`/api/contents/${contentId}/comments`);
-  return response.json();
-};
+const fetchComments = async (contentId: number, commentId: number | null) => {
+  const url = new URL('/api/comments', env.NEXT_PUBLIC_WEBSITE + '/api/comments');
+  url.searchParams.set('content', contentId.toString());
 
-const fetchCommentResponses = async (commentId: number) => {
-  const response = await fetch(`/api/comments/${commentId}`);
+  if (commentId) {
+    url.searchParams.set('comment', commentId.toString());
+  }
+
+  const response = await fetch(url);
+
   return response.json();
 };
 
 export function useCommentsQuery(contentId: number, commentId: number | null, options?: CommentsQueryOptions) {
-  const queryKey = commentId ? [COMMENTS_QUERY_KEY, contentId, commentId] : [COMMENTS_QUERY_KEY, contentId];
-
-  const queryFn = async (): Promise<CommentWithAuthor[]> => {
-    if (commentId) {
-      return fetchCommentResponses(commentId);
-    } else {
-      return fetchCommentsOnContent(contentId);
-    }
-  };
-
   return useQuery({
-    queryKey,
-    queryFn,
+    queryKey: [COMMENTS_QUERY_KEY, contentId, commentId],
+    queryFn: () => fetchComments(contentId, commentId),
     refetchOnWindowFocus: false,
     retry: 1,
     refetchOnMount: false,

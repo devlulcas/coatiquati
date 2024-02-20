@@ -1,13 +1,13 @@
 import { db } from '@/modules/database/db';
-import { contentCommentVotingTable } from '@/modules/database/schema/comment';
+import { commentVoteTable } from '@/modules/database/schema/comment';
 import { and, eq } from 'drizzle-orm';
 
 export class CommentVoteRepository {
   getUserVote(commentId: number, userId: string, database = db): 1 | -1 | 0 | undefined {
     const result = database
-      .select({ vote: contentCommentVotingTable.vote })
-      .from(contentCommentVotingTable)
-      .where(and(eq(contentCommentVotingTable.commentId, commentId), eq(contentCommentVotingTable.userId, userId)))
+      .select({ vote: commentVoteTable.vote })
+      .from(commentVoteTable)
+      .where(and(eq(commentVoteTable.commentId, commentId), eq(commentVoteTable.userId, userId)))
       .get();
 
     if (!result) {
@@ -19,17 +19,17 @@ export class CommentVoteRepository {
 
   async updateVote(commentId: number, userId: string, vote: 1 | -1 | 0, database = db): Promise<void> {
     await database
-      .update(contentCommentVotingTable)
+      .update(commentVoteTable)
       .set({ vote })
-      .where(and(eq(contentCommentVotingTable.commentId, commentId), eq(contentCommentVotingTable.userId, userId)))
+      .where(and(eq(commentVoteTable.commentId, commentId), eq(commentVoteTable.userId, userId)))
       .execute();
   }
 
   async voteComment(commentId: number, userId: string, vote: 1 | -1 | 0, database = db): Promise<void> {
     const result = await database
-      .insert(contentCommentVotingTable)
+      .insert(commentVoteTable)
       .values({ commentId, userId, vote })
-      .returning({ id: contentCommentVotingTable.id })
+      .returning({ id: commentVoteTable.id })
       .execute();
 
     if (!result.length) {

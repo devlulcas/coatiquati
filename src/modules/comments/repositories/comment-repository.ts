@@ -1,11 +1,7 @@
 import { db } from '@/modules/database/db';
-import {
-  contentCommentTable,
-  contentCommentVotingTable,
-  type ContentNewCommentTable,
-} from '@/modules/database/schema/comment';
+import { commentVoteTable, contentCommentTable, type ContentNewCommentTable } from '@/modules/database/schema/comment';
 import { userTable } from '@/modules/database/schema/user';
-import { and, asc, eq, isNull, sql } from 'drizzle-orm';
+import { and, asc, eq, isNull } from 'drizzle-orm';
 import type { CommentWithAuthor, CommentWithAuthorSelect } from '../types/comment';
 
 export class CommentRepository {
@@ -32,8 +28,6 @@ export class CommentRepository {
         contentId: contentCommentTable.contentId,
         content: contentCommentTable.content,
         parentCommentId: contentCommentTable.parentCommentId,
-        upvotes: sql<number>`CAST(COUNT(CASE WHEN ${contentCommentVotingTable.vote} = 1 THEN 1 ELSE NULL END) as int)`,
-        downvotes: sql<number>`CAST(COUNT(CASE WHEN ${contentCommentVotingTable.vote} = -1 THEN 1 ELSE NULL END) as int)`,
         author: {
           id: userTable.id,
           username: userTable.username,
@@ -49,7 +43,6 @@ export class CommentRepository {
         ),
       )
       .leftJoin(userTable, eq(userTable.id, contentCommentTable.authorId))
-      .leftJoin(contentCommentVotingTable, eq(contentCommentVotingTable.commentId, contentCommentTable.id))
       .groupBy(contentCommentTable.id)
       .orderBy(contentCommentTable.createdAt, asc(contentCommentTable.createdAt))
       .all();
@@ -66,8 +59,6 @@ export class CommentRepository {
         contentId: contentCommentTable.contentId,
         content: contentCommentTable.content,
         parentCommentId: contentCommentTable.parentCommentId,
-        upvotes: sql<number>`CAST(COUNT(CASE WHEN ${contentCommentVotingTable.vote} = 1 THEN 1 ELSE NULL END) as int)`,
-        downvotes: sql<number>`CAST(COUNT(CASE WHEN ${contentCommentVotingTable.vote} = -1 THEN 1 ELSE NULL END) as int)`,
         author: {
           id: userTable.id,
           username: userTable.username,
@@ -83,7 +74,7 @@ export class CommentRepository {
         ),
       )
       .leftJoin(userTable, eq(userTable.id, contentCommentTable.authorId))
-      .leftJoin(contentCommentVotingTable, eq(contentCommentVotingTable.commentId, contentCommentTable.id))
+      .leftJoin(commentVoteTable, eq(commentVoteTable.commentId, contentCommentTable.id))
       .groupBy(contentCommentTable.id)
       .orderBy(contentCommentTable.createdAt, asc(contentCommentTable.createdAt))
       .all();
@@ -99,11 +90,6 @@ export class CommentRepository {
       contentId: fromDatabase.contentId,
       content: fromDatabase.content,
       parentCommentId: fromDatabase.parentCommentId,
-      upvotes: fromDatabase.upvotes,
-      downvotes: fromDatabase.downvotes,
-      currentUserVote: 0,
-      downvoteCount: fromDatabase.downvotes,
-      upvoteCount: fromDatabase.upvotes,
       author: {
         id: fromDatabase.author!.id,
         username: fromDatabase.author!.username,
