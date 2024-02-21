@@ -2,7 +2,6 @@
 
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { AddNewCommentForm } from '@/modules/comments/components/add-new-comment-form';
-import { CommentBlock } from '@/modules/comments/components/comment-block';
 import { useCommentsQuery } from '@/modules/comments/hooks/use-comments-query';
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
@@ -66,10 +65,7 @@ export function RenderedContentWrapper({ children, title, by, content }: Rendere
         <Separator className="my-4" />
 
         <ul className="flex flex-col gap-2">
-          {commentsQuery.isSuccess &&
-            commentsQuery.data.map(comment => (
-              <CommentBlock key={comment.id} comment={comment} by={by} content={content} />
-            ))}
+          {commentsQuery.data?.map(comment => <pre key={comment.id}>{JSON.stringify(comment, null, 2)}</pre>)}
         </ul>
       </footer>
     </section>
