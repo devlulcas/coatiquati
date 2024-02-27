@@ -7,8 +7,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } f
 import { useToast } from '@/shared/components/ui/use-toast';
 import { SkullIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
+import { setUserRoleMutation } from '../../actions/set-user-role-mutation';
 import { type User } from '../../types/user';
-import { editUserRoleAction } from './edit-user-role-action';
 
 type EditUserRoleProps = {
   user: User;
@@ -32,7 +32,7 @@ export function EditUserRole({ user }: EditUserRoleProps) {
   const onSubmit = () => {
     startTransition(async () => {
       try {
-        await editUserRoleAction({ userId: user.id, role: flippedRole.value });
+        await setUserRoleMutation({ userId: user.id, role: flippedRole.value });
         toast({ title: `${user.username} agora é um ${flippedRole.label}` });
       } catch (error) {
         toast({
@@ -58,10 +58,10 @@ export function EditUserRole({ user }: EditUserRoleProps) {
         </DialogTitle>
 
         <DialogDescription className="flex items-center justify-center py-10">
-          <SkullIcon className="w-24 h-24 text-red-600" />
+          <SkullIcon className="h-24 w-24 text-red-600" />
         </DialogDescription>
 
-        <DialogFooter className="flex gap-4 w-full">
+        <DialogFooter className="flex w-full gap-4">
           <Button onClick={closeConfirmDialog} variant="outline">
             Cancelar
           </Button>

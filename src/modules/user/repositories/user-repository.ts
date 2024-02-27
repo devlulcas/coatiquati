@@ -41,7 +41,7 @@ export class UserRepository {
         throw new Error('Usuário não encontrado');
       }
 
-      return userTableToUserMapper(data, false);
+      return userTableToUserMapper(data);
     } catch (error) {
       log.error(error);
       throw new Error('Erro ao atualizar usuário');
@@ -59,7 +59,7 @@ export class UserRepository {
         return null;
       }
 
-      return userTableToUserMapper(data, false);
+      return userTableToUserMapper(data);
     } catch (error) {
       log.error(error);
       return null;
@@ -79,7 +79,7 @@ export class UserRepository {
       },
     });
 
-    return data.map(user => userTableToUserMapper(user, true));
+    return data.map(user => userTableToUserMapper(user));
   }
 
   async getUserProfile(username: string, database = db): Promise<UserProfile | null> {
@@ -115,7 +115,7 @@ export class UserRepository {
       }
 
       const result: UserProfile = {
-        ...userTableToUserMapper(data, true),
+        ...userTableToUserMapper(data),
         authoredTrails: data.authoredTrails.map(trail => trail),
       };
 

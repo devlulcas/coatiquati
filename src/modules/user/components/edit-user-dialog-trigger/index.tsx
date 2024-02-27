@@ -1,6 +1,5 @@
 'use client';
 
-import { userSignUpSchema } from '@/modules/auth/schemas/user-sign-up-schema';
 import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
@@ -14,27 +13,28 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PencilIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
+import { updateUserMutation } from '../../actions/update-user-mutation';
+import { updateUserSchema } from '../../schemas/update-user-schema';
 import { type User } from '../../types/user';
-import { editUserAction } from './edit-user-action';
 
-const editUserDialogSchema = userSignUpSchema.omit({ password: true });
+const editUserFormSchema = updateUserSchema;
 
-type EditUserFormValues = z.infer<typeof editUserDialogSchema>;
+type EditUserFormValues = z.infer<typeof editUserFormSchema>;
 
 type EditUserDialogTriggerProps = {
   user: User;
+  children: React.ReactNode;
 };
 
-export function EditUserDialogTrigger({ user }: EditUserDialogTriggerProps) {
+export function EditUserDialogTrigger({ user, children }: EditUserDialogTriggerProps) {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<EditUserFormValues>({
-    resolver: zodResolver(editUserDialogSchema),
+    resolver: zodResolver(editUserFormSchema),
     defaultValues: {
       email: user.email,
       username: user.username,
@@ -43,7 +43,7 @@ export function EditUserDialogTrigger({ user }: EditUserDialogTriggerProps) {
 
   const onSubmit = async (data: EditUserFormValues) => {
     try {
-      await editUserAction(data);
+      await updateUserMutation(data);
       toast({ title: `Usuário ${data.username} alterado com sucesso` });
       setIsOpen(false);
     } catch (error) {
@@ -57,12 +57,7 @@ export function EditUserDialogTrigger({ user }: EditUserDialogTriggerProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost">
-          Editar
-          <PencilIcon size={16} className="ml-2" />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
@@ -92,6 +87,20 @@ export function EditUserDialogTrigger({ user }: EditUserDialogTriggerProps) {
                       <FormLabel>E-mail</FormLabel>
                       <FormControl>
                         <Input type="email" placeholder="email@exemplo.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="avatar"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Avatar</FormLabel>
+                      <FormControl>
+                        <Input type="url" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
