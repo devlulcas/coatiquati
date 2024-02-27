@@ -4,6 +4,7 @@ import { ContributorList } from '@/modules/user/components/contributor-list';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { UpdatedAt } from '@/shared/components/common/updated-at';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
+import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/cn';
 import type { ClassValue } from 'clsx';
 import Image from 'next/image';
@@ -67,7 +68,15 @@ export async function TrailHeading({ trail, className }: TrailHeadingProps) {
 
         <VisualizeTrailAsAdmin trailId={trail.id} />
 
-        <FollowTrailButton trailId={trail.id} isAlreadyFollowing={isAlreadyFollowing} />
+        {session !== null ? (
+          <div className="mt-auto">
+            <FollowTrailButton trailId={trail.id} isAlreadyFollowing={isAlreadyFollowing} />
+          </div>
+        ) : (
+          <Button asChild className="mt-auto">
+            <Link href="/sign-in">Faça login para seguir esta trilha</Link>
+          </Button>
+        )}
       </div>
     </div>
   );
