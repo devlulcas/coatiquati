@@ -24,3 +24,5 @@ export type UpdateTrail = Omit<Updatable<TrailTable>, 'authorId'> & {
 };
 
 export type NewTrail = Creatable<NewTrailTable>;
+
+export type TrailId = TrailTable['id'];

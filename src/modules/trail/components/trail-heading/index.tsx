@@ -1,3 +1,5 @@
+import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { currentUserIsAlreadySubscribedQuery } from '@/modules/trail-subscriptions/actions/current-user-is-already-subscribed-query';
 import { ContributorList } from '@/modules/user/components/contributor-list';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { UpdatedAt } from '@/shared/components/common/updated-at';
@@ -7,25 +9,40 @@ import type { ClassValue } from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Trail } from '../../types/trail';
+import { FollowTrailButton } from '../follow-trail-button';
 import { VisualizeTrailAsAdmin } from './visualize-trail-as-admin';
 
 type TrailHeadingProps = {
   trail: Trail;
-  isAdmin?: boolean;
   className?: ClassValue;
 };
 
-export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
+export async function TrailHeading({ trail, className }: TrailHeadingProps) {
   const allContributors = [trail.author, ...trail.contributors.map(contributor => contributor.user)];
 
+  const session = await getPageSession();
+
+  const isAlreadyFollowing = session !== null && (await currentUserIsAlreadySubscribedQuery(trail.id, session.userId));
+
   return (
-    <div className={cn('relative w-full min-h-80 flex flex-col lg:flex-row gap-4', className)}>
+    <div className={cn('relative flex min-h-80 w-full flex-col gap-4 lg:flex-row', className)}>
+      <Link
+        className="group absolute left-4 top-4 flex items-center gap-2"
+        href={createProfileUrl(trail.author.username)}
+      >
+        <UserAvatar className="z-10" user={trail.author} />
+
+        <span className="-translate-x-full rounded bg-brand-500 px-2 text-sm opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100">
+          {trail.author.username}
+        </span>
+      </Link>
+
       <Image
         src={trail.thumbnail}
         alt={trail.title}
         height={10}
         width={10}
-        className="rounded-md z-[-2] absolute w-full h-full inset-0 blur-2xl opacity-75 animate-pulse"
+        className="absolute inset-0 z-[-2] h-full w-full animate-pulse rounded-md opacity-75 blur-2xl"
       />
 
       <Image
@@ -33,16 +50,16 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
         alt={trail.title}
         height={320}
         width={320}
-        className="rounded-md border w-full h-auto lg:w-80 lg:h-80"
+        className="h-auto w-full rounded-md border lg:h-80 lg:w-80"
       />
 
-      <div className="flex flex-col gap-4 w-full bg-background/50 p-4 rounded-md border">
-        <h1 className="text-4xl font-bold break-all">{trail.title}</h1>
+      <div className="flex w-full flex-col gap-4 rounded-md border bg-background/50 p-4">
+        <h1 className="break-all text-4xl font-bold">{trail.title}</h1>
 
-        <p className="text-lg break-all">{trail.description}</p>
+        <p className="break-all text-lg">{trail.description}</p>
 
         <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-bold flex items-center gap-2">{trail.contributors.length} contribuidores</h2>
+          <h2 className="flex items-center gap-2 text-xl font-bold">{trail.contributors.length} contribuidores</h2>
           <ContributorList contributors={allContributors} />
         </section>
 
@@ -50,16 +67,7 @@ export function TrailHeading({ isAdmin, trail, className }: TrailHeadingProps) {
 
         <VisualizeTrailAsAdmin trailId={trail.id} />
 
-        <Link
-          className="absolute top-4 left-4 flex items-center gap-2 group"
-          href={createProfileUrl(trail.author.username)}
-        >
-          <UserAvatar user={trail.author} />
-
-          <span className="text-sm transition-all -translate-x-full opacity-0 group-hover:opacity-100 group-hover:translate-x-0">
-            {trail.author.username}
-          </span>
-        </Link>
+        <FollowTrailButton trailId={trail.id} isAlreadyFollowing={isAlreadyFollowing} />
       </div>
     </div>
   );

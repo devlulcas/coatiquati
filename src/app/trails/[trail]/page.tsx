@@ -1,5 +1,3 @@
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
-import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { TopicCardItem } from '@/modules/topic/components/topic-card-item';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
 import { GetTrailUseCase } from '@/modules/trail/use-cases/get-trail-use-case';
@@ -19,19 +17,15 @@ export default async function Page({ params }: PageProps) {
 
   if (!trailData) redirect('/');
 
-  const session = await getPageSession();
-
-  const isAdmin = session !== null && isAdminOrAbove(session.user.role);
-
   return (
-    <div className="py-8 container">
-      <TrailHeading isAdmin={isAdmin} trail={trailData} className="mb-8" />
+    <div className="container py-8">
+      <TrailHeading trail={trailData} className="mb-8" />
 
-      {trailData.topics.length === 0 && <p className="text-lg text-center">Nenhum tópico encontrado</p>}
+      {trailData.topics.length === 0 && <p className="text-center text-lg">Nenhum tópico encontrado</p>}
 
-      <h2 className="text-2xl font-bold mb-4">{trailData.topics.length} tópicos</h2>
+      <h2 className="mb-4 text-2xl font-bold">{trailData.topics.length} tópicos</h2>
 
-      <ul className="flex flex-col gap-4 border-gray-300 border-l-2 pl-4">
+      <ul className="flex flex-col gap-4 border-l-2 border-gray-300 pl-4">
         {trailData.topics.map(topic => (
           <li key={topic.id}>
             <TopicCardItem topic={topic} />

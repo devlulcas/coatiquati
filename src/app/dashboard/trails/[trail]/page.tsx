@@ -1,5 +1,3 @@
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
-import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { NewTrailDialogTrigger } from '@/modules/topic/components/new-topic-dialog-trigger';
 import { TopicsTable } from '@/modules/topic/components/topics-table';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
@@ -20,16 +18,12 @@ export default async function Page({ params }: PageProps) {
 
   if (!trailData) redirect('/dashboard');
 
-  const session = await getPageSession();
-
-  const isAdmin = session !== null && isAdminOrAbove(session.user.role);
-
   return (
     <div className="flex flex-col gap-8">
-      <TrailHeading isAdmin={isAdmin} trail={trailData} className="mb-8" />
+      <TrailHeading trail={trailData} className="mb-8" />
 
       <section>
-        <div className="flex justify-between mb-4">
+        <div className="mb-4 flex justify-between">
           <h2 className="text-xl">Tópicos da trilha</h2>
           <NewTrailDialogTrigger trailId={trailId} />
         </div>
