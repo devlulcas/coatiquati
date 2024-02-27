@@ -15,16 +15,19 @@ export function FollowTrailButton({ trailId, isAlreadyFollowing }: FollowTrailBu
 
   return (
     <form action={followTrailServerAction} className="w-full">
-      <Button className="group w-full items-center gap-2">
-        <StarIcon
-          className={
-            isAlreadyFollowing
-              ? 'fill-current text-brand-500'
-              : 'fill-current text-brand-300 group-hover:text-brand-500'
-          }
-        />
+      <button className="group flex bg-background rounded border w-full items-center justify-start gap-2">
+        <div className="flex h-10 w-10 items-center justify-center border-r">
+          <StarIcon
+            className={
+              isAlreadyFollowing
+                ? 'fill-current text-foreground'
+                : 'fill-current text-foreground group-hover:text-brand-500'
+            }
+          />
+        </div>
+
         {isAlreadyFollowing ? 'Parar de seguir' : 'Seguir'}
-      </Button>
+      </button>
     </form>
   );
 }
