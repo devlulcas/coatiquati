@@ -14,7 +14,7 @@ export function RenderRichTextContentCard({ content }: { content: ContentWithRic
       content={{ id: data.contentId, type: meta.contentType }}
     >
       <ReadonlyEditor content={data.previewAsJson} />
-      <Link href={`/contents/${meta.id}`} className="text-md text-muted-foreground flex items-center gap-2">
+      <Link href={`/contents/${meta.id}`} className="text-md ml-1 flex items-center gap-2 text-muted-foreground">
         Ler mais <ArrowRightIcon size={16} />
       </Link>
     </RenderedContentWrapper>
