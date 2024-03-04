@@ -2,7 +2,6 @@ import type { BaseContent, NewContent, UpdateContent } from '@/modules/content/t
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
 import { contentTable } from '@/modules/database/schema/content';
-import { contentContributionTable } from '@/modules/database/schema/contribution';
 import { log } from '@/modules/logging/lib/pino';
 import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { eq } from 'drizzle-orm';
@@ -40,6 +39,12 @@ export class BaseContentRepository {
   async updateBaseContent(content: UpdateContent, database = db): Promise<BaseContent> {
     const updatedAt = new Date().toISOString();
 
+    const authorId = await this.getAuthorId(content.id, database);
+
+    if (authorId !== content.contributorId) {
+      throw new Error('Você não tem permissão para editar este conteúdo');
+    }
+
     return database.transaction(async tx => {
       tx.update(contentTable)
         .set({
@@ -50,13 +55,7 @@ export class BaseContentRepository {
         })
         .execute();
 
-      tx.update(contentContributionTable)
-        .set({
-          contentId: content.id,
-          userId: content.contributorId,
-          contributedAt: updatedAt,
-        })
-        .execute();
+      await this.contributionRepository.contributeInContent(content.id, content.contributorId, tx);
 
       return this.getBaseContent(content.id, tx);
     });
@@ -91,6 +90,7 @@ export class BaseContentRepository {
 
   async enableBaseContent(id: number, database = db): Promise<void> {
     const updatedAt = new Date().toISOString();
+
     try {
       await database.update(contentTable).set({ active: true, updatedAt }).where(eq(contentTable.id, id)).execute();
     } catch (error) {
@@ -107,5 +107,27 @@ export class BaseContentRepository {
       log.error('Erro ao desabilitar trilha.', { id, error });
       throw new Error('Erro ao desabilitar trilha.');
     }
+  }
+
+  async getAuthorId(contentId: number, database = db): Promise<string> {
+    const result = await database.query.contentTable.findFirst({
+      with: {
+        author: {
+          columns: {
+            id: true,
+          },
+        },
+      },
+      where(fields, operators) {
+        return operators.eq(fields.id, contentId);
+      },
+    });
+
+    if (!result) {
+      log.error('Erro ao buscar autor do conteúdo de vídeo', { contentId });
+      throw new Error('Erro ao buscar autor do conteúdo de vídeo com id = ' + contentId);
+    }
+
+    return result.authorId;
   }
 }
