@@ -1,18 +1,10 @@
 import { db } from '@/modules/database/db';
 import { feedbackTable, type NewFeedback } from '@/modules/database/schema/feedback';
+import { userTable } from '@/modules/database/schema/user';
 import type { PaginationSchema } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
 import { desc, eq } from 'drizzle-orm';
-
-export const FEEDBACK_DB_FIELDS = Object.freeze({
-  id: true,
-  title: true,
-  description: true,
-  thumbnail: true,
-  status: true,
-  createdAt: true,
-  updatedAt: true,
-});
+import type { Feedback } from '../types/feedback';
 
 export class FeedbackRepository {
   async createFeedback(feedback: NewFeedback, database = db): Promise<number> {
@@ -25,16 +17,34 @@ export class FeedbackRepository {
     }
   }
 
-  async getFeedback(pagination: PaginationSchema, type?: string, database = db) {
-    const feedback = database
-      .select()
+  async getFeedback(pagination: PaginationSchema, type?: string, database = db): Promise<Feedback[]> {
+    let feedbackQuery = database
+      .select({
+        id: feedbackTable.id,
+        type: feedbackTable.type,
+        softwareVersion: feedbackTable.softwareVersion,
+        text: feedbackTable.content,
+        createdAt: feedbackTable.createdAt,
+        user: {
+          id: userTable.id,
+          username: userTable.username,
+          avatar: userTable.avatar,
+        },
+      })
       .from(feedbackTable)
       .orderBy(desc(feedbackTable.createdAt))
-      .where(type ? eq(feedbackTable.type, type) : undefined)
-      .groupBy(feedbackTable.softwareVersion)
+      .leftJoin(userTable, eq(feedbackTable.userId, userTable.id))
       .limit(pagination.take)
-      .offset(pagination.skip)
-      .all();
+      .offset(pagination.skip);
+
+    if (type && ['bug', 'feature', 'improvement'].includes(type)) {
+      feedbackQuery = feedbackQuery.where(eq(feedbackTable.type, type));
+    }
+
+    const feedback = feedbackQuery.all();
+
+    console.log(feedbackQuery.toSQL());
+    console.log(feedback);
 
     return feedback;
   }

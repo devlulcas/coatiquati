@@ -1,5 +1,6 @@
 import { getFeedbackListQuery } from '@/modules/feedback/actions/get-feedback-list-query';
 import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
+import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { cn } from '@/shared/utils/cn';
@@ -25,11 +26,21 @@ export default async function FeedbackPage(props: PageProps) {
     improvement: 'Melhoria',
   };
 
+  const fromDateTimeToLocaleString = (dateTime: string) => {
+    return new Date(dateTime).toLocaleDateString('pt-BR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <section>
         <form className="flex gap-2">
-          <Select defaultValue={type}>
+          <Select defaultValue={type} name="type" aria-label="Tipo de feedback">
             <SelectTrigger>
               <SelectValue placeholder="Tipo de feedback" />
             </SelectTrigger>
@@ -49,32 +60,41 @@ export default async function FeedbackPage(props: PageProps) {
           </Button>
         </form>
 
-        <ul className="flex flex-col gap-4 divide-y">
+        <ul className="mt-4 flex flex-col divide-y divide-primary/15 overflow-clip rounded">
           {feedback.map(feedback => (
-            <li key={feedback.id} className="flex gap-4 px-2 py-4">
-              <div>
-                <div className="mb-2 flex gap-2">
-                  <h3
-                    className={cn(
-                      'rounded-md px-3 py-2 text-sm',
-                      feedback.type === 'bug' && 'bg-red-500/75 text-white',
-                      feedback.type === 'feature' && 'bg-green-500/75 text-white',
-                      feedback.type === 'improvement' && 'bg-blue-500/75 text-white',
-                    )}
-                  >
-                    {feedbackTypeLabel[feedback.type] ?? feedback.type}
-                  </h3>
+            <li key={feedback.id} className="flex flex-col gap-4 bg-foreground/10 px-2 py-4">
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  {feedback.user && (
+                    <Link href={`/profile/${feedback.user.username}`}>
+                      <UserAvatar user={feedback.user} />
+                    </Link>
+                  )}
 
-                  <time className="text-sm text-muted-foreground" dateTime={new Date(feedback.createdAt).toISOString()}>
-                    {new Date(feedback.createdAt).toLocaleDateString('pt-BR', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                    })}
-                  </time>
+                  <div>
+                    <h3 className="text-xl font-bold">{feedback.softwareVersion}</h3>
+                    <time
+                      className="text-sm text-muted-foreground"
+                      dateTime={new Date(feedback.createdAt).toISOString()}
+                    >
+                      {fromDateTimeToLocaleString(feedback.createdAt)}
+                    </time>
+                  </div>
                 </div>
-                <ReadonlyEditor content={feedback.content} />
+
+                <strong
+                  className={cn(
+                    'min-w-28 rounded-full px-3 py-2 text-center text-xs font-bold uppercase',
+                    feedback.type === 'bug' && 'bg-red-500/75 text-white',
+                    feedback.type === 'feature' && 'bg-green-500/75 text-white',
+                    feedback.type === 'improvement' && 'bg-blue-500/75 text-white',
+                  )}
+                >
+                  {feedbackTypeLabel[feedback.type] ?? feedback.type}
+                </strong>
               </div>
+
+              <ReadonlyEditor content={feedback.text} />
             </li>
           ))}
         </ul>

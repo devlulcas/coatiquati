@@ -1,9 +1,9 @@
 'use server';
 
-import type { Feedback } from '@/modules/database/schema/feedback';
 import { FeedbackRepository } from '../repositories/feedback-repository';
+import type { Feedback } from '../types/feedback';
 
 export async function getFeedbackListQuery(page: number, type?: string): Promise<Feedback[]> {
   const feedbackRepository = new FeedbackRepository();
-  return feedbackRepository.getFeedback({ skip: (page - 1) * 10, take: 10 }, type);
+  return feedbackRepository.getFeedback({ take: 10, skip: (page - 1) * 10 }, type);
 }

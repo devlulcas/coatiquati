@@ -1,5 +1,5 @@
 import { cn } from '@/shared/utils/cn';
-import { type Editor, EditorContent as TipTapEditorContent } from '@tiptap/react';
+import { EditorContent as TipTapEditorContent, type Editor } from '@tiptap/react';
 import css from './editor-content.module.css';
 
 type EditorContentProps = {
@@ -7,5 +7,10 @@ type EditorContentProps = {
 };
 
 export function EditorContent({ editor }: EditorContentProps) {
-  return <TipTapEditorContent editor={editor} className={cn('prose dark:prose-invert', css.editor)} />;
+  return (
+    <TipTapEditorContent
+      editor={editor}
+      className={cn('prose dark:prose-invert prose-img:mx-auto prose-img:max-h-[500px] prose-img:rounded', css.editor)}
+    />
+  );
 }

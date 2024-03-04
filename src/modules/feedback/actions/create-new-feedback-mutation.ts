@@ -4,6 +4,7 @@ import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { readFileSync } from 'fs';
+import { revalidatePath } from 'next/cache';
 import path from 'path';
 import type { NewFeedbackFormValues } from '../components/new-feedback-form';
 import { FeedbackRepository } from '../repositories/feedback-repository';
@@ -26,6 +27,8 @@ export async function createNewFeedbackMutation(feedback: NewFeedbackFormValues)
     softwareVersion: packageJson.version,
     userId: session.user.id,
   });
+
+  revalidatePath('/dashboard/feedback');
 
   log.info('Feedback created', { feedbackId: feedbackId, authorId: session.user.id });
 }
