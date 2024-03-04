@@ -1,5 +1,6 @@
 import { getPageSession } from '@/modules/auth/utils/get-page-session';
 import { currentUserIsAlreadySubscribedQuery } from '@/modules/trail-subscriptions/actions/current-user-is-already-subscribed-query';
+import { FollowTrailButton } from '@/modules/trail-subscriptions/components/follow-trail-button';
 import { ContributorList } from '@/modules/user/components/contributor-list';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { UpdatedAt } from '@/shared/components/common/updated-at';
@@ -10,7 +11,6 @@ import type { ClassValue } from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Trail } from '../../types/trail';
-import { FollowTrailButton } from '../follow-trail-button';
 import { VisualizeTrailAsAdmin } from './visualize-trail-as-admin';
 
 type TrailHeadingProps = {
@@ -46,13 +46,20 @@ export async function TrailHeading({ trail, className }: TrailHeadingProps) {
         className="absolute inset-0 z-[-2] h-full w-full animate-pulse rounded-md opacity-75 blur-2xl"
       />
 
-      <Image
-        src={trail.thumbnail}
-        alt={trail.title}
-        height={320}
-        width={320}
-        className="h-auto w-full rounded-md border lg:h-80 lg:w-80"
-      />
+      <div
+        className={cn(
+          'rounded-md p-[1px]',
+          isAlreadyFollowing ? 'bg-gradient-to-tr from-brand-500 to-brand-600' : 'bg-border',
+        )}
+      >
+        <Image
+          src={trail.thumbnail}
+          alt={trail.title}
+          height={320}
+          width={320}
+          className="h-auto w-full rounded-md border lg:h-80 lg:w-80"
+        />
+      </div>
 
       <div className="flex w-full flex-col gap-4 rounded-md border bg-background/50 p-4">
         <h1 className="break-all text-4xl font-bold">{trail.title}</h1>
