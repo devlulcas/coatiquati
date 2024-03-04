@@ -16,6 +16,13 @@ export class ContributionRepository {
   async contributeInTrail(trailId: number, userId: string, database = db): Promise<void> {
     await database.transaction(async tx => {
       try {
+        const isAuthor = tx.select({ id: topicTable.id }).from(topicTable).where(eq(topicTable.authorId, userId)).get();
+
+        if (isAuthor) {
+          log.warn('Usuário não pode contribuir com trilha que ele mesmo criou.', { trailId, userId });
+          return;
+        }
+
         const contributedAt = new Date().toISOString();
         await tx.insert(trailContributionTable).values({ trailId, userId, contributedAt }).execute();
       } catch (error) {
@@ -32,6 +39,13 @@ export class ContributionRepository {
   async contributeInTopic(topicId: number, userId: string, database = db): Promise<void> {
     await database.transaction(async tx => {
       try {
+        const isAuthor = tx.select({ id: topicTable.id }).from(topicTable).where(eq(topicTable.authorId, userId)).get();
+
+        if (isAuthor) {
+          log.warn('Usuário não pode contribuir com tópico que ele mesmo criou.', { topicId, userId });
+          return;
+        }
+
         const contributedAt = new Date().toISOString();
         await tx.insert(topicContributionTable).values({ topicId, userId, contributedAt }).execute();
 
@@ -64,6 +78,17 @@ export class ContributionRepository {
   async contributeInContent(contentId: number, userId: string, database = db): Promise<void> {
     await database.transaction(async tx => {
       try {
+        const isAuthor = tx
+          .select({ id: contentTable.id })
+          .from(contentTable)
+          .where(eq(contentTable.authorId, userId))
+          .get();
+
+        if (isAuthor) {
+          log.warn('Usuário não pode contribuir com conteúdo que ele mesmo criou.', { contentId, userId });
+          return;
+        }
+
         const contributedAt = new Date().toISOString();
         await tx.insert(contentContributionTable).values({ contentId, userId, contributedAt }).execute();
 
