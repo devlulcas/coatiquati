@@ -10,6 +10,7 @@ export const GET = async (request: NextRequest) => {
   const commentId = Number(request.nextUrl.searchParams.get('comment'));
 
   if (!contentId) {
+    console.error('Content ID is required');
     return NextResponse.json([]);
   }
 

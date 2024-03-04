@@ -25,7 +25,7 @@ type RenderedContentWrapperProps = {
 export function RenderedContentWrapper({ children, title, by, content }: RenderedContentWrapperProps) {
   const currentUserDataQuery = useCurrentUserDataQuery();
 
-  const isContentOwner = currentUserDataQuery.isSuccess && currentUserDataQuery.data.id === by.id;
+  const isContentAuthor = currentUserDataQuery.isSuccess && currentUserDataQuery.data.id === by.id;
   const isAdmin = currentUserDataQuery.isSuccess && isAdminOrAbove(currentUserDataQuery.data.role);
 
   const commentsQuery = useCommentsQuery(content.id, null);
@@ -40,12 +40,12 @@ export function RenderedContentWrapper({ children, title, by, content }: Rendere
 
           <Link className="text-sm text-muted-foreground" href={createProfileUrl(by.username)}>
             por <span className="text-brand-500">{by.username}</span>
-            {isContentOwner && '(você)'}
+            {isContentAuthor && '(você)'}
             <span className="sr-only">Ver perfil de {by.username}</span>
           </Link>
         </div>
 
-        {(isContentOwner || isAdmin) && (
+        {(isContentAuthor || isAdmin) && (
           <Button className="ml-auto" variant="outline" size="icon" asChild>
             <Link href={`/contents/${content.id}/edit/${content.type}`} title="Você pode editar esse conteúdo">
               <PencilIcon size={16} />

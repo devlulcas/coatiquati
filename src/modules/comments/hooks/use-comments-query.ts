@@ -8,6 +8,7 @@ type CommentsQueryOptions = Pick<UseQueryOptions, 'enabled'>;
 
 const fetchComments = async (contentId: number, commentId: number | null): Promise<CommentWithAuthor[]> => {
   const url = new URL('/api/comments', env.NEXT_PUBLIC_WEBSITE + '/api/comments');
+
   url.searchParams.set('content', contentId.toString());
 
   if (commentId) {

@@ -1,19 +1,21 @@
 'use client';
 
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
+import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/alert';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { toast } from '@/shared/components/ui/use-toast';
+import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { SendIcon } from 'lucide-react';
+import { AlertOctagonIcon, SendIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
+import { createCommentMutation } from '../../actions/create-comment-mutation';
 import { COMMENTS_QUERY_KEY } from '../../hooks/use-comments-query';
 import { newCommentSchema } from '../../schemas/new-comment-schema';
-import { addNewCommentAction } from './add-new-comment-action';
 import { CircularProgress } from './circular-progress';
 
 const formSchema = newCommentSchema;
@@ -36,19 +38,20 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
 
   const queryClient = useQueryClient();
 
-  const onSubmit = async (data: AddNewCommentFormValues) => {
-    try {
-      await addNewCommentAction(data);
-      toast({ title: 'Seu comentário foi publicado com sucesso' });
-      queryClient.invalidateQueries({ queryKey: [COMMENTS_QUERY_KEY, contentId, parentCommentId] });
-    } catch (error) {
+  const createCommentMutationState = useServerActionMutation({
+    serverAction: createCommentMutation,
+    onFailedAction: error => {
       toast({
         title: 'Erro ao comentar',
-        description: error instanceof Error ? error.message : String(error),
+        description: error.message,
         variant: 'destructive',
       });
-    }
-  };
+    },
+    onSuccessfulAction: () => {
+      toast({ title: 'Seu comentário foi publicado com sucesso' });
+      queryClient.invalidateQueries({ queryKey: [COMMENTS_QUERY_KEY, contentId, parentCommentId] });
+    },
+  });
 
   const currentUserDataQuery = useCurrentUserDataQuery();
 
@@ -64,7 +67,15 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
+      <form onSubmit={form.handleSubmit(createCommentMutationState.mutate)} className="w-full space-y-4">
+        {createCommentMutationState.state === 'error' && (
+          <Alert variant="destructive">
+            <AlertOctagonIcon className="h-4 w-4" />
+            <AlertTitle>Algo deu errado!</AlertTitle>
+            <AlertDescription>{createCommentMutationState.error.message}</AlertDescription>
+          </Alert>
+        )}
+
         <FormField
           control={form.control}
           name="content"
@@ -100,7 +111,12 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
 
                     <CircularProgress size={30} width={6} max={maximumContentLength} value={content.length} />
 
-                    <Button type="submit" className="flex items-center gap-2" size="sm">
+                    <Button
+                      type="submit"
+                      isLoading={createCommentMutationState.isPending}
+                      className="flex items-center gap-2"
+                      size="sm"
+                    >
                       Enviar
                       <SendIcon size={16} />
                     </Button>
