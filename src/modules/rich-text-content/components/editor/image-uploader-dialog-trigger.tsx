@@ -7,16 +7,14 @@ import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { type Editor } from '@tiptap/react';
-import { ImagePlusIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
-import { EditorActionButton } from './editor-action-button';
 
 type ImageUploaderProps = {
   onSave: (src: string, alt: string) => void;
 };
 
-export function ImageUploaderDialogTrigger({ editor }: { editor: Editor | null }) {
+export function ImageUploaderDialogTrigger({ editor, children }: { editor: Editor | null; children: React.ReactNode }) {
   const imageUpload = (src: string, alt: string) => {
     if (editor) {
       editor.chain().focus().setImage({ src, alt }).run();
@@ -25,9 +23,7 @@ export function ImageUploaderDialogTrigger({ editor }: { editor: Editor | null }
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <EditorActionButton icon={<ImagePlusIcon />} label="imagem" />
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent className="min-w-fit">
         <DialogHeader>
@@ -64,8 +60,8 @@ function ImageUploader({ onSave }: ImageUploaderProps) {
   return (
     <div className="p-2">
       {src ? (
-        <div className="w-full flex">
-          <Image src={src} alt={altRef.current} className="rounded-lg mx-auto" width={500} height={500} />
+        <div className="flex w-full">
+          <Image src={src} alt={altRef.current} className="mx-auto rounded-lg" width={500} height={500} />
         </div>
       ) : (
         <UploadDropzone
@@ -93,10 +89,10 @@ function ImageUploader({ onSave }: ImageUploaderProps) {
         />
       )}
 
-      <div className="w-full mt-3">
+      <div className="mt-3 w-full">
         <Label htmlFor="alt">Texto alternativo</Label>
 
-        <div className="flex gap-2 w-full mt-2">
+        <div className="mt-2 flex w-full gap-2">
           <Input
             id="alt"
             placeholder="Texto alternativo"

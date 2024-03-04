@@ -18,7 +18,11 @@ export function EditorActionButton({ icon, label, onClick, disabled, active, cla
       onClick={onClick}
       type="button"
       disabled={disabled}
-      className={cn('gap-2 rounded-none flex-1 min-w-fit border', { 'bg-brand-500 text-brand-50': active }, className)}
+      className={cn(
+        'h-fit min-w-fit flex-1 gap-2 rounded-none border px-2 py-2',
+        { 'bg-brand-500 text-brand-50 hover:text-brand-600': active },
+        className,
+      )}
       aria-label={label}
       title={label}
     >

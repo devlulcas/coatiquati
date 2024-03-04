@@ -12,7 +12,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
 
   return (
     <div className="flex h-[--view-height] flex-col lg:flex-row">
-      <aside className="lg:h-[--view-height] w-full lg:w-72 border-r bg-background/75 px-4 py-8 backdrop-blur-md">
+      <aside className="w-full border-r bg-background/75 px-4 py-8 backdrop-blur-md lg:h-[--view-height] lg:w-72">
         <nav className="flex flex-col items-center divide-y">
           <a href="/dashboard" className="w-full p-4 text-white">
             Dashboard
@@ -26,10 +26,14 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
           <a href="/dashboard/bans" className="w-full p-4 text-white">
             Banimentos
           </a>
+
+          <a href="/dashboard/feedback" className="w-full p-4 text-white">
+            Feedback
+          </a>
         </nav>
       </aside>
 
-      <main className="flex-1 p-8 h-[--view-height] overflow-y-auto">{children}</main>
+      <main className="h-[--view-height] flex-1 overflow-y-auto p-8">{children}</main>
     </div>
   );
 }

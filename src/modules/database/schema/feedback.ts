@@ -6,11 +6,12 @@ import { userTable } from './user';
 export type Feedback = InferSelectModel<typeof feedbackTable>;
 export type NewFeedback = InferInsertModel<typeof feedbackTable>;
 
-export const feedbackTable = sqliteTable('user_email_verification_token', {
+export const feedbackTable = sqliteTable('feedback', {
   id: integer('id').primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => userTable.id),
+  type: text('type').notNull(),
   content: text('content', { mode: 'json' }).$type<JSONContent>().notNull(),
   softwareVersion: text('software_version').notNull(),
   createdAt: text('created_at')
