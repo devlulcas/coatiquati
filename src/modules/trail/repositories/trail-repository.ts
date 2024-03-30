@@ -140,7 +140,7 @@ export class TrailRepository {
     try {
       const data = database.query.trailTable.findMany({
         columns: TRAIL_DB_FIELDS,
-        limit: 5,
+        limit: 10,
         offset: 0,
         where: (fields, operators) => {
           return operators.not(operators.eq(fields.status, contentStatus.DRAFT));

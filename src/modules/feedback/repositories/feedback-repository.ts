@@ -37,14 +37,15 @@ export class FeedbackRepository {
       .limit(pagination.take)
       .offset(pagination.skip);
 
-    if (type && ['bug', 'feature', 'improvement'].includes(type)) {
+    const isValidQueryType = (type: unknown): type is Feedback['type'] => {
+      return typeof type === 'string' && ['bug', 'feature', 'improvement'].includes(type);
+    };
+
+    if (isValidQueryType(type)) {
       feedbackQuery = feedbackQuery.where(eq(feedbackTable.type, type));
     }
 
     const feedback = feedbackQuery.all();
-
-    console.log(feedbackQuery.toSQL());
-    console.log(feedback);
 
     return feedback;
   }

@@ -1,10 +1,8 @@
-import type { JSONContent } from '@tiptap/core';
-
 export type Feedback = {
   id: number;
-  type: string;
+  type: 'bug' | 'feature' | 'improvement';
   softwareVersion: string;
-  text: JSONContent;
+  text: string;
   createdAt: string;
   user: {
     id: string;

@@ -1,4 +1,3 @@
-import type { JSONContent } from '@tiptap/core';
 import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { userTable } from './user';
@@ -11,8 +10,8 @@ export const feedbackTable = sqliteTable('feedback', {
   userId: text('user_id')
     .notNull()
     .references(() => userTable.id),
-  type: text('type').notNull(),
-  content: text('content', { mode: 'json' }).$type<JSONContent>().notNull(),
+  type: text('type').notNull().$type<'bug' | 'feature' | 'improvement'>(),
+  content: text('content', { mode: 'json' }).$type<string>().notNull(),
   softwareVersion: text('software_version').notNull(),
   createdAt: text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)

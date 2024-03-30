@@ -3,7 +3,7 @@ import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
-import { cn } from '@/shared/utils/cn';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { TrashIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -19,12 +19,6 @@ export default async function FeedbackPage(props: PageProps) {
   const type = props.searchParams.type;
 
   const feedback = await getFeedbackListQuery(page, type);
-
-  const feedbackTypeLabel: Record<string, string> = {
-    bug: 'Bug',
-    feature: 'Feature',
-    improvement: 'Melhoria',
-  };
 
   const fromDateTimeToLocaleString = (dateTime: string) => {
     return new Date(dateTime).toLocaleDateString('pt-BR', {
@@ -62,8 +56,8 @@ export default async function FeedbackPage(props: PageProps) {
 
         <ul className="mt-4 flex flex-col divide-y divide-primary/15 overflow-clip rounded">
           {feedback.map(feedback => (
-            <li key={feedback.id} className="flex flex-col gap-4 bg-foreground/10 px-2 py-4">
-              <div className="mb-2 flex items-center justify-between gap-2">
+            <li key={feedback.id} className="flex flex-col gap-4 rounded-2xl bg-foreground/10 px-2 py-2">
+              <div className="mb-2 flex justify-between gap-2">
                 <div className="flex items-center gap-2">
                   {feedback.user && (
                     <Link href={`/profile/${feedback.user.username}`}>
@@ -82,19 +76,10 @@ export default async function FeedbackPage(props: PageProps) {
                   </div>
                 </div>
 
-                <strong
-                  className={cn(
-                    'min-w-28 rounded-full px-3 py-2 text-center text-xs font-bold uppercase',
-                    feedback.type === 'bug' && 'bg-red-500/75 text-white',
-                    feedback.type === 'feature' && 'bg-green-500/75 text-white',
-                    feedback.type === 'improvement' && 'bg-blue-500/75 text-white',
-                  )}
-                >
-                  {feedbackTypeLabel[feedback.type] ?? feedback.type}
-                </strong>
+                <FeedbackBadge variant={feedback.type} />
               </div>
 
-              <ReadonlyEditor content={feedback.text} />
+              <ReadonlyEditor content={JSON.parse(feedback.text)} />
             </li>
           ))}
         </ul>
@@ -103,4 +88,32 @@ export default async function FeedbackPage(props: PageProps) {
       </section>
     </div>
   );
+}
+
+const feebackBadgeVariants = cva(
+  'block h-fit min-w-28 rounded-b-3xl rounded-tl-3xl rounded-tr-lg px-3 py-2 text-center text-xs font-bold uppercase',
+  {
+    variants: {
+      variant: {
+        bug: 'bg-red-500/75 text-white',
+        feature: 'bg-green-500/75 text-white',
+        improvement: 'bg-blue-500/75 text-white',
+      },
+    },
+    defaultVariants: {
+      variant: 'bug',
+    },
+  },
+);
+
+type FeedbackBadgeProps = VariantProps<typeof feebackBadgeVariants>;
+
+function FeedbackBadge({ variant }: FeedbackBadgeProps) {
+  const feedbackTypeLabel: Record<string, string> = {
+    bug: 'Bug',
+    feature: 'Feature',
+    improvement: 'Melhoria',
+  };
+
+  return <strong className={feebackBadgeVariants({ variant })}>{feedbackTypeLabel[variant ?? 'bug']}</strong>;
 }
