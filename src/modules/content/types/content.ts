@@ -1,10 +1,8 @@
 import type {
-  ContentFileTable,
   ContentImageTable,
   ContentRichTextTable,
   ContentTable,
   ContentVideoTable,
-  NewContentFileTable,
   NewContentImageTable,
   NewContentRichTextTable,
   NewContentTable,
@@ -21,11 +19,6 @@ type UpdatableContent<T> = Partial<Omit<T, 'createdAt'>> & {
 export type BaseContent = Omit<ContentTable, 'authorId' | 'contentType' | 'topicId'> & {
   author: Contributor;
   contributors: { user: Contributor }[];
-};
-
-export type ContentWithFile = BaseContent & {
-  contentType: 'file';
-  content: ContentFileTable;
 };
 
 export type ContentWithImage = BaseContent & {
@@ -48,17 +41,11 @@ export type ContentWithVideo = BaseContent & {
   content: ContentVideoTable;
 };
 
-export type Content = ContentWithFile | ContentWithImage | ContentWithRichTextPreview | ContentWithVideo;
-
+export type Content =  ContentWithImage | ContentWithRichTextPreview | ContentWithVideo;
 export type NewContent = Creatable<NewContentTable>;
-
 export type UpdateContent = Omit<Updatable<ContentTable>, 'authorId' | 'contentType'> & {
   contributorId: ContentTable['authorId'];
 };
-
-export type ContentFile = ContentFileTable;
-export type NewContentFile = Creatable<NewContentFileTable>;
-export type UpdateContentFile = UpdatableContent<ContentFileTable>;
 
 export type ContentRichTextPreview = Omit<ContentRichTextTable, 'asJson'>;
 export type ContentRichText = Omit<ContentRichTextTable, 'previewAsJson'>;

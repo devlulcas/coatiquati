@@ -1,5 +1,6 @@
-import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { relations, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { foreignKey, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { tableTimestampColumns } from '../lib/helpers';
 import { contentTable } from './content';
 import { userTable } from './user';
 
@@ -24,13 +25,7 @@ export const contentCommentTable = sqliteTable(
       }),
     content: text('content').notNull(),
     parentCommentId: integer('parent_comment_id'),
-    createdAt: text('created_at')
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: text('updated_at')
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    deletedAt: text('deleted_at').default(sql`CURRENT_TIMESTAMP`),
+    ...tableTimestampColumns
   },
   table => ({
     parentCommentReference: foreignKey(() => ({
@@ -55,12 +50,7 @@ export const commentVoteTable = sqliteTable('comment_vote', {
       onUpdate: 'cascade',
     }),
   vote: integer('vote').notNull(),
-  createdAt: text('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: text('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  ...tableTimestampColumns
 });
 
 export const commentVoteTableRelations = relations(commentVoteTable, ({ one }) => ({

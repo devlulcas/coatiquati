@@ -1,3 +1,4 @@
+import { getCommentsOnContentQuery } from '@/modules/comments/actions/get-comments-on-content-query';
 import type { ContentWithVideo } from '@/modules/content/types/content';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { RenderedContentWrapper } from '../rendered-content-wrapper';
@@ -9,10 +10,10 @@ function getYoutubeVideoIdFromUrl(url: string) {
   return videoId;
 }
 
-export function RenderVideoContentCard({ content }: { content: ContentWithVideo }) {
-  const { content: data, ...meta } = content;
+export async function RenderVideoContentCard({ data }: { data: ContentWithVideo }) {
+  const videoId = getYoutubeVideoIdFromUrl(data.content.src);
 
-  const videoId = getYoutubeVideoIdFromUrl(data.src);
+  const comments = await getCommentsOnContentQuery(data.content.baseContentId);
 
   if (!videoId) {
     return null;
@@ -20,12 +21,13 @@ export function RenderVideoContentCard({ content }: { content: ContentWithVideo 
 
   return (
     <RenderedContentWrapper
-      title={meta.title}
-      by={meta.author}
-      content={{ id: data.contentId, type: meta.contentType }}
+      title={data.title}
+      by={data.author}
+      content={{ id: data.content.baseContentId, type: data.contentType }}
+      comments={comments}
     >
-      <YouTubeEmbed id={videoId} title={meta.title} />
-      <p className="text-md text-muted-foreground">{data.description}</p>
+      <YouTubeEmbed id={videoId} title={data.title} />
+      <p className="text-md text-muted-foreground">{data.content.description}</p>
     </RenderedContentWrapper>
   );
 }

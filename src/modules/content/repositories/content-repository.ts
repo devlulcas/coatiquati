@@ -1,62 +1,23 @@
 import type {
   BaseContent,
-  ContentFile,
-  ContentImage,
   ContentRichTextPreview,
   ContentVideo,
-  ContentWithFile,
   ContentWithImage,
   ContentWithRichTextPreview,
-  ContentWithVideo,
+  ContentWithVideo
 } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
-
-export const CONTENT_DB_FIELDS = Object.freeze({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  title: true,
-  active: true,
-  contentType: true,
-});
+import { log } from '@/modules/logging/lib/pino';
 
 export class ContentRepository {
-  async getContentWithFile(content: BaseContent, database = db): Promise<ContentWithFile> {
-    const resultFile: ContentFile | undefined = await database.query.contentFileTable.findFirst({
-      where(fields, operators) {
-        return operators.eq(fields.contentId, content.id);
-      },
-    });
-
-    if (!resultFile) {
-      throw new Error('Erro ao buscar conteúdo');
-    }
-
-    return {
-      ...content,
-      contentType: 'file',
-      content: resultFile,
-    };
-  }
-
-  async getContentWithImage(content: BaseContent, database = db): Promise<ContentWithImage> {
-    const resultImage: ContentImage | undefined = await database.query.contentImageTable.findFirst({
-      columns: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        contentId: true,
-        alt: true,
-        description: true,
-        src: true,
-      },
-      where(fields, operators) {
-        return operators.eq(fields.contentId, content.id);
-      },
+  async getContentWithImage(content: BaseContent): Promise<ContentWithImage> {
+    const resultImage = await db.query.contentImageTable.findFirst({
+      where: (fields, operators) => operators.eq(fields.baseContentId, content.id),
     });
 
     if (!resultImage) {
-      throw new Error('Erro ao buscar conteúdo de imagem com id = ' + content.id);
+      log.error('Erro ao buscar imagem', content.id);
+      throw new Error('Erro ao buscar conteúdo de imagem');
     }
 
     return {
@@ -66,20 +27,9 @@ export class ContentRepository {
     };
   }
 
-  async getContentWithVideo(content: BaseContent, database = db): Promise<ContentWithVideo> {
-    const resultVideo: ContentVideo | undefined = await database.query.contentVideoTable.findFirst({
-      columns: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        contentId: true,
-        alt: true,
-        description: true,
-        src: true,
-      },
-      where(fields, operators) {
-        return operators.eq(fields.contentId, content.id);
-      },
+  async getContentWithVideo(content: BaseContent): Promise<ContentWithVideo> {
+    const resultVideo: ContentVideo | undefined = await db.query.contentVideoTable.findFirst({
+      where: (fields, operators) => operators.eq(fields.baseContentId, content.id),
     });
 
     if (!resultVideo) {
@@ -93,19 +43,10 @@ export class ContentRepository {
     };
   }
 
-  async getContentWithRichTextPreview(content: BaseContent, database = db): Promise<ContentWithRichTextPreview> {
-    const resultRichtext: ContentRichTextPreview | undefined = await database.query.contentRichTextTable.findFirst({
-      columns: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        contentId: true,
-        previewAsJson: true,
-      },
-      where(fields, operators) {
-        return operators.eq(fields.contentId, content.id);
-      },
-    });
+  async getContentWithRichTextPreview(content: BaseContent): Promise<ContentWithRichTextPreview> {
+    const resultRichtext: ContentRichTextPreview | undefined = await db.query.contentRichTextTable.findFirst({
+      where: (fields, operators) => operators.eq(fields.baseContentId, content.id),
+    })
 
     if (!resultRichtext) {
       throw new Error('Erro ao buscar conteúdo de rich text com id = ' + content.id);

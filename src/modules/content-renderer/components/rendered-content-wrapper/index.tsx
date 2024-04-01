@@ -2,7 +2,7 @@
 
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { AddNewCommentForm } from '@/modules/comments/components/add-new-comment-form';
-import { useCommentsQuery } from '@/modules/comments/hooks/use-comments-query';
+import type { Comment } from '@/modules/comments/types/comment';
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import type { Contributor } from '@/modules/user/types/user';
@@ -20,15 +20,14 @@ type RenderedContentWrapperProps = {
     id: number;
     type: string;
   };
+  comments: Comment[];
 };
 
-export function RenderedContentWrapper({ children, title, by, content }: RenderedContentWrapperProps) {
+export function RenderedContentWrapper({ children, title, by, content, comments }: RenderedContentWrapperProps) {
   const currentUserDataQuery = useCurrentUserDataQuery();
 
   const isContentAuthor = currentUserDataQuery.isSuccess && currentUserDataQuery.data.id === by.id;
   const isAdmin = currentUserDataQuery.isSuccess && isAdminOrAbove(currentUserDataQuery.data.role);
-
-  const commentsQuery = useCommentsQuery(content.id, null);
 
   return (
     <section className="flex flex-col gap-2 rounded border bg-background/50">
@@ -65,7 +64,16 @@ export function RenderedContentWrapper({ children, title, by, content }: Rendere
         <Separator className="my-4" />
 
         <ul className="flex flex-col gap-2">
-          {commentsQuery.data?.map(comment => <pre key={comment.id}>{JSON.stringify(comment, null, 2)}</pre>)}
+          {comments.map(comment => (
+            <li key={comment.id} className="flex gap-2">
+              <UserAvatar className="h-8 w-8 rounded border border-secondary-foreground/25 text-xs" user={comment.author} />
+
+              <div className="flex flex-col justify-between">
+                <p className="text-md font-bold">{comment.author.username}</p>
+                <p className="text-sm text-muted-foreground">{comment.content}</p>
+              </div>
+            </li>
+          ))}
         </ul>
       </footer>
     </section>

@@ -22,7 +22,7 @@ export const trailContributionTable = sqliteTable(
       .notNull(),
   },
   table => ({
-    pk: primaryKey(table.userId, table.trailId),
+    pk: primaryKey({columns: [table.userId, table.trailId]}),
   }),
 );
 
@@ -52,7 +52,7 @@ export const topicContributionTable = sqliteTable(
       .notNull(),
   },
   table => ({
-    pk: primaryKey(table.userId, table.topicId),
+    pk: primaryKey({columns: [table.userId, table.topicId]}),
   }),
 );
 
@@ -82,7 +82,7 @@ export const contentContributionTable = sqliteTable(
       .notNull(),
   },
   table => ({
-    pk: primaryKey(table.userId, table.contentId),
+    pk: primaryKey({columns: [table.userId, table.contentId]}),
   }),
 );
 

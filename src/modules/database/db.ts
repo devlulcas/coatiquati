@@ -10,7 +10,6 @@ import * as emailVerificationTokenSchema from './schema/email-verification-token
 import * as feedbackSchema from './schema/feedback';
 import * as passwordResetTokenSchema from './schema/password-reset-token';
 import * as reportSchema from './schema/report';
-import * as sensibleActionTokenSchema from './schema/sensible-action-token';
 import * as topicSchema from './schema/topic';
 import * as trailSchema from './schema/trail';
 import * as trailSubscriptionSchema from './schema/trail-subscription';
@@ -28,7 +27,6 @@ export const db = drizzle(sqlite, {
     ...emailVerificationTokenSchema,
     ...passwordResetTokenSchema,
     ...reportSchema,
-    ...sensibleActionTokenSchema,
     ...topicSchema,
     ...trailSubscriptionSchema,
     ...trailSchema,

@@ -1,13 +1,13 @@
-import { type InferInsertModel, type InferSelectModel, relations, sql } from 'drizzle-orm';
+import { relations, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentStatus, type ContentStatus } from '../../../shared/constants/content-status';
+import { tableTimestampColumns } from '../lib/helpers';
 import { contentTable } from './content';
 import { topicContributionTable } from './contribution';
 import { trailTable } from './trail';
 import { userTable } from './user';
 
 export type TopicTable = InferSelectModel<typeof topicTable>;
-
 export type NewTopicTable = InferInsertModel<typeof topicTable>;
 
 export const topicTable = sqliteTable('topic', {
@@ -28,12 +28,7 @@ export const topicTable = sqliteTable('topic', {
       onDelete: 'no action',
       onUpdate: 'cascade',
     }),
-  createdAt: text('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: text('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  ...tableTimestampColumns,
 });
 
 export const topicTableRelations = relations(topicTable, ({ many, one }) => ({

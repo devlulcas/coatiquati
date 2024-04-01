@@ -34,6 +34,7 @@ export const POST = async (request: NextRequest) => {
         avatar: 'default-user-avatar.png',
         isBanned: Number(false),
         verified: Number(false),
+        deletedAt: null,
       },
     });
 

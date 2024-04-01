@@ -10,6 +10,7 @@ export const CONTENT_DB_FIELDS = Object.freeze({
   id: true,
   createdAt: true,
   updatedAt: true,
+  deletedAt: true,
   title: true,
   active: true,
   contentType: true,
@@ -18,40 +19,36 @@ export const CONTENT_DB_FIELDS = Object.freeze({
 export class BaseContentRepository {
   constructor(private readonly contributionRepository = new ContributionRepository()) {}
 
-  async createBaseContent(content: NewContent, database = db): Promise<number> {
-    const insertedContent = database
+  async createBaseContent(content: NewContent): Promise<number> {
+    const insertedContent = await db
       .insert(contentTable)
       .values({
         title: content.title,
         active: content.active,
-        contentType: content.contentType,
         authorId: content.authorId,
         topicId: content.topicId,
       })
       .returning({ id: contentTable.id })
       .get();
 
-    this.contributionRepository.contributeInContent(insertedContent.id, content.authorId, database);
+    this.contributionRepository.contributeInContent(insertedContent.id, content.authorId, db);
 
     return insertedContent.id;
   }
 
-  async updateBaseContent(content: UpdateContent, database = db): Promise<BaseContent> {
-    const updatedAt = new Date().toISOString();
-
-    const authorId = await this.getAuthorId(content.id, database);
+  async updateBaseContent(content: UpdateContent): Promise<BaseContent> {
+    const authorId = await this.getAuthorId(content.id);
 
     if (authorId !== content.contributorId) {
       throw new Error('Você não tem permissão para editar este conteúdo');
     }
 
-    return database.transaction(async tx => {
+    return db.transaction(async tx => {
       tx.update(contentTable)
         .set({
           title: content.title,
           active: content.active,
           topicId: content.topicId,
-          updatedAt: updatedAt,
         })
         .execute();
 
@@ -61,8 +58,8 @@ export class BaseContentRepository {
     });
   }
 
-  async getBaseContent(id: number, database = db): Promise<BaseContent> {
-    const result = await database.query.contentTable.findFirst({
+  async getBaseContent(id: number): Promise<BaseContent> {
+    const result = await db.query.contentTable.findFirst({
       columns: CONTENT_DB_FIELDS,
       with: {
         author: {
@@ -82,46 +79,33 @@ export class BaseContentRepository {
     });
 
     if (!result) {
+      log.error('Erro ao buscar conteúdo', { id });
       throw new Error('Erro ao buscar conteúdo');
     }
 
     return result;
   }
 
-  async enableBaseContent(id: number, database = db): Promise<void> {
-    const updatedAt = new Date().toISOString();
-
+  async enableBaseContent(id: number): Promise<void> {
     try {
-      await database.update(contentTable).set({ active: true, updatedAt }).where(eq(contentTable.id, id)).execute();
+      await db.update(contentTable).set({ active: true }).where(eq(contentTable.id, id)).execute();
     } catch (error) {
       log.error('Erro ao habilitar trilha.', { id, error });
       throw new Error('Erro ao habilitar trilha.');
     }
   }
 
-  async omitBaseContent(id: number, database = db): Promise<void> {
-    const updatedAt = new Date().toISOString();
+  async omitBaseContent(id: number): Promise<void> {
     try {
-      await database.update(contentTable).set({ active: false, updatedAt }).where(eq(contentTable.id, id)).execute();
+      await db.update(contentTable).set({ active: false }).where(eq(contentTable.id, id)).execute();
     } catch (error) {
       log.error('Erro ao desabilitar trilha.', { id, error });
       throw new Error('Erro ao desabilitar trilha.');
     }
   }
 
-  async getAuthorId(contentId: number, database = db): Promise<string> {
-    const result = await database.query.contentTable.findFirst({
-      with: {
-        author: {
-          columns: {
-            id: true,
-          },
-        },
-      },
-      where(fields, operators) {
-        return operators.eq(fields.id, contentId);
-      },
-    });
+  async getAuthorId(contentId: number): Promise<string> {
+    const result = await db.select({authorId: contentTable.authorId}).from(contentTable).where(eq(contentTable.id, contentId)).get();
 
     if (!result) {
       log.error('Erro ao buscar autor do conteúdo de vídeo', { contentId });

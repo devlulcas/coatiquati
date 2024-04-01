@@ -22,6 +22,9 @@ export const CONTRIBUTOR_DB_FIELDS = Object.freeze({
   id: true,
   username: true,
   avatar: true,
+  createdAt: true,
+  updatedAt: true,
+  deletedAt: true,
 });
 
 export class UserRepository {

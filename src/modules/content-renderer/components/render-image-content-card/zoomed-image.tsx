@@ -49,7 +49,7 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
           <ResizablePanel className="max-h-[75dvh]">
             <Zoom>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt={data.alt} src={data.src} width={1240} height={1080} />
+              <img alt={data.description} src={data.src} width={1240} height={1080} />
             </Zoom>
           </ResizablePanel>
           <ResizableHandle withHandle className="mx-2" />

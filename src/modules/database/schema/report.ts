@@ -1,5 +1,6 @@
-import { relations, sql } from 'drizzle-orm';
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { relations } from 'drizzle-orm';
+import { blob, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { tableTimestampColumns } from '../lib/helpers';
 import { userTable } from './user';
 
 export const REPORT_REASON = {
@@ -17,6 +18,10 @@ export const REPORT_REASON = {
   platformPolicyViolation: 'platform_policy_violation',
 } as const;
 
+export const isValidReportReason = (reason: string): reason is ReportReason =>
+  Object.values(REPORT_REASON).includes(reason as any);
+
+
 type ReportReason = (typeof REPORT_REASON)[keyof typeof REPORT_REASON];
 
 export const reportTable = sqliteTable('report', {
@@ -30,12 +35,7 @@ export const reportTable = sqliteTable('report', {
   description: text('description').notNull(),
   status: text('status').$type<'pending' | 'resolved'>().notNull().default('pending'),
   moderatorId: text('moderator_id').references(() => userTable.id),
-  createdAt: text('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: text('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  ...tableTimestampColumns
 });
 
 export const reportTableRelations = relations(reportTable, ({ one }) => ({
@@ -56,13 +56,8 @@ export const banTable = sqliteTable('ban', {
     .references(() => userTable.id),
   moderatorId: text('moderator_id').references(() => userTable.id),
   reason: text('reason').notNull(),
-  expires: text('expires').notNull(),
-  createdAt: text('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: text('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  expires: blob('expires', { mode: 'bigint' }).notNull(),
+  ...tableTimestampColumns
 });
 
 export const banTableRelations = relations(banTable, ({ one }) => ({

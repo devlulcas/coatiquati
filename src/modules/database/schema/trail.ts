@@ -1,6 +1,7 @@
 import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentStatus, type ContentStatus } from '../../../shared/constants/content-status';
+import { tableTimestampColumns } from '../lib/helpers';
 import { trailContributionTable } from './contribution';
 import { topicTable } from './topic';
 import { trailSubscriptionTable } from './trail-subscription';
@@ -25,12 +26,7 @@ export const trailTable = sqliteTable('trail', {
       onDelete: 'no action',
       onUpdate: 'cascade',
     }),
-  createdAt: text('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: text('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+    ...tableTimestampColumns
 });
 
 export const trailTableRelations = relations(trailTable, ({ many, one }) => ({

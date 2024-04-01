@@ -8,13 +8,11 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { toast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useQueryClient } from '@tanstack/react-query';
 import { AlertOctagonIcon, SendIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
-import { createCommentMutation } from '../../actions/create-comment-mutation';
-import { COMMENTS_QUERY_KEY } from '../../hooks/use-comments-query';
+import { commentOnContentMutation } from '../../actions/comment-on-content-mutation';
 import { newCommentSchema } from '../../schemas/new-comment-schema';
 import { CircularProgress } from './circular-progress';
 
@@ -36,10 +34,8 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
     },
   });
 
-  const queryClient = useQueryClient();
-
   const createCommentMutationState = useServerActionMutation({
-    serverAction: createCommentMutation,
+    serverAction: commentOnContentMutation,
     onFailedAction: error => {
       toast({
         title: 'Erro ao comentar',
@@ -49,7 +45,6 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
     },
     onSuccessfulAction: () => {
       toast({ title: 'Seu comentário foi publicado com sucesso' });
-      queryClient.invalidateQueries({ queryKey: [COMMENTS_QUERY_KEY, contentId, parentCommentId] });
     },
   });
 

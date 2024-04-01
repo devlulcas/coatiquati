@@ -1,10 +1,11 @@
-import { relations, sql, type InferSelectModel } from 'drizzle-orm';
+import { relations, type InferSelectModel } from 'drizzle-orm';
 import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import type { Role } from '../../auth/constants/roles';
+import { tableTimestampColumns } from '../lib/helpers';
+import { commentVoteTable } from './comment';
 import { contentContributionTable, topicContributionTable, trailContributionTable } from './contribution';
 import { emailVerificationTokenTable } from './email-verification-token';
 import { passwordResetTokenTable } from './password-reset-token';
-import { sensibleOperationTokenTable } from './sensible-action-token';
 import { trailTable } from './trail';
 import { trailSubscriptionTable } from './trail-subscription';
 
@@ -18,37 +19,26 @@ export const userTable = sqliteTable('user', {
   avatar: text('avatar').notNull().default('default-user-avatar.png'),
   verified: integer('email_verified', { mode: 'boolean' }).default(false),
   isBanned: integer('is_banned', { mode: 'boolean' }).default(false),
-  createdAt: text('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: text('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  ...tableTimestampColumns
 });
 
 export const userTableRelations = relations(userTable, ({ one, many }) => ({
   emailVerificationTokens: many(emailVerificationTokenTable),
   passwordResetTokens: many(passwordResetTokenTable),
-  sensibleActionTokens: many(sensibleOperationTokenTable),
   trailSubscriptions: many(trailSubscriptionTable),
   authoredTrails: many(trailTable),
   authoredTopics: many(trailTable),
   trailContributions: many(trailContributionTable),
   topicContributions: many(topicContributionTable),
   contentContributions: many(contentContributionTable),
+  commentVotes: many(commentVoteTable),
 }));
 
 export const sessionTable = sqliteTable('user_session', {
   id: text('id').primaryKey(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => userTable.id),
-  activeExpires: blob('active_expires', {
-    mode: 'bigint',
-  }).notNull(),
-  idleExpires: blob('idle_expires', {
-    mode: 'bigint',
-  }).notNull(),
+  userId: text('user_id').notNull().references(() => userTable.id),
+  activeExpires: blob('active_expires', {    mode: 'bigint'}).notNull(),
+  idleExpires: blob('idle_expires', {    mode: 'bigint'}).notNull(),
 });
 
 export const keyTable = sqliteTable('user_key', {

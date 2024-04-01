@@ -32,7 +32,7 @@ export class TrailRepository {
    */
   async createTrail(trail: NewTrail, database = db): Promise<Trail> {
     try {
-      const newTrail = database.insert(trailTable).values(trail).returning({ id: trailTable.id }).get();
+      const newTrail = await database.insert(trailTable).values(trail).returning({ id: trailTable.id }).get();
       const data = await this.getTrailById(newTrail.id, database);
       return data;
     } catch (error) {
@@ -226,11 +226,11 @@ export class TrailRepository {
   /**
    * Atualiza uma trilha e a lista de contribuidores
    */
-  async updateTrail(trail: UpdateTrail, database = db): Promise<Trail> {
+  async updateTrail(trail: UpdateTrail): Promise<void> {
     const { contributorId, id, ...updatedData } = trail;
     const updatedAt = new Date().toISOString();
 
-    return database.transaction(async tx => {
+    return db.transaction(async tx => {
       try {
         tx.update(trailTable)
           .set({ ...updatedData, updatedAt })
@@ -241,10 +241,6 @@ export class TrailRepository {
           .set({ trailId: id, userId: contributorId, contributedAt: updatedAt })
           .where(eq(trailContributionTable.trailId, id))
           .execute();
-
-        const data = await this.getTrailById(id, tx);
-
-        return data;
       } catch (error) {
         log.error('Erro ao atualizar trilha', { error, trail });
         tx.rollback();
@@ -256,10 +252,11 @@ export class TrailRepository {
   /**
    * Omite uma trilha
    */
-  async omitTrail(id: number, database = db): Promise<void> {
+  async omitTrail(id: number): Promise<void> {
     const updatedAt = new Date().toISOString();
+    
     try {
-      await database
+      await db
         .update(trailTable)
         .set({ status: contentStatus.DRAFT, updatedAt })
         .where(eq(trailTable.id, id))

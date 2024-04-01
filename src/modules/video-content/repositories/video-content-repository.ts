@@ -15,6 +15,7 @@ export const VIDEO_CONTENT_DB_FIELDS = Object.freeze({
   id: true,
   createdAt: true,
   updatedAt: true,
+  deletedAt: true,
   description: true,
   contentId: true,
   src: true,
@@ -24,13 +25,8 @@ export const VIDEO_CONTENT_DB_FIELDS = Object.freeze({
 export class VideoContentRepository {
   constructor(private readonly baseContentRepository: BaseContentRepository = new BaseContentRepository()) {}
 
-  async getContent(contentId: number, database = db): Promise<ContentVideo> {
-    const resultVideo: ContentVideo | undefined = await database.query.contentVideoTable.findFirst({
-      columns: VIDEO_CONTENT_DB_FIELDS,
-      where(fields, operators) {
-        return operators.eq(fields.contentId, contentId);
-      },
-    });
+  async getContent(contentId: number): Promise<ContentVideo> {
+    const resultVideo: ContentVideo | undefined = await db.select().from(contentVideoTable).where(eq(contentVideoTable.contentId, contentId)).get();
 
     if (!resultVideo) {
       log.error('Erro ao buscar conteúdo de vídeo', { contentId });
@@ -40,8 +36,8 @@ export class VideoContentRepository {
     return resultVideo;
   }
 
-  async createContent(baseContent: NewContent, video: NewContentVideo, database = db): Promise<ContentVideo> {
-    const contentId = await database.transaction(async tx => {
+  async createContent(baseContent: NewContent, video: NewContentVideo): Promise<ContentVideo> {
+    const contentId = await db.transaction(async tx => {
       try {
         const insertedContentId = await this.baseContentRepository.createBaseContent(baseContent, tx);
 

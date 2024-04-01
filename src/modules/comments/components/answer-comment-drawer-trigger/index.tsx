@@ -20,11 +20,11 @@ import {
 import { useMediaQuery } from '@/shared/hooks/use-media-query';
 import { MessageSquarePlusIcon } from 'lucide-react';
 import { memo, useState } from 'react';
-import type { CommentWithAuthor } from '../../types/comment';
+import type { Comment } from '../../types/comment';
 import { AddNewCommentForm } from '../add-new-comment-form';
 
 type AnswerCommentDrawerTriggerProps = {
-  originalComment: CommentWithAuthor;
+  originalComment: Comment;
 };
 
 function InnerAnswerCommentDrawerTrigger({ originalComment }: AnswerCommentDrawerTriggerProps) {

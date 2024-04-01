@@ -7,9 +7,9 @@ import type { NewTrailCategorySchema } from '../schemas/new-trail-category-schem
 import type { TrailCategory } from '../types/trail-category';
 
 export class TrailCategoryRepository {
-  async upsertCategory(category: NewTrailCategorySchema, database = db): Promise<void> {
+  async upsertCategory(category: NewTrailCategorySchema): Promise<void> {
     try {
-      await database
+      await db
         .insert(categoryTable)
         .values({ name: category.name, authorId: category.authorId })
         .onConflictDoNothing()
@@ -20,13 +20,13 @@ export class TrailCategoryRepository {
     }
   }
 
-  async getCategories(params?: Partial<PaginationSchemaWithSearch>, database = db): Promise<TrailCategory[]> {
+  async getCategories(params?: Partial<PaginationSchemaWithSearch>): Promise<TrailCategory[]> {
     const search = params?.search || null;
     const skip = params?.skip || 0;
     const take = params?.take || 40;
 
     try {
-      let query = database.select({ name: categoryTable.name }).from(categoryTable).offset(skip).limit(take);
+      let query = db.select({ name: categoryTable.name }).from(categoryTable).offset(skip).limit(take).$dynamic();
 
       if (search) {
         query = query.where(like(categoryTable.name, `%${search}%`));
