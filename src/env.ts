@@ -13,6 +13,7 @@ export const env = createEnv({
     DEV_MAIL_PASS: z.string().min(1),
     MAIL_RESEND_API_KEY: z.string().min(1),
     MAIL_FROM: z.string().min(1),
+    DATABASE_AUTH_TOKEN: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_WEBSITE: z.string().min(1),
@@ -29,5 +30,6 @@ export const env = createEnv({
     DEV_MAIL_PASS: process.env.DEV_MAIL_PASS,
     MAIL_RESEND_API_KEY: process.env.MAIL_RESEND_API_KEY,
     MAIL_FROM: process.env.MAIL_FROM,
+    DATABASE_AUTH_TOKEN: process.env.DATABASE_AUTH_TOKEN,
   },
 });

@@ -11,7 +11,7 @@ import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verifica
 export class EmailVerificationTokenRepository {
   async createVerificationToken(userId: string, database = db): Promise<EmailVerificationToken | null> {
     try {
-      const storedUserTokens = database
+      const storedUserTokens = await database
         .select({
           id: emailVerificationTokenTable.id,
           userId: emailVerificationTokenTable.userId,
@@ -52,10 +52,10 @@ export class EmailVerificationTokenRepository {
     }
   }
 
-  async getVerificationTokenById(tokenId: string, database = db): Promise<EmailVerificationToken | null> {
-    const results = await database.transaction(async tx => {
+  async getVerificationTokenById(tokenId: string): Promise<EmailVerificationToken | null> {
+    const results = await db.transaction(async tx => {
       try {
-        const storedToken = tx
+        const storedToken = await tx
           .select()
           .from(emailVerificationTokenTable)
           .where(eq(emailVerificationTokenTable.id, tokenId))

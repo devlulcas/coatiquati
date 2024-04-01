@@ -19,8 +19,8 @@ export class CommentRepository {
     }
   }
 
-  getCommentsByContentId(contentId: number, database = db): CommentWithAuthor[] {
-    const comments = database
+  async getCommentsByContentId(contentId: number, database = db): Promise<CommentWithAuthor[]> {
+    const comments = await database
       .select({
         id: contentCommentTable.id,
         createdAt: contentCommentTable.createdAt,
@@ -50,8 +50,8 @@ export class CommentRepository {
     return comments.map(comment => this.toCommentWithAuthor(comment));
   }
 
-  getCommentResponsesByCommentId(commentId: number, database = db): CommentWithAuthor[] {
-    const comments = database
+  async getCommentResponsesByCommentId(commentId: number, database = db): Promise<CommentWithAuthor[]> {
+    const comments = await database
       .select({
         id: contentCommentTable.id,
         createdAt: contentCommentTable.createdAt,

@@ -1,7 +1,8 @@
 import { env } from '@/env';
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
+// import { drizzle } from 'drizzle-orm/better-sqlite3';
+import { drizzle } from 'drizzle-orm/libsql';
 
+import { createClient } from '@libsql/client';
 import * as commentSchema from './schema/comment';
 import * as contentSchema from './schema/content';
 import * as contributionSchema from './schema/contribution';
@@ -15,7 +16,9 @@ import * as trailSchema from './schema/trail';
 import * as trailSubscriptionSchema from './schema/trail-subscription';
 import * as useSchema from './schema/user';
 
-export const sqlite = new Database(env.DATABASE_URL);
+// export const sqlite = new Database(env.DATABASE_URL);
+
+export const sqlite = createClient({ url: env.DATABASE_URL, authToken: env.DATABASE_AUTH_TOKEN });
 
 export const db = drizzle(sqlite, {
   schema: {

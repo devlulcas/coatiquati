@@ -20,6 +20,7 @@
     "@dnd-kit/sortable": "^7.0.2",
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^3.3.4",
+    "@libsql/client": "^0.6.0",
     "@lucia-auth/adapter-sqlite": "^2.0.1",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-dialog": "1.0.4",
