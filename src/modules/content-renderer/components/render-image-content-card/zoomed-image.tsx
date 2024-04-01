@@ -39,7 +39,7 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="lg:max-w-[45vw] max-h-[95dvh]">
+      <DialogContent className="max-h-[95dvh] lg:max-w-[45vw]">
         <DialogHeader>
           <DialogTitle>{meta.title}</DialogTitle>
           <DialogDescription className="text-md text-muted-foreground">{data.description}</DialogDescription>
@@ -54,7 +54,7 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
           </ResizablePanel>
           <ResizableHandle withHandle className="mx-2" />
           <ResizablePanel>
-            <aside className="bg-secondary text-secondary-foreground p-4 rounded border flex flex-col gap-2 w-full">
+            <aside className="flex w-full flex-col gap-2 rounded border bg-secondary p-4 text-secondary-foreground">
               <h4 className="text-md font-bold">{meta.title}</h4>
 
               <ScrollArea className="h-1/2 py-2">
@@ -81,7 +81,7 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
                 {meta.contributors.map(contributor => (
                   <li
                     key={contributor.user.id}
-                    className="flex gap-2 items-center border border-primary/20 p-1 rounded overflow-x-clip"
+                    className="flex items-center gap-2 overflow-x-clip rounded border border-primary/20 p-1"
                   >
                     <UserAvatar user={contributor.user} className="rounded" />
                     <Link className="truncate" href={createProfileUrl(contributor.user.username)}>

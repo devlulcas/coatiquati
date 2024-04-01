@@ -9,14 +9,14 @@ type ResetPasswordEmailProps = {
 export function ResetPasswordEmail({ name, url }: ResetPasswordEmailProps) {
   return (
     <GenericEmailTemplate title="Alteração de senha">
-      <Heading as="h2" className="text-xl font-bold text-center text-neutral-100">
+      <Heading as="h2" className="text-center text-xl font-bold text-neutral-100">
         Olá, {name}! Clique no link abaixo para alterar sua senha:
       </Heading>
 
       <Section className="text-center">
         <Button
           href={url}
-          className="text-center text-neutral-100 bg-violet-700 rounded px-4 py-2 border border-violet-200"
+          className="rounded border border-violet-200 bg-violet-700 px-4 py-2 text-center text-neutral-100"
         >
           Clique aqui para alterar sua senha
         </Button>
@@ -32,7 +32,7 @@ export function ResetPasswordEmail({ name, url }: ResetPasswordEmailProps) {
         </Row>
       </Section>
 
-      <Text className="text-red-300 text-sm">Se você não solicitou este e-mail, ignore-o.</Text>
+      <Text className="text-sm text-red-300">Se você não solicitou este e-mail, ignore-o.</Text>
     </GenericEmailTemplate>
   );
 }

@@ -14,10 +14,10 @@ export default async function Page({ params }: PageProps) {
   const topicData = await getTopicUseCase.execute({ id: topicId });
 
   return (
-    <div className="py-8 container">
-      <header className="flex p-2 border bg-background/75 rounded flex-col gap-2 mb-3">
-        <h2 className="text-2xl font-bold mb-4 break-words">{topicData.title}</h2>
-        <p className="text-lg text-muted-foreground break-words">{topicData.description}</p>
+    <div className="container py-8">
+      <header className="mb-3 flex flex-col gap-2 rounded border bg-background/75 p-2">
+        <h2 className="mb-4 break-words text-2xl font-bold">{topicData.title}</h2>
+        <p className="break-words text-lg text-muted-foreground">{topicData.description}</p>
       </header>
 
       <NewRichTextContentForm topicId={topicId} />

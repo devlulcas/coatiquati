@@ -39,7 +39,7 @@ export function ProfileHeading({ user, isCurrentUser }: ProfileHeadingProps) {
         <p className="text-foreground/75">Por aqui desde {createdAt}</p>
         <div className="flex items-center gap-2">
           <UserRoleBadge role={user.role} className="w-fit text-sm font-bold" />
-          <span>{user.emailVerified ? 'Verificado' : 'Não verificado'}</span>
+          <span>{user.verified ? 'Verificado' : 'Não verificado'}</span>
         </div>
       </div>
     </div>

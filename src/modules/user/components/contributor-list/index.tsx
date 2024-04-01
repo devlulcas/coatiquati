@@ -11,9 +11,9 @@ export function ContributorList({ contributors }: ContributorListProps) {
   return (
     <ul className="flex items-center">
       {contributors.map((contributor, index, list) => (
-        <li key={contributor.id} className="first:ml-0 -ml-2" style={{ zIndex: list.length - index }}>
+        <li key={contributor.id} className="-ml-2 first:ml-0" style={{ zIndex: list.length - index }}>
           <Link href={createProfileUrl(contributor.username)}>
-            <Avatar className="border border-foreground/25 rounded-full">
+            <Avatar className="rounded-full border border-foreground/25">
               <AvatarFallback>{contributor.username.slice(0, 2)}</AvatarFallback>
               <AvatarImage src={contributor.avatar} alt={contributor.username} />
             </Avatar>

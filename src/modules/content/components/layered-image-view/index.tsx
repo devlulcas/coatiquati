@@ -21,12 +21,12 @@ export function LayeredImageView({ layers }: LayeredImageViewProps) {
   };
 
   return (
-    <div className="flex flex-col gap-2 border p-2 rounded-lg w-fit">
-      <ul className="relative w-[350px] h-[350px] overflow-hidden rounded-lg">
+    <div className="flex w-fit flex-col gap-2 rounded-lg border p-2">
+      <ul className="relative h-[350px] w-[350px] overflow-hidden rounded-lg">
         {layers.map((layer: LayeredImage, index: number) => (
           <li
             key={index}
-            className="absolute top-0 left-0"
+            className="absolute left-0 top-0"
             style={{
               opacity: (() => {
                 if (index === 0) return 1;
@@ -39,7 +39,7 @@ export function LayeredImageView({ layers }: LayeredImageViewProps) {
         ))}
       </ul>
 
-      <div className="flex gap-2 w-[350px]">
+      <div className="flex w-[350px] gap-2">
         {layers.map((_: LayeredImage, index: number) => {
           if (index === 0) return null;
 

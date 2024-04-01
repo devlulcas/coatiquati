@@ -35,7 +35,7 @@ function InnerAnswerCommentDrawerTrigger({ originalComment }: AnswerCommentDrawe
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button size="sm" variant="outline" className="gap-2 items-center">
+          <Button size="sm" variant="outline" className="items-center gap-2">
             <span>Responder</span>
             <MessageSquarePlusIcon size={16} />
           </Button>
@@ -56,7 +56,7 @@ function InnerAnswerCommentDrawerTrigger({ originalComment }: AnswerCommentDrawe
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button size="icon" variant="outline" className="h-9 w-9 gap-2 items-center w">
+        <Button size="icon" variant="outline" className="w h-9 w-9 items-center gap-2">
           <span className="sr-only">Responder</span>
           <MessageSquarePlusIcon size={16} />
         </Button>

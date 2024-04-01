@@ -93,7 +93,7 @@ export class CommentRepository {
       author: {
         id: fromDatabase.author!.id,
         username: fromDatabase.author!.username,
-        avatar: fromDatabase.author!.avatar,
+        avatar: fromDatabase.author!.avatar ?? 'default-user-avatar.png',
       },
     };
   }

@@ -15,8 +15,8 @@ export const userTable = sqliteTable('user', {
   username: text('username').notNull().unique(),
   role: text('role').$type<Role>().notNull(),
   email: text('email').notNull().unique(),
-  avatar: text('avatar'),
-  email_verified: integer('email_verified', { mode: 'boolean' }).default(false),
+  avatar: text('avatar').notNull().default('default-user-avatar.png'),
+  verified: integer('email_verified', { mode: 'boolean' }).default(false),
   isBanned: integer('is_banned', { mode: 'boolean' }).default(false),
   createdAt: text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)

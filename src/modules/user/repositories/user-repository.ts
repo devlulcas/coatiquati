@@ -5,17 +5,17 @@ import { log } from '@/modules/logging/lib/pino';
 import { CATEGORY_DB_FIELDS, TRAIL_DB_FIELDS } from '@/modules/trail/repositories/trail-repository';
 import type { UpdateUser, User, UserProfile } from '@/modules/user/types/user';
 import { eq } from 'drizzle-orm';
-import { userTableToUserMapper } from '../lib/user-table-to-user-mapper';
 
 export const USER_DB_FIELDS = Object.freeze({
-  id: true,
-  username: true,
   avatar: true,
-  email: true,
-  email_verified: true,
   createdAt: true,
-  updatedAt: true,
+  email: true,
+  id: true,
+  isBanned: true,
   role: true,
+  updatedAt: true,
+  username: true,
+  verified: true,
 });
 
 export const CONTRIBUTOR_DB_FIELDS = Object.freeze({
@@ -41,7 +41,7 @@ export class UserRepository {
         throw new Error('Usuário não encontrado');
       }
 
-      return userTableToUserMapper(data);
+      return data;
     } catch (error) {
       log.error(error);
       throw new Error('Erro ao atualizar usuário');
@@ -59,7 +59,7 @@ export class UserRepository {
         return null;
       }
 
-      return userTableToUserMapper(data);
+      return data;
     } catch (error) {
       log.error(error);
       return null;
@@ -67,7 +67,7 @@ export class UserRepository {
   }
 
   async getUsers(params: PaginationSchemaWithSearch, database = db): Promise<User[]> {
-    const data = await database.query.userTable.findMany({
+    return database.query.userTable.findMany({
       columns: USER_DB_FIELDS,
       limit: params.take,
       offset: params.skip,
@@ -78,8 +78,6 @@ export class UserRepository {
         );
       },
     });
-
-    return data.map(user => userTableToUserMapper(user));
   }
 
   async getUserProfile(username: string, database = db): Promise<UserProfile | null> {
@@ -115,7 +113,7 @@ export class UserRepository {
       }
 
       const result: UserProfile = {
-        ...userTableToUserMapper(data),
+        ...data,
         authoredTrails: data.authoredTrails.map(trail => trail),
       };
 

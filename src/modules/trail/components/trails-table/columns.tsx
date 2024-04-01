@@ -46,7 +46,7 @@ export const trailsColumns: ColumnDef<Trail>[] = [
     cell: ({ row }) => {
       return (
         <Image
-          className="rounded-md mx-auto"
+          className="mx-auto rounded-md"
           src={row.original.thumbnail}
           alt={row.original.title}
           height={50}

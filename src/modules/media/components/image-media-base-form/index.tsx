@@ -73,7 +73,7 @@ export function ImageMediaBaseForm({ onSubmit, className, defaultValues }: Image
         />
 
         <Button
-          className="w-full mt-auto"
+          className="mt-auto w-full"
           type="submit"
           disabled={form.formState.isSubmitting}
           isLoading={form.formState.isSubmitting}

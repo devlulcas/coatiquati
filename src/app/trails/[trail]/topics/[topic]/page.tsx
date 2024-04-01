@@ -49,20 +49,20 @@ export default async function Page({ params }: PageProps) {
   ).map(([type, count]) => ({ type: type as keyof typeof contentTypeIcon, count }));
 
   return (
-    <div className="py-8 container flex flex-col gap-2">
-      <header className="flex p-2 border bg-background/75 rounded flex-col gap-2">
-        <h2 className="text-2xl font-bold mb-2">{topicData.title}</h2>
+    <div className="container flex flex-col gap-2 py-8">
+      <header className="flex flex-col gap-2 rounded border bg-background/75 p-2">
+        <h2 className="mb-2 text-2xl font-bold">{topicData.title}</h2>
         <p className="text-lg text-muted-foreground">{topicData.description}</p>
       </header>
 
-      <div className="flex p-2 border bg-background/75 rounded flex-col gap-2">
+      <div className="flex flex-col gap-2 rounded border bg-background/75 p-2">
         <div className="flex flex-wrap gap-2">
           <span>Neste tópico seus colegas já contribuíram com:</span>
-          <ul className="flex gap-2 items-center flex-wrap w-fit">
+          <ul className="flex w-fit flex-wrap items-center gap-2">
             {contentTypesAvailable.map(contentType => (
               <li
                 key={contentType.type}
-                className="p-1 relative flex items-center gap-1 border rounded-lg bg-card/90 text-card-foreground text-xs lowercase"
+                className="relative flex items-center gap-1 rounded-lg border bg-card/90 p-1 text-xs lowercase text-card-foreground"
               >
                 {contentTypeIcon[contentType.type].icon}
                 <span>
@@ -75,8 +75,8 @@ export default async function Page({ params }: PageProps) {
         </div>
 
         <span>Contribua você também com imagens, vídeos, links e textos dos seus estudos neste tópico:</span>
-        <div className="flex gap-2 items-center flex-wrap">
-          <Button asChild variant="secondary" className="flex gap-2 items-center">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild variant="secondary" className="flex items-center gap-2">
             <Link href={createTrailUrl(topicData.trailId)}>
               <ArrowLeftIcon size={16} />
               Voltar
@@ -87,7 +87,7 @@ export default async function Page({ params }: PageProps) {
         </div>
       </div>
 
-      <h3 className="text-xl font-bold mt-6 mb-4">Conteúdos</h3>
+      <h3 className="mb-4 mt-6 text-xl font-bold">Conteúdos</h3>
 
       <ul className="flex flex-col gap-3">
         {topicData.contents.map(content => (

@@ -24,5 +24,5 @@ export default async function EditContentLayout({ children, params }: EditConten
 
   if (!canEdit) redirect('/');
 
-  return <div className="py-8 container">{children}</div>;
+  return <div className="container py-8">{children}</div>;
 }

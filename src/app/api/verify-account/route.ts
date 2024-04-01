@@ -1,13 +1,13 @@
-import { CheckAccountVerificationTokenUseCase } from '@/modules/auth/use-cases/check-account-verification-token-use-case';
+import { checkAccountVerificationTokenMutation } from '@/modules/auth/actions/check-account-verification-token-mutation';
 import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
-import { type NextRequest, NextResponse } from 'next/server';
+import { log } from '@/modules/logging/lib/pino';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export const GET = async (request: NextRequest) => {
   const token = request.nextUrl.searchParams.get('token') ?? '';
 
   try {
-    const checkAccountVerificationTokenUseCase = new CheckAccountVerificationTokenUseCase();
-    const session = await checkAccountVerificationTokenUseCase.execute({ token });
+    const session = await checkAccountVerificationTokenMutation(token);
 
     const authRequest = handleApiAuthRequest(request);
 
@@ -17,8 +17,8 @@ export const GET = async (request: NextRequest) => {
       status: 302,
       headers: { Location: '/' },
     });
-  } catch (e) {
-    console.error(e);
+  } catch (error) {
+    log.error('Erro ao verificar token de verificação de conta', { error });
     return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
   }
 };

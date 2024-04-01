@@ -28,7 +28,7 @@ export default async function Page() {
         <Link
           href="/trails"
           style={{ backgroundSize: '300% 300%' }}
-          className="coati-animated-line animate-background mt-8 flex w-fit rounded-md bg-gradient-to-tr from-brand-500 to-purple-600 p-[2px]"
+          className="coati-animated-line mt-8 flex w-fit animate-background rounded-md bg-gradient-to-tr from-brand-500 to-purple-600 p-[2px]"
         >
           <span className="flex h-12 w-fit items-center justify-center rounded-md bg-white px-6 text-black transition duration-300 ease-in-out hover:shadow-lg">
             Conheça as trilhas

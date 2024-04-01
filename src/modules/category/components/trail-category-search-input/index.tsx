@@ -39,18 +39,18 @@ export function TrailCategorySearchInput({ className, setValue, value }: TrailCa
     <div className={cn('relative', className)}>
       <Input
         type="text"
-        className="border rounded-md w-full mb-2"
+        className="mb-2 w-full rounded-md border"
         placeholder="Pesquisar categoria"
         value={search}
         onChange={e => setSearch(e.target.value)}
       />
 
       {trailCategorySearchQuery.isLoading && (
-        <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary" />
+        <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-t-2 border-primary" />
       )}
 
       {trailCategorySearchQuery.isSuccess && trailCategorySearchQuery.data.length > 0 && (
-        <div className="border rounded-md p-3 flex flex-col gap-2 bg-muted">
+        <div className="flex flex-col gap-2 rounded-md border bg-muted p-3">
           <p className="text-sm text-muted-foreground">Categorias encontradas</p>
 
           {trailCategorySearchQuery.data.map(trailCategory => (

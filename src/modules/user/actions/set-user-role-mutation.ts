@@ -63,7 +63,7 @@ export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Us
 
   const desiredRole = isAdmin(validatedParams.data.role) ? roles.ADMIN : roles.USER;
 
-  if (targetUser.emailVerified === false && desiredRole === roles.ADMIN) {
+  if (targetUser.verified === false && desiredRole === roles.ADMIN) {
     throw new Error('Usuário alvo não verificado. Logo, não pode ter suas permissões alteradas.');
   }
 

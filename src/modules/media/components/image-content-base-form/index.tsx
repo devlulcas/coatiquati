@@ -38,11 +38,11 @@ export function ImageContentBaseForm({ onSubmit, className, defaultValues }: Ima
         className={cn('flex h-full flex-col gap-4', className)}
       >
         {form.watch('src') ? (
-          <div className="w-full flex">
+          <div className="flex w-full">
             <Image
               src={form.watch('src')}
               alt={form.watch('alt')}
-              className="rounded-lg mx-auto"
+              className="mx-auto rounded-lg"
               width={500}
               height={500}
             />
@@ -115,7 +115,7 @@ export function ImageContentBaseForm({ onSubmit, className, defaultValues }: Ima
           )}
         />
 
-        <Button className="w-full mt-auto" type="submit">
+        <Button className="mt-auto w-full" type="submit">
           Adicionar imagem
         </Button>
       </form>

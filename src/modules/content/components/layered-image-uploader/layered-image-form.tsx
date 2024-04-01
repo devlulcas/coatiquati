@@ -42,7 +42,7 @@ export function LayeredImageForm({ onAdd, defaultValue, className }: LayeredImag
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('flex h-full flex-col gap-4 p-4 border rounded-lg', className)}
+        className={cn('flex h-full flex-col gap-4 rounded-lg border p-4', className)}
         action="/api/sign-in"
       >
         <ImageUploaderInput
@@ -81,7 +81,7 @@ export function LayeredImageForm({ onAdd, defaultValue, className }: LayeredImag
 
         <Button
           variant="secondary"
-          className="w-full mt-auto"
+          className="mt-auto w-full"
           type="submit"
           disabled={form.formState.isSubmitting}
           isLoading={form.formState.isSubmitting}

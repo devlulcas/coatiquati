@@ -3,13 +3,16 @@
 declare namespace Lucia {
   // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   type Auth = import('./modules/auth/services/lucia').Auth;
+
   type DatabaseUserAttributes = Omit<
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     import('./modules/database/schema/user').AuthUserTable,
-    'id' | 'createdAt' | 'updatedAt' | 'avatar' | 'email_verified'
+    'id' | 'createdAt' | 'updatedAt' | 'isBanned' | 'verified'
   > & {
-    email_verified: number;
+    isBanned: number;
+    verified: number;
   };
+
   type DatabaseSessionAttributes = {
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     id: import('./modules/database/schema/user').AuthUserTable['id'];

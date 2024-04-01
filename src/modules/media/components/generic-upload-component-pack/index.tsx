@@ -99,9 +99,9 @@ export const UploadDropzone = (props: React.ComponentPropsWithoutRef<typeof Uplo
 
           if (isUploading) {
             return (
-              <div className="flex items-center flex-col justify-center">
+              <div className="flex flex-col items-center justify-center">
                 <span className="text-brand-500">Fazendo upload do arquivo...</span>
-                <div className="flex items-center gap-2 justify-center w-full">
+                <div className="flex w-full items-center justify-center gap-2">
                   <Progress className="ml-2" value={uploadProgress} />
                   <Badge>{uploadProgress}%</Badge>
                 </div>

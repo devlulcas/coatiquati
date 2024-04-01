@@ -25,7 +25,7 @@ export function ImageMediaDialogTrigger({ onSubmit, defaultValues }: ImageMediaD
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="flex gap-2 items-center justify-center">
+        <Button className="flex items-center justify-center gap-2">
           <ImagePlusIcon /> Contribuir com uma imagem
         </Button>
       </DialogTrigger>

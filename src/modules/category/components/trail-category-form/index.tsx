@@ -73,12 +73,12 @@ export function TrailCategoryForm({ className }: TrailCategoryFormProps) {
         />
 
         {trailCategorySearchQuery.isSuccess && trailCategorySearchQuery.data.length > 0 && (
-          <div className="border rounded-md p-3 flex flex-col gap-2 bg-muted">
+          <div className="flex flex-col gap-2 rounded-md border bg-muted p-3">
             <p className="text-sm text-muted-foreground">
               Antes de confirmar, verifique se as categorias abaixo são parecidas com a que está criando, caso seja,
               você deve desistir de criar uma nova e usar uma das que já existem.
             </p>
-            <ul className="flex gap-2 flex-wrap">
+            <ul className="flex flex-wrap gap-2">
               {trailCategorySearchQuery.data.map(category => (
                 <li key={category.name}>
                   <Badge>{category.name}</Badge>

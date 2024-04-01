@@ -71,9 +71,11 @@ export function TopicBaseForm({ defaultValues, onSubmit, className }: TopicBaseF
           )}
         />
 
-        <Button className="w-full" type="submit" isLoading={form.formState.isSubmitting}
+        <Button
+          className="w-full"
+          type="submit"
+          isLoading={form.formState.isSubmitting}
           disabled={form.formState.isSubmitting}
-          
         >
           Salvar
         </Button>

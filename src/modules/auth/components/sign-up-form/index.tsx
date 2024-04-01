@@ -49,12 +49,12 @@ export function SignUpForm() {
   };
 
   return (
-    <div className="flex items-center justify-center flex-col h-[--view-height]">
+    <div className="flex h-[--view-height] flex-col items-center justify-center">
       <Form {...form}>
         <form
           method="POST"
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 h-fit bg-card border rounded-md shadow-md px-4 py-6 min-w-[400px]"
+          className="flex h-fit min-w-[400px] flex-col gap-4 rounded-md border bg-card px-4 py-6 shadow-md"
           action="/api/sign-up"
         >
           <h1 className="text-3xl font-bold">Cadastrar-se</h1>
@@ -100,7 +100,7 @@ export function SignUpForm() {
             )}
           />
 
-          <Button className="w-full mt-4" type="submit" isLoading={form.formState.isSubmitting}>
+          <Button className="mt-4 w-full" type="submit" isLoading={form.formState.isSubmitting}>
             Entrar
           </Button>
         </form>

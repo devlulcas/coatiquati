@@ -25,18 +25,18 @@ export function GenericEmailTemplate({ children, title }: GenericEmailTemplatePr
       <Body>
         <Tailwind>
           <Container>
-            <div className="border border-neutral-100 bg-neutral-950 rounded w-full">
-              <div className="flex p-4 items-center">
+            <div className="w-full rounded border border-neutral-100 bg-neutral-950">
+              <div className="flex items-center p-4">
                 <Img src="/favicon.svg" alt="Logo" aria-hidden={true} width={48} height={48} />
 
-                <Heading as="h1" ml={4} className="text-xl font-bold text-center text-neutral-100">
+                <Heading as="h1" ml={4} className="text-center text-xl font-bold text-neutral-100">
                   {title}
                 </Heading>
               </div>
 
               <Hr className="border-neutral-800" />
 
-              <div className="flex space-y-2 p-4 w-full flex-col">{children}</div>
+              <div className="flex w-full flex-col space-y-2 p-4">{children}</div>
             </div>
           </Container>
         </Tailwind>

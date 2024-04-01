@@ -9,11 +9,11 @@ export default function Page() {
   };
 
   return (
-    <main className="flex justify-center gap-2 lg:gap-8 min-h-[--view-height] flex-col lg:flex-row container">
-      <div className="lg:w-1/2 p-4 border bg-background/50 my-4 rounded-lg flex flex-col">
+    <main className="container flex min-h-[--view-height] flex-col justify-center gap-2 lg:flex-row lg:gap-8">
+      <div className="my-4 flex flex-col rounded-lg border bg-background/50 p-4 lg:w-1/2">
         <h1 className="text-4xl font-bold">Sobre o projeto</h1>
 
-        <p className="prose my-8 text-justify text-white text-lg">
+        <p className="prose my-8 text-justify text-lg text-white">
           CoatiQuati é um projeto de
           <a className="text-brand-400 hover:text-brand-300" href={links.github}>
             {' '}
@@ -29,7 +29,7 @@ export default function Page() {
         </p>
 
         <p>
-          <em className="text-brand-400 hover:text-brand-300 font-semibold">Porque o nome CoatiQuati?</em>
+          <em className="font-semibold text-brand-400 hover:text-brand-300">Porque o nome CoatiQuati?</em>
           <br />O quati é um animal que vive na América do Sul e Central, e é conhecido por ser um animal curioso e que
           gosta de se aventurar. O nome CoatiQuati é uma brincadeira com o nome do animal em inglês e em português.
         </p>
@@ -40,7 +40,7 @@ export default function Page() {
       <Image
         src={coatiAvif}
         alt="Coati"
-        className="lg:w-1/2 object-cover my-4 rounded-lg filter grayscale hover:grayscale-0 transition-all duration-300"
+        className="my-4 rounded-lg object-cover grayscale filter transition-all duration-300 hover:grayscale-0 lg:w-1/2"
       />
     </main>
   );

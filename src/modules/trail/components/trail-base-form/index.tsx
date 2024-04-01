@@ -35,7 +35,7 @@ export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseF
       <form
         method="POST"
         onSubmit={form.handleSubmit(onSubmit)}
-        className={cn('flex flex-col gap-4 w-full', className)}
+        className={cn('flex w-full flex-col gap-4', className)}
       >
         <FormField
           control={form.control}

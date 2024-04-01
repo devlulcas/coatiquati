@@ -49,13 +49,13 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex h-full flex-col gap-4', className)}
       >
-        <div className={cn('aspect-video h-80 rounded-lg overflow-hidden ', youtubeId ? 'bg-black' : 'bg-neutral-900')}>
+        <div className={cn('aspect-video h-80 overflow-hidden rounded-lg ', youtubeId ? 'bg-black' : 'bg-neutral-900')}>
           {youtubeId ? (
             <YouTubeEmbed id={youtubeId} title={form.watch('title')} />
           ) : (
-            <div className="flex items-center justify-center gap-4 h-full">
-              <VideoOffIcon className="w-16 h-16 text-neutral-500" />
-              <p className="text-neutral-500 text-lg">Sem vídeo</p>
+            <div className="flex h-full items-center justify-center gap-4">
+              <VideoOffIcon className="h-16 w-16 text-neutral-500" />
+              <p className="text-lg text-neutral-500">Sem vídeo</p>
             </div>
           )}
         </div>
@@ -116,7 +116,7 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
           )}
         />
 
-        <Button className="w-full mt-auto" type="submit">
+        <Button className="mt-auto w-full" type="submit">
           Salvar vídeo
         </Button>
       </form>

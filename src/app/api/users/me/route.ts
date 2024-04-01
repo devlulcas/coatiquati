@@ -1,6 +1,6 @@
 import { auth } from '@/modules/auth/services/lucia';
 import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export const GET = async (request: NextRequest) => {
   const authRequest = handleApiAuthRequest(request);
@@ -18,6 +18,6 @@ export const GET = async (request: NextRequest) => {
     id: user.id,
     username: user.username,
     role: user.role,
-    emailVerified: user.emailVerified,
+    verified: user.verified,
   });
 };

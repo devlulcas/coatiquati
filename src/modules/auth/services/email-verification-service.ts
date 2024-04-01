@@ -2,9 +2,6 @@ import { log } from '@/modules/logging/lib/pino';
 import { isWithinExpiration } from 'lucia/utils';
 import { EmailVerificationTokenRepository } from '../repositories/email-verification-token-repository';
 
-type EmailVerificationToken = string;
-type UserId = string;
-
 export class EmailVerificationService {
   constructor(
     private emailVerificationTokenRepository: EmailVerificationTokenRepository = new EmailVerificationTokenRepository(),
@@ -16,7 +13,7 @@ export class EmailVerificationService {
    * @param userId Id do usuário
    * @returns O token de verificação de email ou null se não for possível gerar um token
    */
-  async generateEmailVerificationToken(userId: string): Promise<EmailVerificationToken | null> {
+  async generateToken(userId: string): Promise<string | null> {
     try {
       const insertedToken = await this.emailVerificationTokenRepository.createVerificationToken(userId);
       return insertedToken ? insertedToken.id : null;
@@ -31,7 +28,7 @@ export class EmailVerificationService {
    * @param token Token de verificação de email
    * @returns O id do usuário associado ao token. Retorna null se o token for inválido.
    */
-  async validateEmailVerificationToken(token: string): Promise<UserId | null> {
+  async validateToken(token: string): Promise<string | null> {
     const storedToken = await this.emailVerificationTokenRepository.getVerificationTokenById(token);
 
     if (!storedToken) {

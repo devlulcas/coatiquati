@@ -26,7 +26,7 @@ export function LayeredImagePreview({ onRemove, value, className }: LayeredImage
 
   return (
     <div
-      className={cn('flex gap-2 p-2 border rounded-lg relative', className)}
+      className={cn('relative flex gap-2 rounded-lg border p-2', className)}
       ref={setNodeRef}
       style={style}
       {...attributes}
@@ -52,7 +52,7 @@ export function LayeredImagePreview({ onRemove, value, className }: LayeredImage
         size="icon"
         onClick={() => onRemove(value.id)}
         variant="destructive"
-        className="absolute bottom-2 right-2 z-10 opacity-25 hover:opacity-100 focus:opacity-100 transition-opacity"
+        className="absolute bottom-2 right-2 z-10 opacity-25 transition-opacity hover:opacity-100 focus:opacity-100"
       >
         <TrashIcon />
       </Button>

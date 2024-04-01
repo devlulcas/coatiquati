@@ -54,7 +54,7 @@ export function LayeredImageUploaderDialogTrigger({
 
       <DialogContent className="min-w-fit max-w-[80vw]">
         <DialogTitle>Camadas</DialogTitle>
-        <DialogDescription className="flex gap-4 flex-col lg:flex-row">
+        <DialogDescription className="flex flex-col gap-4 lg:flex-row">
           <LayeredImageUploader {...layeredImageControl} />
         </DialogDescription>
         <DialogFooter>

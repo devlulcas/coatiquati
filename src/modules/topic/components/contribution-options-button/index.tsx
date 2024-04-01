@@ -19,7 +19,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
   const topicUrl = createTopicUrl(topicId, trailId);
 
   return (
-    <div className="flex gap-1 w-fit">
+    <div className="flex w-fit gap-1">
       <Button className="z-10" onClick={() => toggleOpen()}>
         Contribuir
       </Button>
@@ -31,7 +31,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex gap-2 ml-3 flex-wrap"
+            className="ml-3 flex flex-wrap gap-2"
           >
             <motion.li
               initial={{ x: -100, opacity: 0 }}
@@ -39,7 +39,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               exit={{ x: -100, opacity: 0 }}
               transition={{ duration: 0.2, delay: 0.1 }}
             >
-              <Button className="flex gap-2 items-center justify-center" asChild>
+              <Button className="flex items-center justify-center gap-2" asChild>
                 <Link href={topicUrl + '/contribute/rich_text'}>
                   <ScrollTextIcon />
                   <span className="sr-only lg:not-sr-only">Postagem</span>
@@ -54,7 +54,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               transition={{ duration: 0.2, delay: 0.2 }}
             >
               <NewImageContentDialogTrigger topicId={topicId}>
-                <Button className="flex gap-2 items-center justify-center">
+                <Button className="flex items-center justify-center gap-2">
                   <ImagePlusIcon />
                   <span className="sr-only lg:not-sr-only">Contribuir com uma imagem</span>
                 </Button>
@@ -68,7 +68,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               transition={{ duration: 0.2, delay: 0.2 }}
             >
               <NewVideoContentDialogTrigger topicId={topicId}>
-                <Button className="flex gap-2 items-center justify-center">
+                <Button className="flex items-center justify-center gap-2">
                   <VideoIcon />
                   <span className="sr-only lg:not-sr-only">Contribuir com um vídeo</span>
                 </Button>

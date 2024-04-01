@@ -40,7 +40,7 @@ export const topicsColumns: ColumnDef<Topic>[] = [
     cell: ({ row }) => {
       return (
         <Image
-          className="rounded-md mx-auto"
+          className="mx-auto rounded-md"
           src={row.original.thumbnail ?? '/images/placeholder.png'}
           alt={row.original.title}
           height={50}

@@ -14,13 +14,13 @@ export function RenderImageContentCard({ content }: { content: ContentWithImage 
       by={meta.author}
       content={{ id: data.contentId, type: meta.contentType }}
     >
-      <div className="absolute top-1 right-2 z-10">
+      <div className="absolute right-2 top-1 z-10">
         <ZoomedImage content={content} />
       </div>
 
       <Image
         title={meta.title}
-        className="rounded max-h-[50vh] w-auto object-contain"
+        className="max-h-[50vh] w-auto rounded object-contain"
         alt={data.alt}
         src={data.src}
         width={1240}

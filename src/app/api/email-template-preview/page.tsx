@@ -8,10 +8,10 @@ export default function EmailTemplatePreview() {
       <h1 className="text-3xl font-bold text-foreground">EmailTemplatePreview</h1>
 
       {templateKeys.map(templateKey => (
-        <div key={templateKey} className="border rounded p-4 bg-muted">
-          <h2 className="text-xl font-bold text-center text-foreground">{templateKey}</h2>
+        <div key={templateKey} className="rounded border bg-muted p-4">
+          <h2 className="text-center text-xl font-bold text-foreground">{templateKey}</h2>
 
-          <iframe src={`/api/email-template-preview/${templateKey}`} className="w-full h-96" />
+          <iframe src={`/api/email-template-preview/${templateKey}`} className="h-96 w-full" />
         </div>
       ))}
     </div>

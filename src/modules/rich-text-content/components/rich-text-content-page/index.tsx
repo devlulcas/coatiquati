@@ -11,9 +11,9 @@ export default async function RichTextContentPage({ contentId }: RichTextContent
   const postData = await getRichTextContentUseCase.execute({ id: contentId });
 
   return (
-    <div className="py-8 container">
+    <div className="container py-8">
       <TrailHeading trail={postData.trail} />
-      <h1 className="text-4xl mt-3 mb-2 font-bold">{postData.topic.title}</h1>
+      <h1 className="mb-2 mt-3 text-4xl font-bold">{postData.topic.title}</h1>
       <ReadonlyEditor content={postData.content.asJson} />
     </div>
   );

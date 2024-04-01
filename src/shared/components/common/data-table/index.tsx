@@ -50,7 +50,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map(header => {
                   return (
-                    <TableHead key={header.id} className="text-center border-r last:border-r-0">
+                    <TableHead key={header.id} className="border-r text-center last:border-r-0">
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               rows.map(row => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id} className="text-center border-r last:border-r-0">
+                    <TableCell key={cell.id} className="border-r text-center last:border-r-0">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -104,7 +104,7 @@ export function SortedColumnHeader(props: SortedColumnHeaderProps) {
   return (
     <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
       <span className="min-w-fit">{children}</span>
-      <ArrowUpDown className="ml-2 min-w-[1rem] w-[1rem]" />
+      <ArrowUpDown className="ml-2 w-[1rem] min-w-[1rem]" />
     </Button>
   );
 }

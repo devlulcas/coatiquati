@@ -47,7 +47,7 @@ export function LayeredImageUploader({ layers, setLayers, pushLayer, removeLayer
   return (
     <>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <ScrollArea className="h-[60vh] w-full min-w-fit flex flex-col rounded-md border p-4">
+        <ScrollArea className="flex h-[60vh] w-full min-w-fit flex-col rounded-md border p-4">
           <SortableContext items={layers} strategy={verticalListSortingStrategy}>
             {layers.map(layer => (
               <LayeredImagePreview key={layer.id} value={layer} onRemove={removeLayer} className="mb-4" />
@@ -56,7 +56,7 @@ export function LayeredImageUploader({ layers, setLayers, pushLayer, removeLayer
         </ScrollArea>
       </DndContext>
 
-      <div className="w-full h-full min-w-[25vw]">
+      <div className="h-full w-full min-w-[25vw]">
         <LayeredImageForm onAdd={pushLayer} defaultValue={{ id: '', src: '', alt: '', title: '' }} />
       </div>
     </>

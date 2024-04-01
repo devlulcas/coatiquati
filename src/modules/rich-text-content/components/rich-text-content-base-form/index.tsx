@@ -37,7 +37,7 @@ export function RichTextContentBaseForm(props: RichTextContentBaseFormProps) {
 
   return (
     <Form {...form}>
-      <form method="POST" onSubmit={innerOnSubmit} className={cn('space-y-8 w-full', className)}>
+      <form method="POST" onSubmit={innerOnSubmit} className={cn('w-full space-y-8', className)}>
         <FormField
           control={form.control}
           name="title"

@@ -29,10 +29,10 @@ type LayeredImageVisualizationProps = NodeViewProps;
 function LayeredImageVisualization(props: LayeredImageVisualizationProps) {
   return (
     <NodeViewWrapper className="layeredImageNode">
-      <div className="relative w-fit h-fit">
+      <div className="relative h-fit w-fit">
         <Button
           size="icon"
-          className="absolute top-4 left-4 z-10 opacity-25 hover:opacity-100 focus:opacity-100 transition-opacity"
+          className="absolute left-4 top-4 z-10 opacity-25 transition-opacity hover:opacity-100 focus:opacity-100"
           variant="ghost"
           data-drag-handle
         >
@@ -50,7 +50,7 @@ function LayeredImageVisualization(props: LayeredImageVisualizationProps) {
         >
           <Button
             size="icon"
-            className="absolute top-4 right-4 z-10 opacity-25 hover:opacity-100 focus:opacity-100 transition-opacity"
+            className="absolute right-4 top-4 z-10 opacity-25 transition-opacity hover:opacity-100 focus:opacity-100"
           >
             <PencilIcon />
             <span className="sr-only">Editar camadas</span>

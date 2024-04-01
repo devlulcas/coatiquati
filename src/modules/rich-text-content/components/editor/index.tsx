@@ -37,7 +37,7 @@ export function Editor({ initialContent, onDelayedChange }: EditorProps) {
   }, [editor, onDelayedChange]);
 
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-2">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>

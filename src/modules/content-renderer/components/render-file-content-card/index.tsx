@@ -12,7 +12,7 @@ export function RenderFileContentCard({ content }: { content: ContentWithFile })
       content={{ id: data.contentId, type: meta.contentType }}
     >
       <Link href={data.url} className="text-md text-muted-foreground">
-        {data.filename} - <span className="p-1 border rounded">{data.filesize}</span>
+        {data.filename} - <span className="rounded border p-1">{data.filesize}</span>
       </Link>
       <p className="text-md text-muted-foreground">{data.visualDescription}</p>
     </RenderedContentWrapper>

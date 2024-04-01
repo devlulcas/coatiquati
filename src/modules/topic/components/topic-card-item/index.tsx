@@ -14,10 +14,10 @@ export function TopicCardItem({ topic }: TopicCardItemProps) {
   return (
     <Link
       href={createTopicUrl(topic.id, topic.trailId)}
-      className="flex flex-col gap-2 bg-card/90 text-card-foreground rounded-md p-4 shadow-md hover:shadow-lg transition-all border"
+      className="flex flex-col gap-2 rounded-md border bg-card/90 p-4 text-card-foreground shadow-md transition-all hover:shadow-lg"
     >
-      <h3 className="text-xl font-bold truncate break-words whitespace-break-spaces">{topic.title}</h3>
-      <p className="text-sm truncate break-words whitespace-break-spaces">{topic.description}</p>
+      <h3 className="truncate whitespace-break-spaces break-words text-xl font-bold">{topic.title}</h3>
+      <p className="truncate whitespace-break-spaces break-words text-sm">{topic.description}</p>
 
       <section className="flex items-center gap-2">
         <ContributorList contributors={allContributors} />

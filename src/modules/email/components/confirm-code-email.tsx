@@ -9,7 +9,7 @@ type ConfirmCodeEmailProps = {
 export function ConfirmCodeEmail({ name, code }: ConfirmCodeEmailProps) {
   return (
     <GenericEmailTemplate title="Código para realização de ação">
-      <Heading as="h2" className="text-xl font-bold text-center text-neutral-100">
+      <Heading as="h2" className="text-center text-xl font-bold text-neutral-100">
         Olá, {name}! Confirme o código abaixo para realizar a ação
       </Heading>
 
@@ -17,7 +17,7 @@ export function ConfirmCodeEmail({ name, code }: ConfirmCodeEmailProps) {
         <Text className="text-4xl font-bold text-neutral-100">{code}</Text>
       </Section>
 
-      <Text className="text-red-300 text-sm">Se você não solicitou este e-mail, ignore-o.</Text>
+      <Text className="text-sm text-red-300">Se você não solicitou este e-mail, ignore-o.</Text>
     </GenericEmailTemplate>
   );
 }

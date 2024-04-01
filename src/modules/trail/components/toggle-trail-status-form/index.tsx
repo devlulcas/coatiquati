@@ -32,12 +32,12 @@ export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
   };
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex items-center gap-2">
       <Button
         variant="ghost"
         type="button"
         isLoading={isLoading}
-        className="flex gap-2 items-center"
+        className="flex items-center gap-2"
         onClick={onSubmit}
       >
         <ContentStatusBadge status={trail.status} />

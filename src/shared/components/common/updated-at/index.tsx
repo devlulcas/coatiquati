@@ -7,7 +7,7 @@ type UpdatedAtProps = {
 export function UpdatedAt({ updatedAt }: UpdatedAtProps) {
   return (
     <time dateTime={updatedAt} className="flex items-center gap-2 text-sm">
-      <ClockIcon className="w-4 h-4 text-muted-foreground" />
+      <ClockIcon className="h-4 w-4 text-muted-foreground" />
       <span>Atualizado em</span>
       {new Date(updatedAt).toLocaleString()}
     </time>
