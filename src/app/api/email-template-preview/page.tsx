@@ -1,7 +1,7 @@
-import { templates } from './[template]/route';
+import { emailTemplates } from '@/modules/email/lib/templates';
 
 export default function EmailTemplatePreview() {
-  const templateKeys = Object.keys(templates);
+  const templateKeys = Object.keys(emailTemplates);
 
   return (
     <div className="container my-8 flex flex-col gap-4">
