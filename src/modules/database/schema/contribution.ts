@@ -11,21 +11,12 @@ import { userTable } from './user';
 export const trailContributionTable = sqliteTable(
   'trail_contribution',
   {
-    trailId: integer('trail_id')
-      .references(() => contentTable.id)
-      .notNull(),
-    userId: text('user_id')
-      .references(() => userTable.id)
-      .notNull(),
-    contributedAt: text('contributed_at')
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+    trailId: integer('trail_id').references(() => contentTable.id).notNull(),
+    userId: text('user_id').references(() => userTable.id).notNull(),
+    contributedAt: integer('contributed_at', { mode: 'timestamp' }).notNull().default(new Date()).$onUpdate(() => new Date()),
   },
-  table => ({
-    pk: primaryKey({columns: [table.userId, table.trailId]}),
-  }),
+  table => ({pk: primaryKey({ columns: [table.userId, table.trailId] })}),
 );
-
 export const trailContributionTableRelations = relations(trailContributionTable, ({ one }) => ({
   trail: one(trailTable, {
     fields: [trailContributionTable.trailId],
@@ -41,21 +32,12 @@ export const trailContributionTableRelations = relations(trailContributionTable,
 export const topicContributionTable = sqliteTable(
   'topic_contribution',
   {
-    topicId: integer('topic_id')
-      .references(() => contentTable.id)
-      .notNull(),
-    userId: text('user_id')
-      .references(() => userTable.id)
-      .notNull(),
-    contributedAt: text('contributed_at')
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+    topicId: integer('topic_id').references(() => contentTable.id).notNull(),
+    userId: text('user_id').references(() => userTable.id).notNull(),
+    contributedAt: text('contributed_at').default(sql`CURRENT_TIMESTAMP`).notNull(),
   },
-  table => ({
-    pk: primaryKey({columns: [table.userId, table.topicId]}),
-  }),
+  table => ({pk: primaryKey({ columns: [table.userId, table.topicId] })}),
 );
-
 export const topicContributionTableRelations = relations(topicContributionTable, ({ one }) => ({
   topic: one(topicTable, {
     fields: [topicContributionTable.topicId],
@@ -71,21 +53,12 @@ export const topicContributionTableRelations = relations(topicContributionTable,
 export const contentContributionTable = sqliteTable(
   'content_contribution',
   {
-    contentId: integer('content_id')
-      .references(() => contentTable.id)
-      .notNull(),
-    userId: text('user_id')
-      .references(() => userTable.id)
-      .notNull(),
-    contributedAt: text('contributed_at')
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
+    contentId: integer('content_id').references(() => contentTable.id).notNull(),
+    userId: text('user_id').references(() => userTable.id).notNull(),
+    contributedAt: text('contributed_at').default(sql`CURRENT_TIMESTAMP`).notNull(),
   },
-  table => ({
-    pk: primaryKey({columns: [table.userId, table.contentId]}),
-  }),
+  table => ({pk: primaryKey({ columns: [table.userId, table.contentId] }) }),
 );
-
 export const contentContributionTableRelations = relations(contentContributionTable, ({ one }) => ({
   content: one(contentTable, {
     fields: [contentContributionTable.contentId],

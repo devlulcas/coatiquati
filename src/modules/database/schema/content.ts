@@ -2,6 +2,7 @@ import type { JSONContent } from '@tiptap/core';
 import { relations, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { tableTimestampColumns } from '../lib/helpers';
+import { contentContributionTable } from './contribution';
 import { topicTable } from './topic';
 import { userTable } from './user';
 
@@ -36,6 +37,7 @@ export const contentTableRelations = relations(contentTable, ({ one, many }) => 
   images: many(contentImageTable),
   videos: many(contentVideoTable),
   richTexts: many(contentRichTextTable),
+  contributors: many(contentContributionTable),
 }));
 
 

@@ -1,14 +1,9 @@
 import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
-import type {
-  ContentVideo,
-  NewContent,
-  NewContentVideo,
-  UpdateContent,
-  UpdateContentVideo,
-} from '@/modules/content/types/content';
+import type { ContentVideo, NewContent, NewContentVideo, UpdateContentVideo } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
-import { contentVideoTable } from '@/modules/database/schema/content';
+import { contentVideoTable, type NewContentTable } from '@/modules/database/schema/content';
 import { log } from '@/modules/logging/lib/pino';
+import type { WithOptionalID } from '@/shared/utils/with';
 import { eq } from 'drizzle-orm';
 
 export const VIDEO_CONTENT_DB_FIELDS = Object.freeze({
@@ -26,7 +21,11 @@ export class VideoContentRepository {
   constructor(private readonly baseContentRepository: BaseContentRepository = new BaseContentRepository()) {}
 
   async getContent(contentId: number): Promise<ContentVideo> {
-    const resultVideo: ContentVideo | undefined = await db.select().from(contentVideoTable).where(eq(contentVideoTable.contentId, contentId)).get();
+    const resultVideo = await db
+      .select()
+      .from(contentVideoTable)
+      .where(eq(contentVideoTable.baseContentId, contentId))
+      .get();
 
     if (!resultVideo) {
       log.error('Erro ao buscar conteúdo de vídeo', { contentId });
@@ -36,19 +35,14 @@ export class VideoContentRepository {
     return resultVideo;
   }
 
-  async createContent(baseContent: NewContent, video: NewContentVideo): Promise<ContentVideo> {
-    const contentId = await db.transaction(async tx => {
+  async createContent(baseContent: NewContent, video: NewContentVideo): Promise<number> {
+    return await db.transaction(async tx => {
       try {
-        const insertedContentId = await this.baseContentRepository.createBaseContent(baseContent, tx);
+        const insertedContentId = await this.baseContentRepository.upsertBaseContent(baseContent, tx);
 
         await tx
           .insert(contentVideoTable)
-          .values({
-            contentId: insertedContentId,
-            alt: video.alt,
-            description: video.description,
-            src: video.src,
-          })
+          .values({ baseContentId: insertedContentId, description: video.description, src: video.src })
           .execute();
 
         return insertedContentId;
@@ -58,20 +52,12 @@ export class VideoContentRepository {
         throw new Error('Erro ao criar conteúdo de video');
       }
     });
-
-    return this.getContent(contentId);
   }
 
-  async updateContent(baseContent: UpdateContent, video?: UpdateContentVideo, database = db): Promise<ContentVideo> {
-    const updatedAt = new Date().toISOString();
-
-    if (typeof video === 'undefined') {
-      throw new Error('Erro ao atualizar conteúdo de vídeo com id = ' + baseContent.id);
-    }
-
-    return database.transaction(async tx => {
+  async updateContent(baseContent: WithOptionalID<NewContentTable>, video: UpdateContentVideo): Promise<ContentVideo> {
+    return db.transaction(async tx => {
       try {
-        await this.baseContentRepository.updateBaseContent(baseContent, tx);
+        await this.baseContentRepository.upsertBaseContent(baseContent, tx);
 
         await tx
           .update(contentVideoTable)
@@ -81,7 +67,7 @@ export class VideoContentRepository {
             src: video.src,
             updatedAt: updatedAt,
           })
-          .where(eq(contentVideoTable.contentId, baseContent.id))
+          .where(eq(contentVideoTable.baseContentId, baseContent.id))
           .execute();
 
         const resultVideo = await this.getContent(baseContent.id, tx);
