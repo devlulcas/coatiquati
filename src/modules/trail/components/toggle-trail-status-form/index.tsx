@@ -5,8 +5,8 @@ import { Button } from '@/shared/components/ui/button';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { contentStatus } from '@/shared/constants/content-status';
 import { useTransition } from 'react';
+import { toggleTrailStatusMutation } from '../../actions/toggle-trail-status-mutation';
 import type { Trail } from '../../types/trail';
-import { toggleTrailStatusAction } from './toggle-trail-status-action';
 
 type ToggleTrailStatusFormProps = {
   trail: Trail;
@@ -19,7 +19,7 @@ export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
   const onSubmit = () => {
     startTransition(async () => {
       try {
-        await toggleTrailStatusAction(trail);
+        await toggleTrailStatusMutation(trail);
         toast({ title: `${trail.title} teve ser estado de publicação invertido` });
       } catch (error) {
         toast({

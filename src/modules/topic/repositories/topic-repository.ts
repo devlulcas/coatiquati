@@ -2,7 +2,7 @@ import type { ContentWithImage, ContentWithRichTextPreview, ContentWithVideo } f
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
 import { topicTable } from '@/modules/database/schema/topic';
-import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
+import type { PaginationSchemaWithSearchAndFilter } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
 import { eq } from 'drizzle-orm';
@@ -21,16 +21,22 @@ export class TopicRepository {
     }
   }
 
-  async getTopics(params: PaginationSchemaWithSearch): Promise<Topic[]> {
+  async getTopics(params: PaginationSchemaWithSearchAndFilter): Promise<Topic[]> {
     try {
       return db.query.topicTable.findMany({
         limit: params.take,
         offset: params.skip,
         where: (fields, operators) => {
-          return operators.or(
+          const filterByContent = operators.or(
             operators.like(fields.title, `%${params.search}%`),
             operators.like(fields.description, `%${params.search}%`),
           );
+
+          if (params.showDrafts) {
+            return filterByContent;
+          }
+
+          return operators.and(filterByContent, operators.eq(fields.status, contentStatus.PUBLISHED));
         },
         with: {
           author: true,
@@ -47,10 +53,14 @@ export class TopicRepository {
     }
   }
 
-  async getTopicById(id: number): Promise<Topic> {
+  async getTopicById(id: number, showDrafts = false): Promise<Topic> {
     const query = db.query.topicTable.findFirst({
       where: (fields, operators) => {
-        return operators.eq(fields.id, id);
+        if (showDrafts) {
+          return operators.eq(fields.id, id);
+        }
+
+        return operators.and(operators.eq(fields.id, id), operators.eq(fields.status, contentStatus.PUBLISHED));
       },
       with: {
         author: true,
@@ -75,10 +85,14 @@ export class TopicRepository {
     return data;
   }
 
-  async getTopicWithContentArray(id: number): Promise<TopicWithContentArray> {
+  async getTopicWithContentArray(id: number, showDrafts = false): Promise<TopicWithContentArray> {
     const query = db.query.topicTable.findFirst({
       where: (fields, operators) => {
-        return operators.eq(fields.id, id);
+        if (showDrafts) {
+          return operators.eq(fields.id, id);
+        }
+
+        return operators.and(operators.eq(fields.id, id), operators.eq(fields.status, contentStatus.PUBLISHED));
       },
       with: {
         author: true,

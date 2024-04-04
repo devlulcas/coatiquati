@@ -5,7 +5,7 @@ import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagina
 import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
 import { asc, eq } from 'drizzle-orm';
-import type { NewTrail, Trail, UpdateTrail } from '../types/trail';
+import type { NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
 
 export class TrailRepository {
   constructor(private readonly contributionRepository: ContributionRepository = new ContributionRepository()) {}
@@ -24,12 +24,22 @@ export class TrailRepository {
     });
   }
 
-  async getTrailById(id: number, database = db): Promise<Trail> {
-    const data: Trail | undefined = await database.query.trailTable.findFirst({
+  async getTrailById(id: number, database = db): Promise<TrailWithTopicArray> {
+    const data: TrailWithTopicArray | undefined = await database.query.trailTable.findFirst({
       with: {
         contributors: { with: { user: true } },
         category: true,
         author: true,
+        topics: {
+          with: {
+            author: true,
+            contributors: {
+              with: {
+                user: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -41,16 +51,22 @@ export class TrailRepository {
     return data;
   }
 
-  async getTrails(params: PaginationSchemaWithSearch): Promise<Trail[]> {
+  async getTrails(params: PaginationSchemaWithSearch, includeDraft = false): Promise<Trail[]> {
     try {
       return db.query.trailTable.findMany({
         limit: params.take,
         offset: params.skip,
         where: (fields, operators) => {
-          return operators.or(
+          const filterByContent = operators.or(
             operators.like(fields.title, `%${params.search}%`),
             operators.like(fields.description, `%${params.search}%`),
           );
+
+          if (includeDraft) {
+            return filterByContent;
+          }
+
+          return operators.and(filterByContent, operators.eq(fields.status, contentStatus.PUBLISHED));
         },
         with: {
           contributors: { with: { user: true } },

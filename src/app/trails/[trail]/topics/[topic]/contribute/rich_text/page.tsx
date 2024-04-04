@@ -1,5 +1,5 @@
 import { NewRichTextContentForm } from '@/modules/rich-text-content/components/new-rich-text-content-form';
-import { GetTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
+import { getTopicQuery } from '@/modules/topic/actions/get-topic-query';
 
 type PageProps = {
   params: {
@@ -9,9 +9,7 @@ type PageProps = {
 
 export default async function Page({ params }: PageProps) {
   const topicId = Number(params.topic);
-
-  const getTopicUseCase = new GetTopicUseCase();
-  const topicData = await getTopicUseCase.execute({ id: topicId });
+  const topicData = await getTopicQuery(topicId);
 
   return (
     <div className="container py-8">
@@ -20,7 +18,7 @@ export default async function Page({ params }: PageProps) {
         <p className="break-words text-lg text-muted-foreground">{topicData.description}</p>
       </header>
 
-      <NewRichTextContentForm topicId={topicId} />
+      <NewRichTextContentForm defaultValues={topicData} />
     </div>
   );
 }

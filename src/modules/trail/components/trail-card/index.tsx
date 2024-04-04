@@ -71,7 +71,10 @@ export function TrailCard({ trail }: TrailCardProps) {
               {trail.description}
             </p>
 
-            <time className="text-card-foreground-500 mt-1 block text-xs lg:mt-2" dateTime={trail.updatedAt}>
+            <time
+              className="text-card-foreground-500 mt-1 block text-xs lg:mt-2"
+              dateTime={trail.updatedAt.toISOString()}
+            >
               Atualizado em {updatedAt}
             </time>
           </div>

@@ -53,7 +53,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               exit={{ x: -100, opacity: 0 }}
               transition={{ duration: 0.2, delay: 0.2 }}
             >
-              <NewImageContentDialogTrigger topicId={topicId}>
+              <NewImageContentDialogTrigger defaultValues={{ topicId }}>
                 <Button className="flex items-center justify-center gap-2">
                   <ImagePlusIcon />
                   <span className="sr-only lg:not-sr-only">Contribuir com uma imagem</span>
@@ -67,7 +67,7 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
               exit={{ x: -100, opacity: 0 }}
               transition={{ duration: 0.2, delay: 0.2 }}
             >
-              <NewVideoContentDialogTrigger topicId={topicId}>
+              <NewVideoContentDialogTrigger defaultValues={{ topicId }}>
                 <Button className="flex items-center justify-center gap-2">
                   <VideoIcon />
                   <span className="sr-only lg:not-sr-only">Contribuir com um vídeo</span>

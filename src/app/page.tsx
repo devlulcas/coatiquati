@@ -1,16 +1,13 @@
 import { Marquee } from '@/modules/home/components/marquee';
-import { GetRecentTrailsUseCase } from '@/modules/trail/use-cases/get-recent-trails-use-case';
+import { TrailCardCarouselSection } from '@/modules/home/components/trail-card-carousel-section';
+import { getRecentTrailsQuery } from '@/modules/trail/actions/get-recent-trails-by-id';
 import blobImage from '@/shared/assets/images/blob-hq.png';
-
 import { ArrowUpRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { TrailCardCarouselSection } from './trail-card-carousel-section';
-
-const recentTrailsUseCase = new GetRecentTrailsUseCase();
 
 export default async function Page() {
-  const trails = await recentTrailsUseCase.execute();
+  const trails = await getRecentTrailsQuery();
 
   return (
     <div className="flex h-full flex-col justify-between pt-12 lg:h-[--view-height]">

@@ -1,6 +1,6 @@
 import { TopicCardItem } from '@/modules/topic/components/topic-card-item';
+import { getTrailByIdQuery } from '@/modules/trail/actions/get-trail-by-id-query';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
-import { GetTrailUseCase } from '@/modules/trail/use-cases/get-trail-use-case';
 import { redirect } from 'next/navigation';
 
 type PageProps = {
@@ -12,8 +12,7 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const trailId = Number(params.trail);
 
-  const getTrailUseCase = new GetTrailUseCase();
-  const trailData = await getTrailUseCase.execute({ id: trailId });
+  const trailData = await getTrailByIdQuery(trailId);
 
   if (!trailData) redirect('/');
 

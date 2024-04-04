@@ -3,11 +3,11 @@
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
+import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { PencilIcon } from 'lucide-react';
-import type { NewTopicSchema } from '../../schemas/new-topic-schema';
+import { updateTopicMutation } from '../../actions/update-topic-mutation';
 import { type Topic } from '../../types/topic';
 import { TopicBaseForm } from '../topic-base-form';
-import { editTopicAction } from './edit-topic-action';
 
 type EditTopicDialogTriggerProps = {
   topic: Topic;
@@ -16,18 +16,22 @@ type EditTopicDialogTriggerProps = {
 export function EditTopicDialogTrigger({ topic }: EditTopicDialogTriggerProps) {
   const { toast } = useToast();
 
-  const onSubmit = async (data: NewTopicSchema) => {
-    try {
-      await editTopicAction({ ...data, id: topic.id });
-      toast({ title: 'Tópico editado com sucesso' });
-    } catch (error) {
+  const mutation = useServerActionMutation({
+    serverAction: updateTopicMutation,
+    onFailedAction: error => {
       toast({
-        title: 'Erro ao editar tópico',
-        description: error instanceof Error ? error.message : String(error),
+        title: 'Erro ao atualizar tópico',
+        description: error.message,
         variant: 'destructive',
       });
-    }
-  };
+    },
+    onSuccessfulAction: () => {
+      toast({
+        title: 'Tópico atualizado com sucesso',
+        variant: 'success',
+      });
+    },
+  });
 
   return (
     <Dialog>
@@ -42,7 +46,13 @@ export function EditTopicDialogTrigger({ topic }: EditTopicDialogTriggerProps) {
           <DialogTitle className="mb-4 max-w-xs truncate">Editar {topic.title}</DialogTitle>
           <TopicBaseForm
             defaultValues={{ ...topic, thumbnail: topic.thumbnail ?? '/images/placeholder.png' }}
-            onSubmit={onSubmit}
+            onSubmit={data => {
+              mutation.mutate({
+                ...data,
+                id: topic.id,
+                trailId: topic.trailId,
+              });
+            }}
           />
         </DialogHeader>
       </DialogContent>

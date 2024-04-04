@@ -1,15 +1,27 @@
 import { TrailCategoryForm } from '@/modules/category/components/trail-category-form';
+import { getTrailsQuery } from '@/modules/trail/actions/get-trails-query';
 import { TrailsTable } from '@/modules/trail/components/trails-table';
-import { GetTrailsUseCase } from '@/modules/trail/use-cases/get-trails-use-case';
 import { getUsersQuery } from '@/modules/user/actions/get-users-query';
 import { UsersTable } from '@/modules/user/components/users-table';
 import { Button } from '@/shared/components/ui/button';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
-export default async function Page() {
-  const getTrailsUseCase = new GetTrailsUseCase();
-  const trailsData = await getTrailsUseCase.execute();
+type PageProps = {
+  searchParams: {
+    search?: string;
+    skip?: string;
+    take?: string;
+  };
+};
+
+export default async function Page({ searchParams }: PageProps) {
+  const trailsData = await getTrailsQuery({
+    search: searchParams.search,
+    skip: Number(searchParams.skip ?? '0'),
+    take: Number(searchParams.take ?? '60'),
+  });
+
   const users = await getUsersQuery();
 
   return (

@@ -3,30 +3,34 @@
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
+import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { PlusIcon } from 'lucide-react';
-import type { NewTopicSchema } from '../../schemas/new-topic-schema';
+import { createTopicMutation } from '../../actions/create-topic-mutation';
 import { TopicBaseForm } from '../topic-base-form';
-import { newTopicAction } from './new-topic-action';
 
-type NewTrailDialogTriggerProps = {
+type NewTopicDialogTriggerProps = {
   trailId: number;
 };
 
-export function NewTrailDialogTrigger({ trailId }: NewTrailDialogTriggerProps) {
+export function NewTopicDialogTrigger({ trailId }: NewTopicDialogTriggerProps) {
   const { toast } = useToast();
 
-  const onSubmit = async (data: NewTopicSchema) => {
-    try {
-      await newTopicAction(data);
-      toast({ title: 'Tópico criado com sucesso' });
-    } catch (error) {
+  const mutation = useServerActionMutation({
+    serverAction: createTopicMutation,
+    onFailedAction: error => {
       toast({
         title: 'Erro ao criar tópico',
-        description: error instanceof Error ? error.message : String(error),
+        description: error.message,
         variant: 'destructive',
       });
-    }
-  };
+    },
+    onSuccessfulAction: () => {
+      toast({
+        title: 'Tópico criado com sucesso',
+        variant: 'success',
+      });
+    },
+  });
 
   return (
     <Dialog>
@@ -39,7 +43,7 @@ export function NewTrailDialogTrigger({ trailId }: NewTrailDialogTriggerProps) {
       <DialogContent className="min-w-fit">
         <DialogHeader>
           <DialogTitle className="mb-4 max-w-xs truncate">Criar novo tópico</DialogTitle>
-          <TopicBaseForm defaultValues={{ trailId }} onSubmit={onSubmit} />
+          <TopicBaseForm defaultValues={{ trailId }} onSubmit={mutation.mutate} />
         </DialogHeader>
       </DialogContent>
     </Dialog>

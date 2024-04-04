@@ -5,8 +5,8 @@ import { Button } from '@/shared/components/ui/button';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { contentStatus } from '@/shared/constants/content-status';
 import { useTransition } from 'react';
+import { toggleTopicStatusMutation } from '../../actions/toggle-topic-status-mutation';
 import type { Topic } from '../../types/topic';
-import { toggleTopicStatusAction } from './toggle-topic-status-action';
 
 type ToggleTopicStatusFormProps = {
   topic: Topic;
@@ -19,7 +19,7 @@ export function ToggleTopicStatusForm({ topic }: ToggleTopicStatusFormProps) {
   const onSubmit = () => {
     startTransition(async () => {
       try {
-        await toggleTopicStatusAction(topic);
+        await toggleTopicStatusMutation(topic.id);
         toast({ title: `${topic.title} teve ser estado de publicação invertido` });
       } catch (error) {
         toast({

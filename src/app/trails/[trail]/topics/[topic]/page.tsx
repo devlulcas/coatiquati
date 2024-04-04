@@ -1,6 +1,6 @@
 import { RenderCorrectContentCard } from '@/modules/content-renderer/components/render-correct-content-card';
+import { getTopicQuery } from '@/modules/topic/actions/get-topic-query';
 import { ContributionOptionsButton } from '@/modules/topic/components/contribution-options-button';
-import { GetTopicUseCase } from '@/modules/topic/use-cases/get-topic-use-case';
 import { createTrailUrl } from '@/modules/trail/lib/create-trail-url';
 import { Button } from '@/shared/components/ui/button';
 import { ArrowLeftIcon, FileIcon, ImageIcon, TextIcon, VideoIcon } from 'lucide-react';
@@ -34,8 +34,7 @@ const contentTypeIcon = {
 export default async function Page({ params }: PageProps) {
   const topicId = Number(params.topic);
 
-  const getTopicUseCase = new GetTopicUseCase();
-  const topicData = await getTopicUseCase.execute({ id: topicId });
+  const topicData = await getTopicQuery(topicId);
 
   // Unify and count
   const contentTypesAvailable: {

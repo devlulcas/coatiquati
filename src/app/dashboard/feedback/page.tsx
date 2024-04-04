@@ -1,10 +1,11 @@
 import { getFeedbackListQuery } from '@/modules/feedback/actions/get-feedback-list-query';
 import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
+import { UserRoleBadge } from '@/modules/user/components/user-role-badge';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { TrashIcon } from 'lucide-react';
+import { CheckIcon, MailIcon, SkullIcon, TrashIcon } from 'lucide-react';
 import Link from 'next/link';
 
 type PageProps = {
@@ -20,7 +21,7 @@ export default async function FeedbackPage(props: PageProps) {
 
   const feedback = await getFeedbackListQuery(page, type);
 
-  const fromDateTimeToLocaleString = (dateTime: string) => {
+  const fromDateTimeToLocaleString = (dateTime: string | Date) => {
     return new Date(dateTime).toLocaleDateString('pt-BR', {
       year: 'numeric',
       month: '2-digit',
@@ -59,11 +60,40 @@ export default async function FeedbackPage(props: PageProps) {
             <li key={feedback.id} className="flex flex-col gap-4 rounded-2xl bg-foreground/10 px-2 py-2">
               <div className="mb-2 flex justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  {feedback.user && (
-                    <Link href={`/profile/${feedback.user.username}`}>
-                      <UserAvatar user={feedback.user} />
-                    </Link>
-                  )}
+                  <div className="space-y-2">
+                    {feedback.user && (
+                      <Link href={`/profile/${feedback.user.username}`} className="flex items-center gap-2">
+                        <UserAvatar user={feedback.user} />
+                        <p>{feedback.user.username}</p>
+                        <UserRoleBadge role={feedback.user.role} />
+
+                        {feedback.user.verified && (
+                          <span
+                            className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/15"
+                            title="Usuário verificado"
+                            aria-label="Usuário verificado"
+                          >
+                            <CheckIcon className="h-4 w-4 text-green-500" />
+                          </span>
+                        )}
+
+                        {feedback.user.isBanned && (
+                          <span
+                            className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500/15"
+                            title="Usuário banido"
+                            aria-label="Usuário banido"
+                          >
+                            <SkullIcon className="h-4 w-4 text-red-500" />
+                          </span>
+                        )}
+                      </Link>
+                    )}
+
+                    <a className="flex items-center gap-2" href={`mailto:${feedback.user.email}`}>
+                      <MailIcon className="h-4 w-4 text-primary-foreground" />
+                      {feedback.user.email}
+                    </a>
+                  </div>
 
                   <div>
                     <h3 className="text-xl font-bold">{feedback.softwareVersion}</h3>
@@ -79,7 +109,7 @@ export default async function FeedbackPage(props: PageProps) {
                 <FeedbackBadge variant={feedback.type} />
               </div>
 
-              <ReadonlyEditor content={JSON.parse(feedback.text)} />
+              <ReadonlyEditor content={JSON.parse(feedback.content)} />
             </li>
           ))}
         </ul>
