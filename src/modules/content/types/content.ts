@@ -1,12 +1,12 @@
 import type {
-  ContentImageTable,
-  ContentRichTextTable,
-  ContentTable,
-  ContentVideoTable,
-  NewContentImageTable,
-  NewContentRichTextTable,
-  NewContentTable,
-  NewContentVideoTable,
+  ContentImageInsert,
+  ContentImageSelect,
+  ContentInsert,
+  ContentRichTextInsert,
+  ContentRichTextSelect,
+  ContentSelect,
+  ContentVideoInsert,
+  ContentVideoSelect,
 } from '@/modules/database/schema/content';
 import type { Creatable, Updatable } from '@/modules/database/types/utils';
 import type { Contributor } from '@/modules/user/types/user';
@@ -16,14 +16,14 @@ type UpdatableContent<T> = Partial<Omit<T, 'createdAt'>> & {
   updatedAt: string;
 };
 
-export type BaseContent = Omit<ContentTable, 'authorId' | 'contentType' | 'topicId'> & {
+export type BaseContent = Omit<ContentSelect, 'authorId' | 'contentType' | 'topicId'> & {
   author: Contributor;
   contributors: { user: Contributor }[];
 };
 
 export type ContentWithImage = BaseContent & {
   contentType: 'image';
-  content: ContentImageTable;
+  content: ContentImageSelect;
 };
 
 export type ContentWithRichText = BaseContent & {
@@ -38,26 +38,26 @@ export type ContentWithRichTextPreview = BaseContent & {
 
 export type ContentWithVideo = BaseContent & {
   contentType: 'video';
-  content: ContentVideoTable;
+  content: ContentVideoSelect;
 };
 
-export type Content =  ContentWithImage | ContentWithRichTextPreview | ContentWithVideo;
-export type NewContent = Creatable<NewContentTable>;
-export type UpdateContent = Omit<Updatable<ContentTable>, 'authorId' | 'contentType'> & {
-  contributorId: ContentTable['authorId'];
+export type Content = ContentWithImage | ContentWithRichTextPreview | ContentWithVideo;
+export type NewContent = Creatable<ContentInsert>;
+export type UpdateContent = Omit<Updatable<ContentSelect>, 'authorId' | 'contentType'> & {
+  contributorId: ContentSelect['authorId'];
 };
 
-export type ContentRichTextPreview = Omit<ContentRichTextTable, 'asJson'>;
-export type ContentRichText = Omit<ContentRichTextTable, 'previewAsJson'>;
-export type NewContentRichText = Omit<Creatable<NewContentRichTextTable>, 'previewAsJson'>;
-export type UpdateContentRichText = Omit<UpdatableContent<ContentRichTextTable>, 'previewAsJson'> & {
-  contributorId: ContentTable['authorId'];
+export type ContentRichTextPreview = Omit<ContentRichText, 'asJson'>;
+export type ContentRichText = Omit<ContentRichTextSelect, 'previewAsJson'>;
+export type NewContentRichText = Omit<Creatable<ContentRichTextInsert>, 'previewAsJson'>;
+export type UpdateContentRichText = Omit<UpdatableContent<ContentRichText>, 'previewAsJson'> & {
+  contributorId: ContentSelect['authorId'];
 };
 
-export type ContentImage = ContentImageTable;
-export type NewContentImage = Omit<Creatable<NewContentImageTable>, 'contentId'>;
-export type UpdateContentImage = Omit<UpdatableContent<ContentImageTable>, 'contentId' | 'updatedAt'>;
+export type ContentImage = ContentImageSelect;
+export type NewContentImage = Omit<Creatable<ContentImageInsert>, 'contentId'>;
+export type UpdateContentImage = Omit<UpdatableContent<ContentImageSelect>, 'contentId' | 'updatedAt'>;
 
-export type ContentVideo = ContentVideoTable;
-export type NewContentVideo = Omit<Creatable<NewContentVideoTable>, 'contentId'>;
-export type UpdateContentVideo = Omit<UpdatableContent<ContentVideoTable>, 'contentId' | 'updatedAt'>;
+export type ContentVideo = ContentVideoSelect;
+export type NewContentVideo = Omit<Creatable<ContentVideoInsert>, 'contentId'>;
+export type UpdateContentVideo = Omit<UpdatableContent<ContentVideoSelect>, 'contentId' | 'updatedAt'>;

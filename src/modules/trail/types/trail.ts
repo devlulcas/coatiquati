@@ -11,7 +11,7 @@ export type UpdateCategory = Updatable<NewCategoryTable>;
 
 export type Trail = Omit<TrailTable, 'authorId' | 'category'> & {
   author: Contributor;
-  contributors: { user: Contributor; contributedAt: string }[];
+  contributors: { user: Contributor; contributedAt: Date }[];
   category: Category | null;
 };
 

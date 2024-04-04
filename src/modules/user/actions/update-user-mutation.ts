@@ -4,9 +4,8 @@ import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { UserRepository } from '../repositories/user-repository';
 import { updateUserSchema, type UpdateUserSchema } from '../schemas/update-user-schema';
-import { type User } from '../types/user';
 
-export async function updateUserMutation(params: UpdateUserSchema): Promise<User> {
+export async function updateUserMutation(params: UpdateUserSchema): Promise<void> {
   const session = await getActionSession();
 
   if (!session) {

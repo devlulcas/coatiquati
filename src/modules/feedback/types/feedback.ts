@@ -1,12 +1,7 @@
-export type Feedback = {
-  id: number;
-  type: 'bug' | 'feature' | 'improvement';
-  softwareVersion: string;
-  text: string;
-  createdAt: string;
-  user: {
-    id: string;
-    username: string;
-    avatar: string;
-  } | null;
-};
+import type { FeedbackSelect } from '@/modules/database/schema/feedback';
+import type { User } from '@/modules/user/types/user';
+import type { With } from '@/shared/utils/with';
+
+export type FeedbackType = 'bug' | 'feature' | 'improvement';
+
+export type Feedback = With<FeedbackSelect, 'user', User>;

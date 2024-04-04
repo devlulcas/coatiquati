@@ -1,44 +1,29 @@
-import { CONTENT_DB_FIELDS, ContentRepository } from '@/modules/content/repositories/content-repository';
-import type { Content } from '@/modules/content/types/content';
+import type { ContentWithImage, ContentWithRichTextPreview, ContentWithVideo } from '@/modules/content/types/content';
+import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
-import { topicContributionTable } from '@/modules/database/schema/contribution';
 import { topicTable } from '@/modules/database/schema/topic';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
-import { CONTRIBUTOR_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import { contentStatus } from '@/shared/constants/content-status';
 import { eq } from 'drizzle-orm';
 import type { NewTopic, Topic, TopicWithContentArray, UpdateTopic } from '../types/topic';
 
-export const TOPIC_DB_FIELDS = Object.freeze({
-  id: true,
-  title: true,
-  description: true,
-  thumbnail: true,
-  status: true,
-  createdAt: true,
-  updatedAt: true,
-  trailId: true,
-});
-
 export class TopicRepository {
-  constructor(private readonly contentRepository: ContentRepository = new ContentRepository()) {}
+  constructor(private readonly contributionRepository: ContributionRepository = new ContributionRepository()) {}
 
-  async createTopic(topic: NewTopic, database = db): Promise<Topic> {
+  async createTopic(topic: NewTopic): Promise<number> {
     try {
-      const newTopic = database.insert(topicTable).values(topic).returning({ id: topicTable.id }).get();
-      const data = await this.getTopicById(newTopic.id, database);
-      return data;
+      const newTopic = await db.insert(topicTable).values(topic).returning({ id: topicTable.id }).get();
+      return newTopic.id;
     } catch (error) {
       log.error('Erro ao criar tópico', error);
       throw new Error('Erro ao criar tópico');
     }
   }
 
-  async getTopics(params: PaginationSchemaWithSearch, database = db): Promise<Topic[]> {
+  async getTopics(params: PaginationSchemaWithSearch): Promise<Topic[]> {
     try {
-      return database.query.topicTable.findMany({
-        columns: TOPIC_DB_FIELDS,
+      return db.query.topicTable.findMany({
         limit: params.take,
         offset: params.skip,
         where: (fields, operators) => {
@@ -48,14 +33,10 @@ export class TopicRepository {
           );
         },
         with: {
-          author: {
-            columns: CONTRIBUTOR_DB_FIELDS,
-          },
+          author: true,
           contributors: {
             with: {
-              user: {
-                columns: CONTRIBUTOR_DB_FIELDS,
-              },
+              user: true,
             },
           },
         },
@@ -66,27 +47,22 @@ export class TopicRepository {
     }
   }
 
-  async getTopicById(id: number, database = db): Promise<Topic> {
-    const query = database.query.topicTable.findFirst({
-      columns: TOPIC_DB_FIELDS,
+  async getTopicById(id: number): Promise<Topic> {
+    const query = db.query.topicTable.findFirst({
       where: (fields, operators) => {
         return operators.eq(fields.id, id);
       },
       with: {
-        author: {
-          columns: CONTRIBUTOR_DB_FIELDS,
-        },
+        author: true,
         contributors: {
           with: {
-            user: {
-              columns: CONTRIBUTOR_DB_FIELDS,
-            },
+            user: true,
           },
         },
       },
     });
 
-    const data: Topic | undefined = await query.catch(error => {
+    const data = await query.catch(error => {
       log.error('Erro ao buscar tópico. Erro interno', { error, id });
       throw new Error('Falha ao buscar tópico. Erro interno');
     });
@@ -99,35 +75,28 @@ export class TopicRepository {
     return data;
   }
 
-  async getTopicWithContentArray(id: number, database = db): Promise<TopicWithContentArray> {
-    const query = database.query.topicTable.findFirst({
-      columns: TOPIC_DB_FIELDS,
+  async getTopicWithContentArray(id: number): Promise<TopicWithContentArray> {
+    const query = db.query.topicTable.findFirst({
       where: (fields, operators) => {
         return operators.eq(fields.id, id);
       },
       with: {
-        contents: {
-          columns: CONTENT_DB_FIELDS,
-          with: {
-            author: {
-              columns: CONTRIBUTOR_DB_FIELDS,
-            },
-            contributors: {
-              with: {
-                user: {
-                  columns: CONTRIBUTOR_DB_FIELDS,
-                },
-              },
-            },
-          },
-        },
-        author: {
-          columns: CONTRIBUTOR_DB_FIELDS,
-        },
+        author: true,
         contributors: {
           with: {
-            user: {
-              columns: CONTRIBUTOR_DB_FIELDS,
+            user: true,
+          },
+        },
+        contents: {
+          with: {
+            author: true,
+            richText: true,
+            image: true,
+            video: true,
+            contributors: {
+              with: {
+                user: true,
+              },
             },
           },
         },
@@ -144,84 +113,66 @@ export class TopicRepository {
       throw new Error('Erro ao buscar tópico');
     }
 
-    // Tenho quase certeza que essa não é a forma correta de fazer isso
-    const filledContentsPromises = data.contents.map(content => {
-      switch (content.contentType) {
-        case 'file':
-          return this.contentRepository.getContentWithFile(content);
-        case 'image':
-          return this.contentRepository.getContentWithImage(content);
-        case 'video':
-          return this.contentRepository.getContentWithVideo(content);
-        case 'rich_text':
-          return this.contentRepository.getContentWithRichTextPreview(content);
-        default:
-          throw new Error('Tipo de conteúdo inválido');
+    const withImage: ContentWithImage[] = [];
+    const withRTE: ContentWithRichTextPreview[] = [];
+    const withVideo: ContentWithVideo[] = [];
+
+    data.contents.forEach(content => {
+      if (content.image.contentType === 'image') {
+        withImage.push({
+          ...content,
+          contentType: 'image',
+          content: content.image,
+        });
+      }
+
+      if (content.richText.contentType === 'rich_text') {
+        withRTE.push({
+          ...content,
+          contentType: 'rich_text',
+          content: content.richText,
+        });
+      }
+
+      if (content.video.contentType === 'video') {
+        withVideo.push({
+          ...content,
+          contentType: 'video',
+          content: content.video,
+        });
       }
     });
 
-    const filledContents: Content[] = await Promise.all(filledContentsPromises).catch(error => {
-      log.error('Erro ao buscar conteúdos do tópico. Erro interno', { error, id });
-      throw new Error('Falha ao buscar conteúdos do tópico. Erro interno');
-    });
-
-    const dataWithFilledContents: TopicWithContentArray = {
+    return {
       ...data,
-      contents: filledContents,
+      contents: [...withImage, ...withRTE, ...withVideo].sort((a, b) => a.id - b.id),
     };
-
-    return dataWithFilledContents;
   }
 
-  async updateTopic(topic: UpdateTopic, database = db): Promise<Topic> {
-    const { id, contributorId, ...updatedData } = topic;
-
-    const updatedAt = new Date().toISOString();
-
-    return database.transaction(async tx => {
+  async updateTopic(topic: UpdateTopic): Promise<void> {
+    return db.transaction(async tx => {
       try {
-        tx.update(topicTable)
-          .set({ ...updatedData, updatedAt })
-          .where(eq(topicTable.id, id))
-          .execute();
-
-        tx.update(topicContributionTable)
-          .set({ topicId: id, userId: contributorId, contributedAt: updatedAt })
-          .where(eq(topicContributionTable.topicId, id))
-          .execute();
-
-        const data = await this.getTopicById(id, tx);
-
-        return data;
+        await tx.update(topicTable).set(topic).where(eq(topicTable.id, topic.id)).execute();
+        await this.contributionRepository.save(topic.contributorId, { topicId: topic.id }, tx);
       } catch (error) {
-        log.error(error);
+        log.error('Erro ao atualizar tópico', error);
         throw new Error('Erro ao atualizar tópico');
       }
     });
   }
 
-  async enableTopic(id: number, database = db): Promise<void> {
-    const updatedAt = new Date().toISOString();
+  async enableTopic(id: number): Promise<void> {
     try {
-      await database
-        .update(topicTable)
-        .set({ status: contentStatus.PUBLISHED, updatedAt })
-        .where(eq(topicTable.id, id))
-        .execute();
+      await db.update(topicTable).set({ status: contentStatus.PUBLISHED }).where(eq(topicTable.id, id)).execute();
     } catch (error) {
       log.error('Erro ao habilitar tópico', error);
       throw new Error('Erro ao habilitar tópico');
     }
   }
 
-  async omitTopic(id: number, database = db): Promise<void> {
-    const updatedAt = new Date().toISOString();
+  async omitTopic(id: number): Promise<void> {
     try {
-      await database
-        .update(topicTable)
-        .set({ status: contentStatus.DRAFT, updatedAt })
-        .where(eq(topicTable.id, id))
-        .execute();
+      await db.update(topicTable).set({ status: contentStatus.DRAFT }).where(eq(topicTable.id, id)).execute();
     } catch (error) {
       log.error('Erro ao omitir tópico', error);
       throw new Error('Erro ao omitir tópico');

@@ -4,7 +4,7 @@ import type {
   ContentVideo,
   ContentWithImage,
   ContentWithRichTextPreview,
-  ContentWithVideo
+  ContentWithVideo,
 } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { log } from '@/modules/logging/lib/pino';
@@ -46,7 +46,7 @@ export class ContentRepository {
   async getContentWithRichTextPreview(content: BaseContent): Promise<ContentWithRichTextPreview> {
     const resultRichtext: ContentRichTextPreview | undefined = await db.query.contentRichTextTable.findFirst({
       where: (fields, operators) => operators.eq(fields.baseContentId, content.id),
-    })
+    });
 
     if (!resultRichtext) {
       throw new Error('Erro ao buscar conteúdo de rich text com id = ' + content.id);

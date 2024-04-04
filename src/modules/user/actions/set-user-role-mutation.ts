@@ -6,7 +6,6 @@ import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { z } from 'zod';
 import { UserRepository } from '../repositories/user-repository';
-import { type User } from '../types/user';
 
 const setUserRoleUseCaseSchema = z.object({
   userId: z.string(),
@@ -15,7 +14,7 @@ const setUserRoleUseCaseSchema = z.object({
 
 export type SetUserRoleSchema = z.infer<typeof setUserRoleUseCaseSchema>;
 
-export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<User> {
+export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<void> {
   const session = await getActionSession();
 
   if (!session) {
