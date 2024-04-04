@@ -1,25 +1,15 @@
 import type { BaseContent } from '@/modules/content/types/content';
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db, type DBTransaction } from '@/modules/database/db';
-import { contentTable, type NewContentTable } from '@/modules/database/schema/content';
+import { contentTable, type ContentInsert } from '@/modules/database/schema/content';
 import { log } from '@/modules/logging/lib/pino';
 import type { WithOptionalID } from '@/shared/utils/with';
 import { eq } from 'drizzle-orm';
 
-export const CONTENT_DB_FIELDS = Object.freeze({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-  deletedAt: true,
-  title: true,
-  active: true,
-  contentType: true,
-});
-
 export class BaseContentRepository {
   constructor(private readonly contributionRepository = new ContributionRepository()) {}
 
-  async upsertBaseContent(content: WithOptionalID<NewContentTable>, tx: DBTransaction): Promise<number> {
+  async upsertBaseContent(content: WithOptionalID<ContentInsert>, tx: DBTransaction): Promise<number> {
     try {
       const insertedContent = await tx
         .insert(contentTable)

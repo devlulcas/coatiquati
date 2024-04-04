@@ -3,8 +3,8 @@ import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { userTable } from './user';
 
-export type Feedback = InferSelectModel<typeof feedbackTable>;
-export type NewFeedback = InferInsertModel<typeof feedbackTable>;
+export type FeedbackSelect = InferSelectModel<typeof feedbackTable>;
+export type FeedbackInsert = InferInsertModel<typeof feedbackTable>;
 
 export const feedbackTable = sqliteTable('feedback', {
   id: integer('id').primaryKey(),
@@ -12,9 +12,9 @@ export const feedbackTable = sqliteTable('feedback', {
     .notNull()
     .references(() => userTable.id),
   type: text('type').notNull().$type<'bug' | 'feature' | 'improvement'>(),
-  content: text('content', { mode: 'json' }).$type<string>().notNull(),
+  content: text('content').notNull(),
   softwareVersion: text('software_version').notNull(),
-  ...tableTimestampColumns
+  ...tableTimestampColumns,
 });
 
 export const feedbackTableRelations = relations(feedbackTable, ({ one }) => ({

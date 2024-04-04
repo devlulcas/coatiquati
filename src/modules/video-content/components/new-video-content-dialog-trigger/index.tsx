@@ -5,23 +5,23 @@ import { Dialog, DialogContent, DialogTrigger } from '@/shared/components/ui/dia
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { useState } from 'react';
-import { createNewVideoContentMutation } from '../../actions/create-new-video-content-mutation';
+import { upsertVideoContentMutation } from '../../actions/upsert-video-content-mutation';
+import type { NewVideoContentSchema } from '../../schemas/new-video-content-schema';
 
 type NewVideoContentDialogTriggerProps = {
-  topicId: number;
   children: React.ReactNode;
+  defaultValues?: Partial<NewVideoContentSchema>;
 };
 
-export function NewVideoContentDialogTrigger({ topicId, children }: NewVideoContentDialogTriggerProps) {
+export function NewVideoContentDialogTrigger({ defaultValues, children }: NewVideoContentDialogTriggerProps) {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
 
   const createNewVideoContentMutationState = useServerActionMutation({
-    serverAction: createNewVideoContentMutation,
-    onSuccessfulAction: newVideo => {
+    serverAction: upsertVideoContentMutation,
+    onSuccessfulAction: () => {
       toast({
         title: 'Conteúdo de vídeo criado com sucesso',
-        description: `"${newVideo.description.toUpperCase()}" foi adicionado a lista de vídeos com sucesso.`,
         variant: 'success',
       });
 
@@ -41,7 +41,7 @@ export function NewVideoContentDialogTrigger({ topicId, children }: NewVideoCont
       <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent className="min-w-fit">
-        <VideoContentBaseForm defaultValues={{ topicId }} onSubmit={createNewVideoContentMutationState.mutate} />
+        <VideoContentBaseForm defaultValues={defaultValues} onSubmit={createNewVideoContentMutationState.mutate} />
       </DialogContent>
     </Dialog>
   );

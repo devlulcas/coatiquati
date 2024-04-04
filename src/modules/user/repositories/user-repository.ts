@@ -2,59 +2,22 @@ import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
-import { CATEGORY_DB_FIELDS, TRAIL_DB_FIELDS } from '@/modules/trail/repositories/trail-repository';
 import type { UpdateUser, User, UserProfile } from '@/modules/user/types/user';
 import { eq } from 'drizzle-orm';
 
-export const USER_DB_FIELDS = Object.freeze({
-  avatar: true,
-  createdAt: true,
-  email: true,
-  id: true,
-  isBanned: true,
-  role: true,
-  updatedAt: true,
-  username: true,
-  verified: true,
-});
-
-export const CONTRIBUTOR_DB_FIELDS = Object.freeze({
-  id: true,
-  username: true,
-  avatar: true,
-  createdAt: true,
-  updatedAt: true,
-  deletedAt: true,
-});
-
 export class UserRepository {
-  async updateUser(id: string, user: UpdateUser, database = db): Promise<User> {
-    const updatedAt = new Date().toISOString();
-
+  async updateUser(id: string, user: UpdateUser): Promise<void> {
     try {
-      await database
-        .update(userTable)
-        .set({ ...user, updatedAt })
-        .where(eq(userTable.id, id))
-        .execute();
-
-      const data = await database.query.userTable.findFirst({ columns: USER_DB_FIELDS });
-
-      if (!data) {
-        throw new Error('Usuário não encontrado');
-      }
-
-      return data;
+      await db.update(userTable).set(user).where(eq(userTable.id, id)).execute();
     } catch (error) {
-      log.error(error);
+      log.error('Erro ao atualizar usuário', error);
       throw new Error('Erro ao atualizar usuário');
     }
   }
 
-  async getUserById(id: string, database = db): Promise<User | null> {
+  async getUserById(id: string): Promise<User | null> {
     try {
-      const data = await database.query.userTable.findFirst({
-        columns: USER_DB_FIELDS,
+      const data = await db.query.userTable.findFirst({
         where: (fields, operators) => operators.eq(fields.id, id),
       });
 
@@ -69,9 +32,8 @@ export class UserRepository {
     }
   }
 
-  async getUsers(params: PaginationSchemaWithSearch, database = db): Promise<User[]> {
-    return database.query.userTable.findMany({
-      columns: USER_DB_FIELDS,
+  async getUsers(params: PaginationSchemaWithSearch): Promise<User[]> {
+    return db.query.userTable.findMany({
       limit: params.take,
       offset: params.skip,
       where: (fields, operators) => {
@@ -83,28 +45,20 @@ export class UserRepository {
     });
   }
 
-  async getUserProfile(username: string, database = db): Promise<UserProfile | null> {
+  async getUserProfile(username: string): Promise<UserProfile | null> {
     try {
-      const data = await database.query.userTable.findFirst({
-        columns: USER_DB_FIELDS,
+      const data = await db.query.userTable.findFirst({
         where: (fields, operators) => operators.eq(fields.username, username),
         with: {
           authoredTrails: {
-            columns: TRAIL_DB_FIELDS,
             with: {
-              author: {
-                columns: CONTRIBUTOR_DB_FIELDS,
-              },
+              author: true,
               contributors: {
                 with: {
-                  user: {
-                    columns: CONTRIBUTOR_DB_FIELDS,
-                  },
+                  user: true,
                 },
               },
-              category: {
-                columns: CATEGORY_DB_FIELDS,
-              },
+              category: true,
             },
           },
         },
@@ -115,12 +69,7 @@ export class UserRepository {
         return null;
       }
 
-      const result: UserProfile = {
-        ...data,
-        authoredTrails: data.authoredTrails.map(trail => trail),
-      };
-
-      return result;
+      return data;
     } catch (error) {
       log.error(error);
       return null;

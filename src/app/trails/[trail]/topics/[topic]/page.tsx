@@ -90,9 +90,9 @@ export default async function Page({ params }: PageProps) {
       <h3 className="mb-4 mt-6 text-xl font-bold">Conteúdos</h3>
 
       <ul className="flex flex-col gap-3">
-        {topicData.contents.map(content => (
-          <li key={content.id}>
-            <RenderCorrectContentCard content={content} />
+        {topicData.contents.map(data => (
+          <li key={data.id}>
+            <RenderCorrectContentCard data={data} />
           </li>
         ))}
 

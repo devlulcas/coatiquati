@@ -1,29 +1,31 @@
 'use client';
 
-import { newRichTextContentAction } from '@/modules/rich-text-content/components/new-rich-text-content-form/new-rich-text-content-action';
 import { RichTextContentBaseForm } from '@/modules/rich-text-content/components/rich-text-content-base-form';
-import type { NewRichTextContentSchema } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
 import { useToast } from '@/shared/components/ui/use-toast';
+import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
+import { upsertRichTextContentMutation } from '../../actions/upsert-rich-text-content-mutation';
+import type { NewRichTextContentSchema } from '../../schemas/new-rich-text-content-schema';
 
 type NewRichTextContentFormProps = {
-  topicId: number;
+  defaultValues: Partial<NewRichTextContentSchema>;
 };
 
-export function NewRichTextContentForm({ topicId }: NewRichTextContentFormProps) {
+export function NewRichTextContentForm({ defaultValues }: NewRichTextContentFormProps) {
   const { toast } = useToast();
 
-  const onSubmit = async (data: NewRichTextContentSchema) => {
-    try {
-      await newRichTextContentAction(data);
-      toast({ title: 'Conteúdo textual criado com sucesso' });
-    } catch (error) {
+  const mutation = useServerActionMutation({
+    serverAction: upsertRichTextContentMutation,
+    onFailedAction: error => {
       toast({
         title: 'Erro ao criar conteúdo textual',
         description: error instanceof Error ? error.message : String(error),
         variant: 'destructive',
       });
-    }
-  };
+    },
+    onSuccessfulAction: () => {
+      toast({ title: 'Conteúdo textual criado com sucesso' });
+    },
+  });
 
-  return <RichTextContentBaseForm defaultValues={{ topicId }} onSubmit={onSubmit} />;
+  return <RichTextContentBaseForm defaultValues={defaultValues} onSubmit={mutation.mutate} />;
 }

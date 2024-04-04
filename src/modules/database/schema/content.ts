@@ -8,21 +8,23 @@ import { userTable } from './user';
 
 const baseContentColumns = {
   id: integer('id').primaryKey().notNull(),
-  baseContentId: integer('base_content_id').notNull().references(() => contentTable.id, {    onDelete: 'cascade',    onUpdate: 'cascade'}),
+  baseContentId: integer('base_content_id')
+    .notNull()
+    .references(() => contentTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
   ...tableTimestampColumns,
-}
+};
 
 // BASE
-export type ContentTable = InferSelectModel<typeof contentTable>;
-export type NewContentTable = InferInsertModel<typeof contentTable>;
+export type ContentSelect = InferSelectModel<typeof contentTable>;
+export type ContentInsert = InferInsertModel<typeof contentTable>;
 export const contentTable = sqliteTable('content', {
   id: integer('id').primaryKey().notNull(),
   title: text('title').notNull(),
   active: integer('active', { mode: 'boolean' }).notNull().default(true),
-  topicId: integer('topic_id').references(() => topicTable.id, {    onDelete: 'cascade',    onUpdate: 'cascade'}),
+  topicId: integer('topic_id').references(() => topicTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
   authorId: text('user_id')
-  .notNull()
-  .references(() => userTable.id, {      onDelete: 'no action',      onUpdate: 'cascade'}),
+    .notNull()
+    .references(() => userTable.id, { onDelete: 'no action', onUpdate: 'cascade' }),
   ...tableTimestampColumns,
 });
 export const contentTableRelations = relations(contentTable, ({ one, many }) => ({
@@ -34,21 +36,29 @@ export const contentTableRelations = relations(contentTable, ({ one, many }) => 
     fields: [contentTable.authorId],
     references: [userTable.id],
   }),
-  images: many(contentImageTable),
-  videos: many(contentVideoTable),
-  richTexts: many(contentRichTextTable),
   contributors: many(contentContributionTable),
+  image: one(contentImageTable, {
+    fields: [contentTable.id],
+    references: [contentImageTable.baseContentId],
+  }),
+  richText: one(contentRichTextTable, {
+    fields: [contentTable.id],
+    references: [contentRichTextTable.baseContentId],
+  }),
+  video: one(contentVideoTable, {
+    fields: [contentTable.id],
+    references: [contentVideoTable.baseContentId],
+  }),
 }));
 
-
 // IMAGE
-export type ContentImageTable = InferSelectModel<typeof contentImageTable>;
-export type NewContentImageTable = InferInsertModel<typeof contentImageTable>;
+export type ContentImageSelect = InferSelectModel<typeof contentImageTable>;
+export type ContentImageInsert = InferInsertModel<typeof contentImageTable>;
 export const contentImageTable = sqliteTable('content_image', {
   contentType: text('content_type').notNull().default('image').$type<'image'>(),
   src: text('stc').notNull(),
   description: text('description').notNull(),
-  ...baseContentColumns
+  ...baseContentColumns,
 });
 export const contentImageTableRelations = relations(contentImageTable, ({ one }) => ({
   content: one(contentTable, {
@@ -58,13 +68,13 @@ export const contentImageTableRelations = relations(contentImageTable, ({ one })
 }));
 
 // RICH TEXT
-export type ContentRichTextTable = InferSelectModel<typeof contentRichTextTable>;
-export type NewContentRichTextTable = InferInsertModel<typeof contentRichTextTable>;
+export type ContentRichTextSelect = InferSelectModel<typeof contentRichTextTable>;
+export type ContentRichTextInsert = InferInsertModel<typeof contentRichTextTable>;
 export const contentRichTextTable = sqliteTable('content_rich_text', {
   contentType: text('content_type').notNull().default('rich_text').$type<'rich_text'>(),
   previewAsJson: text('preview_as_json', { mode: 'json' }).$type<JSONContent>().notNull(),
   asJson: text('as_json', { mode: 'json' }).$type<JSONContent>().notNull(),
-  ...baseContentColumns
+  ...baseContentColumns,
 });
 export const contentRichTextTableRelations = relations(contentRichTextTable, ({ one }) => ({
   content: one(contentTable, {
@@ -74,13 +84,13 @@ export const contentRichTextTableRelations = relations(contentRichTextTable, ({ 
 }));
 
 // VIDEO
-export type ContentVideoTable = InferSelectModel<typeof contentVideoTable>;
-export type NewContentVideoTable = InferInsertModel<typeof contentVideoTable>;
+export type ContentVideoSelect = InferSelectModel<typeof contentVideoTable>;
+export type ContentVideoInsert = InferInsertModel<typeof contentVideoTable>;
 export const contentVideoTable = sqliteTable('content_video', {
   contentType: text('content_type').notNull().default('video').$type<'video'>(),
   src: text('stc').notNull(),
   description: text('description').notNull(),
-  ...baseContentColumns
+  ...baseContentColumns,
 });
 export const contentVideoTableRelations = relations(contentVideoTable, ({ one }) => ({
   content: one(contentTable, {
