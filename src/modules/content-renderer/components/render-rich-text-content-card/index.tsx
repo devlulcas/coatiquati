@@ -7,7 +7,7 @@ import { RenderedContentWrapper } from '../rendered-content-wrapper';
 
 export async function RenderRichTextContentCard({ data }: { data: ContentWithRichTextPreview }) {
   const comments = await getCommentsOnContentQuery(data.content.baseContentId);
-  
+
   return (
     <RenderedContentWrapper
       title={data.title}

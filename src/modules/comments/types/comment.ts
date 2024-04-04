@@ -3,9 +3,9 @@ import type { Contributor } from '@/modules/user/types/user';
 
 export type Comment = ContentCommentTable & {
   author: Contributor;
-  votes:{
+  votes: {
     commentId: number;
     userId: string;
     vote: number;
-  }[]
+  }[];
 };

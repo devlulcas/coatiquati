@@ -25,7 +25,7 @@ export const contentCommentTable = sqliteTable(
       }),
     content: text('content').notNull(),
     parentCommentId: integer('parent_comment_id'),
-    ...tableTimestampColumns
+    ...tableTimestampColumns,
   },
   table => ({
     parentCommentReference: foreignKey(() => ({
@@ -50,7 +50,7 @@ export const commentVoteTable = sqliteTable('comment_vote', {
       onUpdate: 'cascade',
     }),
   vote: integer('vote').notNull(),
-  ...tableTimestampColumns
+  ...tableTimestampColumns,
 });
 
 export const commentVoteTableRelations = relations(commentVoteTable, ({ one }) => ({

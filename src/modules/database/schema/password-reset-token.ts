@@ -9,7 +9,7 @@ export const passwordResetTokenTable = sqliteTable('user_password_reset_token', 
     .notNull()
     .references(() => userTable.id),
   expires: blob('expires', { mode: 'bigint' }).notNull(),
-  ...tableTimestampColumns
+  ...tableTimestampColumns,
 });
 
 export const passwordResetTokenTableRelations = relations(passwordResetTokenTable, ({ one }) => ({

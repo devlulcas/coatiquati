@@ -19,7 +19,7 @@ export const userTable = sqliteTable('user', {
   avatar: text('avatar').notNull().default('default-user-avatar.png'),
   verified: integer('email_verified', { mode: 'boolean' }).default(false),
   isBanned: integer('is_banned', { mode: 'boolean' }).default(false),
-  ...tableTimestampColumns
+  ...tableTimestampColumns,
 });
 
 export const userTableRelations = relations(userTable, ({ one, many }) => ({
@@ -36,9 +36,11 @@ export const userTableRelations = relations(userTable, ({ one, many }) => ({
 
 export const sessionTable = sqliteTable('user_session', {
   id: text('id').primaryKey(),
-  userId: text('user_id').notNull().references(() => userTable.id),
-  activeExpires: blob('active_expires', {    mode: 'bigint'}).notNull(),
-  idleExpires: blob('idle_expires', {    mode: 'bigint'}).notNull(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => userTable.id),
+  activeExpires: blob('active_expires', { mode: 'bigint' }).notNull(),
+  idleExpires: blob('idle_expires', { mode: 'bigint' }).notNull(),
 });
 
 export const keyTable = sqliteTable('user_key', {

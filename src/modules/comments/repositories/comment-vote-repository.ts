@@ -4,7 +4,7 @@ import { and, eq } from 'drizzle-orm';
 
 export class CommentVoteRepository {
   async getUserVote(commentId: number, userId: string): Promise<1 | -1 | 0> {
-    const result = await  db
+    const result = await db
       .select({ vote: commentVoteTable.vote })
       .from(commentVoteTable)
       .where(and(eq(commentVoteTable.commentId, commentId), eq(commentVoteTable.userId, userId)))
@@ -24,8 +24,11 @@ export class CommentVoteRepository {
   }
 
   async removeVote(commentId: number, userId: string): Promise<void> {
-   const result = await db.delete(commentVoteTable).where(and(eq(commentVoteTable.commentId, commentId), eq(commentVoteTable.userId, userId))).execute();
-  
+    const result = await db
+      .delete(commentVoteTable)
+      .where(and(eq(commentVoteTable.commentId, commentId), eq(commentVoteTable.userId, userId)))
+      .execute();
+
     if (result.rowsAffected === 0) {
       throw new Error('Erro ao remover voto');
     }
@@ -36,7 +39,7 @@ export class CommentVoteRepository {
       .insert(commentVoteTable)
       .values({ commentId, userId, vote })
       .returning({ id: commentVoteTable.id })
-      .onConflictDoUpdate({ target: [commentVoteTable.commentId, commentVoteTable.userId], set: { vote }})
+      .onConflictDoUpdate({ target: [commentVoteTable.commentId, commentVoteTable.userId], set: { vote } })
       .execute();
 
     if (!result.length) {

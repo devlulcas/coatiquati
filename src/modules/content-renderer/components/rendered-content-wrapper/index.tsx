@@ -66,7 +66,10 @@ export function RenderedContentWrapper({ children, title, by, content, comments 
         <ul className="flex flex-col gap-2">
           {comments.map(comment => (
             <li key={comment.id} className="flex gap-2">
-              <UserAvatar className="h-8 w-8 rounded border border-secondary-foreground/25 text-xs" user={comment.author} />
+              <UserAvatar
+                className="h-8 w-8 rounded border border-secondary-foreground/25 text-xs"
+                user={comment.author}
+              />
 
               <div className="flex flex-col justify-between">
                 <p className="text-md font-bold">{comment.author.username}</p>

@@ -23,37 +23,32 @@ export class CommentRepository {
           operators.eq(fields.contentId, contentId),
           operators.isNull(fields.parentCommentId),
           operators.isNull(fields.deletedAt),
-        )
+        );
       },
       with: {
         author: {
           columns: USER_DB_FIELDS,
         },
         votes: {
-          columns: {vote: true, commentId: true, userId: true},
+          columns: { vote: true, commentId: true, userId: true },
         },
-      }
-    })
-
+      },
+    });
   }
 
   async getCommentResponsesByCommentId(commentId: number): Promise<Comment[]> {
     return db.query.contentCommentTable.findMany({
       where: (fields, operators) => {
-        return operators.and(
-          operators.eq(fields.parentCommentId, commentId),
-          operators.isNull(fields.deletedAt),
-        )
+        return operators.and(operators.eq(fields.parentCommentId, commentId), operators.isNull(fields.deletedAt));
       },
       with: {
         author: {
           columns: USER_DB_FIELDS,
         },
         votes: {
-          columns: {vote: true, commentId: true, userId: true},
+          columns: { vote: true, commentId: true, userId: true },
         },
-      }
-    })
+      },
+    });
   }
-
 }

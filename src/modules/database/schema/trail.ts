@@ -26,7 +26,7 @@ export const trailTable = sqliteTable('trail', {
       onDelete: 'no action',
       onUpdate: 'cascade',
     }),
-    ...tableTimestampColumns
+  ...tableTimestampColumns,
 });
 
 export const trailTableRelations = relations(trailTable, ({ many, one }) => ({

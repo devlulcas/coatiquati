@@ -24,7 +24,7 @@ export function NewTrailForm() {
 
   return (
     <div className="flex flex-col gap-2">
-      <h2 className="text-xl">{mutation.isPending ? "Criando" : "Criar"} nova trilha</h2>
+      <h2 className="text-xl">{mutation.isPending ? 'Criando' : 'Criar'} nova trilha</h2>
       <TrailBaseForm onSubmit={mutation.mutate} />
     </div>
   );

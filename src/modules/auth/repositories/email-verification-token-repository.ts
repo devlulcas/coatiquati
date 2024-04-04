@@ -19,8 +19,10 @@ export class EmailVerificationTokenRepository {
 
       // Se o token for válido por mais da metade do tempo de expiração, ele é reutilizável
       if (storedUserTokens.length > 0) {
-        const halfLifetime =EMAIL_VERIFICATION_TOKEN_EXPIRES_IN / 2
-        const reusableStoredToken = storedUserTokens.find(token => isWithinExpiration(token.expiresAt.getTime() - halfLifetime));
+        const halfLifetime = EMAIL_VERIFICATION_TOKEN_EXPIRES_IN / 2;
+        const reusableStoredToken = storedUserTokens.find(token =>
+          isWithinExpiration(token.expiresAt.getTime() - halfLifetime),
+        );
         if (reusableStoredToken) return reusableStoredToken;
       }
 
@@ -56,8 +58,8 @@ export class EmailVerificationTokenRepository {
 
         if (!storedToken) {
           log.error('Token de verificação de e-mail não encontrado', { tokenId });
-          throw new Error('Invalid token')
-        };
+          throw new Error('Invalid token');
+        }
 
         const results = await tx
           .delete(emailVerificationTokenTable)
@@ -67,8 +69,8 @@ export class EmailVerificationTokenRepository {
 
         if (results.length === 0) {
           log.error('Erro ao deletar token de verificação de e-mail', { tokenId });
-          throw new Error('Invalid token')
-        };
+          throw new Error('Invalid token');
+        }
 
         return storedToken;
       } catch (error) {

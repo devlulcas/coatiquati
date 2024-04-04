@@ -21,7 +21,6 @@ export const REPORT_REASON = {
 export const isValidReportReason = (reason: string): reason is ReportReason =>
   Object.values(REPORT_REASON).includes(reason as any);
 
-
 type ReportReason = (typeof REPORT_REASON)[keyof typeof REPORT_REASON];
 
 export const reportTable = sqliteTable('report', {
@@ -35,7 +34,7 @@ export const reportTable = sqliteTable('report', {
   description: text('description').notNull(),
   status: text('status').$type<'pending' | 'resolved'>().notNull().default('pending'),
   moderatorId: text('moderator_id').references(() => userTable.id),
-  ...tableTimestampColumns
+  ...tableTimestampColumns,
 });
 
 export const reportTableRelations = relations(reportTable, ({ one }) => ({
@@ -57,7 +56,7 @@ export const banTable = sqliteTable('ban', {
   moderatorId: text('moderator_id').references(() => userTable.id),
   reason: text('reason').notNull(),
   expires: blob('expires', { mode: 'bigint' }).notNull(),
-  ...tableTimestampColumns
+  ...tableTimestampColumns,
 });
 
 export const banTableRelations = relations(banTable, ({ one }) => ({

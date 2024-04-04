@@ -19,7 +19,7 @@ export const trailSubscriptionTable = sqliteTable(
         onUpdate: 'cascade',
       }),
   },
-  table => ({pk: primaryKey({ columns: [table.trailId, table.userId]})  }),
+  table => ({ pk: primaryKey({ columns: [table.trailId, table.userId] }) }),
 );
 
 export const trailSubscriptionTableRelations = relations(trailSubscriptionTable, ({ one }) => ({
