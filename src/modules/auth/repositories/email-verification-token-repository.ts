@@ -5,7 +5,7 @@ import {
 } from '@/modules/database/schema/email-verification-token';
 import { log } from '@/modules/logging/lib/pino';
 import { eq } from 'drizzle-orm';
-import { isWithinExpiration } from 'lucia/utils';
+import { generateRandomString, isWithinExpiration } from 'lucia/utils';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
 
 export class EmailVerificationTokenRepository {
@@ -26,7 +26,7 @@ export class EmailVerificationTokenRepository {
         if (reusableStoredToken) return reusableStoredToken;
       }
 
-      const newToken = new Crypto().getRandomValues(new Uint8Array(32)).join('').slice(0, 63);
+      const newToken = generateRandomString(64);
 
       const results = await database
         .insert(emailVerificationTokenTable)
