@@ -29,11 +29,15 @@ export async function toggleTrailStatusMutation(params: TrailWithIdSchema): Prom
 
   if (trail.status === 'PUBLISHED') {
     trailRepository.omitTrail(validatedParams.data.id);
-  } else if (trail.status === 'DRAFT') {
-    trailRepository.enableTrail(validatedParams.data.id);
-  } else {
-    throw new Error('Status inválido para trilha.');
+    revalidateTrails({ username: session.user.username, trailId: trail.id });
+    return;
   }
 
-  revalidateTrails({ username: session.user.username, trailId: trail.id });
+  if (trail.status === 'DRAFT') {
+    trailRepository.enableTrail(validatedParams.data.id);
+    revalidateTrails({ username: session.user.username, trailId: trail.id });
+    return;
+  }
+
+  throw new Error('Status inválido para trilha.');
 }

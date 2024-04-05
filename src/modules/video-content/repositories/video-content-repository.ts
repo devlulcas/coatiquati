@@ -29,6 +29,8 @@ export class VideoContentRepository {
       try {
         const newContentId = await this.baseContentRepository.upsertBaseContent(baseContent, tx);
 
+        log.info('Conteúdo base criado com sucesso', { baseContent, newContentId });
+
         await tx
           .insert(contentVideoTable)
           .values({
@@ -36,13 +38,16 @@ export class VideoContentRepository {
             baseContentId: newContentId,
             description: video.description,
             src: video.src,
+            contentType: 'video',
           })
-          .onConflictDoUpdate({ target: [contentVideoTable.baseContentId, contentVideoTable.id], set: video })
+          .onConflictDoUpdate({ target: [contentVideoTable.id], set: video })
           .execute();
+
+        log.info('Conteúdo de video criado com sucesso', { baseContent, video, newContentId });
 
         return newContentId;
       } catch (error) {
-        log.error('Erro ao criar conteúdo de video.', { baseContent, video, error });
+        log.error('Erro ao criar conteúdo de video ' + String(error), { baseContent, video });
         tx.rollback();
         throw new Error('Erro ao criar conteúdo de video.');
       }

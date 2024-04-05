@@ -78,7 +78,7 @@ export class TopicRepository {
     });
 
     if (!data) {
-      log.error('Erro ao buscar tópico. Trilha não encontrada', { id });
+      log.error('Erro ao buscar tópico. Tópico não encontrada', { id });
       throw new Error('Erro ao buscar tópico. Trilha não encontrada');
     }
 
@@ -132,34 +132,91 @@ export class TopicRepository {
     const withVideo: ContentWithVideo[] = [];
 
     data.contents.forEach(content => {
-      if (content.image.contentType === 'image') {
-        withImage.push({
-          ...content,
+      console.log('----------------');
+      console.log(content);
+      if (content.image?.contentType === 'image') {
+        const image: ContentWithImage = {
+          active: content.active,
+          author: content.author,
+          contributors: content.contributors,
+          createdAt: content.createdAt,
           contentType: 'image',
-          content: content.image,
-        });
+          id: content.id,
+          updatedAt: content.updatedAt,
+          deletedAt: content.deletedAt,
+          title: content.title,
+          content: {
+            baseContentId: content.image.baseContentId,
+            contentType: 'image',
+            createdAt: content.image.createdAt,
+            id: content.image.id,
+            updatedAt: content.image.updatedAt,
+            deletedAt: content.image.deletedAt,
+            src: content.image.src,
+            description: content.image.description,
+          },
+        };
+
+        withImage.push(image);
       }
 
-      if (content.richText.contentType === 'rich_text') {
-        withRTE.push({
-          ...content,
+      if (content.richText?.contentType === 'rich_text') {
+        const rt: ContentWithRichTextPreview = {
+          active: content.active,
+          author: content.author,
+          contributors: content.contributors,
+          createdAt: content.createdAt,
           contentType: 'rich_text',
-          content: content.richText,
-        });
+          id: content.id,
+          updatedAt: content.updatedAt,
+          deletedAt: content.deletedAt,
+          title: content.title,
+          content: {
+            baseContentId: content.richText.baseContentId,
+            contentType: 'rich_text',
+            createdAt: content.richText.createdAt,
+            id: content.richText.id,
+            updatedAt: content.richText.updatedAt,
+            deletedAt: content.richText.deletedAt,
+            previewAsJson: content.richText.previewAsJson,
+          },
+        };
+
+        withRTE.push(rt);
       }
 
-      if (content.video.contentType === 'video') {
-        withVideo.push({
-          ...content,
+      if (content.video?.contentType === 'video') {
+        const video: ContentWithVideo = {
+          active: content.active,
+          author: content.author,
+          contributors: content.contributors,
+          createdAt: content.createdAt,
           contentType: 'video',
-          content: content.video,
-        });
+          id: content.id,
+          updatedAt: content.updatedAt,
+          deletedAt: content.deletedAt,
+          title: content.title,
+          content: {
+            baseContentId: content.video.baseContentId,
+            contentType: 'video',
+            createdAt: content.video.createdAt,
+            id: content.video.id,
+            updatedAt: content.video.updatedAt,
+            deletedAt: content.video.deletedAt,
+            src: content.video.src,
+            description: content.video.description,
+          },
+        };
+
+        withVideo.push(video);
       }
     });
 
+    const unifiedContents = [...withImage, ...withRTE, ...withVideo].sort((a, b) => a.id - b.id);
+
     return {
       ...data,
-      contents: [...withImage, ...withRTE, ...withVideo].sort((a, b) => a.id - b.id),
+      contents: unifiedContents,
     };
   }
 

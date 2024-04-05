@@ -13,7 +13,7 @@ export const trailContributionTable = sqliteTable(
   'trail_contribution',
   {
     trailId: integer('trail_id')
-      .references(() => contentTable.id)
+      .references(() => trailTable.id)
       .notNull(),
     userId: text('user_id')
       .references(() => userTable.id)
@@ -21,7 +21,7 @@ export const trailContributionTable = sqliteTable(
     contributedAt: integer('contributed_at', { mode: 'timestamp' })
       .notNull()
       .default(NOW_AS_INTEGER)
-      .$onUpdate(() => NOW_AS_INTEGER),
+      .$onUpdate(() => new Date()),
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.trailId] }) }),
 );
@@ -41,7 +41,7 @@ export const topicContributionTable = sqliteTable(
   'topic_contribution',
   {
     topicId: integer('topic_id')
-      .references(() => contentTable.id)
+      .references(() => topicTable.id)
       .notNull(),
     userId: text('user_id')
       .references(() => userTable.id)

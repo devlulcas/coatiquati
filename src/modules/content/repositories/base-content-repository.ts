@@ -18,7 +18,11 @@ export class BaseContentRepository {
         .returning({ id: contentTable.id })
         .get();
 
+      log.info('Conteúdo salvo com sucesso', { content: insertedContent });
+
       await this.contributionRepository.save(content.authorId, { contentId: insertedContent.id }, tx);
+
+      log.info('Contribuição salva com sucesso', { content: insertedContent });
 
       return insertedContent.id;
     } catch (error) {

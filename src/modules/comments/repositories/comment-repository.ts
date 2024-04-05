@@ -46,4 +46,18 @@ export class CommentRepository {
       },
     });
   }
+
+  async getCommentById(commentId: number): Promise<Comment | undefined> {
+    return db.query.contentCommentTable.findFirst({
+      where: (fields, operators) => {
+        return operators.and(operators.eq(fields.id, commentId), operators.isNull(fields.deletedAt));
+      },
+      with: {
+        author: true,
+        votes: {
+          columns: { vote: true, commentId: true, userId: true },
+        },
+      },
+    });
+  }
 }

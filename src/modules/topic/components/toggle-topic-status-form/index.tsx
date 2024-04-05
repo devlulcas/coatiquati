@@ -20,7 +20,7 @@ export function ToggleTopicStatusForm({ topic }: ToggleTopicStatusFormProps) {
     startTransition(async () => {
       try {
         await toggleTopicStatusMutation(topic.id);
-        toast({ title: `${topic.title} teve ser estado de publicação invertido` });
+        toast({ title: `${topic.title} teve seu estado de publicação invertido` });
       } catch (error) {
         toast({
           title: 'Erro ao alterar estado de publicação do tópico',

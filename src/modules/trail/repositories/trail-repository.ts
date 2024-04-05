@@ -19,11 +19,16 @@ export class TrailRepository {
             .values({ name: trail.category, authorId: trail.authorId })
             .onConflictDoNothing()
             .execute();
+
+          log.info('Categoria inserida', { category: trail.category });
         }
 
         const newTrail = await tx.insert(trailTable).values(trail).returning({ id: trailTable.id }).get();
         log.info('Trilha inserida', newTrail);
+
         await this.contributionRepository.save(trail.authorId, { trailId: newTrail.id }, tx);
+        log.info('Contribuição salva', { trailId: newTrail.id });
+
         return newTrail.id;
       } catch (error) {
         log.error('Erro ao criar trilha', String(error), trail);
@@ -138,7 +143,8 @@ export class TrailRepository {
     try {
       await db.update(trailTable).set({ status: contentStatus.DRAFT }).where(eq(trailTable.id, id)).execute();
     } catch (error) {
-      log.error('Erro ao omitir trilha', { error, id });
+      console.clear();
+      log.error('Erro ao omitir trilha ' + (error instanceof Error ? error.message : ''), { error, id });
       throw new Error('Erro ao omitir trilha');
     }
   }
@@ -147,7 +153,8 @@ export class TrailRepository {
     try {
       await db.update(trailTable).set({ status: contentStatus.PUBLISHED }).where(eq(trailTable.id, id)).execute();
     } catch (error) {
-      log.error('Erro ao habilitar trilha', { error, id });
+      console.clear();
+      log.error('Erro ao habilitar trilha ' + (error instanceof Error ? error.message : ''), { error, id });
       throw new Error('Erro ao habilitar trilha');
     }
   }

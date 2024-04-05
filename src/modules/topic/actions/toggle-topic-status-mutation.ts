@@ -18,7 +18,7 @@ export async function toggleTopicStatusMutation(topicId: number) {
 
   const topicRepository = new TopicRepository();
 
-  const topic = await topicRepository.getTopicById(topicId);
+  const topic = await topicRepository.getTopicById(topicId, true);
 
   if (topic.status === 'PUBLISHED') {
     topicRepository.omitTopic(topicId);

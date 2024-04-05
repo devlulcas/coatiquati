@@ -8,6 +8,7 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { toast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { AlertOctagonIcon, SendIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -34,6 +35,8 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
     },
   });
 
+  const queryClient = useQueryClient();
+
   const createCommentMutationState = useServerActionMutation({
     serverAction: commentOnContentMutation,
     onFailedAction: error => {
@@ -45,6 +48,7 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
     },
     onSuccessfulAction: () => {
       toast({ title: 'Seu comentário foi publicado com sucesso' });
+      queryClient.invalidateQueries({ queryKey: ['comment-responses', contentId, parentCommentId] });
     },
   });
 

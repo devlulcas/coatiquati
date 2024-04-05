@@ -20,7 +20,7 @@ export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
     startTransition(async () => {
       try {
         await toggleTrailStatusMutation(trail);
-        toast({ title: `${trail.title} teve ser estado de publicação invertido` });
+        toast({ title: `${trail.title} teve seu estado de publicação invertido` });
       } catch (error) {
         toast({
           title: 'Erro ao alterar estado de publicação da trilha',

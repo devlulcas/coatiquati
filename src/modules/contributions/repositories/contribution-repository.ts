@@ -39,7 +39,6 @@ export class ContributionRepository {
       }
     } catch (error) {
       log.error('Erro ao salvar contribuição' + String(error), { user, contributesTo });
-
       throw new Error('Erro ao salvar contribuição:' + (error instanceof Error ? error.message : String(error)));
     }
   }

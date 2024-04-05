@@ -1,6 +1,6 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { getPageSession } from '@/modules/auth/utils/get-page-session';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { type z } from 'zod';
@@ -18,7 +18,7 @@ export async function getTrailsQuery(params: GetTrailsUseCaseSchema = {}): Promi
     throw new Error('Parâmetros inválidos para buscar trilhas.');
   }
 
-  const session = await getActionSession();
+  const session = await getPageSession();
 
   const trailRepository = new TrailRepository();
 

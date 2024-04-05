@@ -7,7 +7,7 @@ export const createdAtColumn = integer('created_at', { mode: 'timestamp' }).notN
 export const updatedAtColumn = integer('updated_at', { mode: 'timestamp' })
   .notNull()
   .default(NOW_AS_INTEGER)
-  .$onUpdate(() => NOW_AS_INTEGER);
+  .$onUpdate(() => new Date());
 export const deletedAtColumn = integer('deleted_at', { mode: 'timestamp' });
 
 export const tableTimestampColumns = {
