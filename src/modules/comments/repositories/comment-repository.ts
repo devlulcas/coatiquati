@@ -1,6 +1,5 @@
 import { db } from '@/modules/database/db';
 import { contentCommentTable, type ContentNewCommentTable } from '@/modules/database/schema/comment';
-import { USER_DB_FIELDS } from '@/modules/user/repositories/user-repository';
 import type { Comment } from '../types/comment';
 
 export class CommentRepository {
@@ -26,9 +25,7 @@ export class CommentRepository {
         );
       },
       with: {
-        author: {
-          columns: USER_DB_FIELDS,
-        },
+        author: true,
         votes: {
           columns: { vote: true, commentId: true, userId: true },
         },
@@ -42,9 +39,7 @@ export class CommentRepository {
         return operators.and(operators.eq(fields.parentCommentId, commentId), operators.isNull(fields.deletedAt));
       },
       with: {
-        author: {
-          columns: USER_DB_FIELDS,
-        },
+        author: true,
         votes: {
           columns: { vote: true, commentId: true, userId: true },
         },

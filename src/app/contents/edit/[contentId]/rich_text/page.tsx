@@ -1,4 +1,4 @@
-import { GetRichTextContentUseCase } from '@/modules/rich-text-content/use-cases/get-rich-text-content-use-case';
+import { getRichTextContentQuery } from '@/modules/rich-text-content/actions/get-rich-text-content-query';
 
 type PageProps = {
   params: {
@@ -8,8 +8,7 @@ type PageProps = {
 
 export default async function Page({ params }: PageProps) {
   const contentId = Number(params.contentId);
-  const getRichTextContentUseCase = new GetRichTextContentUseCase();
-  const contentData = await getRichTextContentUseCase.execute({ id: contentId });
+  const contentData = await getRichTextContentQuery(contentId);
 
   return <pre>{JSON.stringify(contentData, null, 2)}</pre>;
 }

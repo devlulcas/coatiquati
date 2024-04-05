@@ -1,5 +1,4 @@
 import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
-import type { ContentRichText } from '@/modules/content/types/content';
 import { db } from '@/modules/database/db';
 import { contentRichTextTable, type ContentInsert } from '@/modules/database/schema/content';
 import { log } from '@/modules/logging/lib/pino';
@@ -8,10 +7,31 @@ import type { JSONContent } from '@tiptap/core';
 export class RichTextContentRepository {
   constructor(private readonly baseContentRepository: BaseContentRepository = new BaseContentRepository()) {}
 
-  async getByContentId(contentId: number): Promise<ContentRichText> {
-    const resultRichtext: ContentRichText | undefined = await db.query.contentRichTextTable.findFirst({
+  async getByContentId(contentId: number) {
+    const resultRichtext = await db.query.contentRichTextTable.findFirst({
       columns: { previewAsJson: false },
       where: (fields, operators) => operators.eq(fields.baseContentId, contentId),
+      with: {
+        content: {
+          with: {
+            author: true,
+            contributors: { with: { user: true } },
+            topic: {
+              with: {
+                trail: {
+                  with: {
+                    author: true,
+                    contributors: { with: { user: true } },
+                    category: true,
+                  },
+                },
+                author: true,
+                contributors: { with: { user: true } },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!resultRichtext) {

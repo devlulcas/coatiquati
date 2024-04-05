@@ -47,7 +47,7 @@ export type UpdateContent = Omit<Updatable<ContentSelect>, 'authorId' | 'content
   contributorId: ContentSelect['authorId'];
 };
 
-export type ContentRichTextPreview = Omit<ContentRichText, 'asJson'>;
+export type ContentRichTextPreview = Omit<ContentRichTextSelect, 'asJson'>;
 export type ContentRichText = Omit<ContentRichTextSelect, 'previewAsJson'>;
 export type NewContentRichText = Omit<Creatable<ContentRichTextInsert>, 'previewAsJson'>;
 export type UpdateContentRichText = Omit<UpdatableContent<ContentRichText>, 'previewAsJson'> & {
