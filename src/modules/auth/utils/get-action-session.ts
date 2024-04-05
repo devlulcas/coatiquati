@@ -1,3 +1,5 @@
+'use server';
+
 import { handleActionAuthRequest } from './handle-auth-request';
 
 export const getActionSession = () => {

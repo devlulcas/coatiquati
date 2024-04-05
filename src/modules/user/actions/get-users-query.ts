@@ -1,3 +1,5 @@
+'use server';
+
 import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { type z } from 'zod';
 import { UserRepository } from '../repositories/user-repository';
