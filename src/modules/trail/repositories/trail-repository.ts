@@ -14,10 +14,11 @@ export class TrailRepository {
     return db.transaction(async tx => {
       try {
         const newTrail = await tx.insert(trailTable).values(trail).returning({ id: trailTable.id }).get();
+        log.info('Trilha inserida', newTrail);
         await this.contributionRepository.save(trail.authorId, { trailId: newTrail.id }, tx);
         return newTrail.id;
       } catch (error) {
-        log.error('Erro ao criar trilha', { error, trail });
+        log.error('Erro ao criar trilha', String(error), trail);
         tx.rollback();
         throw new Error('Erro ao criar trilha');
       }
