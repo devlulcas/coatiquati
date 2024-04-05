@@ -1,6 +1,6 @@
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
-import { trailTable } from '@/modules/database/schema/trail';
+import { categoryTable, trailTable } from '@/modules/database/schema/trail';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
@@ -13,6 +13,14 @@ export class TrailRepository {
   async createTrail(trail: NewTrail): Promise<number> {
     return db.transaction(async tx => {
       try {
+        if (trail.category) {
+          await tx
+            .insert(categoryTable)
+            .values({ name: trail.category, authorId: trail.authorId })
+            .onConflictDoNothing()
+            .execute();
+        }
+
         const newTrail = await tx.insert(trailTable).values(trail).returning({ id: trailTable.id }).get();
         log.info('Trilha inserida', newTrail);
         await this.contributionRepository.save(trail.authorId, { trailId: newTrail.id }, tx);
@@ -95,8 +103,27 @@ export class TrailRepository {
   }
 
   async updateTrail(trail: UpdateTrail): Promise<void> {
+    const currentTrail = await db
+      .select({ authorId: trailTable.authorId })
+      .from(trailTable)
+      .where(eq(trailTable.id, trail.id))
+      .get();
+
+    if (!currentTrail) {
+      log.error('Trilha não encontrada', { trail });
+      throw new Error('Trilha não encontrada');
+    }
+
     return db.transaction(async tx => {
       try {
+        if (trail.category) {
+          await tx
+            .insert(categoryTable)
+            .values({ name: trail.category, authorId: currentTrail.authorId })
+            .onConflictDoNothing()
+            .execute();
+        }
+
         await tx.update(trailTable).set(trail).where(eq(trailTable.id, trail.id)).execute();
         await this.contributionRepository.save(trail.contributorId, { trailId: trail.id }, tx);
       } catch (error) {
