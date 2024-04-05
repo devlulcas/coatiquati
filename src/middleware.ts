@@ -9,10 +9,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (process.env.NODE_ENV === 'development') {
-    return NextResponse.next();
-  }
-
   if (process.env.MAINTENANCE_MODE === 'true') {
     return NextResponse.rewrite(new URL('/wip', request.url));
   }
