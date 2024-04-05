@@ -1,5 +1,6 @@
 import { relations, sql } from 'drizzle-orm';
 import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { NOW_AS_INTEGER } from '../lib/helpers';
 import { contentTable } from './content';
 import { topicTable } from './topic';
 import { trailTable } from './trail';
@@ -19,8 +20,8 @@ export const trailContributionTable = sqliteTable(
       .notNull(),
     contributedAt: integer('contributed_at', { mode: 'timestamp' })
       .notNull()
-      .default(new Date())
-      .$onUpdate(() => new Date()),
+      .default(NOW_AS_INTEGER)
+      .$onUpdate(() => NOW_AS_INTEGER),
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.trailId] }) }),
 );
