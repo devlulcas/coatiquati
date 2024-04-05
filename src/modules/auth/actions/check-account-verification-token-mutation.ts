@@ -22,7 +22,7 @@ export async function checkAccountVerificationTokenMutation(token: string): Prom
       role: user.role,
       email: user.email,
       username: user.username,
-      verified: Number(true),
+      email_verified: Number(true),
     });
 
     return auth.createSession({

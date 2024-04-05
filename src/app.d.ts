@@ -7,10 +7,11 @@ declare namespace Lucia {
   type DatabaseUserAttributes = Omit<
     // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     import('./modules/database/schema/user').AuthUserTable,
-    'id' | 'createdAt' | 'updatedAt' | 'isBanned' | 'verified'
+    'id' | 'createdAt' | 'updatedAt' | 'isBanned' | 'verified' | 'deletedAt'
   > & {
-    isBanned: number;
-    verified: number;
+    is_banned: number;
+    email_verified: number;
+    deleted_at: number | null;
   };
 
   type DatabaseSessionAttributes = {

@@ -21,6 +21,8 @@ export const POST = async (request: NextRequest) => {
   const email = formDataResult.data.email.toLowerCase().trim();
 
   try {
+    const avatars = ['grape.png', 'mint.png', 'original.png', 'peach.png'];
+
     const user = await auth.createUser({
       key: {
         providerId: 'username',
@@ -31,10 +33,10 @@ export const POST = async (request: NextRequest) => {
         username: username,
         email,
         role: roles.USER,
-        avatar: 'default-user-avatar.png',
-        isBanned: Number(false),
-        verified: Number(false),
-        deletedAt: null,
+        avatar: '/avatars/' + avatars[Math.floor(Math.random() * avatars.length)],
+        is_banned: Number(false),
+        email_verified: Number(false),
+        deleted_at: null,
       },
     });
 
@@ -62,7 +64,7 @@ export const POST = async (request: NextRequest) => {
       },
     });
   } catch (error) {
-    log.error('Erro ao criar usuário', { error });
+    log.error('Erro ao criar usuário' + error);
     return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
   }
 };

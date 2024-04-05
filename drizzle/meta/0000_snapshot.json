@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "2a0254fa-4e0f-4114-9feb-4404d7a71d3f",
+  "id": "345a5afa-facf-46bd-b649-9f5d0ba73b52",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "comment_vote": {
@@ -1631,7 +1631,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'default-user-avatar.png'"
+          "default": "'/avatars/original.png'"
         },
         "email_verified": {
           "name": "email_verified",

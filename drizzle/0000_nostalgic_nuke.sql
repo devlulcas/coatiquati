@@ -227,7 +227,7 @@ CREATE TABLE `user` (
 	`username` text NOT NULL,
 	`role` text NOT NULL,
 	`email` text NOT NULL,
-	`avatar` text DEFAULT 'default-user-avatar.png' NOT NULL,
+	`avatar` text DEFAULT '/avatars/original.png' NOT NULL,
 	`email_verified` integer DEFAULT false,
 	`is_banned` integer DEFAULT false,
 	`created_at` integer DEFAULT (strftime('%s', 'now')) NOT NULL,
