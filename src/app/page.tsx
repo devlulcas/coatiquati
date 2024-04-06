@@ -10,22 +10,22 @@ export default async function Page() {
   const trails = await getRecentTrailsQuery();
 
   return (
-    <div className="flex h-full flex-col justify-between pt-12 lg:h-[--view-height]">
-      <div className="container flex flex-col">
-        <h1 className="inline-block bg-gradient-to-r from-brand-500 via-purple-600 to-brand-500 bg-clip-text text-5xl font-black text-transparent lg:text-6xl">
+    <div className="flex h-[--view-height] flex-col justify-between pt-8 lg:pt-1">
+      <div className="container flex h-full flex-col">
+        <h1 className="inline-block bg-gradient-to-r from-brand-500 via-violet-500 to-brand-500 bg-clip-text text-5xl font-black text-transparent lg:text-6xl">
           CoatiQuati
         </h1>
 
-        <p className="mt-4 max-w-lg text-pretty pl-1 font-medium leading-7">
-          <strong>Coati</strong> é uma plataforma de ensino colaborativo, onde você pode aprender e ensinar qualquer
-          coisa. Professores criam trilhas e passam primeiro deixando migalhas de conhecimento, depois estudantes passam
-          pelas trilhas aprendendo com o que existe nelas e deixando mais migalhas de conhecimento.
+        <p className="mt-3 max-w-md text-pretty pl-1 font-medium leading-6">
+          Descubra a Coati, a <em className="text-brand-400">plataforma interativa</em> onde o conhecimento flui
+          livremente, permitindo que você <em className="text-brand-400">explore e compartilhe sabedoria</em> sem
+          fronteiras.
         </p>
 
         <Link
           href="/trails"
           style={{ backgroundSize: '300% 300%' }}
-          className="coati-animated-line mt-8 flex w-fit animate-background rounded-md bg-gradient-to-tr from-brand-500 to-purple-600 p-[2px]"
+          className="coati-animated-line mt-4 flex w-fit animate-background rounded-md bg-gradient-to-tr from-brand-500 to-purple-600 p-[2px]"
         >
           <span className="flex h-12 w-fit items-center justify-center rounded-md bg-white px-6 text-black transition duration-300 ease-in-out hover:shadow-lg">
             Conheça as trilhas
@@ -33,7 +33,7 @@ export default async function Page() {
           </span>
         </Link>
 
-        <TrailCardCarouselSection trails={trails} className="mb-4 mt-12" />
+        <TrailCardCarouselSection trails={trails} className="mb-auto mt-auto" />
 
         <div className="absolute inset-0 z-[-1] h-[--safe-screen-height] overflow-hidden outline">
           <Image
