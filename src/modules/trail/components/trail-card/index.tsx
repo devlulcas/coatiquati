@@ -2,6 +2,7 @@ import { ContributorList } from '@/modules/user/components/contributor-list';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
+import { cn } from '@/shared/utils/cn';
 import { ArrowRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,9 +11,10 @@ import { type Trail } from '../../types/trail';
 
 type TrailCardProps = {
   trail: Trail;
+  forceVertical?: boolean;
 };
 
-export function TrailCard({ trail }: TrailCardProps) {
+export function TrailCard({ trail, forceVertical }: TrailCardProps) {
   const trailSlug = createTrailUrl(trail.id);
   const userProfileSlug = trail.author ? createProfileUrl(trail.author.username) : '/';
   const updatedAt = new Date(trail.updatedAt).toLocaleString('pt-BR', {
@@ -22,11 +24,36 @@ export function TrailCard({ trail }: TrailCardProps) {
   });
 
   return (
-    <div className="coati-animated-line rounded-xl bg-gradient-to-r from-brand-500 via-purple-600 to-brand-500 p-[1px]">
-      <article className="flex w-full max-w-xs flex-col items-center justify-center overflow-hidden rounded-xl border bg-card text-card-foreground shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg">
-        <div className="relative h-48 w-full">
-          <Link href={trailSlug}>
-            <Image fill alt={trail.title} src={trail.thumbnail} className="w-full object-contain" />
+    <div
+      className={cn(
+        'coati-animated-line h-64 w-full rounded-xl bg-gradient-to-r from-brand-500 via-purple-600 to-brand-500 p-[1px] sm:h-fit',
+        forceVertical && 'h-fit',
+      )}
+    >
+      <article
+        className={cn(
+          'flex h-full w-full items-center justify-center overflow-hidden rounded-xl bg-card text-card-foreground shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg sm:flex-col',
+          forceVertical && 'flex-col',
+        )}
+      >
+        <div className={cn('relative h-full w-full overflow-clip sm:aspect-square', forceVertical && 'aspect-square')}>
+          <Link href={trailSlug} className="relative block h-full w-full">
+            <Image
+              width={128}
+              height={128}
+              aria-hidden
+              alt={trail.title}
+              src={trail.thumbnail}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%) scale(4)',
+                filter: 'blur(1px)',
+              }}
+            />
+
+            <Image fill alt={trail.title} src={trail.thumbnail} className="h-full w-full object-contain" />
           </Link>
 
           <div className="absolute right-2 top-2">
@@ -57,7 +84,11 @@ export function TrailCard({ trail }: TrailCardProps) {
               </Link>
             )}
 
-            <ContributorList contributors={trail.contributors.map(contributor => contributor.user)} />
+            <ContributorList
+              contributors={trail.contributors
+                .filter(ctb => ctb.user.id !== trail.author.id)
+                .map(contributor => contributor.user)}
+            />
           </div>
         </div>
 

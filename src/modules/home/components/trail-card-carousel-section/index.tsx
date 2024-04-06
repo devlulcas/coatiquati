@@ -40,7 +40,9 @@ export function TrailCardCarouselSection({ trails, ...rest }: TrailCardCarouselS
         <CarouselContent>
           {trails.map(trail => (
             <CarouselItem key={trail.id} className="basis-[75%] lg:basis-1/5">
-              <TrailCard trail={trail} />
+              <div className="w-fit min-w-60">
+                <TrailCard forceVertical trail={trail} />
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
