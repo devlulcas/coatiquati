@@ -221,10 +221,24 @@ export class TopicRepository {
   }
 
   async updateTopic(topic: UpdateTopic): Promise<void> {
+    const currentTopic = await db
+      .select({ authorId: topicTable.authorId })
+      .from(topicTable)
+      .where(eq(topicTable.id, topic.id))
+      .get();
+
+    if (!currentTopic) {
+      log.error('Erro ao atualizar tópico. Tópico não encontrado', { id: topic.id });
+      throw new Error('Erro ao atualizar tópico. Tópico não encontrado');
+    }
+
     return db.transaction(async tx => {
       try {
         await tx.update(topicTable).set(topic).where(eq(topicTable.id, topic.id)).execute();
-        await this.contributionRepository.save(topic.contributorId, { topicId: topic.id }, tx);
+
+        if (topic.contributorId !== currentTopic.authorId) {
+          await this.contributionRepository.save(topic.contributorId, { topicId: topic.id }, tx);
+        }
       } catch (error) {
         log.error('Erro ao atualizar tópico', error);
         throw new Error('Erro ao atualizar tópico');

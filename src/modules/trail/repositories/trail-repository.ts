@@ -26,9 +26,6 @@ export class TrailRepository {
         const newTrail = await tx.insert(trailTable).values(trail).returning({ id: trailTable.id }).get();
         log.info('Trilha inserida', newTrail);
 
-        await this.contributionRepository.save(trail.authorId, { trailId: newTrail.id }, tx);
-        log.info('Contribuição salva', { trailId: newTrail.id });
-
         return newTrail.id;
       } catch (error) {
         log.error('Erro ao criar trilha', String(error), trail);
@@ -130,7 +127,10 @@ export class TrailRepository {
         }
 
         await tx.update(trailTable).set(trail).where(eq(trailTable.id, trail.id)).execute();
-        await this.contributionRepository.save(trail.contributorId, { trailId: trail.id }, tx);
+
+        if (trail.contributorId !== currentTrail.authorId) {
+          await this.contributionRepository.save(trail.contributorId, { trailId: trail.id }, tx);
+        }
       } catch (error) {
         log.error('Erro ao atualizar trilha', { error, trail });
         tx.rollback();
