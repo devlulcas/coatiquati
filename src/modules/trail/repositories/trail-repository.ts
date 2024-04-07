@@ -1,10 +1,10 @@
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
 import { categoryTable, trailTable } from '@/modules/database/schema/trail';
-import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
-import { asc, eq } from 'drizzle-orm';
+import { asc, eq, type SQL } from 'drizzle-orm';
+import type { TrailSearchSchema } from '../actions/get-trails-query';
 import type { NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
 
 export class TrailRepository {
@@ -62,22 +62,33 @@ export class TrailRepository {
     return data;
   }
 
-  async getTrails(params: PaginationSchemaWithSearch, includeDraft = false): Promise<Trail[]> {
+  async getTrails(params: TrailSearchSchema, includeDraft = false): Promise<Trail[]> {
     try {
       return db.query.trailTable.findMany({
         limit: params.take,
         offset: params.skip,
         where: (fields, operators) => {
-          const filterByContent = operators.or(
-            operators.like(fields.title, `%${params.search}%`),
-            operators.like(fields.description, `%${params.search}%`),
-          );
+          const filters: SQL[] = [];
 
-          if (includeDraft) {
-            return filterByContent;
+          for (const [field, value] of Object.entries(params)) {
+            if (field === 'status' && value === contentStatus.DRAFT && !includeDraft) {
+              continue;
+            }
+
+            if (value && Object.hasOwn(fields, field)) {
+              const databaseField = fields[field as keyof typeof fields];
+
+              if (Object.hasOwn(databaseField, 'columnType')) {
+                filters.push(operators.eq(databaseField, value));
+              }
+            }
           }
 
-          return operators.and(filterByContent, operators.eq(fields.status, contentStatus.PUBLISHED));
+          if (!includeDraft) {
+            filters.push(operators.eq(fields.status, contentStatus.PUBLISHED));
+          }
+
+          return operators.and(...filters);
         },
         with: {
           contributors: { with: { user: true } },

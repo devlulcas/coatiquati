@@ -2,16 +2,33 @@
 
 import { getPageSession } from '@/modules/auth/utils/get-page-session';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
-import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
-import { type z } from 'zod';
+import { contentStatus } from '@/shared/constants/content-status';
+import { z } from 'zod';
 import { TrailRepository } from '../repositories/trail-repository';
 import type { Trail } from '../types/trail';
 
-const getTrailsUseCaseSchema = createPaginationSchemaWithSearch(30);
+const getTrailsUseCaseSchema = z.object({
+  search: z.coerce.string().optional(),
+  skip: z.coerce.string().optional().transform(Number),
+  take: z.coerce.string().optional().transform(Number),
+  category: z.coerce.string().optional(),
+  authorId: z.coerce.string().optional(),
+  status: z.coerce
+    .string()
+    .optional()
+    .refine(
+      value => {
+        if (typeof value === 'undefined') return true;
+        const validStatuses: string[] = Object.values(contentStatus);
+        return validStatuses.includes(value);
+      },
+      { message: 'Status inválido' },
+    ),
+});
 
-type GetTrailsUseCaseSchema = Partial<z.infer<typeof getTrailsUseCaseSchema>>;
+export type TrailSearchSchema = z.infer<typeof getTrailsUseCaseSchema>;
 
-export async function getTrailsQuery(params: GetTrailsUseCaseSchema = {}): Promise<Trail[]> {
+export async function getTrailsQuery(params: TrailSearchSchema = { skip: 0, take: 30 }): Promise<Trail[]> {
   const validatedParams = getTrailsUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {

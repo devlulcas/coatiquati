@@ -1,4 +1,3 @@
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
 import { getTrailSubscriptionsByUserIdQuery } from '@/modules/trail-subscriptions/actions/get-trail-subscriptions-by-user-id-query';
 import { getMostSubscribedCategory } from '@/modules/trail-subscriptions/lib/get-most-subscribed-category';
 import { TrailCard } from '@/modules/trail/components/trail-card';
@@ -13,8 +12,6 @@ type PageProps = {
 };
 
 export default async function Page({ params }: PageProps) {
-  const session = await getPageSession();
-
   const profile = await getUserProfileQuery(decodeURIComponent(params.username));
 
   if (!profile) {
@@ -26,8 +23,8 @@ export default async function Page({ params }: PageProps) {
   const mostSubscribedCategory = getMostSubscribedCategory(subscribedTrails);
 
   return (
-    <main className="container py-8">
-      <ProfileHeading user={profile} isCurrentUser={session?.userId === profile.id} />
+    <main className="container py-4">
+      <ProfileHeading user={profile} />
 
       {mostSubscribedCategory && (
         <p className="mt-8 flex items-center gap-2">

@@ -1,47 +1,71 @@
+import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { FollowUserButton } from '@/modules/user-followings/components/follow-user-button';
 import { Button } from '@/shared/components/ui/button';
+import { BoltIcon } from 'lucide-react';
 import Image from 'next/image';
-import type { User } from '../../types/user';
+import type { UserProfile } from '../../types/user';
 import { EditUserDialogTrigger } from '../edit-user-dialog-trigger';
-import { UserRoleBadge } from '../user-role-badge';
 
 type ProfileHeadingProps = {
-  user: User;
-  isCurrentUser?: boolean;
+  user: UserProfile;
 };
 
-export function ProfileHeading({ user, isCurrentUser }: ProfileHeadingProps) {
+export async function ProfileHeading({ user }: ProfileHeadingProps) {
+  const session = await getPageSession();
+
+  const isCurrentUser = session?.userId === user.id;
+
   const createdAt = new Date(user.createdAt).toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
   });
 
-  return (
-    <div className="flex gap-2">
-      <Image
-        className="aspect-square h-full rounded-md border object-cover"
-        src={user.avatar ?? 'https://placekitten.com/100/100'}
-        alt={user.username}
-        width={100}
-        height={100}
-      />
+  const isAlreadyFollowing = user.followers.some(follower => follower.username === session?.user.username);
 
-      <div className="flex w-full flex-col gap-2 rounded-md border bg-background/50 px-5 py-5 backdrop-blur-md">
+  return (
+    <section className="overflow-hidden rounded-md bg-background">
+      <div className="relative h-28 w-full overflow-hidden">
+        <Image src={user.avatar} alt={user.username} layout="fill" objectFit="cover" className="blur-md" />
+
         {isCurrentUser && (
           <EditUserDialogTrigger user={user}>
-            <Button variant="ghost" className="absolute right-2 top-2">
-              Editar
+            <Button variant="ghost" size="icon" className="absolute right-4 top-4">
+              <BoltIcon size={18} />
+              <span className="sr-only">Editar perfil</span>
             </Button>
           </EditUserDialogTrigger>
         )}
+      </div>
 
-        <h1 className="text-3xl font-bold">{user.username}</h1>
-        <p className="text-foreground/75">Por aqui desde {createdAt}</p>
-        <div className="flex items-center gap-2">
-          <UserRoleBadge role={user.role} className="w-fit text-sm font-bold" />
-          <span>{user.verified ? 'Verificado' : 'Não verificado'}</span>
+      <div className="z-10 flex h-[1px] items-center justify-center">
+        <Image
+          src={user.avatar}
+          alt={user.username}
+          height={80}
+          width={80}
+          className="absolute rounded-full border-4 border-secondary"
+        />
+      </div>
+
+      <div className="flex flex-col justify-between bg-secondary p-4 text-secondary-foreground">
+        <h1 className="text-2xl font-bold">{user.username}</h1>
+        <p className="text-sm text-secondary-foreground/75">Membro desde {createdAt}</p>
+
+        <div className="mt-4 flex items-center gap-4">
+          <div className="flex items-center gap-1">
+            <span className="text-sm font-bold">{user.followers.length}</span>
+            <span className="text-xs">Seguidores</span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <span className="text-sm font-bold">{user.following.length}</span>
+            <span className="text-xs">Seguindo</span>
+          </div>
+
+          {!isCurrentUser && <FollowUserButton userId={user.id} isAlreadyFollowing={isAlreadyFollowing} />}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

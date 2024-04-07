@@ -7,8 +7,10 @@ export type User = AuthUserTable;
 
 export type UserProfile = User & {
   authoredTrails: Trail[];
+  followers: { avatar: string; username: string }[];
+  following: { avatar: string; username: string }[];
 };
 
-export type UpdateUser = Partial<Pick<User, 'username' | 'avatar' | 'email' | 'role'>>;
+export type UpdateUser = Partial<Pick<User, 'username' | 'avatar' | 'email' | 'role' | 'verified' | 'isBanned'>>;
 
 export type UserId = AuthUserTable['id'];

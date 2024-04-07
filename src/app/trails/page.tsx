@@ -47,7 +47,7 @@ export default async function Page({ searchParams }: PageProps) {
           <h2 className="text-2xl font-bold">{category}</h2>
           <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 xl:grid-cols-5">
             {[...trails, ...trails, ...trails, ...trails, ...trails, ...trails].map(trail => (
-              <TrailCard forceVertical key={trail.id} trail={trail} />
+              <TrailCard key={trail.id} trail={trail} />
             ))}
           </div>
         </section>

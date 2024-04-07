@@ -8,7 +8,16 @@ import { eq } from 'drizzle-orm';
 export class UserRepository {
   async updateUser(id: string, user: UpdateUser): Promise<void> {
     try {
-      await db.update(userTable).set(user).where(eq(userTable.id, id)).execute();
+      await db
+        .update(userTable)
+        .set({
+          avatar: user.avatar,
+          username: user.username,
+          email: user.email,
+          verified: user.verified,
+        })
+        .where(eq(userTable.id, id))
+        .execute();
     } catch (error) {
       log.error('Erro ao atualizar usuário', error);
       throw new Error('Erro ao atualizar usuário');
@@ -61,6 +70,16 @@ export class UserRepository {
               category: true,
             },
           },
+          followers: {
+            with: {
+              follower: true,
+            },
+          },
+          following: {
+            with: {
+              user: true,
+            },
+          },
         },
       });
 
@@ -69,9 +88,19 @@ export class UserRepository {
         return null;
       }
 
-      return data;
+      return {
+        ...data,
+        followers: data.followers.map(follower => ({
+          avatar: follower.follower.avatar,
+          username: follower.follower.username,
+        })),
+        following: data.following.map(following => ({
+          avatar: following.user.avatar,
+          username: following.user.username,
+        })),
+      };
     } catch (error) {
-      log.error(error);
+      log.error('Erro ao buscar perfil de usuário', error);
       return null;
     }
   }

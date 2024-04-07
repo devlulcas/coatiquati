@@ -14,18 +14,15 @@ export default function Page() {
         <h1 className="text-4xl font-bold">Sobre o projeto</h1>
 
         <p className="prose my-8 text-justify text-lg text-white">
-          CoatiQuati é um projeto de
+          CoatiQuati é um projeto de{' '}
           <a className="text-brand-400 hover:text-brand-300" href={links.github}>
-            {' '}
             código aberto
           </a>
-          , desenvolvido por
+          , desenvolvido por{' '}
           <a className="text-brand-400 hover:text-brand-300" href={links.me}>
-            {' '}
             mim (Lucas Alves Rego)
           </a>
-          , com o objetivo de ajudar pessoas interessadas em aprender algo novo e que não sabem por onde começar. O
-          projeto foi desenvolvido como o meu TCC e está em desenvolvimento.
+          , com o objetivo de ajudar pessoas interessadas em aprender algo novo e que não sabem por onde começar.
         </p>
 
         <p>

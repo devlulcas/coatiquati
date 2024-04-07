@@ -1,5 +1,5 @@
 .scrollContainer {
-  overflow-x: hidden;
+  overflow: hidden;
   position: relative;
 }
 

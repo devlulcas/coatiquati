@@ -17,7 +17,8 @@
     "db:generate": "pnpm drizzle-kit generate:sqlite",
     "db:migrate": "pnpm tsx ./src/modules/database/migrate.ts",
     "db:push": "pnpm drizzle-kit push:sqlite",
-    "db:pull": "pnpm drizzle-kit pull:sqlite"
+    "db:pull": "pnpm drizzle-kit pull:sqlite",
+    "db:summon": "turso dev --db-file dev.db"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",

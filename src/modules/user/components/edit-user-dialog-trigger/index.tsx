@@ -11,12 +11,15 @@ import {
 } from '@/shared/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
+import { RadioGroup } from '@/shared/components/ui/radio-group';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
 import { updateUserMutation } from '../../actions/update-user-mutation';
+import { AVATARS } from '../../constants/avatars';
 import { updateUserSchema } from '../../schemas/update-user-schema';
 import { type User } from '../../types/user';
 
@@ -100,7 +103,34 @@ export function EditUserDialogTrigger({ user, children }: EditUserDialogTriggerP
                     <FormItem>
                       <FormLabel>Avatar</FormLabel>
                       <FormControl>
-                        <Input type="url" {...field} />
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-row space-x-2"
+                        >
+                          {AVATARS.map(avatar => (
+                            <label key={avatar} htmlFor={avatar}>
+                              <input
+                                className="peer sr-only"
+                                type="radio"
+                                id={avatar}
+                                value={avatar}
+                                checked={field.value === avatar}
+                                onChange={field.onChange}
+                                onBlur={field.onBlur}
+                                ref={field.ref}
+                              />
+
+                              <Image
+                                src={avatar}
+                                alt="Avatar"
+                                width={64}
+                                height={64}
+                                className="cursor-pointer rounded border-2 border-gray-200 peer-checked:border-brand-500"
+                              />
+                            </label>
+                          ))}
+                        </RadioGroup>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

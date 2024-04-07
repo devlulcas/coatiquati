@@ -8,6 +8,7 @@ import { emailVerificationTokenTable } from './email-verification-token';
 import { passwordResetTokenTable } from './password-reset-token';
 import { trailTable } from './trail';
 import { trailSubscriptionTable } from './trail-subscription';
+import { userFollowerTable } from './user-follower';
 
 export type AuthUserTable = InferSelectModel<typeof userTable>;
 
@@ -32,6 +33,8 @@ export const userTableRelations = relations(userTable, ({ one, many }) => ({
   topicContributions: many(topicContributionTable),
   contentContributions: many(contentContributionTable),
   commentVotes: many(commentVoteTable),
+  followers: many(userFollowerTable, { relationName: 'followed' }),
+  following: many(userFollowerTable, { relationName: 'follower' }),
 }));
 
 export const sessionTable = sqliteTable('user_session', {
