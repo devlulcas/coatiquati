@@ -84,16 +84,12 @@ export function TrailCard({ trail, forceVertical }: TrailCardProps) {
               </Link>
             )}
 
-            <ContributorList
-              contributors={trail.contributors
-                .filter(ctb => ctb.user.id !== trail.author.id)
-                .map(contributor => contributor.user)}
-            />
+            <ContributorList contributors={trail.contributors.map(contributor => contributor.user)} />
           </div>
         </div>
 
-        <div className="flex h-fit w-full flex-col justify-between p-4">
-          <div>
+        <div className="flex h-full w-full flex-col justify-between p-4">
+          <div className="h-full">
             <h2 className="line-clamp-2 min-h-[2lh] break-words text-base font-black uppercase lg:text-xl">
               {trail.title}
             </h2>
