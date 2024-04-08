@@ -28,11 +28,7 @@ export async function commentOnContentMutation(params: NewCommentSchema) {
 
   const commentRepository = new CommentRepository();
 
-  try {
-    await commentRepository.addCommentInContent(newComment);
-    log.info('Comentário criado', { authorId: session.user.id, on: 'content', contentId: params.contentId });
-  } catch (error) {
-    log.error('Erro ao criar comentário', { error });
-    throw new Error('Erro ao criar comentário');
-  }
+  await commentRepository.addCommentInContent(newComment);
+
+  log.info('Comentário criado', { authorId: session.user.id, on: 'content', contentId: params.contentId });
 }

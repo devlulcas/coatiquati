@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Textarea } from '@/shared/components/ui/textarea';
 import { toast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
+import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { AlertOctagonIcon, SendIcon } from 'lucide-react';
@@ -80,7 +81,7 @@ export function AddNewCommentForm({ contentId, parentCommentId }: AddNewCommentF
           name="content"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>
+              <FormLabel className={cn(parentCommentId && 'sr-only')}>
                 {parentCommentId ? 'Comentário resposta' : 'Compartilhe sua opinião sobre o conteúdo'}
               </FormLabel>
               <FormControl>

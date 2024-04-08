@@ -19,7 +19,7 @@ import {
 } from '@/shared/components/ui/drawer';
 import { useMediaQuery } from '@/shared/hooks/use-media-query';
 import { MessageSquarePlusIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import type { Comment } from '../../types/comment';
 import { AddNewCommentForm } from '../add-new-comment-form';
 
@@ -27,7 +27,7 @@ type AnswerCommentDrawerTriggerProps = {
   originalComment: Comment;
 };
 
-function InnerAnswerCommentDrawerTrigger({ originalComment }: AnswerCommentDrawerTriggerProps) {
+export function AnswerCommentDrawerTrigger({ originalComment }: AnswerCommentDrawerTriggerProps) {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
@@ -75,50 +75,3 @@ function InnerAnswerCommentDrawerTrigger({ originalComment }: AnswerCommentDrawe
     </Drawer>
   );
 }
-
-// async function postResponse(commentId: number, content: string): Promise<{ message: string }> {
-//   const response = await fetch(`/api/comments/${commentId}/responses`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ content }),
-//   });
-
-//   const createdResponse: { message: string } | { error: string } = await response.json();
-
-//   if ('error' in createdResponse) {
-//     throw new Error(createdResponse.error);
-//   }
-
-//   return createdResponse;
-// }
-
-// function usePostCommentResponseMutation() {
-//   const { toast } = useToast();
-
-//   const queryClient = useQueryClient();
-
-//   return useMutation({
-//     mutationFn: ({ commentId, content }: { commentId: number; content: string }) => postResponse(commentId, content),
-//     onError: error => {
-//       toast({
-//         title: 'Erro ao criar comentário',
-//         description: error instanceof Error ? error.message : 'Erro desconhecido',
-//         variant: 'destructive',
-//       });
-//     },
-//     onSettled: (_, __, vars) => {
-//       queryClient.invalidateQueries({ queryKey: ['comment-responses', vars.commentId] });
-//     },
-//     onSuccess: data => {
-//       toast({
-//         title: 'Comentário respondido',
-//         description: data.message,
-//         variant: 'success',
-//       });
-//     },
-//   });
-// }
-
-export const AnswerCommentDrawerTrigger = memo(InnerAnswerCommentDrawerTrigger);

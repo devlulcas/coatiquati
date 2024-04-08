@@ -39,7 +39,6 @@ export class CommentVoteRepository {
       .insert(commentVoteTable)
       .values({ commentId, userId, vote })
       .returning({ id: commentVoteTable.id })
-      .onConflictDoUpdate({ target: [commentVoteTable.commentId, commentVoteTable.userId], set: { vote } })
       .execute();
 
     if (!result.length) {

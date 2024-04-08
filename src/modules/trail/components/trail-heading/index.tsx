@@ -1,6 +1,7 @@
 import { getPageSession } from '@/modules/auth/utils/get-page-session';
 import { currentUserIsAlreadySubscribedQuery } from '@/modules/trail-subscriptions/actions/current-user-is-already-subscribed-query';
 import { FollowTrailButton } from '@/modules/trail-subscriptions/components/follow-trail-button';
+import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
 import { ContributorList } from '@/modules/user/components/contributor-list';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { UpdatedAt } from '@/shared/components/common/updated-at';
@@ -8,6 +9,7 @@ import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/cn';
 import type { ClassValue } from 'clsx';
+import { EllipsisIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Trail } from '../../types/trail';
@@ -37,6 +39,17 @@ export async function TrailHeading({ trail, className }: TrailHeadingProps) {
           {trail.author.username}
         </span>
       </Link>
+
+      <ReportFormDialogTrigger origin={{ id: trail.id, type: 'trail' }} user={trail.author.id}>
+        <button
+          type="button"
+          aria-label="Mais opções"
+          title="Mais opções"
+          className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full text-sm text-brand-50 hover:bg-brand-800/50 focus:bg-brand-800/50"
+        >
+          <EllipsisIcon size={16} />
+        </button>
+      </ReportFormDialogTrigger>
 
       <Image
         src={trail.thumbnail}

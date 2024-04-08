@@ -34,6 +34,21 @@ export const contentCommentTable = sqliteTable(
     })),
   }),
 );
+export const contentCommentTableRelations = relations(contentCommentTable, ({ one, many }) => ({
+  content: one(contentTable, {
+    fields: [contentCommentTable.contentId],
+    references: [contentTable.id],
+  }),
+  author: one(userTable, {
+    fields: [contentCommentTable.authorId],
+    references: [userTable.id],
+  }),
+  parentComment: one(contentCommentTable, {
+    fields: [contentCommentTable.parentCommentId],
+    references: [contentCommentTable.id],
+  }),
+  votes: many(commentVoteTable),
+}));
 
 export const commentVoteTable = sqliteTable('comment_vote', {
   id: integer('id').primaryKey().notNull(),
@@ -52,7 +67,6 @@ export const commentVoteTable = sqliteTable('comment_vote', {
   vote: integer('vote').notNull(),
   ...tableTimestampColumns,
 });
-
 export const commentVoteTableRelations = relations(commentVoteTable, ({ one }) => ({
   comment: one(contentCommentTable, {
     fields: [commentVoteTable.commentId],
@@ -62,20 +76,4 @@ export const commentVoteTableRelations = relations(commentVoteTable, ({ one }) =
     fields: [commentVoteTable.userId],
     references: [userTable.id],
   }),
-}));
-
-export const contentCommentTableRelations = relations(contentCommentTable, ({ one, many }) => ({
-  content: one(contentTable, {
-    fields: [contentCommentTable.contentId],
-    references: [contentTable.id],
-  }),
-  author: one(userTable, {
-    fields: [contentCommentTable.authorId],
-    references: [userTable.id],
-  }),
-  parentComment: one(contentCommentTable, {
-    fields: [contentCommentTable.parentCommentId],
-    references: [contentCommentTable.id],
-  }),
-  votes: many(commentVoteTable),
 }));
