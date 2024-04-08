@@ -87,7 +87,7 @@ CREATE TABLE `topic_contribution` (
 	`user_id` text NOT NULL,
 	`contributed_at` text DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	PRIMARY KEY(`topic_id`, `user_id`),
-	FOREIGN KEY (`topic_id`) REFERENCES `content`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`topic_id`) REFERENCES `topic`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
@@ -96,7 +96,7 @@ CREATE TABLE `trail_contribution` (
 	`user_id` text NOT NULL,
 	`contributed_at` integer DEFAULT (strftime('%s', 'now')) NOT NULL,
 	PRIMARY KEY(`trail_id`, `user_id`),
-	FOREIGN KEY (`trail_id`) REFERENCES `content`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`trail_id`) REFERENCES `trail`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
@@ -132,24 +132,34 @@ CREATE TABLE `user_password_reset_token` (
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE TABLE `ban` (
-	`id` text PRIMARY KEY NOT NULL,
-	`user_id` text NOT NULL,
-	`moderator_id` text,
-	`reason` text NOT NULL,
-	`expires` blob NOT NULL,
+CREATE TABLE `publication_media` (
+	`id` integer PRIMARY KEY NOT NULL,
+	`publication_id` integer NOT NULL,
+	`description` text NOT NULL,
+	`url` text NOT NULL,
+	`type` text NOT NULL,
 	`created_at` integer DEFAULT (strftime('%s', 'now')) NOT NULL,
 	`updated_at` integer DEFAULT (strftime('%s', 'now')) NOT NULL,
 	`deleted_at` integer,
-	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`moderator_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`publication_id`) REFERENCES `publication`(`id`) ON UPDATE no action ON DELETE cascade
+);
+--> statement-breakpoint
+CREATE TABLE `publication` (
+	`id` integer PRIMARY KEY NOT NULL,
+	`content` text NOT NULL,
+	`user_id` text NOT NULL,
+	`created_at` integer DEFAULT (strftime('%s', 'now')) NOT NULL,
+	`updated_at` integer DEFAULT (strftime('%s', 'now')) NOT NULL,
+	`deleted_at` integer,
+	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE cascade ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `report` (
-	`id` text PRIMARY KEY NOT NULL,
+	`id` integer PRIMARY KEY NOT NULL,
 	`user_id` text NOT NULL,
+	`reported_by_id` text NOT NULL,
 	`type` text NOT NULL,
-	`entity_id` text NOT NULL,
+	`entity_id` integer NOT NULL,
 	`entity_type` text NOT NULL,
 	`description` text NOT NULL,
 	`status` text DEFAULT 'pending' NOT NULL,
@@ -158,6 +168,7 @@ CREATE TABLE `report` (
 	`updated_at` integer DEFAULT (strftime('%s', 'now')) NOT NULL,
 	`deleted_at` integer,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`reported_by_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`moderator_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
@@ -205,6 +216,17 @@ CREATE TABLE `trail` (
 	`deleted_at` integer,
 	FOREIGN KEY (`category_id`) REFERENCES `category`(`name`) ON UPDATE cascade ON DELETE set null,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE cascade ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `user_follower` (
+	`user_id` text NOT NULL,
+	`follower_id` text NOT NULL,
+	`created_at` integer DEFAULT (strftime('%s', 'now')) NOT NULL,
+	`updated_at` integer DEFAULT (strftime('%s', 'now')) NOT NULL,
+	`deleted_at` integer,
+	PRIMARY KEY(`follower_id`, `user_id`),
+	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE cascade ON DELETE cascade,
+	FOREIGN KEY (`follower_id`) REFERENCES `user`(`id`) ON UPDATE cascade ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `user_key` (

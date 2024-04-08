@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "345a5afa-facf-46bd-b649-9f5d0ba73b52",
+  "id": "24505aee-7ca2-46b5-b4bc-710a93e019ee",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "comment_vote": {
@@ -633,10 +633,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "topic_contribution_topic_id_content_id_fk": {
-          "name": "topic_contribution_topic_id_content_id_fk",
+        "topic_contribution_topic_id_topic_id_fk": {
+          "name": "topic_contribution_topic_id_topic_id_fk",
           "tableFrom": "topic_contribution",
-          "tableTo": "content",
+          "tableTo": "topic",
           "columnsFrom": [
             "topic_id"
           ],
@@ -699,10 +699,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "trail_contribution_trail_id_content_id_fk": {
-          "name": "trail_contribution_trail_id_content_id_fk",
+        "trail_contribution_trail_id_trail_id_fk": {
+          "name": "trail_contribution_trail_id_trail_id_fk",
           "tableFrom": "trail_contribution",
-          "tableTo": "content",
+          "tableTo": "trail",
           "columnsFrom": [
             "trail_id"
           ],
@@ -952,40 +952,40 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "ban": {
-      "name": "ban",
+    "publication_media": {
+      "name": "publication_media",
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "publication_id": {
+          "name": "publication_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "moderator_id": {
-          "name": "moderator_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "reason": {
-          "name": "reason",
+        "url": {
+          "name": "url",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "expires": {
-          "name": "expires",
-          "type": "blob",
+        "type": {
+          "name": "type",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -1016,9 +1016,76 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "ban_user_id_user_id_fk": {
-          "name": "ban_user_id_user_id_fk",
-          "tableFrom": "ban",
+        "publication_media_publication_id_publication_id_fk": {
+          "name": "publication_media_publication_id_publication_id_fk",
+          "tableFrom": "publication_media",
+          "tableTo": "publication",
+          "columnsFrom": [
+            "publication_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "publication": {
+      "name": "publication",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%s', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%s', 'now'))"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "publication_user_id_user_id_fk": {
+          "name": "publication_user_id_user_id_fk",
+          "tableFrom": "publication",
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
@@ -1027,20 +1094,7 @@
             "id"
           ],
           "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "ban_moderator_id_user_id_fk": {
-          "name": "ban_moderator_id_user_id_fk",
-          "tableFrom": "ban",
-          "tableTo": "user",
-          "columnsFrom": [
-            "moderator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -1051,13 +1105,20 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
         "user_id": {
           "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "reported_by_id": {
+          "name": "reported_by_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -1072,7 +1133,7 @@
         },
         "entity_id": {
           "name": "entity_id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -1138,6 +1199,19 @@
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "report_reported_by_id_user_id_fk": {
+          "name": "report_reported_by_id_user_id_fk",
+          "tableFrom": "report",
+          "tableTo": "user",
+          "columnsFrom": [
+            "reported_by_id"
           ],
           "columnsTo": [
             "id"
@@ -1497,6 +1571,87 @@
         }
       },
       "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "user_follower": {
+      "name": "user_follower",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "follower_id": {
+          "name": "follower_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%s', 'now'))"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%s', 'now'))"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "user_follower_user_id_user_id_fk": {
+          "name": "user_follower_user_id_user_id_fk",
+          "tableFrom": "user_follower",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        },
+        "user_follower_follower_id_user_id_fk": {
+          "name": "user_follower_follower_id_user_id_fk",
+          "tableFrom": "user_follower",
+          "tableTo": "user",
+          "columnsFrom": [
+            "follower_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {
+        "user_follower_follower_id_user_id_pk": {
+          "columns": [
+            "follower_id",
+            "user_id"
+          ],
+          "name": "user_follower_follower_id_user_id_pk"
+        }
+      },
       "uniqueConstraints": {}
     },
     "user_key": {
