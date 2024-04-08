@@ -1,10 +1,15 @@
+import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { CreatePublicationForm } from '@/modules/publication/components/create-publication-form';
+import { UserPublicationList } from '@/modules/publication/components/user-publication-list';
 import { getTrailSubscriptionsByUserIdQuery } from '@/modules/trail-subscriptions/actions/get-trail-subscriptions-by-user-id-query';
 import { getMostSubscribedCategory } from '@/modules/trail-subscriptions/lib/get-most-subscribed-category';
 import { TrailCard } from '@/modules/trail/components/trail-card';
 import { getUserProfileQuery } from '@/modules/user/actions/get-user-profile-query';
 import { ProfileHeading } from '@/modules/user/components/profile-heading';
+import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { StarsIcon } from 'lucide-react';
+import Link from 'next/link';
 
 type PageProps = {
   params: {
@@ -23,6 +28,10 @@ export default async function Page({ params }: PageProps) {
 
   const mostSubscribedCategory = getMostSubscribedCategory(subscribedTrails);
 
+  const session = await getPageSession();
+
+  const isCurrentUser = session && profile.id === session.userId;
+
   return (
     <main className="container py-4">
       <ProfileHeading user={profile} />
@@ -38,6 +47,14 @@ export default async function Page({ params }: PageProps) {
         </p>
       )}
 
+      {isCurrentUser && (
+        <section className="mb-4 mt-8">
+          <CreatePublicationForm />
+        </section>
+      )}
+
+      <UserPublicationList user={profile} />
+
       <section className="mt-8">
         <h2 className="text-xl font-bold">Seguidores</h2>
 
@@ -45,8 +62,10 @@ export default async function Page({ params }: PageProps) {
 
         <ul className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {profile.followers.map(follower => (
-            <li key={follower.username} className="flex items-center gap-2">
-              <UserAvatar user={follower} /> {follower.username}
+            <li key={follower.username}>
+              <Link href={createProfileUrl(follower.username)} className="flex items-center gap-2">
+                <UserAvatar user={follower} /> {follower.username}
+              </Link>
             </li>
           ))}
         </ul>
@@ -59,8 +78,10 @@ export default async function Page({ params }: PageProps) {
 
         <ul className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {profile.following.map(following => (
-            <li key={following.username} className="flex items-center gap-2">
-              <UserAvatar user={following} /> {following.username}
+            <li key={following.username}>
+              <Link href={createProfileUrl(following.username)} className="flex items-center gap-2">
+                <UserAvatar user={following} /> {following.username}
+              </Link>
             </li>
           ))}
         </ul>
