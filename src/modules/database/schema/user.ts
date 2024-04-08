@@ -6,6 +6,7 @@ import { commentVoteTable } from './comment';
 import { contentContributionTable, topicContributionTable, trailContributionTable } from './contribution';
 import { emailVerificationTokenTable } from './email-verification-token';
 import { passwordResetTokenTable } from './password-reset-token';
+import { publicationTable } from './publication';
 import { trailTable } from './trail';
 import { trailSubscriptionTable } from './trail-subscription';
 import { userFollowerTable } from './user-follower';
@@ -35,6 +36,7 @@ export const userTableRelations = relations(userTable, ({ one, many }) => ({
   commentVotes: many(commentVoteTable),
   followers: many(userFollowerTable, { relationName: 'followed' }),
   following: many(userFollowerTable, { relationName: 'follower' }),
+  publications: many(publicationTable),
 }));
 
 export const sessionTable = sqliteTable('user_session', {
