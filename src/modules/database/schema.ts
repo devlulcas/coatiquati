@@ -4,6 +4,7 @@ import * as contributionSchema from './schema/contribution';
 import * as emailVerificationTokenSchema from './schema/email-verification-token';
 import * as feedbackSchema from './schema/feedback';
 import * as passwordResetTokenSchema from './schema/password-reset-token';
+import * as publicationSchema from './schema/publication';
 import * as reportSchema from './schema/report';
 import * as topicSchema from './schema/topic';
 import * as trailSchema from './schema/trail';
@@ -24,4 +25,5 @@ export const schema = {
   ...trailSubscriptionSchema,
   ...userSchema,
   ...userFollowerSchema,
+  ...publicationSchema,
 };
