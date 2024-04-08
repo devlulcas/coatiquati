@@ -48,7 +48,7 @@ export async function TrailHeading({ trail, className }: TrailHeadingProps) {
 
       <div
         className={cn(
-          'rounded-md p-[1px]',
+          'h-fit rounded-md p-[1px]',
           isAlreadyFollowing ? 'bg-gradient-to-tr from-brand-500 to-brand-600' : 'bg-border',
         )}
       >
