@@ -1,7 +1,7 @@
 import { TopicCardItem } from '@/modules/topic/components/topic-card-item';
 import { getTrailByIdQuery } from '@/modules/trail/actions/get-trail-by-id-query';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
-import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
 type PageProps = {
   params: {
@@ -12,9 +12,11 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const trailId = Number(params.trail);
 
-  const trailData = await getTrailByIdQuery(trailId);
+  const trailData = await getTrailByIdQuery(trailId).catch(() => null);
 
-  if (!trailData) redirect('/');
+  if (!trailData) {
+    notFound();
+  }
 
   return (
     <div className="container py-8">
