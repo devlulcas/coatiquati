@@ -1,8 +1,9 @@
-import { getUsersQuery } from '@/modules/user/actions/get-users-query';
-import { UserAvatar } from '@/shared/components/common/user-avatar';
+import { getReportsQuery } from '@/modules/user-moderation/actions/get-reports-query';
+import ReportListItem from '@/modules/user-moderation/components/report-list-item';
+import { REPORT_REASON_LABELS, type ReportReason } from '@/modules/user-moderation/constants/report';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
-import { HammerIcon, TrashIcon } from 'lucide-react';
+import { TrashIcon } from 'lucide-react';
 import Link from 'next/link';
 
 type PageProps = {
@@ -12,9 +13,7 @@ type PageProps = {
 };
 
 export default async function Page(props: PageProps) {
-  const users = await getUsersQuery({
-    search: props.searchParams.user,
-  });
+  const reports = await getReportsQuery();
 
   return (
     <div className="flex flex-col gap-8">
@@ -29,31 +28,20 @@ export default async function Page(props: PageProps) {
           </Button>
         </form>
 
-        <div className="mt-8">
-          {users.length > 0 && (
-            <ul className="flex flex-col divide-y">
-              {users.map(user => (
-                <li key={user.id} className="flex items-center justify-between py-4">
-                  <div className="flex items-center gap-2">
-                    <UserAvatar user={user} />
-                    <p className="text-lg font-bold">{user.username}</p>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
-                  </div>
-
-                  <Button className="flex items-center gap-2">
-                    Banir
-                    <HammerIcon className="h-4 w-4" />
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {users.length === 0 && typeof props.searchParams.user !== 'undefined' && (
-          <p className="text-center text-muted-foreground">Nenhum usuário encontrado. Tente outra busca.</p>
-        )}
+        <ul className="mt-4 flex flex-col gap-1 divide-y-2">
+          {reports.map(report => (
+            <ReportListItem key={report.id} report={report} />
+          ))}
+        </ul>
       </section>
     </div>
+  );
+}
+
+function ReportReasonLabel({ reason }: { reason: ReportReason }) {
+  return (
+    <span className="rounded bg-destructive/75 px-2 text-sm text-destructive-foreground">
+      {REPORT_REASON_LABELS[reason]}
+    </span>
   );
 }
