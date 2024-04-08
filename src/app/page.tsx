@@ -17,9 +17,9 @@ export default async function Page() {
         </h1>
 
         <p className="mt-3 max-w-md text-pretty pl-1 font-medium leading-6">
-          Descubra a Coati, a <em className="not-italic text-violet-400">plataforma interativa</em> onde o conhecimento
+          Descubra a Coati, a <em className="font-semibold not-italic">plataforma interativa</em> onde o conhecimento
           flui livremente, permitindo que você{' '}
-          <em className="not-italic text-violet-400">explore e compartilhe sabedoria</em> sem fronteiras.
+          <em className="font-semibold not-italic">explore e compartilhe sabedoria</em> sem fronteiras.
         </p>
 
         <Link
