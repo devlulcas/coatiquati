@@ -12,8 +12,24 @@ import '../shared/assets/styles/utils.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Coatiquati',
-  description: 'Learn by teaching',
+  title: 'CoatiQuati',
+  description: 'CoatiQuati é uma plataforma de estudos para tudo e todos.',
+  openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
+    url: 'https://coatiquati.wiki',
+    siteName: 'CoatiQuati',
+    title: 'CoatiQuati',
+    description: 'CoatiQuati é uma plataforma de estudos para tudo e todos.',
+    images: [
+      {
+        url: 'https://coatiquati.wiki/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'CoatiQuati',
+      },
+    ],
+  },
 };
 
 type RootLayoutProps = {

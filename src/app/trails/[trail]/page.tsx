@@ -1,7 +1,39 @@
 import { TopicCardItem } from '@/modules/topic/components/topic-card-item';
 import { getTrailByIdQuery } from '@/modules/trail/actions/get-trail-by-id-query';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const trailId = Number(params.trail);
+
+  const trailData = await getTrailByIdQuery(trailId).catch(() => null);
+
+  if (!trailData) {
+    notFound();
+  }
+
+  return {
+    title: trailData.title,
+    description: trailData.description,
+    openGraph: {
+      type: 'website',
+      locale: 'pt_BR',
+      url: `https://coatiquati.wiki/trails/${trailId}`,
+      siteName: 'CoatiQuati',
+      title: trailData.title,
+      description: trailData.description,
+      images: [
+        {
+          url: 'https://coatiquati.wiki/og.png',
+          width: 1200,
+          height: 630,
+          alt: 'CoatiQuati',
+        },
+      ],
+    },
+  };
+}
 
 type PageProps = {
   params: {
