@@ -17,9 +17,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/shared/components/ui/drawer';
-import { useToast } from '@/shared/components/ui/use-toast';
 import { useMediaQuery } from '@/shared/hooks/use-media-query';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { MessageSquarePlusIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import type { Comment } from '../../types/comment';
@@ -78,49 +76,49 @@ function InnerAnswerCommentDrawerTrigger({ originalComment }: AnswerCommentDrawe
   );
 }
 
-async function postResponse(commentId: number, content: string): Promise<{ message: string }> {
-  const response = await fetch(`/api/comments/${commentId}/responses`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ content }),
-  });
+// async function postResponse(commentId: number, content: string): Promise<{ message: string }> {
+//   const response = await fetch(`/api/comments/${commentId}/responses`, {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({ content }),
+//   });
 
-  const createdResponse: { message: string } | { error: string } = await response.json();
+//   const createdResponse: { message: string } | { error: string } = await response.json();
 
-  if ('error' in createdResponse) {
-    throw new Error(createdResponse.error);
-  }
+//   if ('error' in createdResponse) {
+//     throw new Error(createdResponse.error);
+//   }
 
-  return createdResponse;
-}
+//   return createdResponse;
+// }
 
-function usePostCommentResponseMutation() {
-  const { toast } = useToast();
+// function usePostCommentResponseMutation() {
+//   const { toast } = useToast();
 
-  const queryClient = useQueryClient();
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: ({ commentId, content }: { commentId: number; content: string }) => postResponse(commentId, content),
-    onError: error => {
-      toast({
-        title: 'Erro ao criar comentário',
-        description: error instanceof Error ? error.message : 'Erro desconhecido',
-        variant: 'destructive',
-      });
-    },
-    onSettled: (_, __, vars) => {
-      queryClient.invalidateQueries({ queryKey: ['comment-responses', vars.commentId] });
-    },
-    onSuccess: data => {
-      toast({
-        title: 'Comentário respondido',
-        description: data.message,
-        variant: 'success',
-      });
-    },
-  });
-}
+//   return useMutation({
+//     mutationFn: ({ commentId, content }: { commentId: number; content: string }) => postResponse(commentId, content),
+//     onError: error => {
+//       toast({
+//         title: 'Erro ao criar comentário',
+//         description: error instanceof Error ? error.message : 'Erro desconhecido',
+//         variant: 'destructive',
+//       });
+//     },
+//     onSettled: (_, __, vars) => {
+//       queryClient.invalidateQueries({ queryKey: ['comment-responses', vars.commentId] });
+//     },
+//     onSuccess: data => {
+//       toast({
+//         title: 'Comentário respondido',
+//         description: data.message,
+//         variant: 'success',
+//       });
+//     },
+//   });
+// }
 
 export const AnswerCommentDrawerTrigger = memo(InnerAnswerCommentDrawerTrigger);

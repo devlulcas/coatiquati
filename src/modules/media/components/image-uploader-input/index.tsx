@@ -40,7 +40,7 @@ export function ImageUploaderInput({ endpoint, value, setValue }: ImageUploaderI
   );
 
   return (
-    <>
+    <div className="flex h-80 w-full items-center justify-center">
       {value ? (
         <div className="relative flex w-full">
           <Image src={value} alt="Imagem" className="mx-auto max-h-80 w-auto rounded-lg" width={500} height={500} />
@@ -52,6 +52,6 @@ export function ImageUploaderInput({ endpoint, value, setValue }: ImageUploaderI
       ) : (
         <UploadDropzone className="mt-0" endpoint={endpoint} onClientUploadComplete={setValueCallback} />
       )}
-    </>
+    </div>
   );
 }

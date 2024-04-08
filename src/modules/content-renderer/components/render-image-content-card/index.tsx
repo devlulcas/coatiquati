@@ -1,7 +1,7 @@
 import type { ContentWithImage } from '@/modules/content/types/content';
 import Image from 'next/image';
+import { ZoomedImage } from '../../../image-content/components/zoomed-image';
 import { RenderedContentWrapper } from '../rendered-content-wrapper';
-import { ZoomedImage } from './zoomed-image';
 
 export async function RenderImageContentCard({ data }: { data: ContentWithImage }) {
   return (
