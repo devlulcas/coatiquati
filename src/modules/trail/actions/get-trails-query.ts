@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { TrailRepository } from '../repositories/trail-repository';
 import type { Trail } from '../types/trail';
 
-const getTrailsUseCaseSchema = z.object({
+const trailSearchSchema = z.object({
   search: z.coerce.string().optional(),
   skip: z.coerce.string().optional().transform(Number),
   take: z.coerce.string().optional().transform(Number),
@@ -26,10 +26,10 @@ const getTrailsUseCaseSchema = z.object({
     ),
 });
 
-export type TrailSearchSchema = z.infer<typeof getTrailsUseCaseSchema>;
+export type TrailSearchSchema = z.infer<typeof trailSearchSchema>;
 
 export async function getTrailsQuery(params: TrailSearchSchema = { skip: 0, take: 30 }): Promise<Trail[]> {
-  const validatedParams = getTrailsUseCaseSchema.safeParse(params);
+  const validatedParams = trailSearchSchema.safeParse(params);
 
   if (!validatedParams.success) {
     throw new Error('Parâmetros inválidos para buscar trilhas.');
