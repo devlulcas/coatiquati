@@ -24,7 +24,7 @@ export async function ProfileHeading({ user }: ProfileHeadingProps) {
   const isAlreadyFollowing = user.followers.some(follower => follower.username === session?.user.username);
 
   return (
-    <section className="overflow-hidden rounded-md bg-background">
+    <section className="overflow-hidden rounded-md bg-secondary/75">
       <div className="relative h-28 w-full overflow-hidden">
         <Image src={user.avatar} alt={user.username} layout="fill" objectFit="cover" className="blur-md" />
 
@@ -48,7 +48,7 @@ export async function ProfileHeading({ user }: ProfileHeadingProps) {
         />
       </div>
 
-      <div className="flex flex-col justify-between bg-secondary p-4 text-secondary-foreground">
+      <div className="flex flex-col justify-between p-4 text-secondary-foreground">
         <h1 className="text-2xl font-bold">{user.username}</h1>
         <p className="text-sm text-secondary-foreground/75">Membro desde {createdAt}</p>
 
