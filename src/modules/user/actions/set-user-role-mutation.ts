@@ -4,6 +4,7 @@ import { roles } from '@/modules/auth/constants/roles';
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
+import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
 import { z } from 'zod';
 import { UserRepository } from '../repositories/user-repository';
 
@@ -14,11 +15,11 @@ const setUserRoleUseCaseSchema = z.object({
 
 export type SetUserRoleSchema = z.infer<typeof setUserRoleUseCaseSchema>;
 
-export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<void> {
+export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Result<string>> {
   const session = await getActionSession();
 
   if (!session) {
-    throw new Error('Você precisa estar logado para editar as permissões de um usuário.');
+    return fail('Você precisa estar logado para editar as permissões de um usuário.');
   }
 
   if (!isHighPrivilegeAdmin(session.user.role)) {
@@ -29,13 +30,13 @@ export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<vo
       targetUsername: params.userId,
     });
 
-    throw new Error('Nível de permissões insuficiente para editar as permissões de um usuário.');
+    return fail('Nível de permissões insuficiente para editar as permissões de um usuário.');
   }
 
   const validatedParams = setUserRoleUseCaseSchema.safeParse(params);
 
   if (!validatedParams.success) {
-    throw new Error('Parâmetros de alteração de permissões inválidos.');
+    return fail('Parâmetros de alteração de permissões inválidos.');
   }
 
   if (session.user.id === validatedParams.data.userId) {
@@ -44,26 +45,28 @@ export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<vo
       username: session.user.username,
     });
 
-    throw new Error('Você não pode editar suas próprias permissões.');
+    return fail('Você não pode editar suas próprias permissões.');
   }
 
   const userRepository = new UserRepository();
 
-  const targetUser = await userRepository.getUserById(validatedParams.data.userId);
+  const targetUserResult = await asyncResult(userRepository.getUserById(validatedParams.data.userId));
 
-  if (!targetUser) {
+  if (targetUserResult.type === 'fail' || targetUserResult.value === null) {
     log.warn('Usuário não encontrado', {
       targetUserId: params.userId,
       targetUsername: params.userId,
     });
 
-    throw new Error('Usuário não encontrado.');
+    return fail('Usuário não encontrado.');
   }
+
+  const targetUser = targetUserResult.value;
 
   const desiredRole = isAdmin(validatedParams.data.role) ? roles.ADMIN : roles.USER;
 
   if (targetUser.verified === false && desiredRole === roles.ADMIN) {
-    throw new Error('Usuário alvo não verificado. Logo, não pode ter suas permissões alteradas.');
+    return fail('Usuário alvo não verificado. Logo, não pode ter suas permissões alteradas.');
   }
 
   if (isHighPrivilegeAdmin(targetUser.role)) {
@@ -74,8 +77,14 @@ export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<vo
       targetUsername: params.userId,
     });
 
-    throw new Error('Não é possível alterar a permissão de um administrador de nível tão alto.');
+    return fail('Não é possível alterar a permissão de um administrador de nível tão alto.');
   }
 
-  return userRepository.updateUser(validatedParams.data.userId, { role: desiredRole });
+  try {
+    await userRepository.updateUser(validatedParams.data.userId, { role: desiredRole });
+    return ok('Permissões de usuário alteradas com sucesso.');
+  } catch (error) {
+    log.error('Erro ao alterar as permissões de usuário', error);
+    return fail('Erro ao alterar as permissões de usuário.');
+  }
 }

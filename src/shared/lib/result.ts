@@ -1,18 +1,20 @@
-export type Result<T = void> =
-  | {
-      type: 'ok';
-      value: T;
-    }
-  | {
-      type: 'fail';
-      fail: string;
-    };
+export type Ok<T> = {
+  type: 'ok';
+  value: T;
+};
 
-export function ok<T>(value: T): Result<T> {
+export type Fail = {
+  type: 'fail';
+  fail: string;
+};
+
+export type Result<T = void> = Ok<T> | Fail;
+
+export function ok<T>(value: T): Ok<T> {
   return { type: 'ok', value };
 }
 
-export function fail<T>(message: string): Result<T> {
+export function fail(message: string): Fail {
   return { type: 'fail', fail: message };
 }
 
@@ -30,4 +32,17 @@ export function unwrap<T>(result: Result<T>): T {
   }
 
   return result.value;
+}
+
+export async function asyncResult<T>(promise: Promise<T>): Promise<Result<T>> {
+  try {
+    const value = await promise;
+    return ok(value);
+  } catch (e) {
+    if (e instanceof Error) {
+      return fail(e.message);
+    } else {
+      return fail('Erro desconhecido');
+    }
+  }
 }

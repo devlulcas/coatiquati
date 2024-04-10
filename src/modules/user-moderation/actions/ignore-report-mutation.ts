@@ -5,17 +5,18 @@ import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { reportTable } from '@/modules/database/schema/report';
 import { log } from '@/modules/logging/lib/pino';
+import { fail, ok, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 
-export async function ignoreReportMutation(reportId: number): Promise<void> {
+export async function ignoreReportMutation(reportId: number): Promise<Result<string>> {
   const session = await getActionSession();
 
   if (!session) {
-    throw new Error('Entre para ignorar um reporte');
+    return fail('Entre para ignorar um reporte');
   }
 
   if (!isAdminOrAbove(session.user.role)) {
-    throw new Error('Você não tem permissão para ignorar reportes');
+    return fail('Você não tem permissão para ignorar reportes');
   }
 
   const report = await db.query.reportTable.findFirst({
@@ -23,14 +24,19 @@ export async function ignoreReportMutation(reportId: number): Promise<void> {
   });
 
   if (!report) {
-    throw new Error('Reporte não encontrado');
+    return fail('Reporte não encontrado');
   }
 
   if (report.userId === session.user.id) {
-    throw new Error('Você não pode ignorar um reporte seu');
+    return fail('Você não pode ignorar um reporte seu');
   }
 
-  await db.update(reportTable).set({ deletedAt: new Date() }).where(eq(reportTable.id, reportId)).execute();
-
-  log.info(`Reporte ignorado: ${reportId} por ${session.user.id}`);
+  try {
+    await db.update(reportTable).set({ deletedAt: new Date() }).where(eq(reportTable.id, reportId)).execute();
+    log.info('Reporte ignorado com sucesso', { reportId, userId: session.user.id });
+    return ok('Reporte ignorado com sucesso');
+  } catch (error) {
+    log.error('Erro ao ignorar reporte', { error });
+    return fail('Erro ao ignorar reporte');
+  }
 }

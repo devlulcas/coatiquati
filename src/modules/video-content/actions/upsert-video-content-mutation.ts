@@ -7,24 +7,28 @@ import {
   newVideoContentSchema,
   type NewVideoContentSchema,
 } from '@/modules/video-content/schemas/new-video-content-schema';
+import { asyncResult, fail, type Result } from '@/shared/lib/result';
 
-export async function upsertVideoContentMutation(params: NewVideoContentSchema): Promise<number> {
+export async function upsertVideoContentMutation(params: NewVideoContentSchema): Promise<Result<number>> {
   const session = await getActionSession();
 
   if (!session) {
-    throw new Error('Você precisa estar logado para criar um conteúdo de vídeo.');
+    return fail('Você precisa estar logado para criar um conteúdo de vídeo.');
   }
 
   const validatedParams = newVideoContentSchema.safeParse(params);
 
   if (!validatedParams.success) {
-    throw new Error('Parâmetros inválidos para cadastro de conteúdo de vídeo.');
+    return fail('Parâmetros inválidos para cadastro de conteúdo de vídeo.');
   }
 
   const videoContentRepository = new VideoContentRepository();
-  const newContentId = await videoContentRepository.upsert(
-    { authorId: session.userId, ...validatedParams.data },
-    { src: validatedParams.data.src, description: validatedParams.data.description },
+
+  const newContentId = asyncResult(
+    videoContentRepository.upsert(
+      { authorId: session.userId, ...validatedParams.data },
+      { src: validatedParams.data.src, description: validatedParams.data.description },
+    ),
   );
 
   log.info('Conteúdo de vídeo criado com sucesso', { newContentId, userId: session.userId });
