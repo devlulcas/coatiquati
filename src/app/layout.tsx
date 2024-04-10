@@ -50,7 +50,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
           <MainLayoutWrapper>
             <Header />
-            <div className="min-h-[--view-height]">{children}</div>
+            <div className="min-h-[--view-height] overflow-x-hidden">{children}</div>
           </MainLayoutWrapper>
         </Providers>
       </body>
