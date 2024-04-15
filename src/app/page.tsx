@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default async function Page() {
-  const trails = await getRecentTrailsQuery();
+  const trailsResult = await getRecentTrailsQuery();
 
   return (
     <div className="flex h-[--view-height] flex-col justify-between pt-12">
@@ -33,7 +33,13 @@ export default async function Page() {
           </span>
         </Link>
 
-        <TrailCardCarouselSection trails={trails} className="mb-auto mt-auto" />
+        {trailsResult.type === 'ok' ? (
+          <TrailCardCarouselSection trails={trailsResult.value} className="mb-auto mt-auto" />
+        ) : (
+          <div className="mb-auto mt-auto flex h-[50vh] items-center justify-center rounded border border-destructive bg-destructive/50 text-destructive-foreground">
+            <p className="text-pretty font-bold">Não foi possível carregar as trilhas recentes.</p>
+          </div>
+        )}
 
         <div className="absolute inset-0 z-[-1] h-[--safe-screen-height] overflow-hidden">
           <Image

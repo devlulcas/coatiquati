@@ -104,7 +104,7 @@ export class TrailRepository {
 
   async getRecentTrails(): Promise<Trail[]> {
     return db.query.trailTable.findMany({
-      limit: 15,
+      limit: 20,
       where: (fields, operators) => operators.eq(fields.status, contentStatus.PUBLISHED),
       orderBy: asc(trailTable.createdAt),
       with: {
