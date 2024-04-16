@@ -3,6 +3,7 @@ import { AddNewCommentForm } from '@/modules/comments/components/add-new-comment
 import { CommentBlock } from '@/modules/comments/components/comment-block';
 import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
 import type { Contributor } from '@/modules/user/types/user';
+import { ErrorMessage } from '@/shared/components/common/error-message';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Separator } from '@/shared/components/ui/separator';
 import { EllipsisIcon } from 'lucide-react';
@@ -20,7 +21,11 @@ type RenderedContentWrapperProps = {
 };
 
 export async function RenderedContentWrapper({ children, title, by, content }: RenderedContentWrapperProps) {
-  const comments = await getCommentsOnContentQuery(content.id);
+  const commentsResult = await getCommentsOnContentQuery(content.id);
+
+  if (commentsResult.type === 'fail') {
+    return <ErrorMessage message={commentsResult.fail} />;
+  }
 
   return (
     <section className="flex flex-col gap-2 rounded border bg-background/50">
@@ -60,7 +65,7 @@ export async function RenderedContentWrapper({ children, title, by, content }: R
         <Separator className="my-4" />
 
         <ul className="flex flex-col gap-2">
-          {comments.map(comment => (
+          {commentsResult.value.map(comment => (
             <CommentBlock key={comment.id} comment={comment} />
           ))}
         </ul>

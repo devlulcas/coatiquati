@@ -25,7 +25,13 @@ export async function TrailHeading({ trail, className }: TrailHeadingProps) {
 
   const session = await getPageSession();
 
-  const isAlreadyFollowing = session !== null && (await currentUserIsAlreadySubscribedQuery(trail.id, session.userId));
+  const checkIfUserIsAlreadySubscribed = async () => {
+    if (session === null) return false;
+    const result = await currentUserIsAlreadySubscribedQuery(trail.id, session.userId);
+    return result.value;
+  };
+
+  const isAlreadyFollowing = await checkIfUserIsAlreadySubscribed();
 
   return (
     <div className={cn('relative flex min-h-80 w-full flex-col gap-4 lg:flex-row', className)}>

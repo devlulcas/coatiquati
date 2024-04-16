@@ -5,13 +5,14 @@ import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { useToast } from '@/shared/components/ui/use-toast';
+import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { ClassValue } from 'clsx';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { createCategoryMutation } from '../../actions/create-category-mutation';
 import { useTrailCategorySearchQuery } from '../../hooks/use-trail-category-search-query';
-import { newTrailCategoryAction } from './new-trail-category-action';
 
 const formSchema = z.object({
   name: z
@@ -42,22 +43,33 @@ export function TrailCategoryForm({ className }: TrailCategoryFormProps) {
 
   const { toast } = useToast();
 
-  const onSubmit = async (data: TrailCategoryFormValues) => {
-    try {
-      await newTrailCategoryAction(data);
-      toast({ title: 'Categoria criada com sucesso' });
-    } catch (error) {
+  const mutation = useServerActionMutation({
+    serverAction: createCategoryMutation,
+    onFailedAction: error => {
       toast({
         title: 'Erro ao criar categoria',
         description: error instanceof Error ? error.message : String(error),
         variant: 'destructive',
       });
-    }
-  };
+    },
+    onSuccessfulAction: () => {
+      toast({ title: 'Categoria criada com sucesso' });
+    },
+  });
 
   return (
     <Form {...form}>
-      <form method="POST" onSubmit={form.handleSubmit(onSubmit)} className={cn('flex flex-col gap-3', className)}>
+      <form
+        method="POST"
+        onSubmit={form.handleSubmit(data => mutation.mutate(data))}
+        className={cn('flex flex-col gap-3', className)}
+      >
+        {mutation.error && (
+          <p className="rounded border-destructive bg-destructive/50 p-4 text-sm text-destructive-foreground">
+            {mutation.error.message}
+          </p>
+        )}
+
         <FormField
           control={form.control}
           name="name"

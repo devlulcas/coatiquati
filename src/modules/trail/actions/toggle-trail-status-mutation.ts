@@ -2,42 +2,49 @@
 
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
+import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
 import { revalidateTrails } from '../lib/revalidate-trail';
 import { TrailRepository } from '../repositories/trail-repository';
 import { trailWithIdSchema, type TrailWithIdSchema } from '../schemas/trail-with-id-schema';
 
-export async function toggleTrailStatusMutation(params: TrailWithIdSchema): Promise<void> {
+export async function toggleTrailStatusMutation(params: TrailWithIdSchema): Promise<Result<string>> {
   const session = await getActionSession();
 
   if (!isAuthenticated(session)) {
-    throw new Error('Usuário não autenticado.');
+    return fail('Usuário não autenticado.');
   }
 
   if (!isAdminOrAbove(session.user.role)) {
-    throw new Error('Somente administradores podem editar trilhas.');
+    return fail('Somente administradores podem editar trilhas.');
   }
 
   const validatedParams = trailWithIdSchema.safeParse(params);
 
   if (!validatedParams.success) {
-    throw new Error('Parâmetros inválidos para editar trilha.');
+    return fail('Parâmetros inválidos para editar trilha.');
   }
 
   const trailRepository = new TrailRepository();
 
-  const trail = await trailRepository.getTrailById(validatedParams.data.id);
+  const trailResult = await asyncResult(trailRepository.getTrailById(validatedParams.data.id));
+
+  if (trailResult.type === 'fail') {
+    return fail('Trilha não encontrada.');
+  }
+
+  const trail = trailResult.value;
 
   if (trail.status === 'PUBLISHED') {
     trailRepository.omitTrail(validatedParams.data.id);
     revalidateTrails({ username: session.user.username, trailId: trail.id });
-    return;
+    return ok('Trilha omitida com sucesso.');
   }
 
   if (trail.status === 'DRAFT') {
     trailRepository.enableTrail(validatedParams.data.id);
     revalidateTrails({ username: session.user.username, trailId: trail.id });
-    return;
+    return ok('Trilha publicada com sucesso.');
   }
 
-  throw new Error('Status inválido para trilha.');
+  return fail('Status de trilha inválido.');
 }

@@ -3,24 +3,36 @@
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
+import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
 import { VOTES } from '../constants/votes';
 import { CommentVoteRepository } from '../repositories/comment-vote-repository';
 
-export async function downvoteCommentMutation(commentId: number): Promise<void> {
+export async function downvoteCommentMutation(commentId: number): Promise<Result<string>> {
   const session = await getActionSession();
 
   if (!isAuthenticated(session)) {
     log.warn('Tentativa de votar em comentário sem usuário logado.', { commentId });
-    throw new Error('Somente usuários logados podem votar em comentários.');
+    return fail('Somente usuários logados podem votar em comentários.');
   }
 
   const commentVoteRepository = new CommentVoteRepository();
 
-  const currentUserVote = await commentVoteRepository.getUserVote(commentId, session.userId);
+  const currentUserVoteResult = await asyncResult(commentVoteRepository.getUserVote(commentId, session.userId));
 
-  if (currentUserVote === VOTES.DOWNVOTE) {
-    return commentVoteRepository.removeVote(commentId, session.userId);
+  if (currentUserVoteResult.type === 'fail') {
+    return fail('Erro ao buscar voto do usuário.');
   }
 
-  return commentVoteRepository.downvote(commentId, session.userId);
+  try {
+    if (currentUserVoteResult.value === VOTES.DOWNVOTE) {
+      await commentVoteRepository.removeVote(commentId, session.userId);
+      return ok('Voto removido.');
+    }
+
+    await commentVoteRepository.downvote(commentId, session.userId);
+    return ok('Voto computado.');
+  } catch (error) {
+    log.error('Erro ao votar em comentário.', { commentId, userId: session.userId, error });
+    return fail('Erro ao votar em comentário.');
+  }
 }

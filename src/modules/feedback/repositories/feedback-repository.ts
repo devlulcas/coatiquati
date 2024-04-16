@@ -14,7 +14,7 @@ export class FeedbackRepository {
     }
   }
 
-  async getFeedback(pagination: PaginationSchema, type?: FeedbackType): Promise<Feedback[]> {
+  async getFeedbackList(pagination: PaginationSchema, type?: FeedbackType): Promise<Feedback[]> {
     return db.query.feedbackTable.findMany({
       where: (fields, operators) => (type ? operators.eq(fields.type, type) : operators.isNotNull(fields.deletedAt)),
       limit: pagination.take,

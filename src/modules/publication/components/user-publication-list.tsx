@@ -3,10 +3,19 @@ import { getPublicationsByUserIdQuery } from '../actions/get-publications-by-use
 import { PublicationCard } from './publication-card';
 
 export async function UserPublicationList({ user }: { user: User }) {
-  const pubs = await getPublicationsByUserIdQuery(user.id);
+  const pubsResult = await getPublicationsByUserIdQuery(user.id);
+
+  if (pubsResult.type === 'fail') {
+    return (
+      <p className="rounded border-destructive bg-destructive/50 p-2 text-center text-destructive-foreground">
+        {pubsResult.fail}
+      </p>
+    );
+  }
+
   return (
     <ul className="overflow-hidden rounded">
-      {pubs.map(pub => (
+      {pubsResult.value.map(pub => (
         <li key={pub.id}>
           <PublicationCard publication={pub} author={user} />
         </li>

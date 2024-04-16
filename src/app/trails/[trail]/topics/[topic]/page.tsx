@@ -2,6 +2,7 @@ import { RenderCorrectContentCard } from '@/modules/content-renderer/components/
 import { getTopicQuery } from '@/modules/topic/actions/get-topic-query';
 import { ContributionOptionsButton } from '@/modules/topic/components/contribution-options-button';
 import { createTrailUrl } from '@/modules/trail/lib/create-trail-url';
+import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { ArrowLeftIcon, FileIcon, ImageIcon, TextIcon, VideoIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -34,14 +35,18 @@ const contentTypeIcon = {
 export default async function Page({ params }: PageProps) {
   const topicId = Number(params.topic);
 
-  const topicData = await getTopicQuery(topicId);
+  const topicResult = await getTopicQuery(topicId);
+
+  if (topicResult.type === 'fail') {
+    return <ErrorMessage message={topicResult.fail} className="container my-8" />;
+  }
 
   // Unify and count
   const contentTypesAvailable: {
     count: number;
     type: keyof typeof contentTypeIcon;
   }[] = Object.entries(
-    topicData.contents.reduce<Record<keyof typeof contentTypeIcon, number>>((acc, content) => {
+    topicResult.value.contents.reduce<Record<keyof typeof contentTypeIcon, number>>((acc, content) => {
       acc[content.contentType] = (acc[content.contentType] ?? 0) + 1;
       return acc;
     }, {} as any),
@@ -50,8 +55,8 @@ export default async function Page({ params }: PageProps) {
   return (
     <div className="container flex flex-col gap-2 py-8">
       <header className="flex flex-col gap-2 rounded border bg-background/75 p-2">
-        <h2 className="mb-2 text-2xl font-bold">{topicData.title}</h2>
-        <p className="text-lg text-muted-foreground">{topicData.description}</p>
+        <h2 className="mb-2 text-2xl font-bold">{topicResult.value.title}</h2>
+        <p className="text-lg text-muted-foreground">{topicResult.value.description}</p>
       </header>
 
       <div className="flex flex-col gap-2 rounded border bg-background/75 p-2">
@@ -76,26 +81,26 @@ export default async function Page({ params }: PageProps) {
         <span>Contribua você também com imagens, vídeos, links e textos dos seus estudos neste tópico:</span>
         <div className="flex flex-wrap items-center gap-2">
           <Button asChild variant="secondary" className="flex items-center gap-2">
-            <Link href={createTrailUrl(topicData.trailId)}>
+            <Link href={createTrailUrl(topicResult.value.trailId)}>
               <ArrowLeftIcon size={16} />
               Voltar
             </Link>
           </Button>
           <span>ou</span>
-          <ContributionOptionsButton topicId={topicData.id} trailId={topicData.trailId} />
+          <ContributionOptionsButton topicId={topicResult.value.id} trailId={topicResult.value.trailId} />
         </div>
       </div>
 
       <h3 className="mb-4 mt-6 text-xl font-bold">Conteúdos</h3>
 
       <ul className="flex flex-col gap-3">
-        {topicData.contents.map(data => (
+        {topicResult.value.contents.map(data => (
           <li key={data.id}>
             <RenderCorrectContentCard data={data} />
           </li>
         ))}
 
-        {topicData.contents.length === 0 && (
+        {topicResult.value.contents.length === 0 && (
           <li className="flex flex-col gap-2">
             <p className="text-lg text-muted-foreground">Nenhum conteúdo encontrado</p>
           </li>

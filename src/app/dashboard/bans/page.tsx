@@ -1,6 +1,6 @@
 import { getReportsQuery } from '@/modules/user-moderation/actions/get-reports-query';
 import ReportListItem from '@/modules/user-moderation/components/report-list-item';
-import { REPORT_REASON_LABELS, type ReportReason } from '@/modules/user-moderation/constants/report';
+import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { TrashIcon } from 'lucide-react';
@@ -13,7 +13,7 @@ type PageProps = {
 };
 
 export default async function Page(props: PageProps) {
-  const reports = await getReportsQuery();
+  const reportsResult = await getReportsQuery();
 
   return (
     <div className="flex flex-col gap-8">
@@ -28,20 +28,16 @@ export default async function Page(props: PageProps) {
           </Button>
         </form>
 
-        <ul className="mt-4 flex flex-col gap-1 divide-y-2">
-          {reports.map(report => (
-            <ReportListItem key={report.id} report={report} />
-          ))}
-        </ul>
+        {reportsResult.type === 'fail' ? (
+          <ErrorMessage message={reportsResult.fail} className="mt-4" />
+        ) : (
+          <ul className="mt-4 flex flex-col gap-1 divide-y-2">
+            {reportsResult.value.map(report => (
+              <ReportListItem key={report.id} report={report} />
+            ))}
+          </ul>
+        )}
       </section>
     </div>
-  );
-}
-
-function ReportReasonLabel({ reason }: { reason: ReportReason }) {
-  return (
-    <span className="rounded bg-destructive/75 px-2 text-sm text-destructive-foreground">
-      {REPORT_REASON_LABELS[reason]}
-    </span>
   );
 }

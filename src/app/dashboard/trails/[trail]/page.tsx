@@ -2,7 +2,7 @@ import { NewTopicDialogTrigger } from '@/modules/topic/components/new-topic-dial
 import { TopicsTable } from '@/modules/topic/components/topics-table';
 import { getTrailByIdQuery } from '@/modules/trail/actions/get-trail-by-id-query';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
-import { redirect } from 'next/navigation';
+import { ErrorMessage } from '@/shared/components/common/error-message';
 
 type PageProps = {
   params: {
@@ -13,13 +13,15 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const trailId = Number(params.trail);
 
-  const trailData = await getTrailByIdQuery(trailId);
+  const trailResult = await getTrailByIdQuery(trailId);
 
-  if (!trailData) redirect('/dashboard');
+  if (trailResult.type === 'fail') {
+    return <ErrorMessage message={trailResult.fail} className="container my-8" />;
+  }
 
   return (
     <div className="flex flex-col gap-8">
-      <TrailHeading trail={trailData} className="mb-8" />
+      <TrailHeading trail={trailResult.value} className="mb-8" />
 
       <section>
         <div className="mb-4 flex justify-between">
@@ -27,7 +29,7 @@ export default async function Page({ params }: PageProps) {
           <NewTopicDialogTrigger trailId={trailId} />
         </div>
 
-        <TopicsTable data={trailData.topics} />
+        <TopicsTable data={trailResult.value.topics} />
       </section>
     </div>
   );

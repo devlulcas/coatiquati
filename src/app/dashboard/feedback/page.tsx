@@ -1,6 +1,7 @@
 import { getFeedbackListQuery } from '@/modules/feedback/actions/get-feedback-list-query';
 import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 import { UserRoleBadge } from '@/modules/user/components/user-role-badge';
+import { ErrorMessage } from '@/shared/components/common/error-message';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
@@ -19,7 +20,7 @@ export default async function FeedbackPage(props: PageProps) {
   const page = props.searchParams.page ? parseInt(props.searchParams.page) : 1;
   const type = props.searchParams.type;
 
-  const feedback = await getFeedbackListQuery(page, type);
+  const feedbackResult = await getFeedbackListQuery(page, type);
 
   const fromDateTimeToLocaleString = (dateTime: string | Date) => {
     return new Date(dateTime).toLocaleDateString('pt-BR', {
@@ -55,66 +56,72 @@ export default async function FeedbackPage(props: PageProps) {
           </Button>
         </form>
 
-        <ul className="mt-4 flex flex-col divide-y divide-primary/15 overflow-clip rounded">
-          {feedback.map(feedback => (
-            <li key={feedback.id} className="flex flex-col gap-4 rounded-2xl bg-foreground/10 px-2 py-2">
-              <div className="mb-2 flex justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="space-y-2">
-                    {feedback.user && (
-                      <Link href={`/profile/${feedback.user.username}`} className="flex items-center gap-2">
-                        <UserAvatar user={feedback.user} />
-                        <p>{feedback.user.username}</p>
-                        <UserRoleBadge role={feedback.user.role} />
+        {feedbackResult.type === 'fail' ? (
+          <ErrorMessage message={feedbackResult.fail} className="mt-4" />
+        ) : (
+          <ul className="mt-4 flex flex-col divide-y divide-primary/15 overflow-clip rounded">
+            {feedbackResult.value.map(feedback => (
+              <li key={feedback.id} className="flex flex-col gap-4 rounded-2xl bg-foreground/10 px-2 py-2">
+                <div className="mb-2 flex justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="space-y-2">
+                      {feedback.user && (
+                        <Link href={`/profile/${feedback.user.username}`} className="flex items-center gap-2">
+                          <UserAvatar user={feedback.user} />
+                          <p>{feedback.user.username}</p>
+                          <UserRoleBadge role={feedback.user.role} />
 
-                        {feedback.user.verified && (
-                          <span
-                            className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/15"
-                            title="Usuário verificado"
-                            aria-label="Usuário verificado"
-                          >
-                            <CheckIcon className="h-4 w-4 text-green-500" />
-                          </span>
-                        )}
+                          {feedback.user.verified && (
+                            <span
+                              className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/15"
+                              title="Usuário verificado"
+                              aria-label="Usuário verificado"
+                            >
+                              <CheckIcon className="h-4 w-4 text-green-500" />
+                            </span>
+                          )}
 
-                        {feedback.user.isBanned && (
-                          <span
-                            className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500/15"
-                            title="Usuário banido"
-                            aria-label="Usuário banido"
-                          >
-                            <SkullIcon className="h-4 w-4 text-red-500" />
-                          </span>
-                        )}
-                      </Link>
-                    )}
+                          {feedback.user.isBanned && (
+                            <span
+                              className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500/15"
+                              title="Usuário banido"
+                              aria-label="Usuário banido"
+                            >
+                              <SkullIcon className="h-4 w-4 text-red-500" />
+                            </span>
+                          )}
+                        </Link>
+                      )}
 
-                    <a className="flex items-center gap-2" href={`mailto:${feedback.user.email}`}>
-                      <MailIcon className="h-4 w-4 text-primary-foreground" />
-                      {feedback.user.email}
-                    </a>
+                      <a className="flex items-center gap-2" href={`mailto:${feedback.user.email}`}>
+                        <MailIcon className="h-4 w-4 text-primary-foreground" />
+                        {feedback.user.email}
+                      </a>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl font-bold">{feedback.softwareVersion}</h3>
+                      <time
+                        className="text-sm text-muted-foreground"
+                        dateTime={new Date(feedback.createdAt).toISOString()}
+                      >
+                        {fromDateTimeToLocaleString(feedback.createdAt)}
+                      </time>
+                    </div>
                   </div>
 
-                  <div>
-                    <h3 className="text-xl font-bold">{feedback.softwareVersion}</h3>
-                    <time
-                      className="text-sm text-muted-foreground"
-                      dateTime={new Date(feedback.createdAt).toISOString()}
-                    >
-                      {fromDateTimeToLocaleString(feedback.createdAt)}
-                    </time>
-                  </div>
+                  <FeedbackBadge variant={feedback.type} />
                 </div>
 
-                <FeedbackBadge variant={feedback.type} />
-              </div>
+                <ReadonlyEditor content={JSON.parse(feedback.content)} />
+              </li>
+            ))}
+          </ul>
+        )}
 
-              <ReadonlyEditor content={JSON.parse(feedback.content)} />
-            </li>
-          ))}
-        </ul>
-
-        {feedback.length === 0 && <p className="text-center text-muted-foreground">Nenhum feedback encontrado</p>}
+        {feedbackResult.type === 'ok' && feedbackResult.value.length === 0 && (
+          <p className="text-center text-muted-foreground">Nenhum feedback encontrado</p>
+        )}
       </section>
     </div>
   );

@@ -2,7 +2,9 @@
 
 import { getPageSession } from '@/modules/auth/utils/get-page-session';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
+import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
+import { fail, ok, type Result } from '@/shared/lib/result';
 import { z } from 'zod';
 import { TrailRepository } from '../repositories/trail-repository';
 import type { Trail } from '../types/trail';
@@ -28,16 +30,22 @@ const trailSearchSchema = z.object({
 
 export type TrailSearchSchema = z.infer<typeof trailSearchSchema>;
 
-export async function getTrailsQuery(params: TrailSearchSchema = { skip: 0, take: 30 }): Promise<Trail[]> {
+export async function getTrailsQuery(params: TrailSearchSchema = { skip: 0, take: 30 }): Promise<Result<Trail[]>> {
   const validatedParams = trailSearchSchema.safeParse(params);
 
   if (!validatedParams.success) {
-    throw new Error('Parâmetros inválidos para buscar trilhas.');
+    return fail(validatedParams.error.errors.join(', '));
   }
 
   const session = await getPageSession();
 
   const trailRepository = new TrailRepository();
 
-  return trailRepository.getTrails(validatedParams.data, isAdminOrAbove(session?.user.role));
+  try {
+    const trails = await trailRepository.getTrails(validatedParams.data, isAdminOrAbove(session?.user.role));
+    return ok(trails);
+  } catch (error) {
+    log.error('Falha ao buscar trilhas', String(error));
+    return fail('Falha ao buscar trilhas');
+  }
 }

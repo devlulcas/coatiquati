@@ -4,21 +4,6 @@ import type { Comment } from '../types/comment';
 
 export class CommentRepository {
   async addCommentInContent(comment: ContentNewCommentTable): Promise<void> {
-    const SIXTY_SECONDS = 60000;
-
-    const lastComment = await db.query.contentCommentTable.findFirst({
-      where: (fields, operators) => {
-        return operators.and(
-          operators.eq(fields.authorId, comment.authorId),
-          operators.gt(fields.createdAt, new Date(Date.now() - SIXTY_SECONDS)),
-        );
-      },
-    });
-
-    if (lastComment) {
-      throw new Error('Espere 60 segundos para comentar novamente');
-    }
-
     const newComment = await db
       .insert(contentCommentTable)
       .values(comment)

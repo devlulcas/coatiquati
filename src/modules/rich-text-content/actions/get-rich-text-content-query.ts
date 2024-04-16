@@ -1,25 +1,35 @@
 'use server';
 
 import type { ContentWithRichText } from '@/modules/content/types/content';
+import { log } from '@/modules/logging/lib/pino';
 import { RichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
 import type { Topic } from '@/modules/topic/types/topic';
 import type { Trail } from '@/modules/trail/types/trail';
+import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
 
-export async function getRichTextContentQuery(baseContentId: number): Promise<{
-  richText: ContentWithRichText;
-  parentTrail: Trail;
-  parentTopic: Topic;
-}> {
+export async function getRichTextContentQuery(baseContentId: number): Promise<
+  Result<{
+    richText: ContentWithRichText;
+    parentTrail: Trail;
+    parentTopic: Topic;
+  }>
+> {
   const richTextContentRepository = new RichTextContentRepository();
 
-  const data = await richTextContentRepository.getByContentId(baseContentId);
+  const rteResult = await asyncResult(richTextContentRepository.getByContentId(baseContentId));
 
-  if (!data.content.topic) {
-    throw new Error('Rich text content does not have a topic');
+  if (rteResult.type === 'fail') {
+    log.error('Falha ao buscar conteúdo de texto rico', rteResult.fail);
+    return fail('Falha ao buscar conteúdo textual');
   }
 
-  const topic = data.content.topic;
-  const trail = data.content.topic.trail;
+  if (!rteResult.value.content.topic) {
+    log.error('Conteúdo não está associado a um tópico', rteResult.value);
+    return fail('Conteúdo não está associado a um tópico');
+  }
+
+  const topic = rteResult.value.content.topic;
+  const trail = rteResult.value.content.topic.trail;
 
   const parentTrail: Trail = {
     id: trail.id,
@@ -50,25 +60,25 @@ export async function getRichTextContentQuery(baseContentId: number): Promise<{
   };
 
   const richText: ContentWithRichText = {
-    id: data.content.id,
-    title: data.content.title,
-    active: data.content.active,
-    author: data.content.author,
+    id: rteResult.value.content.id,
+    title: rteResult.value.content.title,
+    active: rteResult.value.content.active,
+    author: rteResult.value.content.author,
     contentType: 'rich_text',
-    contributors: data.content.contributors,
-    createdAt: data.content.createdAt,
-    deletedAt: data.content.deletedAt,
-    updatedAt: data.content.updatedAt,
+    contributors: rteResult.value.content.contributors,
+    createdAt: rteResult.value.content.createdAt,
+    deletedAt: rteResult.value.content.deletedAt,
+    updatedAt: rteResult.value.content.updatedAt,
     content: {
-      id: data.id,
-      baseContentId: data.baseContentId,
-      asJson: data.asJson,
+      id: rteResult.value.id,
+      baseContentId: rteResult.value.baseContentId,
+      asJson: rteResult.value.asJson,
       contentType: 'rich_text',
-      createdAt: data.createdAt,
-      deletedAt: data.deletedAt,
-      updatedAt: data.updatedAt,
+      createdAt: rteResult.value.createdAt,
+      deletedAt: rteResult.value.deletedAt,
+      updatedAt: rteResult.value.updatedAt,
     },
   };
 
-  return { richText, parentTrail, parentTopic };
+  return ok({ richText, parentTrail, parentTopic });
 }

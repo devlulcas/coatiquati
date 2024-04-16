@@ -5,22 +5,30 @@ import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { RichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
 import { type NewRichTextContentSchema } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
+import { asyncResult, fail, type Result } from '@/shared/lib/result';
 
-export async function upsertRichTextContentMutation(params: NewRichTextContentSchema): Promise<number> {
+export async function upsertRichTextContentMutation(params: NewRichTextContentSchema): Promise<Result<number>> {
   const session = await getActionSession();
 
   if (!isAuthenticated(session)) {
-    throw new Error('Usuário não autenticado');
+    return fail('Usuário não autenticado');
   }
 
   const richTextContentRepository = new RichTextContentRepository();
 
-  const newContentId = richTextContentRepository.upsert(
-    { title: params.title, topicId: params.topicId, authorId: session.userId },
-    params.content,
+  const newContentResult = await asyncResult(
+    richTextContentRepository.upsert(
+      { title: params.title, topicId: params.topicId, authorId: session.userId },
+      params.content,
+    ),
   );
 
-  log.info('Conteúdo de rich text alterado com sucesso.', { newContentId });
+  if (newContentResult.type === 'fail') {
+    log.error('Falha ao alterar conteúdo de texto rico', newContentResult.fail);
+    return fail('Falha ao alterar textual');
+  }
 
-  return newContentId;
+  log.info('Conteúdo de rich text alterado com sucesso.', newContentResult.value);
+
+  return newContentResult;
 }

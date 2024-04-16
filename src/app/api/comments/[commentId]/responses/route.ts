@@ -14,7 +14,12 @@ type RouteProps = {
 
 export const GET = async (_: NextRequest, { params }: RouteProps): Promise<NextResponse<Comment[]>> => {
   const comments = await getCommentResponsesQuery(Number(params.commentId));
-  return NextResponse.json(comments);
+
+  if (comments.type === 'fail') {
+    return NextResponse.json([], { status: 404 });
+  }
+
+  return NextResponse.json(comments.value);
 };
 
 export const POST = async (

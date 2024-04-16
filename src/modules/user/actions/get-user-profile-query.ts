@@ -7,11 +7,11 @@ import { type UserProfile } from '../types/user';
 
 const getUserProfileSchema = userSignInSchema.pick({ username: true });
 
-export async function getUserProfileQuery(username: string): Promise<Result<UserProfile>> {
+export async function getUserProfileQuery(username: string): Promise<Result<UserProfile | null>> {
   const validatedParams = getUserProfileSchema.safeParse({ username });
 
   if (!validatedParams.success) {
-    throw new Error('Parâmetros de busca de perfil inválidos');
+    return fail('Parâmetros de busca de perfil inválidos');
   }
 
   const userRepository = new UserRepository();
@@ -23,7 +23,7 @@ export async function getUserProfileQuery(username: string): Promise<Result<User
   }
 
   if (profileResult.value === null) {
-    return fail('Usuário não encontrado');
+    return ok(null);
   }
 
   return ok(profileResult.value);

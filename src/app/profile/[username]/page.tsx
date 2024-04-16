@@ -7,9 +7,12 @@ import { TrailCard } from '@/modules/trail/components/trail-card';
 import { getUserProfileQuery } from '@/modules/user/actions/get-user-profile-query';
 import { ProfileHeading } from '@/modules/user/components/profile-heading';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
+import { ErrorMessage } from '@/shared/components/common/error-message';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
+import { unwrapOr } from '@/shared/lib/result';
 import { StarsIcon } from 'lucide-react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 type PageProps = {
   params: {
@@ -18,13 +21,21 @@ type PageProps = {
 };
 
 export default async function Page({ params }: PageProps) {
-  const profile = await getUserProfileQuery(decodeURIComponent(params.username));
+  const profileResult = await getUserProfileQuery(decodeURIComponent(params.username));
 
-  if (!profile) {
-    throw new Error('Profile not found');
+  if (profileResult.type === 'fail') {
+    return <ErrorMessage message={profileResult.fail} className="container my-4" />;
   }
 
-  const subscribedTrails = await getTrailSubscriptionsByUserIdQuery(profile.id);
+  if (profileResult.value === null) {
+    notFound();
+  }
+
+  const profile = profileResult.value;
+
+  const subscribedTrailsResult = await getTrailSubscriptionsByUserIdQuery(profile.id);
+
+  const subscribedTrails = unwrapOr(subscribedTrailsResult, []);
 
   const mostSubscribedCategory = getMostSubscribedCategory(subscribedTrails);
 
@@ -89,6 +100,8 @@ export default async function Page({ params }: PageProps) {
 
       <section className="mt-4">
         <h2 className="text-xl font-bold">Trilhas inscritas</h2>
+
+        {subscribedTrailsResult.type === 'fail' && <ErrorMessage message={subscribedTrailsResult.fail} />}
 
         {subscribedTrails.length === 0 && (
           <p>Parece que {profile.username} ainda não se inscreveu em nenhuma trilha.</p>

@@ -3,6 +3,7 @@ import { getTrailsQuery } from '@/modules/trail/actions/get-trails-query';
 import { TrailsTable } from '@/modules/trail/components/trails-table';
 import { getUsersQuery } from '@/modules/user/actions/get-users-query';
 import { UsersTable } from '@/modules/user/components/users-table';
+import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -16,13 +17,13 @@ type PageProps = {
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const trailsData = await getTrailsQuery({
+  const trailsResult = await getTrailsQuery({
     search: searchParams.search,
     skip: Number(searchParams.skip ?? '0'),
     take: Number(searchParams.take ?? '60'),
   });
 
-  const users = await getUsersQuery();
+  const usersResult = await getUsersQuery();
 
   return (
     <div className="flex flex-col gap-8">
@@ -37,7 +38,11 @@ export default async function Page({ searchParams }: PageProps) {
             </Link>
           </Button>
         </div>
-        <TrailsTable data={trailsData} />
+        {trailsResult.type === 'fail' ? (
+          <ErrorMessage message={trailsResult.fail} className="mt-4" />
+        ) : (
+          <TrailsTable data={trailsResult.value} />
+        )}
       </section>
 
       <section>
@@ -47,7 +52,11 @@ export default async function Page({ searchParams }: PageProps) {
 
       <section>
         <h2 className="mb-4 text-xl">Usuários</h2>
-        <UsersTable data={users} />
+        {usersResult.type === 'fail' ? (
+          <ErrorMessage message={usersResult.fail} className="mt-4" />
+        ) : (
+          <UsersTable data={usersResult.value} />
+        )}
       </section>
     </div>
   );
