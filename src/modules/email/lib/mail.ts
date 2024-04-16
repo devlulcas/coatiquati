@@ -1,14 +1,20 @@
 import { env } from '@/env';
+import Mailgun from 'mailgun.js';
 import nodemailer from 'nodemailer';
-import { Resend } from 'resend';
 
 type MailTransport = {
   sendMail: (options: { from: string; to: string; subject: string; html: string }) => Promise<unknown>;
 };
 
 const createProductionTransporter = (): MailTransport => {
-  const resend = new Resend(env.MAIL_RESEND_API_KEY);
-  return { sendMail: resend.emails.send };
+  const mailgun = new Mailgun(FormData);
+  const mg = mailgun.client({ username: 'api', key: env.MAIL_MAILGUN_API_KEY });
+
+  return {
+    sendMail: async (options: { from: string; to: string; subject: string; html: string }) => {
+      await mg.messages.create(env.MAIL_FROM, options);
+    },
+  };
 };
 
 const createDevelopmentTransporter = (): MailTransport => {
