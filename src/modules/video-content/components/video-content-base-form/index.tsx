@@ -12,6 +12,7 @@ import { useMemo } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { type z } from 'zod';
 import { YouTubeEmbed } from '../youtube-embed';
+import { getEmbedIDFromYoutubeUrl } from '../../lib/youtube';
 
 const videoContentFormSchema = newVideoContentSchema;
 
@@ -32,14 +33,7 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
   const url = form.watch('src');
 
   const youtubeId = useMemo(() => {
-    try {
-      const urlObject = new URL(url);
-      if (urlObject.hostname === 'youtu.be') return urlObject.pathname.replace('/', '');
-      return urlObject.searchParams.get('v');
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
+    return getEmbedIDFromYoutubeUrl(url);
   }, [url]);
 
   return (

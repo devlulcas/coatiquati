@@ -52,7 +52,7 @@ export async function publishContentMutation(params: CreatePublicationSchema): P
           .get();
 
         validatedParams.data.medias.forEach(async media => {
-          tx.insert(publicationMediaTable).values({
+          await tx.insert(publicationMediaTable).values({
             publicationId: pub.id,
             description: media.description,
             url: media.url,

@@ -1,5 +1,6 @@
 import { auth } from '@/modules/auth/services/lucia';
 import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
+import { redirect } from 'next/navigation';
 import { type NextRequest } from 'next/server';
 
 export const POST = async (request: NextRequest) => {
@@ -17,10 +18,5 @@ export const POST = async (request: NextRequest) => {
 
   authRequest.setSession(null);
 
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: '/',
-    },
-  });
+  redirect('/');
 };

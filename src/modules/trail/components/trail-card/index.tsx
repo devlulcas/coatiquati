@@ -54,6 +54,12 @@ export function TrailCard({ trail, forceVertical }: TrailCardProps) {
             />
 
             <Image fill alt={trail.title} src={trail.thumbnail} className="h-full w-full object-contain" />
+
+            {trail.status === 'DRAFT' && (
+              <div className="absolute left-2 top-2">
+                <span className="h-fit rounded-md bg-amber-200 px-2 py-1 text-xs text-amber-700">Rascunho</span>
+              </div>
+            )}
           </Link>
 
           <div className="absolute right-2 top-2">

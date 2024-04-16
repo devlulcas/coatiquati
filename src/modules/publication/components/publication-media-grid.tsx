@@ -35,7 +35,7 @@ export function PublicationMediaGrid({ medias }: { medias: PublicationMedia[] })
             length === 3 && index === 2 ? 'col-span-2 row-span-1' : '',
           )}
         >
-          {media.type === 'image' ? <ImageEmbed {...media} /> : <VideoEmbed {...media} />}
+          {media.type === 'image' ? <PublicationImageEmbed {...media} /> : <PublicationVideoEmbed {...media} />}
 
           <DescriptionAlertDialog description={media.description} />
         </div>
@@ -44,7 +44,7 @@ export function PublicationMediaGrid({ medias }: { medias: PublicationMedia[] })
   );
 }
 
-function ImageEmbed({ description, url }: Pick<PublicationMedia, 'description' | 'url'>) {
+export function PublicationImageEmbed({ description, url }: Pick<PublicationMedia, 'description' | 'url'>) {
   return (
     <Link href={url} target="_blank">
       <Image src={url} alt={description} layout="fill" objectFit="cover" />
@@ -52,7 +52,7 @@ function ImageEmbed({ description, url }: Pick<PublicationMedia, 'description' |
   );
 }
 
-function VideoEmbed({ description, url }: Pick<PublicationMedia, 'description' | 'url'>) {
+export function PublicationVideoEmbed({ description, url }: Pick<PublicationMedia, 'description' | 'url'>) {
   const videoId = getEmbedIDFromYoutubeUrl(url);
 
   if (!videoId) {
