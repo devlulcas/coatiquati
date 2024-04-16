@@ -3,7 +3,7 @@
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidateTopics } from '../lib/revalidate-topic';
 import { TopicRepository } from '../repositories/topic-repository';
 import { updateTopicSchema, type UpdateTopicSchema } from '../schemas/edit-topic-schema';
@@ -37,7 +37,7 @@ export async function updateTopicMutation(params: UpdateTopicSchema): Promise<Re
   };
 
   const topicRepository = new TopicRepository();
-  const topicResult = await asyncResult(topicRepository.updateTopic(updatedTopic));
+  const topicResult = await wrapAsyncInResult(topicRepository.updateTopic(updatedTopic));
 
   if (topicResult.type === 'fail') {
     log.error('Falha ao atualizar um tópico.', topicResult.fail);

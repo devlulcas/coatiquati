@@ -5,7 +5,7 @@ import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { userFollowerTable } from '@/modules/database/schema/user-follower';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { currentUserIsFollowingQuery } from './current-user-is-following-query';
@@ -18,7 +18,7 @@ export async function followUserMutation(userId: string): Promise<Result<string>
   }
 
   const currentUser = session.userId;
-  const userToFollowResult = await asyncResult(
+  const userToFollowResult = await wrapAsyncInResult(
     db.query.userTable.findFirst({
       where: (fields, operators) => {
         return operators.eq(fields.id, userId);

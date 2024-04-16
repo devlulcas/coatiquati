@@ -3,7 +3,7 @@
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidatePath } from 'next/cache';
 import { UserRepository } from '../repositories/user-repository';
 import { updateUserSchema, type UpdateUserSchema } from '../schemas/update-user-schema';
@@ -17,7 +17,7 @@ export async function updateUserMutation(params: UpdateUserSchema): Promise<Resu
 
   const userRepository = new UserRepository();
 
-  const currentUserResult = await asyncResult(userRepository.getUserById(session.userId));
+  const currentUserResult = await wrapAsyncInResult(userRepository.getUserById(session.userId));
 
   if (currentUserResult.type === 'fail' || currentUserResult.value === null) {
     log.warn('Usuário não encontrado', {

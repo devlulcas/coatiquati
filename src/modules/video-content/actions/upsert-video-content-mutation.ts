@@ -7,7 +7,7 @@ import {
   newVideoContentSchema,
   type NewVideoContentSchema,
 } from '@/modules/video-content/schemas/new-video-content-schema';
-import { asyncResult, fail, type Result } from '@/shared/lib/result';
+import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertVideoContentMutation(params: NewVideoContentSchema): Promise<Result<number>> {
   const session = await getActionSession();
@@ -24,7 +24,7 @@ export async function upsertVideoContentMutation(params: NewVideoContentSchema):
 
   const videoContentRepository = new VideoContentRepository();
 
-  const newContentId = asyncResult(
+  const newContentId = wrapAsyncInResult(
     videoContentRepository.upsert(
       { authorId: session.userId, ...validatedParams.data },
       { src: validatedParams.data.src, description: validatedParams.data.description },

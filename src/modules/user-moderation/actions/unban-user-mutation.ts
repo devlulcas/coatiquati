@@ -5,7 +5,7 @@ import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 
 export async function unbanUserMutation(params: { username: string }): Promise<Result<string>> {
@@ -23,7 +23,7 @@ export async function unbanUserMutation(params: { username: string }): Promise<R
     return fail('Nome do usuário é obrigatório');
   }
 
-  const userResult = await asyncResult(
+  const userResult = await wrapAsyncInResult(
     db.query.userTable.findFirst({
       columns: { id: true, isBanned: true },
       where: (fields, op) => op.eq(fields.username, params.username),

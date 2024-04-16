@@ -2,7 +2,7 @@
 
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAuthenticated } from '@/modules/auth/utils/is';
-import { asyncResult, fail, ok, wrapInResult, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, wrapInResult, type Result } from '@/shared/lib/result';
 import { readFileSync } from 'fs';
 import { revalidatePath } from 'next/cache';
 import path from 'path';
@@ -31,7 +31,7 @@ export async function createNewFeedbackMutation(feedback: NewFeedbackFormValues)
 
   const feedbackRepository = new FeedbackRepository();
 
-  const feedbackResult = await asyncResult(
+  const feedbackResult = await wrapAsyncInResult(
     feedbackRepository.createFeedback({
       content: feedback.text,
       type: feedback.type,

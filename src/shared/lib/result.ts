@@ -42,7 +42,7 @@ export function unwrapOr<T>(result: Result<T>, defaultValue: T): T {
   return result.value;
 }
 
-export async function asyncResult<T>(promise: Promise<T>): Promise<Result<T>> {
+export async function wrapAsyncInResult<T>(promise: Promise<T>): Promise<Result<T>> {
   try {
     const value = await promise;
     return ok(value);

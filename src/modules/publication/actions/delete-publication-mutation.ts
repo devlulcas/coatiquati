@@ -5,7 +5,7 @@ import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { publicationMediaTable, publicationTable } from '@/modules/database/schema/publication';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 
 export async function deletePublicationMutation(pubId: number): Promise<Result<string>> {
@@ -15,7 +15,7 @@ export async function deletePublicationMutation(pubId: number): Promise<Result<s
     return fail('Somente um usuário autenticado pode deletar publicações!');
   }
 
-  const publicationResult = await asyncResult(
+  const publicationResult = await wrapAsyncInResult(
     db.query.publicationTable.findFirst({
       columns: { authorId: true },
       where: (fields, op) => op.and(op.eq(fields.id, pubId), op.isNull(fields.deletedAt)),

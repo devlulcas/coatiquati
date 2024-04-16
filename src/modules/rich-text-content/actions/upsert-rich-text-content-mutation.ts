@@ -5,7 +5,7 @@ import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { RichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
 import { type NewRichTextContentSchema } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
-import { asyncResult, fail, type Result } from '@/shared/lib/result';
+import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertRichTextContentMutation(params: NewRichTextContentSchema): Promise<Result<number>> {
   const session = await getActionSession();
@@ -16,7 +16,7 @@ export async function upsertRichTextContentMutation(params: NewRichTextContentSc
 
   const richTextContentRepository = new RichTextContentRepository();
 
-  const newContentResult = await asyncResult(
+  const newContentResult = await wrapAsyncInResult(
     richTextContentRepository.upsert(
       { title: params.title, topicId: params.topicId, authorId: session.userId },
       params.content,

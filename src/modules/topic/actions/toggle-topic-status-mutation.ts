@@ -3,7 +3,7 @@
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidateTopics } from '../lib/revalidate-topic';
 import { TopicRepository } from '../repositories/topic-repository';
 
@@ -20,7 +20,7 @@ export async function toggleTopicStatusMutation(topicId: number): Promise<Result
 
   const topicRepository = new TopicRepository();
 
-  const topicResult = await asyncResult(topicRepository.getTopicById(topicId, true));
+  const topicResult = await wrapAsyncInResult(topicRepository.getTopicById(topicId, true));
 
   if (topicResult.type === 'fail') {
     log.error('Falha ao buscar tópico.', topicResult.fail);

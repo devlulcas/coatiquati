@@ -4,7 +4,7 @@ import { roles } from '@/modules/auth/constants/roles';
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { z } from 'zod';
 import { UserRepository } from '../repositories/user-repository';
 
@@ -50,7 +50,7 @@ export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Re
 
   const userRepository = new UserRepository();
 
-  const targetUserResult = await asyncResult(userRepository.getUserById(validatedParams.data.userId));
+  const targetUserResult = await wrapAsyncInResult(userRepository.getUserById(validatedParams.data.userId));
 
   if (targetUserResult.type === 'fail' || targetUserResult.value === null) {
     log.warn('Usuário não encontrado', {

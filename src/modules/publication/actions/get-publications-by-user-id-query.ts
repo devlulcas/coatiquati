@@ -2,7 +2,7 @@
 
 import { db } from '@/modules/database/db';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, ok, type Result } from '@/shared/lib/result';
+import { ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import type { Publication } from '../types/publication';
 
 export async function getPublicationsByUserIdQuery(userId: string): Promise<Result<Publication[]>> {
@@ -15,7 +15,7 @@ export async function getPublicationsByUserIdQuery(userId: string): Promise<Resu
     return ok([]);
   }
 
-  const pubs: Result<Publication[]> = await asyncResult(
+  const pubs: Result<Publication[]> = await wrapAsyncInResult(
     db.query.publicationTable.findMany({
       where: (fields, op) => op.and(op.eq(fields.authorId, userId), op.isNull(fields.deletedAt)),
       with: {

@@ -4,7 +4,7 @@ import type { Session } from '@/modules/auth/types/session';
 import { db } from '@/modules/database/db';
 import { userFollowerTable } from '@/modules/database/schema/user-follower';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, ok, type Ok } from '@/shared/lib/result';
+import { ok, wrapAsyncInResult, type Ok } from '@/shared/lib/result';
 import { and, eq } from 'drizzle-orm';
 
 export async function currentUserIsFollowingQuery(userId: string, session: Session): Promise<Ok<boolean>> {
@@ -12,7 +12,7 @@ export async function currentUserIsFollowingQuery(userId: string, session: Sessi
 
   const follower = session.userId;
 
-  const isAlreadyFollowing = await asyncResult(
+  const isAlreadyFollowing = await wrapAsyncInResult(
     db
       .select({ id: userFollowerTable.userId })
       .from(userFollowerTable)

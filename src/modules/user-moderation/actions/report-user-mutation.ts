@@ -4,7 +4,7 @@ import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { db } from '@/modules/database/db';
 import { reportTable, type ReportInsert } from '@/modules/database/schema/report';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { desc, eq } from 'drizzle-orm';
 import type { ReportReason } from '../constants/report';
 import { createReportSchema, type CreateReportSchema } from '../schemas/create-report';
@@ -30,7 +30,7 @@ export async function reportUserMutation(params: CreateReportSchema): Promise<Re
     return fail('Você não pode reportar você mesmo');
   }
 
-  const lastReportFromUserResult = await asyncResult(
+  const lastReportFromUserResult = await wrapAsyncInResult(
     db
       .select()
       .from(reportTable)

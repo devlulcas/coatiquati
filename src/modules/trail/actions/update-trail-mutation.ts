@@ -3,7 +3,7 @@
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidateTrails } from '../lib/revalidate-trail';
 import { TrailRepository } from '../repositories/trail-repository';
 import { updateTrailSchema, type UpdateTrailSchema } from '../schemas/edit-trail-schema';
@@ -38,7 +38,7 @@ export async function updateTrailMutation(params: UpdateTrailSchema): Promise<Re
 
   const trailRepository = new TrailRepository();
 
-  const trailResult = await asyncResult(trailRepository.updateTrail(updatedTrail));
+  const trailResult = await wrapAsyncInResult(trailRepository.updateTrail(updatedTrail));
 
   if (trailResult.type === 'fail') {
     return fail('Falha ao editar trilha.');

@@ -8,7 +8,7 @@ import {
   type NewImageContentSchema,
 } from '@/modules/image-content/schemas/new-image-content-schema';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, type Result } from '@/shared/lib/result';
+import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertImageContentMutation(params: NewImageContentSchema): Promise<Result<number>> {
   const session = await getActionSession();
@@ -26,7 +26,7 @@ export async function upsertImageContentMutation(params: NewImageContentSchema):
 
   const imageContentRepository = new ImageContentRepository();
 
-  const newContentId = await asyncResult(
+  const newContentId = await wrapAsyncInResult(
     imageContentRepository.upsert(
       { title: params.title, topicId: params.topicId, authorId: session.userId },
       { description: params.description, src: params.src },

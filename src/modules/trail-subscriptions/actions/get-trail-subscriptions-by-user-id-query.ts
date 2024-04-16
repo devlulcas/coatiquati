@@ -4,10 +4,10 @@ import { db } from '@/modules/database/db';
 import { log } from '@/modules/logging/lib/pino';
 import type { Trail } from '@/modules/trail/types/trail';
 import type { UserId } from '@/modules/user/types/user';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function getTrailSubscriptionsByUserIdQuery(userId: UserId): Promise<Result<Trail[]>> {
-  const subscriptions = await asyncResult(
+  const subscriptions = await wrapAsyncInResult(
     db.query.trailSubscriptionTable.findMany({
       columns: {
         trailId: false,
@@ -25,13 +25,13 @@ export async function getTrailSubscriptionsByUserIdQuery(userId: UserId): Promis
           },
         },
       },
-    })
-  )
+    }),
+  );
 
   if (subscriptions.type === 'fail') {
     log.error('Falha ao buscar inscrições de trilha.', subscriptions.fail);
     return fail('Falha ao buscar inscrições de trilha.');
   }
 
-  return ok( subscriptions.value.flatMap(subscription => subscription.trail));
+  return ok(subscriptions.value.flatMap(subscription => subscription.trail));
 }

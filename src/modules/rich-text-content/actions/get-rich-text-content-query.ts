@@ -5,7 +5,7 @@ import { log } from '@/modules/logging/lib/pino';
 import { RichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
 import type { Topic } from '@/modules/topic/types/topic';
 import type { Trail } from '@/modules/trail/types/trail';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function getRichTextContentQuery(baseContentId: number): Promise<
   Result<{
@@ -16,7 +16,7 @@ export async function getRichTextContentQuery(baseContentId: number): Promise<
 > {
   const richTextContentRepository = new RichTextContentRepository();
 
-  const rteResult = await asyncResult(richTextContentRepository.getByContentId(baseContentId));
+  const rteResult = await wrapAsyncInResult(richTextContentRepository.getByContentId(baseContentId));
 
   if (rteResult.type === 'fail') {
     log.error('Falha ao buscar conteúdo de texto rico', rteResult.fail);

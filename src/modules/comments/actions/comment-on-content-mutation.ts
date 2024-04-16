@@ -5,7 +5,7 @@ import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { type ContentNewCommentTable } from '@/modules/database/schema/comment';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { CommentRepository } from '../repositories/comment-repository';
 import { newCommentSchema, type NewCommentSchema } from '../schemas/new-comment-schema';
 
@@ -24,7 +24,7 @@ export async function commentOnContentMutation(params: NewCommentSchema): Promis
 
   const SIXTY_SECONDS = 60000;
 
-  const lastCommentResult = await asyncResult(
+  const lastCommentResult = await wrapAsyncInResult(
     db.query.contentCommentTable.findFirst({
       where: (fields, operators) => {
         return operators.and(

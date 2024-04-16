@@ -3,7 +3,7 @@
 import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { asyncResult, fail, ok, type Result } from '@/shared/lib/result';
+import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { VOTES } from '../constants/votes';
 import { CommentVoteRepository } from '../repositories/comment-vote-repository';
 
@@ -17,7 +17,7 @@ export async function upvoteCommentMutation(commentId: number): Promise<Result<s
 
   const commentVoteRepository = new CommentVoteRepository();
 
-  const currentUserVote = await asyncResult(commentVoteRepository.getUserVote(commentId, session.userId));
+  const currentUserVote = await wrapAsyncInResult(commentVoteRepository.getUserVote(commentId, session.userId));
 
   if (currentUserVote.type === 'fail') {
     return fail('Erro ao buscar voto do usuário.');

@@ -1,7 +1,7 @@
 'use server';
 
 import { createPaginationSchemaWithSearch, type PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
-import { asyncResult, fail, type Result } from '@/shared/lib/result';
+import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { TrailCategoryRepository } from '../repositories/trail-category-repository';
 import type { TrailCategory } from '../types/trail-category';
 
@@ -16,5 +16,5 @@ export async function searchTrailCategoriesQuery(
 
   const trailCategoryRepository = new TrailCategoryRepository();
 
-  return asyncResult(trailCategoryRepository.getCategories(validatedParams.data));
+  return wrapAsyncInResult(trailCategoryRepository.getCategories(validatedParams.data));
 }
