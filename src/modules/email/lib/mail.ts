@@ -1,4 +1,5 @@
 import { env } from '@/env';
+import { log } from '@/modules/logging/lib/pino';
 import Mailgun from 'mailgun.js';
 import nodemailer from 'nodemailer';
 
@@ -12,7 +13,12 @@ const createProductionTransporter = (): MailTransport => {
 
   return {
     sendMail: async (options: { from: string; to: string; subject: string; html: string }) => {
-      await mg.messages.create(env.MAIL_FROM, options);
+      try {
+        const res = await mg.messages.create(env.MAIL_FROM, options);
+        log.info(res);
+      } catch (error) {
+        log.error(error);
+      }
     },
   };
 };
