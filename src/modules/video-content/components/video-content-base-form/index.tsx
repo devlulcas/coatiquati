@@ -9,10 +9,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { ClassValue } from 'clsx';
 import { VideoOffIcon } from 'lucide-react';
 import { useMemo } from 'react';
-import { type SubmitHandler, useForm } from 'react-hook-form';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 import { type z } from 'zod';
-import { YouTubeEmbed } from '../youtube-embed';
 import { getEmbedIDFromYoutubeUrl } from '../../lib/youtube';
+import { YouTubeEmbed } from '../youtube-embed';
 
 const videoContentFormSchema = newVideoContentSchema;
 
@@ -30,7 +30,7 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
     defaultValues: defaultValues,
   });
 
-  const url = form.watch('src');
+  const url = form.watch('src') ?? '';
 
   const youtubeId = useMemo(() => {
     return getEmbedIDFromYoutubeUrl(url);
