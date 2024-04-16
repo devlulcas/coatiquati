@@ -29,7 +29,7 @@ export type DBTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 async function migrateDatabase() {
   const migrationFolderPath = path.resolve(__dirname, '../../../drizzle');
-  await migrate(db, { migrationsFolder: migrationFolderPath, migrationsTable: '__migrations_drizzle' });
+  await migrate(db, { migrationsFolder: migrationFolderPath });
   sqlite.close();
 }
 
