@@ -11,10 +11,12 @@ const createProductionTransporter = (): MailTransport => {
   const mailgun = new Mailgun(FormData);
   const mg = mailgun.client({ username: 'api', key: env.MAIL_MAILGUN_API_KEY });
 
+  const domain = env.MAIL_FROM.split('@')[1];
+
   return {
     sendMail: async (options: { from: string; to: string; subject: string; html: string }) => {
       try {
-        const res = await mg.messages.create(env.MAIL_FROM, options);
+        const res = await mg.messages.create(domain, options);
         log.info(res);
       } catch (error) {
         log.error(error);
