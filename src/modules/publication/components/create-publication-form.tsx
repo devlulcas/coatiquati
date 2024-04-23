@@ -231,7 +231,7 @@ function AddMediaDialog({
                   });
                 }
 
-                const file = res.at(0);
+                const file = res.find(file => file.url.length > 0);
 
                 if (!file) {
                   return toast({

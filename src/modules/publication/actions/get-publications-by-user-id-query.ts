@@ -18,6 +18,7 @@ export async function getPublicationsByUserIdQuery(userId: string): Promise<Resu
   const pubs: Result<Publication[]> = await wrapAsyncInResult(
     db.query.publicationTable.findMany({
       where: (fields, op) => op.and(op.eq(fields.authorId, userId), op.isNull(fields.deletedAt)),
+      orderBy: (fields, op) => op.desc(fields.createdAt),
       with: {
         medias: {
           where: (fields, op) => op.isNull(fields.deletedAt),

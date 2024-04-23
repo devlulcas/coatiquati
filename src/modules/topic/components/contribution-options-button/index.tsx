@@ -1,6 +1,7 @@
 'use client';
 
 import { NewImageContentDialogTrigger } from '@/modules/image-content/components/new-image-content-dialog-trigger';
+import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { NewVideoContentDialogTrigger } from '@/modules/video-content/components/new-video-content-dialog-trigger';
 import { Button } from '@/shared/components/ui/button';
 import { AnimatePresence, motion, useCycle } from 'framer-motion';
@@ -18,10 +19,17 @@ export function ContributionOptionsButton({ topicId, trailId }: ContributionOpti
 
   const topicUrl = createTopicUrl(topicId, trailId);
 
+  const userDataQuery = useCurrentUserDataQuery();
+
   return (
     <div className="flex w-fit gap-1">
-      <Button className="z-10" onClick={() => toggleOpen()}>
-        Contribuir
+      <Button
+        className="z-10"
+        isLoading={userDataQuery.isLoading}
+        disabled={userDataQuery.isLoading || !userDataQuery.data}
+        onClick={() => toggleOpen()}
+      >
+        {userDataQuery.data ? (isOpen ? 'Fechar' : 'Contribuir') : 'Entre para contribuir'}
       </Button>
 
       <AnimatePresence>

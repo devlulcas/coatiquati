@@ -6,14 +6,6 @@ import { contentContributionTable } from './contribution';
 import { topicTable } from './topic';
 import { userTable } from './user';
 
-const baseContentColumns = {
-  id: integer('id').primaryKey().notNull(),
-  baseContentId: integer('base_content_id')
-    .notNull()
-    .references(() => contentTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-  ...tableTimestampColumns,
-};
-
 // BASE
 export type ContentSelect = InferSelectModel<typeof contentTable>;
 export type ContentInsert = InferInsertModel<typeof contentTable>;
@@ -58,7 +50,11 @@ export const contentImageTable = sqliteTable('content_image', {
   contentType: text('content_type').notNull().default('image').$type<'image'>(),
   src: text('stc').notNull(),
   description: text('description').notNull(),
-  ...baseContentColumns,
+  id: integer('id').primaryKey().notNull(),
+  baseContentId: integer('base_content_id')
+    .notNull()
+    .references(() => contentTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  ...tableTimestampColumns,
 });
 export const contentImageTableRelations = relations(contentImageTable, ({ one }) => ({
   content: one(contentTable, {
@@ -74,7 +70,11 @@ export const contentRichTextTable = sqliteTable('content_rich_text', {
   contentType: text('content_type').notNull().default('rich_text').$type<'rich_text'>(),
   previewAsJson: text('preview_as_json', { mode: 'json' }).$type<JSONContent>().notNull(),
   asJson: text('as_json', { mode: 'json' }).$type<JSONContent>().notNull(),
-  ...baseContentColumns,
+  id: integer('id').primaryKey().notNull(),
+  baseContentId: integer('base_content_id')
+    .notNull()
+    .references(() => contentTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  ...tableTimestampColumns,
 });
 export const contentRichTextTableRelations = relations(contentRichTextTable, ({ one }) => ({
   content: one(contentTable, {
@@ -90,7 +90,11 @@ export const contentVideoTable = sqliteTable('content_video', {
   contentType: text('content_type').notNull().default('video').$type<'video'>(),
   src: text('stc').notNull(),
   description: text('description').notNull(),
-  ...baseContentColumns,
+  id: integer('id').primaryKey().notNull(),
+  baseContentId: integer('base_content_id')
+    .notNull()
+    .references(() => contentTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  ...tableTimestampColumns,
 });
 export const contentVideoTableRelations = relations(contentVideoTable, ({ one }) => ({
   content: one(contentTable, {

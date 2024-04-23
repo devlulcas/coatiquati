@@ -9,6 +9,7 @@ import { ProfileHeading } from '@/modules/user/components/profile-heading';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
+import { Separator } from '@/shared/components/ui/separator';
 import { unwrapOr } from '@/shared/lib/result';
 import { StarsIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -63,6 +64,8 @@ export default async function Page({ params }: PageProps) {
           <CreatePublicationForm />
         </section>
       )}
+
+      <Separator className="my-4" />
 
       <UserPublicationList user={profile} />
 

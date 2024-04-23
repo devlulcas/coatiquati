@@ -16,6 +16,7 @@ export class TopicRepository {
       const newTopic = await db.insert(topicTable).values(topic).returning({ id: topicTable.id }).get();
       return newTopic.id;
     } catch (error) {
+      console.error(error);
       log.error('Erro ao criar tópico', error instanceof Error ? error.message : JSON.stringify(error));
       throw new Error('Erro ao criar tópico');
     }

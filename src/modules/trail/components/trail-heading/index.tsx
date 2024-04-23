@@ -21,7 +21,7 @@ type TrailHeadingProps = {
 };
 
 export async function TrailHeading({ trail, className }: TrailHeadingProps) {
-  const allContributors = [trail.author, ...trail.contributors.map(contributor => contributor.user)];
+  const allContributors = trail.contributors.map(contributor => contributor.user);
 
   const session = await getPageSession();
 

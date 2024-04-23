@@ -3,6 +3,7 @@ import { db } from '@/modules/database/db';
 import { contentRichTextTable, type ContentInsert } from '@/modules/database/schema/content';
 import { log } from '@/modules/logging/lib/pino';
 import type { JSONContent } from '@tiptap/core';
+import { eq } from 'drizzle-orm';
 
 export class RichTextContentRepository {
   constructor(private readonly baseContentRepository: BaseContentRepository = new BaseContentRepository()) {}
@@ -45,7 +46,11 @@ export class RichTextContentRepository {
   async upsert(baseContent: ContentInsert, richText: JSONContent): Promise<number> {
     return db.transaction(async tx => {
       try {
+        log.info('Criando conteúdo base e de rich text.');
+
         const newContentId = await this.baseContentRepository.upsertBaseContent(baseContent, tx);
+
+        log.info('Conteúdo base criado com sucesso.', { newContentId });
 
         const data = {
           asJson: richText,
@@ -53,15 +58,26 @@ export class RichTextContentRepository {
           baseContentId: newContentId,
         };
 
-        await tx
-          .insert(contentRichTextTable)
-          .values(data)
-          .onConflictDoUpdate({ target: [contentRichTextTable.baseContentId, contentRichTextTable.id], set: data })
-          .execute();
+        const alreadyExists = await db.query.contentRichTextTable.findFirst({
+          where: (fields, operators) => operators.eq(fields.baseContentId, newContentId),
+        });
+
+        if (alreadyExists) {
+          await tx
+            .update(contentRichTextTable)
+            .set(data)
+            .where(eq(contentRichTextTable.baseContentId, newContentId))
+            .execute();
+        } else {
+          await tx.insert(contentRichTextTable).values(data).execute();
+        }
+
+        log.info('Conteúdo de rich text criado com sucesso.', { newContentId });
 
         return newContentId;
       } catch (error) {
-        log.error('Erro ao criar conteúdo de rich text.', { baseContent, richText, error });
+        console.error(error);
+        log.error('Erro ao criar conteúdo de rich text.', error instanceof Error ? error.message : String(error));
         tx.rollback();
         throw new Error('Erro ao criar conteúdo de rich text com id = ' + richText.contentId);
       }
