@@ -97,6 +97,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "10.4.19",
     "dotenv": "^16.4.5",
+    "drizzle-dbml-generator": "^0.6.1",
     "drizzle-kit": "^0.20.14",
     "eslint": "8.57.0",
     "eslint-config-next": "14.1.4",
@@ -109,6 +110,7 @@
     "prettier-plugin-tailwindcss": "^0.5.13",
     "tailwindcss": "3.4.3",
     "tailwindcss-animate": "^1.0.7",
+    "ts-node": "^10.9.2",
     "tsx": "^4.7.2",
     "typescript": "5.4.3",
     "vitest": "^1.4.0"

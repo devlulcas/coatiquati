@@ -1,0 +1,298 @@
+table comment_vote {
+  id integer [pk, not null]
+  comment_id integer [not null]
+  user_id text [not null]
+  vote integer [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table comment {
+  id integer [pk, not null]
+  content_id integer [not null]
+  user_id text [not null]
+  content text [not null]
+  parent_comment_id integer
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table content_image {
+  content_type text [not null, default: 'image']
+  stc text [not null]
+  description text [not null]
+  id integer [pk, not null]
+  base_content_id integer [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table content_rich_text {
+  content_type text [not null, default: 'rich_text']
+  preview_as_json text [not null]
+  as_json text [not null]
+  id integer [pk, not null]
+  base_content_id integer [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table content {
+  id integer [pk, not null]
+  title text [not null]
+  active integer [not null, default: 1]
+  topic_id integer
+  user_id text [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table content_video {
+  content_type text [not null, default: 'video']
+  stc text [not null]
+  description text [not null]
+  id integer [pk, not null]
+  base_content_id integer [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table content_contribution {
+  content_id integer [not null]
+  user_id text [not null]
+  contributed_at text [not null, default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (user_id, content_id) [pk]
+  }
+}
+
+table topic_contribution {
+  topic_id integer [not null]
+  user_id text [not null]
+  contributed_at text [not null, default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (user_id, topic_id) [pk]
+  }
+}
+
+table trail_contribution {
+  trail_id integer [not null]
+  user_id text [not null]
+  contributed_at integer [not null, default: `(strftime('%s', 'now'))`]
+
+  indexes {
+    (user_id, trail_id) [pk]
+  }
+}
+
+table user_email_verification_token {
+  id text [pk, not null]
+  user_id text [not null]
+  expires_at integer [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table feedback {
+  id integer [pk, not null]
+  user_id text [not null]
+  type text [not null]
+  content text [not null]
+  software_version text [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table user_password_reset_token {
+  id text [pk, not null]
+  user_id text [not null]
+  expires blob [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table report {
+  id integer [pk, not null]
+  user_id text [not null]
+  reported_by_id text [not null]
+  type text [not null]
+  entity_id integer [not null]
+  entity_type text [not null]
+  description text [not null]
+  status text [not null, default: 'pending']
+  moderator_id text
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table topic {
+  id integer [pk, not null]
+  title text [not null]
+  description text [not null]
+  thumbnail text
+  status text [not null, default: 'DRAFT']
+  trail_id integer [not null]
+  user_id text [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table category {
+  name text [pk, not null, unique]
+  user_id text [not null]
+  created_at text [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at text [not null, default: `CURRENT_TIMESTAMP`]
+}
+
+table trail {
+  id integer [pk, not null]
+  title text [not null]
+  description text [not null]
+  thumbnail text [not null]
+  status text [not null, default: 'DRAFT']
+  category_id text
+  user_id text [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table trail_subscrition {
+  trail_id integer [not null]
+  user_id text [not null]
+
+  indexes {
+    (trail_id, user_id) [pk]
+  }
+}
+
+table user_key {
+  id text [pk, not null]
+  user_id text [not null]
+  hashed_password text
+}
+
+table user_session {
+  id text [pk, not null]
+  user_id text [not null]
+  active_expires blob [not null]
+  idle_expires blob [not null]
+}
+
+table user {
+  id text [pk, not null]
+  username text [not null, unique]
+  role text [not null]
+  email text [not null, unique]
+  avatar text [not null, default: '/avatars/original.png']
+  email_verified integer [default: 0]
+  is_banned integer [default: 0]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table user_follower {
+  user_id text [not null]
+  follower_id text [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+
+  indexes {
+    (follower_id, user_id) [pk]
+  }
+}
+
+table publication_media {
+  id integer [pk, not null]
+  publication_id integer [not null]
+  description text [not null]
+  url text [not null]
+  type text [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+table publication {
+  id integer [pk, not null]
+  content text [not null]
+  user_id text [not null]
+  created_at integer [not null, default: `(strftime('%s', 'now'))`]
+  updated_at integer [not null, default: `(strftime('%s', 'now'))`]
+  deleted_at integer
+}
+
+ref: comment_vote.comment_id > comment.id
+
+ref: comment_vote.user_id > user.id
+
+ref: comment.content_id - content.id
+
+ref: comment.user_id - user.id
+
+ref: comment.parent_comment_id - comment.id
+
+ref: content.id - content_image.base_content_id
+
+ref: content.id - content_rich_text.base_content_id
+
+ref: content.topic_id > topic.id
+
+ref: content.user_id - user.id
+
+ref: content_video.base_content_id - content.id
+
+ref: content_contribution.content_id > content.id
+
+ref: content_contribution.user_id > user.id
+
+ref: topic_contribution.topic_id > topic.id
+
+ref: topic_contribution.user_id > user.id
+
+ref: trail_contribution.trail_id > trail.id
+
+ref: trail_contribution.user_id > user.id
+
+ref: user_email_verification_token.user_id > user.id
+
+ref: feedback.user_id - user.id
+
+ref: user_password_reset_token.user_id > user.id
+
+ref: report.reported_by_id - user.id
+
+ref: topic.trail_id > trail.id
+
+ref: topic.user_id - user.id
+
+ref: trail.category_id > category.name
+
+ref: trail.user_id > user.id
+
+ref: trail_subscrition.trail_id > trail.id
+
+ref: trail_subscrition.user_id > user.id
+
+ref: user_follower.user_id > user.id
+
+ref: user_follower.follower_id > user.id
+
+ref: publication_media.publication_id > publication.id
+
+ref: publication.user_id > user.id
