@@ -1,4 +1,3 @@
-import { requestAccountVerificationMutation } from '@/modules/auth/actions/request-account-verification-mutation';
 import { roles } from '@/modules/auth/constants/roles';
 import { userSignUpSchema } from '@/modules/auth/schemas/user-sign-up-schema';
 import { auth } from '@/modules/auth/services/lucia';
@@ -48,14 +47,6 @@ export const POST = async (request: NextRequest) => {
     const authRequest = handleApiAuthRequest(request);
 
     authRequest.setSession(session);
-
-    try {
-      await requestAccountVerificationMutation(session);
-    } catch (error) {
-      log.error('Erro ao enviar email de verificação', { error });
-      await auth.invalidateAllUserSessions(user.userId);
-      return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
-    }
 
     return new Response(null, {
       status: 302,
