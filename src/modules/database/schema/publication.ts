@@ -8,7 +8,7 @@ export type PublicationInsert = InferInsertModel<typeof publicationTable>;
 export const publicationTable = sqliteTable('publication', {
   id: integer('id').primaryKey(),
   content: text('content').notNull(),
-  authorId: text('user_id')
+  authorId: text('userId')
     .notNull()
     .references(() => userTable.id, { onDelete: 'no action', onUpdate: 'cascade' }),
   ...tableTimestampColumns,
@@ -23,9 +23,9 @@ export const publicationTableRelations = relations(publicationTable, ({ one, man
 
 export type PublicationMediaSelect = InferSelectModel<typeof publicationMediaTable>;
 export type PublicationMediaInsert = InferInsertModel<typeof publicationMediaTable>;
-export const publicationMediaTable = sqliteTable('publication_media', {
+export const publicationMediaTable = sqliteTable('publicationMedia', {
   id: integer('id').primaryKey(),
-  publicationId: integer('publication_id')
+  publicationId: integer('publicationId')
     .notNull()
     .references(() => publicationTable.id, { onDelete: 'cascade' }),
   description: text('description').notNull(),

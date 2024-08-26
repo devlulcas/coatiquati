@@ -14,12 +14,12 @@ export function ok<T>(value: T): Ok<T> {
   return { type: 'ok', value };
 }
 
-export function fail(message: string): Fail {
+export function fail(message: 'undefined' | (string & {})): Fail {
   return { type: 'fail', fail: message };
 }
 
 export function isFail<T>(result: Result<T>): result is { type: 'fail'; fail: string } {
-  return result.type === 'fail';
+  return result.type === 'fail' && result.fail !== 'undefined';
 }
 
 export function isOk<T>(result: Result<T>): result is { type: 'ok'; value: T } {

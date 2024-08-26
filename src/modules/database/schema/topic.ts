@@ -16,13 +16,13 @@ export const topicTable = sqliteTable('topic', {
   description: text('description').notNull(),
   thumbnail: text('thumbnail'),
   status: text('status').$type<ContentStatus>().default(contentStatus.DRAFT).notNull(),
-  trailId: integer('trail_id')
+  trailId: integer('trailId')
     .notNull()
     .references(() => trailTable.id, {
       onDelete: 'no action',
       onUpdate: 'cascade',
     }),
-  authorId: text('user_id')
+  authorId: text('userId')
     .notNull()
     .references(() => userTable.id, {
       onDelete: 'no action',

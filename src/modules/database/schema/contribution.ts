@@ -10,21 +10,22 @@ import { userTable } from './user';
 
 // Contribuições em trilhas
 export const trailContributionTable = sqliteTable(
-  'trail_contribution',
+  'trailContribution',
   {
-    trailId: integer('trail_id')
+    trailId: integer('trailId')
       .references(() => trailTable.id)
       .notNull(),
-    userId: text('user_id')
+    userId: text('userId')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: integer('contributed_at', { mode: 'timestamp' })
+    contributedAt: integer('contributedAt', { mode: 'timestamp' })
       .notNull()
       .default(NOW_AS_INTEGER)
       .$onUpdate(() => new Date()),
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.trailId] }) }),
 );
+
 export const trailContributionTableRelations = relations(trailContributionTable, ({ one }) => ({
   trail: one(trailTable, {
     fields: [trailContributionTable.trailId],
@@ -38,20 +39,21 @@ export const trailContributionTableRelations = relations(trailContributionTable,
 
 // Contribuições em tópicos
 export const topicContributionTable = sqliteTable(
-  'topic_contribution',
+  'topicContribution',
   {
-    topicId: integer('topic_id')
+    topicId: integer('topicId')
       .references(() => topicTable.id)
       .notNull(),
-    userId: text('user_id')
+    userId: text('userId')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: text('contributed_at')
-      .default(sql`CURRENT_TIMESTAMP`)
+    contributedAt: text('contributedAt')
+      .default(sql`CURRENTTIMESTAMP`)
       .notNull(),
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.topicId] }) }),
 );
+
 export const topicContributionTableRelations = relations(topicContributionTable, ({ one }) => ({
   topic: one(topicTable, {
     fields: [topicContributionTable.topicId],
@@ -65,20 +67,21 @@ export const topicContributionTableRelations = relations(topicContributionTable,
 
 // Contribuições em conteúdos (Usuários comuns podem contribuir com conteúdos)
 export const contentContributionTable = sqliteTable(
-  'content_contribution',
+  'contentContribution',
   {
-    contentId: integer('content_id')
+    contentId: integer('contentId')
       .references(() => contentTable.id)
       .notNull(),
-    userId: text('user_id')
+    userId: text('userId')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: text('contributed_at')
-      .default(sql`CURRENT_TIMESTAMP`)
+    contributedAt: text('contributedAt')
+      .default(sql`CURRENTTIMESTAMP`)
       .notNull(),
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.contentId] }) }),
 );
+
 export const contentContributionTableRelations = relations(contentContributionTable, ({ one }) => ({
   content: one(contentTable, {
     fields: [contentContributionTable.contentId],

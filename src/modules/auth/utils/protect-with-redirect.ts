@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { type roles } from '../constants/roles';
-import { getPageSession } from './get-page-session';
+import { validateRequest } from '../services/lucia';
 
 type ProtectWithRedirectParams = {
   redirectTo?: string;
@@ -8,15 +8,15 @@ type ProtectWithRedirectParams = {
 };
 
 export async function protectWithRedirect({ acceptRoles, redirectTo }: ProtectWithRedirectParams) {
-  const session = await getPageSession();
+  const { user } = await validateRequest();
 
-  if (!session) {
+  if (!user) {
+    return redirect(redirectTo || "/sign-in");
+  }
+
+  if (acceptRoles && !acceptRoles.includes(user.role)) {
     redirect(redirectTo || '/sign-in');
   }
 
-  if (acceptRoles && !acceptRoles.includes(session.user.role)) {
-    redirect(redirectTo || '/sign-in');
-  }
-
-  return session;
+  return user;
 }

@@ -3,68 +3,38 @@
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
-import { useToast } from '@/shared/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
 import { userSignInSchema } from '../../schemas/user-sign-in-schema';
+import { useFormState } from 'react-dom';
+import { loginMutation } from '../../actions/login-mutation';
+import { fail, isFail } from '@/shared/lib/result';
+import { ErrorMessage } from '@/shared/components/common/error-message';
 
 export function SignInForm() {
-  const router = useRouter();
-  const { toast } = useToast();
-
   const form = useForm<z.infer<typeof userSignInSchema>>({
     resolver: zodResolver(userSignInSchema),
   });
 
-  const onSubmit = async (values: z.infer<typeof userSignInSchema>) => {
-    const formData = new FormData();
-    formData.append('username', values.username);
-    formData.append('password', values.password);
-
-    const response = await fetch('/api/sign-in', {
-      method: 'POST',
-      body: formData,
-      redirect: 'manual',
-    });
-
-    if (response.status === 0) {
-      toast({
-        title: 'Sucesso',
-        description: 'Bem vindo!',
-      });
-
-      return router.refresh();
-    }
-
-    if (response.status === 401) {
-      return toast({
-        title: 'Erro',
-        description: 'Usuário ou senha incorretos',
-        variant: 'destructive',
-      });
-    }
-
-    return toast({
-      title: 'Erro',
-      description: 'Ocorreu um erro inesperado. Talvez esse usuário não exista',
-      variant: 'destructive',
-    });
-  };
+  const [state, formAction, isPending] = useFormState(loginMutation, fail('undefined'));
 
   return (
     <div className="flex h-[--view-height] flex-col items-center justify-center">
       <Form {...form}>
         <form
           method="POST"
-          onSubmit={form.handleSubmit(onSubmit)}
           className="flex h-fit min-w-[400px] flex-col gap-4 rounded-md border bg-card px-4 py-6 shadow-md"
-          action="/api/sign-in"
+          action={formAction}
         >
           <h1 className="text-3xl font-bold">Entrar</h1>
+
+          {isFail(state) && (
+            <ErrorMessage className='my-3' message={state.fail} />
+          )}
+
           <FormField
             control={form.control}
             name="username"
@@ -93,8 +63,8 @@ export function SignInForm() {
             )}
           />
 
-          <Button className="mt-4 w-full" type="submit">
-            {form.formState.isSubmitting ? <Loader className="animate-spin" size={16} /> : 'Entrar'}
+          <Button disabled={isPending} className="mt-4 w-full" type="submit">
+            {isPending ? <Loader className="animate-spin" size={16} /> : 'Entrar'}
           </Button>
         </form>
       </Form>

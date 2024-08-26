@@ -16,11 +16,12 @@ export type AuthUserTable = InferSelectModel<typeof userTable>;
 export const userTable = sqliteTable('user', {
   id: text('id').primaryKey(),
   username: text('username').notNull().unique(),
+  password_hash: text('password_hash').notNull(),
   role: text('role').$type<Role>().notNull(),
   email: text('email').notNull().unique(),
   avatar: text('avatar').notNull().default('/avatars/original.png'),
-  verified: integer('email_verified', { mode: 'boolean' }).default(false),
-  isBanned: integer('is_banned', { mode: 'boolean' }).default(false),
+  verifiedAt: integer('verifiedAt', { mode: 'timestamp' }),
+  bannedAt: integer('bannedAt', { mode: 'timestamp' }),
   ...tableTimestampColumns,
 });
 
@@ -39,19 +40,8 @@ export const userTableRelations = relations(userTable, ({ one, many }) => ({
   publications: many(publicationTable),
 }));
 
-export const sessionTable = sqliteTable('user_session', {
+export const sessionTable = sqliteTable('userSession', {
   id: text('id').primaryKey(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => userTable.id),
-  activeExpires: blob('active_expires', { mode: 'bigint' }).notNull(),
-  idleExpires: blob('idle_expires', { mode: 'bigint' }).notNull(),
-});
-
-export const keyTable = sqliteTable('user_key', {
-  id: text('id').primaryKey(),
-  userId: text('user_id')
-    .notNull()
-    .references(() => userTable.id),
-  hashedPassword: text('hashed_password'),
+  user_id: text('user_id').notNull().references(() => userTable.id),
+  expires_at: blob('expires_at', { mode: 'bigint' }).notNull(),
 });

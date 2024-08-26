@@ -5,8 +5,9 @@ import {
 } from '@/modules/database/schema/email-verification-token';
 import { log } from '@/modules/logging/lib/pino';
 import { eq } from 'drizzle-orm';
-import { generateRandomString, isWithinExpiration } from 'lucia/utils';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
+import { isWithinExpiration } from '../utils/time';
+import { generateIdFromEntropySize } from 'lucia';
 
 export class EmailVerificationTokenRepository {
   async createVerificationToken(userId: string, database = db): Promise<EmailVerificationToken | null> {
@@ -26,7 +27,7 @@ export class EmailVerificationTokenRepository {
         if (reusableStoredToken) return reusableStoredToken;
       }
 
-      const newToken = generateRandomString(64);
+      const newToken = generateIdFromEntropySize(64);
 
       const results = await database
         .insert(emailVerificationTokenTable)
@@ -58,7 +59,7 @@ export class EmailVerificationTokenRepository {
 
         if (!storedToken) {
           log.error('Token de verificação de e-mail não encontrado', { tokenId });
-          throw new Error('Invalid token');
+          throw new Error('Token de verificação de e-mail não encontrado');
         }
 
         const results = await tx
@@ -69,7 +70,7 @@ export class EmailVerificationTokenRepository {
 
         if (results.length === 0) {
           log.error('Erro ao deletar token de verificação de e-mail', { tokenId });
-          throw new Error('Invalid token');
+          throw new Error('Erro ao deletar token de verificação de e-mail');
         }
 
         return storedToken;

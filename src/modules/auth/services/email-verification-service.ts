@@ -1,11 +1,11 @@
 import { log } from '@/modules/logging/lib/pino';
-import { isWithinExpiration } from 'lucia/utils';
 import { EmailVerificationTokenRepository } from '../repositories/email-verification-token-repository';
+import { isWithinExpiration } from '../utils/time';
 
 export class EmailVerificationService {
   constructor(
     private emailVerificationTokenRepository: EmailVerificationTokenRepository = new EmailVerificationTokenRepository(),
-  ) {}
+  ) { }
 
   /**
    * Gera um token de verificação de email para o usuário.
@@ -36,11 +36,12 @@ export class EmailVerificationService {
       return null;
     }
 
-    // Converte de BigInt para Number
-    if (!isWithinExpiration(storedToken.expiresAt.getTime())) {
+    const isExpired = !isWithinExpiration(storedToken.expiresAt.getTime())
+
+    if (isExpired) {
       const now = Date.now();
-      const timeLeft = storedToken.expiresAt.getTime() - now;
-      log.warn('Expired email verification token ', { token, timeLeft });
+      const timeDiff = storedToken.expiresAt.getTime() - now;
+      log.warn({ token, timeDiff, isExpired });
       return null;
     }
 

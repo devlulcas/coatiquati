@@ -16,11 +16,11 @@ export const trailTable = sqliteTable('trail', {
   description: text('description').notNull(),
   thumbnail: text('thumbnail').notNull(),
   status: text('status').$type<ContentStatus>().default(contentStatus.DRAFT).notNull(),
-  category: text('category_id').references(() => categoryTable.name, {
+  category: text('categoryId').references(() => categoryTable.name, {
     onDelete: 'set null',
     onUpdate: 'cascade',
   }),
-  authorId: text('user_id')
+  authorId: text('userId')
     .notNull()
     .references(() => userTable.id, {
       onDelete: 'no action',
@@ -48,7 +48,7 @@ export type NewCategoryTable = InferInsertModel<typeof categoryTable>;
 
 export const categoryTable = sqliteTable('category', {
   name: text('name').primaryKey().notNull().unique(),
-  authorId: text('user_id')
+  authorId: text('userId')
     .notNull()
     .references(() => userTable.id, {
       onDelete: 'set null',

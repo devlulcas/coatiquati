@@ -13,9 +13,9 @@ export const isHighPrivilegeAdmin = (role: string | null | undefined): role is R
   return role === roles.HIGH_PRIVILEGE_ADMIN;
 };
 
-export const isAuthenticated = (session?: Session | null): session is Session => {
-  if (!session) return false;
-  return session.userId !== null;
+export const isAuthenticated = <T>(sessionOrUser?: T | null): sessionOrUser is T => {
+  if (!sessionOrUser) return false;
+  return sessionOrUser !== null;
 };
 
 export const isAdminOrAbove = (role: string | null | undefined): role is Role => {

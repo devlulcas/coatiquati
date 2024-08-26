@@ -4,15 +4,15 @@ import { trailTable } from './trail';
 import { userTable } from './user';
 
 export const trailSubscriptionTable = sqliteTable(
-  'trail_subscrition',
+  'trailSubscrition',
   {
-    trailId: integer('trail_id')
+    trailId: integer('trailId')
       .notNull()
       .references(() => trailTable.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    userId: text('user_id')
+    userId: text('userId')
       .notNull()
       .references(() => userTable.id, {
         onDelete: 'cascade',

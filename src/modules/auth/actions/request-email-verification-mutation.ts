@@ -6,29 +6,32 @@ import { emailToHtml } from '@/modules/email/lib/email-to-html';
 import { mailer } from '@/modules/email/lib/mail';
 import { log } from '@/modules/logging/lib/pino';
 import { EmailVerificationService } from '../services/email-verification-service';
-import type { Session } from '../types/session';
 import { isAuthenticated } from '../utils/is';
+import { validateRequest } from '../services/lucia';
+import { fail, ok } from '@/shared/lib/result';
 
-export async function requestAccountVerificationMutation(session: Session): Promise<{ message: string }> {
+export async function requestEmailVerificationMutation() {
+  const { user } = await validateRequest();
+
+  if (!isAuthenticated(user)) {
+    return fail('Usuário não autenticado. A confirmação de e-mail só pode ser feita por usuários autenticados.');
+  }
+
+  if (user.verifiedAt) {
+    return fail('O e-mail já foi verificado.');
+  }
+
   const emailVerificationService = new EmailVerificationService();
 
-  if (!isAuthenticated(session)) {
-    throw new Error('Usuário não autenticado. A confirmação de e-mail só pode ser feita por usuários autenticados.');
-  }
-
-  if (session.user.verified) {
-    return { message: 'Email já verificado.' };
-  }
-
-  const token = await emailVerificationService.generateToken(session.user.userId).catch(error => {
+  const token = await emailVerificationService.generateToken(user.id).catch(error => {
     log.error('Erro ao tentar gerar token de verificação de e-mail', { error });
     return null;
   });
 
-  log.info('Token gerado', { token });
+  log.info('Token de verificação de e-mail gerado', { token });
 
   if (!token) {
-    throw new Error('Erro ao gerar token.');
+    return fail('Erro ao tentar gerar token de verificação de e-mail.');
   }
 
   const emailVerificationURL = new URL('api/verify-account', env.NEXT_PUBLIC_WEBSITE);
@@ -36,19 +39,19 @@ export async function requestAccountVerificationMutation(session: Session): Prom
 
   try {
     await mailer.sendMail(
-      session.user.email,
+      user.email,
       'Verificação de conta',
       emailToHtml(
         VerifyAccountEmail({
-          name: session.user.username,
+          name: user.username,
           url: emailVerificationURL.toString(),
         }),
       ),
     );
 
-    return { message: 'Email enviado' };
+    return ok('E-mail de verificação enviado com sucesso.');
   } catch (error) {
     log.error('Erro ao enviar email de verificação', { error });
-    throw new Error('Erro ao enviar email de verificação.');
+    return fail('Erro ao enviar e-mail de verificação.');
   }
 }

@@ -3,61 +3,38 @@
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
-import { useToast } from '@/shared/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
 import { userSignUpSchema } from '../../schemas/user-sign-up-schema';
+import { registerMutation } from '../../actions/register-mutation';
+import { useFormState } from 'react-dom';
+import { ErrorMessage } from '@/shared/components/common/error-message';
+import { fail, isFail } from '@/shared/lib/result';
+
+type SignUpFormSchema = z.infer<typeof userSignUpSchema>
 
 export function SignUpForm() {
-  const router = useRouter();
-  const { toast } = useToast();
-
-  const form = useForm<z.infer<typeof userSignUpSchema>>({
+  const form = useForm<SignUpFormSchema>({
     resolver: zodResolver(userSignUpSchema),
   });
 
-  const onSubmit = async (values: z.infer<typeof userSignUpSchema>) => {
-    const formData = new FormData();
-
-    formData.append('email', values.email);
-    formData.append('username', values.username);
-    formData.append('password', values.password);
-
-    const response = await fetch('/api/sign-up', {
-      method: 'POST',
-      body: formData,
-      redirect: 'manual',
-    });
-
-    if (response.status === 0) {
-      toast({
-        title: 'Sucesso',
-        description: 'Bem vindo!',
-      });
-
-      return router.refresh();
-    }
-
-    return toast({
-      title: 'Erro',
-      description: 'Ocorreu um erro inesperado. Talvez esse usuário já exista',
-      variant: 'destructive',
-    });
-  };
+  const [state, formAction, isPending] = useFormState(registerMutation, fail('undefined'));
 
   return (
     <div className="flex h-[--view-height] flex-col items-center justify-center">
       <Form {...form}>
         <form
-          method="POST"
-          onSubmit={form.handleSubmit(onSubmit)}
           className="flex h-fit min-w-[400px] flex-col gap-4 rounded-md border bg-card px-4 py-6 shadow-md"
-          action="/api/sign-up"
+          action={formAction}
         >
           <h1 className="text-3xl font-bold">Cadastrar-se</h1>
+
+          {isFail(state) && (
+            <ErrorMessage className='my-3' message={state.fail} />
+          )}
+
           <FormField
             control={form.control}
             name="username"
@@ -100,7 +77,7 @@ export function SignUpForm() {
             )}
           />
 
-          <Button className="mt-4 w-full" type="submit" isLoading={form.formState.isSubmitting}>
+          <Button className="mt-4 w-full" type="submit" isLoading={isPending}>
             Entrar
           </Button>
         </form>

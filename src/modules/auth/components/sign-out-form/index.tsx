@@ -1,6 +1,10 @@
 import { cn } from '@/shared/utils/cn';
 import type { ClassValue } from 'clsx';
-import { AuthForm } from '../auth-form';
+import { useFormState } from 'react-dom';
+import { logoutMutation } from '../../actions/logout-mutation';
+import { fail, isFail, isOk } from '@/shared/lib/result';
+import { useEffect } from 'react';
+import { useToast } from '@/shared/components/ui/use-toast';
 
 type SignOutFormProps = {
   children: React.ReactNode;
@@ -9,11 +13,32 @@ type SignOutFormProps = {
 };
 
 export function SignOutForm({ children, className, formClassName }: SignOutFormProps) {
+  const [state, formAction, isPending] = useFormState(logoutMutation, fail('undefined'));
+
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (isFail(state)) {
+      toast({
+        title: state.fail,
+        variant: 'destructive',
+      })
+    }
+
+    if (isOk(state)) {
+      toast({
+        title: 'Até a próxima :)',
+        variant: 'success',
+      })
+    }
+  }, [state, toast]);
+
+
   return (
-    <AuthForm action="/api/sign-out" className={cn(formClassName)}>
-      <button className={cn(className)} type="submit">
+    <form action={formAction} className={cn(formClassName)}>
+      <button className={cn(className)} type="submit" disabled={isPending}>
         {children}
       </button>
-    </AuthForm>
+    </form>
   );
 }

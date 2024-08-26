@@ -11,20 +11,20 @@ export const contentCommentTable = sqliteTable(
   'comment',
   {
     id: integer('id').primaryKey().notNull(),
-    contentId: integer('content_id')
+    contentId: integer('contenId')
       .notNull()
       .references(() => contentTable.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    authorId: text('user_id')
+    authorId: text('useId')
       .notNull()
       .references(() => userTable.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
     content: text('content').notNull(),
-    parentCommentId: integer('parent_comment_id'),
+    parentCommentId: integer('parenCommenId'),
     ...tableTimestampColumns,
   },
   table => ({
@@ -50,15 +50,15 @@ export const contentCommentTableRelations = relations(contentCommentTable, ({ on
   votes: many(commentVoteTable),
 }));
 
-export const commentVoteTable = sqliteTable('comment_vote', {
+export const commentVoteTable = sqliteTable('commenVote', {
   id: integer('id').primaryKey().notNull(),
-  commentId: integer('comment_id')
+  commentId: integer('commenId')
     .notNull()
     .references(() => contentCommentTable.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
-  userId: text('user_id')
+  userId: text('useId')
     .notNull()
     .references(() => userTable.id, {
       onDelete: 'cascade',

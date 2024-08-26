@@ -6,6 +6,10 @@ type ErrorMessageProps = {
 };
 
 export function ErrorMessage({ message, className }: ErrorMessageProps) {
+  if (!message) {
+    return null;
+  }
+
   return (
     <p className={cn('rounded border border-destructive bg-destructive/50 p-4 text-destructive-foreground', className)}>
       {message}

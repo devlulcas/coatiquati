@@ -6,12 +6,12 @@ import { userTable } from './user';
 export type EmailVerificationToken = InferSelectModel<typeof emailVerificationTokenTable>;
 export type NewEmailVerificationToken = InferInsertModel<typeof emailVerificationTokenTable>;
 
-export const emailVerificationTokenTable = sqliteTable('user_email_verification_token', {
+export const emailVerificationTokenTable = sqliteTable('userEmailVerificationToken', {
   id: text('id').primaryKey(),
-  userId: text('user_id')
+  userId: text('userId')
     .notNull()
     .references(() => userTable.id),
-  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+  expiresAt: integer('expiresAt', { mode: 'timestamp' }).notNull(),
   ...tableTimestampColumns,
 });
 
