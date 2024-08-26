@@ -1,4 +1,4 @@
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { currentUserIsAlreadySubscribedQuery } from '@/modules/trail-subscriptions/actions/current-user-is-already-subscribed-query';
 import { FollowTrailButton } from '@/modules/trail-subscriptions/components/follow-trail-button';
 import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
@@ -23,11 +23,11 @@ type TrailHeadingProps = {
 export async function TrailHeading({ trail, className }: TrailHeadingProps) {
   const allContributors = trail.contributors.map(contributor => contributor.user);
 
-  const session = await getPageSession();
+  const { user } = await validateRequest();
 
   const checkIfUserIsAlreadySubscribed = async () => {
-    if (session === null) return false;
-    const result = await currentUserIsAlreadySubscribedQuery(trail.id, session.userId);
+    if (user === null) return false;
+    const result = await currentUserIsAlreadySubscribedQuery(trail.id, user.id);
     return result.value;
   };
 
@@ -94,7 +94,7 @@ export async function TrailHeading({ trail, className }: TrailHeadingProps) {
 
         <VisualizeTrailAsAdmin trailId={trail.id} />
 
-        {session !== null ? (
+        {user !== null ? (
           <div className="mt-auto">
             <FollowTrailButton trailId={trail.id} isAlreadyFollowing={isAlreadyFollowing} />
           </div>

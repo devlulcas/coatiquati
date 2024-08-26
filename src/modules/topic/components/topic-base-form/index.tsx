@@ -1,6 +1,6 @@
 'use client';
 
-import { ImageUploaderInput } from '@/modules/media/components/image-uploader-input';
+import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
@@ -60,11 +60,17 @@ export function TopicBaseForm({ defaultValues, onSubmit, className }: TopicBaseF
             <FormItem>
               <FormLabel>Thumbnail</FormLabel>
               <FormControl>
-                <ImageUploaderInput
-                  endpoint="newImageMedia"
-                  value={form.watch('thumbnail')}
-                  setValue={form.setValue.bind(form, 'thumbnail')}
-                />
+                <FormControl>
+                  <ImageUploadArea
+                    defaultValue={{ src: field.value }}
+                    onFailedUpload={error => {
+                      form.setError('thumbnail', error);
+                    }}
+                    onSuccessfulUpload={data => {
+                      form.setValue('thumbnail', data.url);
+                    }}
+                  />
+                </FormControl>
               </FormControl>
               <FormMessage />
             </FormItem>

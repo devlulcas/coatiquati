@@ -7,7 +7,6 @@ import TextStyle from '@tiptap/extension-text-style';
 import Youtube from '@tiptap/extension-youtube';
 import { type Content, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import LayeredImage from '@/modules/content/components/layered-image-node';
 
 type UseRichTextEditorOptions = {
   initialContent?: Content;
@@ -40,7 +39,6 @@ export function useRichTextEditor(options: UseRichTextEditorOptions = { editable
       Youtube.configure({
         progressBarColor: 'hotpink',
       }),
-      LayeredImage,
     ],
     content: options.initialContent,
     editable: options.editable,

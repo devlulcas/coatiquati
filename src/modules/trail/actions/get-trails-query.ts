@@ -1,6 +1,6 @@
 'use server';
 
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
@@ -37,12 +37,12 @@ export async function getTrailsQuery(params: TrailSearchSchema = { skip: 0, take
     return fail(validatedParams.error.errors.join(', '));
   }
 
-  const session = await getPageSession();
+  const { user } = await validateRequest();
 
   const trailRepository = new TrailRepository();
 
   try {
-    const trails = await trailRepository.getTrails(validatedParams.data, isAdminOrAbove(session?.user.role));
+    const trails = await trailRepository.getTrails(validatedParams.data, isAdminOrAbove(user?.role));
     return ok(trails);
   } catch (error) {
     log.error('Falha ao buscar trilhas', String(error));

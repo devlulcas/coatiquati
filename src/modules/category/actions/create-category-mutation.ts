@@ -1,6 +1,5 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result } from '@/shared/lib/result';
@@ -8,7 +7,7 @@ import { TrailCategoryRepository } from '../repositories/trail-category-reposito
 import { newTrailCategorySchema } from '../schemas/new-trail-category-schema';
 
 export async function createCategoryMutation(name: string): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
   if (!isAuthenticated(session)) {
     return fail('Falha ao criar categoria. Você precisa estar logado para criar uma categoria.');

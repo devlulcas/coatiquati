@@ -1,6 +1,6 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { userFollowerTable } from '@/modules/database/schema/user-follower';
@@ -11,13 +11,12 @@ import { revalidatePath } from 'next/cache';
 import { currentUserIsFollowingQuery } from './current-user-is-following-query';
 
 export async function followUserMutation(userId: string): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     return fail('Você precisa estar logado para seguir um usuário');
   }
 
-  const currentUser = session.userId;
   const userToFollowResult = await wrapAsyncInResult(
     db.query.userTable.findFirst({
       where: (fields, operators) => {
@@ -30,20 +29,20 @@ export async function followUserMutation(userId: string): Promise<Result<string>
     return fail('Usuário não encontrado');
   }
 
-  const isAlreadyFollowingResult = await currentUserIsFollowingQuery(userId, session);
+  const isAlreadyFollowingResult = await currentUserIsFollowingQuery(userId, user.id);
 
   const follow = async () => {
-    await db.insert(userFollowerTable).values({ userId, followerId: currentUser }).execute();
-    log.info('Seguiu usuário', currentUser, userId);
+    await db.insert(userFollowerTable).values({ userId, followerId: user.id }).execute();
+    log.info('Seguiu usuário', user.id, userId);
   };
 
   const unfollow = async () => {
     await db
       .delete(userFollowerTable)
-      .where(and(eq(userFollowerTable.userId, userId), eq(userFollowerTable.followerId, currentUser)))
+      .where(and(eq(userFollowerTable.userId, userId), eq(userFollowerTable.followerId, user.id)))
       .execute();
 
-    log.info('Deixou de seguir usuário', currentUser, userId);
+    log.info('Deixou de seguir usuário', user.id, userId);
   };
 
   try {
@@ -59,6 +58,6 @@ export async function followUserMutation(userId: string): Promise<Result<string>
     return fail('Erro ao seguir usuário');
   } finally {
     revalidatePath('/profile/' + userToFollowResult.value.username);
-    revalidatePath('/profile/' + session.user.username);
+    revalidatePath('/profile/' + user.username);
   }
 }

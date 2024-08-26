@@ -1,7 +1,8 @@
 'use client';
 
+import { ImageUploadDialogTrigger } from '@/modules/file/components/image-upload-dialog-trigger';
+import { uploadImageToGallery } from '@/modules/file/services/upload-image-to-gallery';
 import { newImageContentSchema } from '@/modules/image-content/schemas/new-image-content-schema';
-import { UploadDropzone } from '@/modules/media/components/generic-upload-component-pack';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
@@ -48,44 +49,27 @@ export function ImageContentBaseForm({ onSubmit, className, defaultValues }: Ima
             />
           </div>
         ) : (
-          <UploadDropzone
-            className="mt-0"
-            endpoint="newImageContent"
-            onClientUploadComplete={res => {
-              if (typeof res === 'undefined' || res.length === 0) {
-                return toast({
-                  title: 'Erro ao realizar upload',
-                  variant: 'destructive',
-                });
-              }
-
-              const file = res.at(0);
-
-              if (!file) {
-                return toast({
-                  title: 'Erro ao realizar upload',
-                  variant: 'destructive',
-                });
-              }
-
-              form.setValue('src', file.url);
+          <ImageUploadDialogTrigger
+            onFailedUpload={error => {
+              toast({
+                title: 'Falha ao subir imagem!',
+                variant: 'destructive',
+                description: error.message,
+              });
             }}
-          />
+            onSuccessfulUpload={data => {
+              form.setValue('src', data.url);
+              form.setValue('alt', data.alt);
+              toast({
+                title: 'Imagem subida com sucesso!',
+                variant: 'success',
+              });
+            }}
+            uploadImage={uploadImageToGallery}
+          >
+            <Button>Upload de imagem</Button>
+          </ImageUploadDialogTrigger>
         )}
-
-        <FormField
-          control={form.control}
-          name="alt"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Texto alternativo</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="Imagem de um gato" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <FormField
           control={form.control}

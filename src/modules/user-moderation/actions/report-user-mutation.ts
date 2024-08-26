@@ -1,6 +1,6 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { db } from '@/modules/database/db';
 import { reportTable, type ReportInsert } from '@/modules/database/schema/report';
 import { log } from '@/modules/logging/lib/pino';
@@ -16,17 +16,17 @@ export async function reportUserMutation(params: CreateReportSchema): Promise<Re
     return fail(validatedParams.error.errors[0].message);
   }
 
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
-  if (!session) {
+  if (!user) {
     return fail('Entre para reportar um usuário');
   }
 
-  if (session.user.isBanned) {
+  if (user.bannedAt) {
     return fail('Você está banido e não pode reportar usuários');
   }
 
-  if (session.user.id === validatedParams.data.userId) {
+  if (user.id === validatedParams.data.userId) {
     return fail('Você não pode reportar você mesmo');
   }
 
@@ -34,7 +34,7 @@ export async function reportUserMutation(params: CreateReportSchema): Promise<Re
     db
       .select()
       .from(reportTable)
-      .where(eq(reportTable.reportedById, session.user.id))
+      .where(eq(reportTable.reportedById, user.id))
       .orderBy(desc(reportTable.createdAt))
       .limit(1)
       .get(),
@@ -59,7 +59,7 @@ export async function reportUserMutation(params: CreateReportSchema): Promise<Re
   // Salva o reporte
   const data: ReportInsert = {
     description: validatedParams.data.description,
-    reportedById: session.user.id,
+    reportedById: user.id,
     reportedEntityId: validatedParams.data.reportedEntityId,
     reportedEntityType: validatedParams.data.reportedEntityType,
     type: validatedParams.data.type as ReportReason, // Já foi validado pelo zod
@@ -68,7 +68,7 @@ export async function reportUserMutation(params: CreateReportSchema): Promise<Re
 
   try {
     await db.insert(reportTable).values(data).execute();
-    log.info(`Usuário ${session.user.id} reportou usuário ${data.userId} por ${data.type}`);
+    log.info(`Usuário ${user.id} reportou usuário ${data.userId} por ${data.type}`);
     return ok('Usuário reportado');
   } catch (error) {
     log.error(`Erro ao reportar usuário ${data.userId} por ${data.type}`, error);

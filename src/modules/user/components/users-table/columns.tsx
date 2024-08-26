@@ -39,7 +39,7 @@ export const usersColumns: ColumnDef<User>[] = [
   {
     id: 'verification_status',
     header: 'Email verificado',
-    cell: ({ row }) => (row.original.verified ? 'Verificado' : 'Não verificado'),
+    cell: ({ row }) => (row.original.verifiedAt ? 'Verificado' : 'Não verificado'),
   },
   {
     id: 'edit',

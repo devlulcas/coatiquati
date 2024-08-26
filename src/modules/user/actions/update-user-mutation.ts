@@ -1,6 +1,6 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -9,20 +9,20 @@ import { UserRepository } from '../repositories/user-repository';
 import { updateUserSchema, type UpdateUserSchema } from '../schemas/update-user-schema';
 
 export async function updateUserMutation(params: UpdateUserSchema): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
-  if (!session) {
+  if (!user) {
     return fail('Você precisa estar logado para editar suas informações.');
   }
 
   const userRepository = new UserRepository();
 
-  const currentUserResult = await wrapAsyncInResult(userRepository.getUserById(session.userId));
+  const currentUserResult = await wrapAsyncInResult(userRepository.getUserById(user.id));
 
   if (currentUserResult.type === 'fail' || currentUserResult.value === null) {
     log.warn('Usuário não encontrado', {
-      userId: session.userId,
-      username: session.user.username,
+      userId: user.id,
+      username: user.username,
     });
 
     return fail('Usuário não encontrado');
@@ -30,7 +30,7 @@ export async function updateUserMutation(params: UpdateUserSchema): Promise<Resu
 
   const isChangingEmail = params.email && params.email !== currentUserResult.value.email;
 
-  if (isChangingEmail && isHighPrivilegeAdmin(session.user.role)) {
+  if (isChangingEmail && isHighPrivilegeAdmin(user.role)) {
     return fail('Peça para um administrador de servidor para alterar diretamente as permissões do seu usuário.');
   }
 
@@ -41,14 +41,14 @@ export async function updateUserMutation(params: UpdateUserSchema): Promise<Resu
   }
 
   try {
-    await userRepository.updateUser(session.userId, {
+    await userRepository.updateUser(user.id, {
       avatar: validatedParams.data.avatar,
       username: validatedParams.data.username,
       email: validatedParams.data.email,
-      verified: isChangingEmail ? false : currentUserResult.value.verified,
+      verifiedAt: isChangingEmail ? null : currentUserResult.value.verifiedAt,
     });
 
-    revalidatePath('/profile/' + session.user.username);
+    revalidatePath('/profile/' + user.username);
 
     return ok('Usuário atualizado com sucesso');
   } catch (error) {

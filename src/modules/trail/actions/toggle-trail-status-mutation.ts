@@ -1,6 +1,6 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidateTrails } from '../lib/revalidate-trail';
@@ -8,13 +8,13 @@ import { TrailRepository } from '../repositories/trail-repository';
 import { trailWithIdSchema, type TrailWithIdSchema } from '../schemas/trail-with-id-schema';
 
 export async function toggleTrailStatusMutation(params: TrailWithIdSchema): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     return fail('Usuário não autenticado.');
   }
 
-  if (!isAdminOrAbove(session.user.role)) {
+  if (!isAdminOrAbove(user.role)) {
     return fail('Somente administradores podem editar trilhas.');
   }
 
@@ -36,13 +36,13 @@ export async function toggleTrailStatusMutation(params: TrailWithIdSchema): Prom
 
   if (trail.status === 'PUBLISHED') {
     trailRepository.omitTrail(validatedParams.data.id);
-    revalidateTrails({ username: session.user.username, trailId: trail.id });
+    revalidateTrails({ username: user.username, trailId: trail.id });
     return ok('Trilha omitida com sucesso.');
   }
 
   if (trail.status === 'DRAFT') {
     trailRepository.enableTrail(validatedParams.data.id);
-    revalidateTrails({ username: session.user.username, trailId: trail.id });
+    revalidateTrails({ username: user.username, trailId: trail.id });
     return ok('Trilha publicada com sucesso.');
   }
 

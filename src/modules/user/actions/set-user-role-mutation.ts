@@ -1,7 +1,7 @@
 'use server';
 
 import { roles } from '@/modules/auth/constants/roles';
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -16,16 +16,16 @@ const setUserRoleUseCaseSchema = z.object({
 export type SetUserRoleSchema = z.infer<typeof setUserRoleUseCaseSchema>;
 
 export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
-  if (!session) {
+  if (!user) {
     return fail('Você precisa estar logado para editar as permissões de um usuário.');
   }
 
-  if (!isHighPrivilegeAdmin(session.user.role)) {
+  if (!isHighPrivilegeAdmin(user.role)) {
     log.warn('Usuário tentou alterar as permissões de outro usuário sem ter permissão para isso', {
-      userId: session.user.id,
-      username: session.user.username,
+      userId: user.id,
+      username: user.username,
       targetUserId: params.userId,
       targetUsername: params.userId,
     });
@@ -39,10 +39,10 @@ export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Re
     return fail('Parâmetros de alteração de permissões inválidos.');
   }
 
-  if (session.user.id === validatedParams.data.userId) {
+  if (user.id === validatedParams.data.userId) {
     log.warn('Usuário tentou alterar suas próprias permissões', {
-      userId: session.user.id,
-      username: session.user.username,
+      userId: user.id,
+      username: user.username,
     });
 
     return fail('Você não pode editar suas próprias permissões.');
@@ -65,14 +65,16 @@ export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Re
 
   const desiredRole = isAdmin(validatedParams.data.role) ? roles.ADMIN : roles.USER;
 
-  if (targetUser.verified === false && desiredRole === roles.ADMIN) {
+  const verified = targetUser.verifiedAt ? new Date(targetUser.verifiedAt).getTime() < Date.now() : false;
+
+  if (!verified && desiredRole === roles.ADMIN) {
     return fail('Usuário alvo não verificado. Logo, não pode ter suas permissões alteradas.');
   }
 
   if (isHighPrivilegeAdmin(targetUser.role)) {
     log.warn('Possível tentativa de golpe. Usuário tentou alterar permissão de usuário de alto nível', {
-      userId: session.user.id,
-      username: session.user.username,
+      userId: user.id,
+      username: user.username,
       targetUserId: params.userId,
       targetUsername: params.userId,
     });

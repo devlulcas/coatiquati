@@ -1,6 +1,5 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { publicationMediaTable, publicationTable } from '@/modules/database/schema/publication';
@@ -9,7 +8,7 @@ import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 
 export async function deletePublicationMutation(pubId: number): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
   if (session === null) {
     return fail('Somente um usuário autenticado pode deletar publicações!');

@@ -1,6 +1,5 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -8,7 +7,7 @@ import { VOTES } from '../constants/votes';
 import { CommentVoteRepository } from '../repositories/comment-vote-repository';
 
 export async function downvoteCommentMutation(commentId: number): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
   if (!isAuthenticated(session)) {
     log.warn('Tentativa de votar em comentário sem usuário logado.', { commentId });

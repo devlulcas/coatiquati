@@ -1,6 +1,5 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { db } from '@/modules/database/db';
 import { publicationMediaTable, publicationTable } from '@/modules/database/schema/publication';
 import { log } from '@/modules/logging/lib/pino';
@@ -9,7 +8,7 @@ import { desc, eq } from 'drizzle-orm';
 import { createPublicationSchema, type CreatePublicationSchema } from '../schemas/create-publication';
 
 export async function publishContentMutation(params: CreatePublicationSchema): Promise<Result<number>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
   if (session === null) {
     return fail('Somente um usuário autenticado pode fazer publicações!');

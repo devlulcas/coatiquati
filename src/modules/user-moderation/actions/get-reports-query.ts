@@ -1,6 +1,6 @@
 'use server';
 
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { fail, ok, type Result } from '@/shared/lib/result';
@@ -9,9 +9,9 @@ import type { ReportSearchSchema } from '../schemas/report-search';
 import type { Report } from '../types/report';
 
 export async function getReportsQuery(params: ReportSearchSchema = { skip: 0, take: 30 }): Promise<Result<Report[]>> {
-  const session = await getPageSession();
+  const { user } = await validateRequest();
 
-  if (!isAdminOrAbove(session?.user.role)) {
+  if (!user || !isAdminOrAbove(user.role)) {
     return fail('Você não tem permissão para ver os reports');
   }
 
@@ -24,7 +24,7 @@ export async function getReportsQuery(params: ReportSearchSchema = { skip: 0, ta
           avatar: true,
           email: true,
           id: true,
-          isBanned: true,
+          bannedAt: true,
           username: true,
         },
       },
@@ -33,7 +33,7 @@ export async function getReportsQuery(params: ReportSearchSchema = { skip: 0, ta
           avatar: true,
           email: true,
           id: true,
-          isBanned: true,
+          bannedAt: true,
           username: true,
         },
       },
@@ -72,7 +72,7 @@ export async function getReportsQuery(params: ReportSearchSchema = { skip: 0, ta
         avatar: report.reportedBy.avatar,
         email: report.reportedBy.email,
         id: report.reportedBy.id,
-        isBanned: Boolean(report.reportedBy.isBanned),
+        isBanned: Boolean(report.reportedBy.bannedAt),
         username: report.reportedBy.username,
       },
       reportedEntity: {
@@ -83,7 +83,7 @@ export async function getReportsQuery(params: ReportSearchSchema = { skip: 0, ta
         avatar: report.reportedUser.avatar,
         email: report.reportedUser.email,
         id: report.reportedUser.id,
-        isBanned: Boolean(report.reportedUser.isBanned),
+        isBanned: Boolean(report.reportedUser.bannedAt),
         username: report.reportedUser.username,
       },
     })),

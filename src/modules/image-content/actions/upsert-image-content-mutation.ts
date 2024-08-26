@@ -1,6 +1,5 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { ImageContentRepository } from '@/modules/image-content/repositories/image-content-repository';
 import {
@@ -11,7 +10,7 @@ import { log } from '@/modules/logging/lib/pino';
 import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertImageContentMutation(params: NewImageContentSchema): Promise<Result<number>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
   if (!isAuthenticated(session)) {
     return fail('Usuário não autenticado');

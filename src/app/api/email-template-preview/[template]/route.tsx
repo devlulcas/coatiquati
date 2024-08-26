@@ -1,7 +1,7 @@
 import { emailTemplates } from '@/modules/email/lib/templates';
-import { render } from '@react-email/components';
+import { render } from '@react-email/render';
 
-export const GET = (request: Request) => {
+export const GET = async (request: Request) => {
   const url = new URL(request.url);
   const template = url.pathname.split('/').pop();
 
@@ -11,7 +11,9 @@ export const GET = (request: Request) => {
     return new Response('Template not found', { status: 404 });
   }
 
-  return new Response(render(selectedTemplate), {
+  const el = await render(selectedTemplate, { pretty: true });
+
+  return new Response(el, {
     headers: { 'Content-Type': 'text/html' },
   });
 };

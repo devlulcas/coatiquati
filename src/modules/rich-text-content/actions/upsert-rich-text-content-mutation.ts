@@ -1,6 +1,5 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { RichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
@@ -8,7 +7,7 @@ import { type NewRichTextContentSchema } from '@/modules/rich-text-content/schem
 import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertRichTextContentMutation(params: NewRichTextContentSchema): Promise<Result<number>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
   if (!isAuthenticated(session)) {
     return fail('Usuário não autenticado');

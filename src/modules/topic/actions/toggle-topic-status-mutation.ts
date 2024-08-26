@@ -1,6 +1,5 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -8,7 +7,7 @@ import { revalidateTopics } from '../lib/revalidate-topic';
 import { TopicRepository } from '../repositories/topic-repository';
 
 export async function toggleTopicStatusMutation(topicId: number): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
   if (!isAuthenticated(session)) {
     return fail('Usuário não autenticado.');

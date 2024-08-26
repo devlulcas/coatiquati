@@ -1,7 +1,7 @@
 'use client';
 
 import { TrailCategorySearchInput } from '@/modules/category/components/trail-category-search-input';
-import { ImageUploaderInput } from '@/modules/media/components/image-uploader-input';
+import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
@@ -84,14 +84,18 @@ export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseF
         <FormField
           control={form.control}
           name="thumbnail"
-          render={() => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Thumbnail</FormLabel>
               <FormControl>
-                <ImageUploaderInput
-                  endpoint="newImageMedia"
-                  value={form.watch('thumbnail')}
-                  setValue={form.setValue.bind(form, 'thumbnail')}
+                <ImageUploadArea
+                  defaultValue={{ src: field.value }}
+                  onFailedUpload={error => {
+                    form.setError('thumbnail', error);
+                  }}
+                  onSuccessfulUpload={data => {
+                    form.setValue('thumbnail', data.url);
+                  }}
                 />
               </FormControl>
               <FormMessage />

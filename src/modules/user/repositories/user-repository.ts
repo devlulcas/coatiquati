@@ -14,7 +14,7 @@ export class UserRepository {
           avatar: user.avatar,
           username: user.username,
           email: user.email,
-          verified: user.verified,
+          verifiedAt: user.verifiedAt,
         })
         .where(eq(userTable.id, id))
         .execute();

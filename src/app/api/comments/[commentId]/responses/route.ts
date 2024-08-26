@@ -1,4 +1,4 @@
-import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { getCommentResponsesQuery } from '@/modules/comments/actions/get-comment-responses-query';
 import { CommentRepository } from '@/modules/comments/repositories/comment-repository';
 import type { Comment } from '@/modules/comments/types/comment';
@@ -26,11 +26,9 @@ export const POST = async (
   request: NextRequest,
   { params }: RouteProps,
 ): Promise<NextResponse<{ message: string } | { error: string }>> => {
-  const authRequest = handleApiAuthRequest(request);
+  const { user } = await validateRequest();
 
-  const session = await authRequest.validate();
-
-  if (!session) {
+  if (!user) {
     redirect('/sign-in');
   }
 
@@ -48,13 +46,13 @@ export const POST = async (
 
   try {
     await commentRepository.addCommentInContent({
-      authorId: session.user.id,
+      authorId: user.id,
       contentId: comment.contentId,
       parentCommentId: comment.id,
       content,
     });
 
-    log.info('Comentário respondido', { authorId: session.user.id, on: comment.id, contentId: comment.contentId });
+    log.info('Comentário respondido', { authorId: user.id, on: comment.id, contentId: comment.contentId });
 
     return NextResponse.json({ message: 'Comentário respondido' });
   } catch (error) {

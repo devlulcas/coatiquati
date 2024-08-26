@@ -133,83 +133,16 @@ export class TopicRepository {
     const withVideo: ContentWithVideo[] = [];
 
     data.contents.forEach(content => {
-      console.log('----------------');
-      console.log(content);
       if (content.image?.contentType === 'image') {
-        const image: ContentWithImage = {
-          active: content.active,
-          author: content.author,
-          contributors: content.contributors,
-          createdAt: content.createdAt,
-          contentType: 'image',
-          id: content.id,
-          updatedAt: content.updatedAt,
-          deletedAt: content.deletedAt,
-          title: content.title,
-          content: {
-            baseContentId: content.image.baseContentId,
-            contentType: 'image',
-            createdAt: content.image.createdAt,
-            id: content.image.id,
-            updatedAt: content.image.updatedAt,
-            deletedAt: content.image.deletedAt,
-            src: content.image.src,
-            description: content.image.description,
-          },
-        };
-
-        withImage.push(image);
+        withImage.push(contentToImageMapper(content));
       }
 
-      if (content.richText?.contentType === 'rich_text') {
-        const rt: ContentWithRichTextPreview = {
-          active: content.active,
-          author: content.author,
-          contributors: content.contributors,
-          createdAt: content.createdAt,
-          contentType: 'rich_text',
-          id: content.id,
-          updatedAt: content.updatedAt,
-          deletedAt: content.deletedAt,
-          title: content.title,
-          content: {
-            baseContentId: content.richText.baseContentId,
-            contentType: 'rich_text',
-            createdAt: content.richText.createdAt,
-            id: content.richText.id,
-            updatedAt: content.richText.updatedAt,
-            deletedAt: content.richText.deletedAt,
-            previewAsJson: content.richText.previewAsJson,
-          },
-        };
-
-        withRTE.push(rt);
+      if (content.richText?.contentType === 'richText') {
+        withRTE.push(contentToRTEMapper(content));
       }
 
       if (content.video?.contentType === 'video') {
-        const video: ContentWithVideo = {
-          active: content.active,
-          author: content.author,
-          contributors: content.contributors,
-          createdAt: content.createdAt,
-          contentType: 'video',
-          id: content.id,
-          updatedAt: content.updatedAt,
-          deletedAt: content.deletedAt,
-          title: content.title,
-          content: {
-            baseContentId: content.video.baseContentId,
-            contentType: 'video',
-            createdAt: content.video.createdAt,
-            id: content.video.id,
-            updatedAt: content.video.updatedAt,
-            deletedAt: content.video.deletedAt,
-            src: content.video.src,
-            description: content.video.description,
-          },
-        };
-
-        withVideo.push(video);
+        withVideo.push(contentToVideoMapper(content));
       }
     });
 
@@ -264,4 +197,81 @@ export class TopicRepository {
       throw new Error('Erro ao omitir tópico');
     }
   }
+}
+
+function contentToImageMapper(content: any): ContentWithImage {
+  const image: ContentWithImage = {
+    active: content.active,
+    author: content.author,
+    contributors: content.contributors,
+    createdAt: content.createdAt,
+    contentType: 'image',
+    id: content.id,
+    updatedAt: content.updatedAt,
+    deletedAt: content.deletedAt,
+    title: content.title,
+    content: {
+      baseContentId: content.image.baseContentId,
+      contentType: 'image',
+      createdAt: content.image.createdAt,
+      id: content.image.id,
+      updatedAt: content.image.updatedAt,
+      deletedAt: content.image.deletedAt,
+      src: content.image.src,
+      description: content.image.description,
+    },
+  };
+
+  return image;
+}
+
+function contentToRTEMapper(content: any): ContentWithRichTextPreview {
+  const rt: ContentWithRichTextPreview = {
+    active: content.active,
+    author: content.author,
+    contributors: content.contributors,
+    createdAt: content.createdAt,
+    contentType: 'rich_text',
+    id: content.id,
+    updatedAt: content.updatedAt,
+    deletedAt: content.deletedAt,
+    title: content.title,
+    content: {
+      baseContentId: content.richText.baseContentId,
+      contentType: 'richText',
+      createdAt: content.richText.createdAt,
+      id: content.richText.id,
+      updatedAt: content.richText.updatedAt,
+      deletedAt: content.richText.deletedAt,
+      previewAsJson: content.richText.previewAsJson,
+    },
+  };
+
+  return rt;
+}
+
+function contentToVideoMapper(content: any): ContentWithVideo {
+  const video: ContentWithVideo = {
+    active: content.active,
+    author: content.author,
+    contributors: content.contributors,
+    createdAt: content.createdAt,
+    contentType: 'video',
+    id: content.id,
+    updatedAt: content.updatedAt,
+    deletedAt: content.deletedAt,
+    title: content.title,
+    content: {
+      baseContentId: content.video.baseContentId,
+      contentType: 'video',
+      createdAt: content.video.createdAt,
+      id: content.video.id,
+      updatedAt: content.video.updatedAt,
+      deletedAt: content.video.deletedAt,
+      src: content.video.src,
+      description: content.video.description,
+    },
+  };
+
+  return video;
 }

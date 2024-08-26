@@ -1,6 +1,5 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { fail, ok, wrapAsyncInResult, wrapInResult, type Result } from '@/shared/lib/result';
 import { readFileSync } from 'fs';
@@ -15,7 +14,7 @@ const packageJsonSchema = z.object({
 });
 
 export async function createNewFeedbackMutation(feedback: NewFeedbackFormValues): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
   if (!isAuthenticated(session)) {
     return fail('Você precisa estar logado para criar uma nova trilha.');

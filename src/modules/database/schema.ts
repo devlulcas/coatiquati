@@ -3,6 +3,7 @@ import * as contentSchema from './schema/content';
 import * as contributionSchema from './schema/contribution';
 import * as emailVerificationTokenSchema from './schema/email-verification-token';
 import * as feedbackSchema from './schema/feedback';
+import * as fileSchema from './schema/file';
 import * as passwordResetTokenSchema from './schema/password-reset-token';
 import * as publicationSchema from './schema/publication';
 import * as reportSchema from './schema/report';
@@ -26,4 +27,5 @@ export const schema = {
   ...userSchema,
   ...userFollowerSchema,
   ...publicationSchema,
+  ...fileSchema,
 };

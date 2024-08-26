@@ -1,12 +1,11 @@
-import { handleApiAuthRequest } from '@/modules/auth/utils/handle-auth-request';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { searchTrailCategoriesQuery } from '@/modules/category/actions/search-trails-categories-query';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export const GET = async (request: NextRequest) => {
-  const authRequest = handleApiAuthRequest(request);
-  const session = await authRequest.validate();
+  const { user } = await validateRequest();
 
-  if (!session) {
+  if (!user) {
     return new Response(null, {
       status: 401,
     });
@@ -29,10 +28,10 @@ export const GET = async (request: NextRequest) => {
     );
   }
 
+  const categories = categoriesResult.value.map(({ name }) => ({ name }));
+
   return NextResponse.json({
-    data: {
-      categories: categoriesResult.value.map(({ name }) => ({ name })),
-    },
+    data: { categories },
     pagination: { skip, take },
   });
 };

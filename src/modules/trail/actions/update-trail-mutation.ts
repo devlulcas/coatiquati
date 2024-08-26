@@ -1,6 +1,6 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -10,13 +10,13 @@ import { updateTrailSchema, type UpdateTrailSchema } from '../schemas/edit-trail
 import type { UpdateTrail } from '../types/trail';
 
 export async function updateTrailMutation(params: UpdateTrailSchema): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     return fail('Você precisa estar logado para editar uma trilha.');
   }
 
-  if (!isAdminOrAbove(session.user.role)) {
+  if (!isAdminOrAbove(user.role)) {
     return fail('Somente administradores podem editar trilhas. Entre como administrador.');
   }
 
@@ -32,7 +32,7 @@ export async function updateTrailMutation(params: UpdateTrailSchema): Promise<Re
     description: validatedParams.data.description,
     thumbnail: validatedParams.data.thumbnail,
     status: validatedParams.data.status,
-    contributorId: session.user.id,
+    contributorId: user.id,
     category: validatedParams.data.category,
   };
 
@@ -44,9 +44,9 @@ export async function updateTrailMutation(params: UpdateTrailSchema): Promise<Re
     return fail('Falha ao editar trilha.');
   }
 
-  log.info('Trilha atualizada', { trailId: validatedParams.data.id, contributorId: session.user.id });
+  log.info('Trilha atualizada', { trailId: validatedParams.data.id, contributorId: user.id });
 
-  revalidateTrails({ username: session.user.username });
+  revalidateTrails({ username: user.username });
 
   return ok('Trilha atualizada com sucesso.');
 }

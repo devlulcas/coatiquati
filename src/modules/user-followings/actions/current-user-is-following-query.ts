@@ -1,22 +1,19 @@
 'use server';
 
-import type { Session } from '@/modules/auth/types/session';
 import { db } from '@/modules/database/db';
 import { userFollowerTable } from '@/modules/database/schema/user-follower';
 import { log } from '@/modules/logging/lib/pino';
 import { ok, wrapAsyncInResult, type Ok } from '@/shared/lib/result';
 import { and, eq } from 'drizzle-orm';
 
-export async function currentUserIsFollowingQuery(userId: string, session: Session): Promise<Ok<boolean>> {
-  if (!session) return ok(false);
-
-  const follower = session.userId;
+export async function currentUserIsFollowingQuery(userId: string, followerId?: string): Promise<Ok<boolean>> {
+  if (!followerId) return ok(false);
 
   const isAlreadyFollowing = await wrapAsyncInResult(
     db
       .select({ id: userFollowerTable.userId })
       .from(userFollowerTable)
-      .where(and(eq(userFollowerTable.userId, userId), eq(userFollowerTable.followerId, follower)))
+      .where(and(eq(userFollowerTable.userId, userId), eq(userFollowerTable.followerId, followerId)))
       .get(),
   );
 

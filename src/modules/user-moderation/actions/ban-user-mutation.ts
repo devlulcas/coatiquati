@@ -1,6 +1,6 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { reportTable } from '@/modules/database/schema/report';
@@ -10,13 +10,13 @@ import { fail, ok, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 
 export async function banUserMutation(params: { reportId: number }): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
-  if (session === null) {
+  if (user === null) {
     return fail('Você não está autenticado');
   }
 
-  if (!isAdminOrAbove(session.user.role)) {
+  if (!isAdminOrAbove(user.role)) {
     return fail('Você não tem permissão para banir usuários');
   }
 
@@ -40,7 +40,7 @@ export async function banUserMutation(params: { reportId: number }): Promise<Res
     return fail('Report não encontrado');
   }
 
-  if (report.reportedUser.id === session.user.id) {
+  if (report.reportedUser.id === user.id) {
     return fail('Você não pode banir a si mesmo');
   }
 
@@ -52,13 +52,17 @@ export async function banUserMutation(params: { reportId: number }): Promise<Res
     try {
       await db
         .update(reportTable)
-        .set({ status: 'resolved', moderatorId: session.user.id })
+        .set({ status: 'resolved', moderatorId: user.id })
         .where(eq(reportTable.id, params.reportId))
         .execute();
 
-      await db.update(userTable).set({ isBanned: true }).where(eq(userTable.id, report.reportedUser.id)).execute();
+      await db
+        .update(userTable)
+        .set({ bannedAt: new Date() })
+        .where(eq(userTable.id, report.reportedUser.id))
+        .execute();
 
-      log.info(`Usuário banido: ${report.reportedUser.id} por ${session.user.id} via reporte ${params.reportId}`);
+      log.info(`Usuário banido: ${report.reportedUser.id} por ${user.id} via reporte ${params.reportId}`);
 
       return ok('Usuário banido');
     } catch (error) {

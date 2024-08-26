@@ -1,6 +1,5 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { type ContentNewCommentTable } from '@/modules/database/schema/comment';
@@ -10,7 +9,7 @@ import { CommentRepository } from '../repositories/comment-repository';
 import { newCommentSchema, type NewCommentSchema } from '../schemas/new-comment-schema';
 
 export async function commentOnContentMutation(params: NewCommentSchema): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
   if (!isAuthenticated(session)) {
     return fail('Somente usuários logados podem comentar.');

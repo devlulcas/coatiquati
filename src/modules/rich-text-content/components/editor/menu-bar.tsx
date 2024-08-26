@@ -31,7 +31,7 @@ import {
   YoutubeIcon,
 } from 'lucide-react';
 import { EditorActionButton } from './editor-action-button';
-import { ImageUploaderDialogTrigger } from './image-uploader-dialog-trigger';
+import { ImageUploaderDialogTrigger } from './editor-image-uploader-dialog-trigger';
 
 type MenuBarProps = {
   editor: Editor | null;

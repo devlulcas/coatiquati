@@ -1,6 +1,6 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { type NewTrailTable } from '@/modules/database/schema/trail';
 import { log } from '@/modules/logging/lib/pino';
@@ -10,13 +10,13 @@ import { TrailRepository } from '../repositories/trail-repository';
 import { newTrailSchema, type NewTrailSchema } from '../schemas/new-trail-schema';
 
 export async function createTrailMutation(params: NewTrailSchema): Promise<Result<number>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     return fail('Você precisa estar logado para criar uma trilha.');
   }
 
-  if (!isAdminOrAbove(session.user.role)) {
+  if (!isAdminOrAbove(user.role)) {
     return fail('Somente administradores podem criar trilhas.');
   }
 
@@ -33,14 +33,14 @@ export async function createTrailMutation(params: NewTrailSchema): Promise<Resul
     description: validatedParams.data.description,
     thumbnail: validatedParams.data.thumbnail,
     status: validatedParams.data.status,
-    authorId: session.user.id,
+    authorId: user.id,
     category: validatedParams.data.category,
   };
 
   try {
     const trail = await trailRepository.createTrail(newTrail);
-    log.info('Trilha criada', { trailId: trail, authorId: session.user.id });
-    revalidateTrails({ username: session.user.username });
+    log.info('Trilha criada', { trailId: trail, authorId: user.id });
+    revalidateTrails({ username: user.username });
     return ok(trail);
   } catch (error) {
     log.error('Falha ao criar trilha', String(error), { newTrail });

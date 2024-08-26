@@ -1,6 +1,6 @@
 'use server';
 
-import { getActionSession } from '@/modules/auth/utils/get-action-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { trailSubscriptionTable } from '@/modules/database/schema/trail-subscription';
@@ -11,24 +11,22 @@ import { revalidatePath } from 'next/cache';
 import { currentUserIsAlreadySubscribedQuery } from './current-user-is-already-subscribed-query';
 
 export async function subscribeToTrailMutation(trailId: TrailId): Promise<Result<string>> {
-  const session = await getActionSession();
+  const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) return fail('Usuário não autenticado');
+  if (!isAuthenticated(user?.role)) return fail('Usuário não autenticado');
 
-  const currentUser = session.userId;
-
-  const isAlreadyFollowing = await currentUserIsAlreadySubscribedQuery(trailId, currentUser);
+  const isAlreadyFollowing = await currentUserIsAlreadySubscribedQuery(trailId, user.id);
 
   if (isAlreadyFollowing.value) {
     await db
       .delete(trailSubscriptionTable)
-      .where(and(eq(trailSubscriptionTable.userId, currentUser), eq(trailSubscriptionTable.trailId, trailId)))
+      .where(and(eq(trailSubscriptionTable.userId, user.id), eq(trailSubscriptionTable.trailId, trailId)))
       .execute();
   } else {
-    await db.insert(trailSubscriptionTable).values({ trailId, userId: currentUser }).execute();
+    await db.insert(trailSubscriptionTable).values({ trailId, userId: user.id }).execute();
   }
 
-  revalidatePath('/profile/' + session.user.username);
+  revalidatePath('/profile/' + user.username);
   revalidatePath('/trails/' + trailId);
   revalidatePath('/dashboard/trails/' + trailId);
 

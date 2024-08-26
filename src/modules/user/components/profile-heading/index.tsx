@@ -1,4 +1,4 @@
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { FollowUserButton } from '@/modules/user-followings/components/follow-user-button';
 import { Button } from '@/shared/components/ui/button';
 import { BoltIcon } from 'lucide-react';
@@ -11,9 +11,9 @@ type ProfileHeadingProps = {
 };
 
 export async function ProfileHeading({ user }: ProfileHeadingProps) {
-  const session = await getPageSession();
+  const { user: currentUser } = await validateRequest();
 
-  const isCurrentUser = session?.userId === user.id;
+  const isCurrentUser = currentUser?.id === user.id;
 
   const createdAt = new Date(user.createdAt).toLocaleDateString('pt-BR', {
     day: '2-digit',
@@ -21,7 +21,7 @@ export async function ProfileHeading({ user }: ProfileHeadingProps) {
     year: 'numeric',
   });
 
-  const isAlreadyFollowing = user.followers.some(follower => follower.username === session?.user.username);
+  const isAlreadyFollowing = user.followers.some(follower => follower.username === currentUser?.username);
 
   return (
     <section className="overflow-hidden rounded-md bg-secondary/75">
