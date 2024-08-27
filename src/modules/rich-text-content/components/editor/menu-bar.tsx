@@ -31,7 +31,7 @@ import {
   YoutubeIcon,
 } from 'lucide-react';
 import { EditorActionButton } from './editor-action-button';
-import { ImageUploaderDialogTrigger } from './editor-image-uploader-dialog-trigger';
+import { EditormageUploaderDialogTrigger } from './editor-image-uploader-dialog-trigger';
 
 type MenuBarProps = {
   editor: Editor | null;
@@ -199,9 +199,9 @@ export function MenuBar({ editor }: MenuBarProps) {
         label="refazer"
       />
 
-      <ImageUploaderDialogTrigger editor={editor}>
+      <EditormageUploaderDialogTrigger editor={editor}>
         <EditorActionButton icon={<ImagePlusIcon size={iconSize} />} label="imagem" />
-      </ImageUploaderDialogTrigger>
+      </EditormageUploaderDialogTrigger>
 
       <EditorActionButton
         onClick={() => editor.chain().focus().toggleTaskList().run()}

@@ -25,12 +25,16 @@ export async function verifyEmailMutation(token: string) {
 
   try {
     await auth.invalidateUserSessions(userId);
-    const updatedUser = await db.update(userTable).set({ verifiedAt: new Date() }).where(eq(userTable.id, userId)).execute();
+    const updatedUser = await db
+      .update(userTable)
+      .set({ verifiedAt: new Date() })
+      .where(eq(userTable.id, userId))
+      .execute();
     log.info('Conta verificada', { userId, updatedUser });
     const session = await auth.createSession(userId, {});
     const sessionCookie = auth.createSessionCookie(session.id);
     cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-    return redirect("/");
+    return redirect('/');
   } catch (error) {
     log.error('Erro ao tentar verificar conta', { error });
     return fail('Erro ao tentar verificar conta.');

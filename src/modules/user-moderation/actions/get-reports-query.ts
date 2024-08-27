@@ -72,7 +72,7 @@ export async function getReportsQuery(params: ReportSearchSchema = { skip: 0, ta
         avatar: report.reportedBy.avatar,
         email: report.reportedBy.email,
         id: report.reportedBy.id,
-        isBanned: Boolean(report.reportedBy.bannedAt),
+        bannedAt: report.reportedBy.bannedAt,
         username: report.reportedBy.username,
       },
       reportedEntity: {
@@ -83,7 +83,7 @@ export async function getReportsQuery(params: ReportSearchSchema = { skip: 0, ta
         avatar: report.reportedUser.avatar,
         email: report.reportedUser.email,
         id: report.reportedUser.id,
-        isBanned: Boolean(report.reportedUser.bannedAt),
+        bannedAt: report.reportedUser.bannedAt,
         username: report.reportedUser.username,
       },
     })),

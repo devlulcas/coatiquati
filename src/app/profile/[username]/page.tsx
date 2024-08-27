@@ -1,4 +1,4 @@
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { CreatePublicationForm } from '@/modules/publication/components/create-publication-form';
 import { UserPublicationList } from '@/modules/publication/components/user-publication-list';
 import { getTrailSubscriptionsByUserIdQuery } from '@/modules/trail-subscriptions/actions/get-trail-subscriptions-by-user-id-query';
@@ -40,9 +40,9 @@ export default async function Page({ params }: PageProps) {
 
   const mostSubscribedCategory = getMostSubscribedCategory(subscribedTrails);
 
-  const session = await getPageSession();
+  const { user } = await validateRequest();
 
-  const isCurrentUser = session && profile.id === session.userId;
+  const isCurrentUser = user && profile.id === user.id;
 
   return (
     <main className="container py-4">
@@ -112,7 +112,7 @@ export default async function Page({ params }: PageProps) {
 
         <ul className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {subscribedTrails.map(trail => (
-            <li key={trail.id} className="transition duration-500 ease-in-out  hover:scale-105">
+            <li key={trail.id} className="transition duration-500 ease-in-out hover:scale-105">
               <TrailCard trail={trail} />
             </li>
           ))}
@@ -124,7 +124,7 @@ export default async function Page({ params }: PageProps) {
           <h2 className="text-xl font-bold">Trilhas autoradas</h2>
           <ul className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
             {profile.authoredTrails.map(trail => (
-              <li key={trail.id} className="transition duration-500 ease-in-out  hover:scale-105">
+              <li key={trail.id} className="transition duration-500 ease-in-out hover:scale-105">
                 <TrailCard trail={trail} />
               </li>
             ))}

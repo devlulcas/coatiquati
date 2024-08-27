@@ -8,7 +8,7 @@ import type { Publication } from '../types/publication';
 import { PublicationMediaGrid } from './publication-media-grid';
 
 type PublicationCardProps = {
-  author: Pick<User, 'avatar' | 'username' | 'verified'>;
+  author: Pick<User, 'avatar' | 'username' | 'verifiedAt'>;
   publication: Publication;
 };
 

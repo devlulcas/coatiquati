@@ -43,7 +43,7 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex h-full flex-col gap-4', className)}
       >
-        <div className={cn('aspect-video h-80 overflow-hidden rounded-lg ', youtubeId ? 'bg-black' : 'bg-neutral-900')}>
+        <div className={cn('aspect-video h-80 overflow-hidden rounded-lg', youtubeId ? 'bg-black' : 'bg-neutral-900')}>
           {youtubeId ? (
             <YouTubeEmbed id={youtubeId} title={form.watch('title')} />
           ) : (

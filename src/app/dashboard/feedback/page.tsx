@@ -71,7 +71,7 @@ export default async function FeedbackPage(props: PageProps) {
                           <p>{feedback.user.username}</p>
                           <UserRoleBadge role={feedback.user.role} />
 
-                          {feedback.user.verified && (
+                          {Boolean(feedback.user.verifiedAt) && (
                             <span
                               className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/15"
                               title="Usuário verificado"
@@ -81,7 +81,7 @@ export default async function FeedbackPage(props: PageProps) {
                             </span>
                           )}
 
-                          {feedback.user.isBanned && (
+                          {Boolean(feedback.user.bannedAt) && (
                             <span
                               className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500/15"
                               title="Usuário banido"

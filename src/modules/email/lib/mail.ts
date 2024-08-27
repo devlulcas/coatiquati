@@ -5,7 +5,12 @@ import { fail, ok, type Result } from '@/shared/lib/result';
 import nodemailer from 'nodemailer';
 
 type MailTransport = {
-  sendMail: (options: { from: string; to: string; subject: string; html: string }) => Promise<Result<unknown>>;
+  sendMail: (options: {
+    from: string;
+    to: string;
+    subject: string;
+    html: string | Promise<string>;
+  }) => Promise<Result<unknown>>;
 };
 
 type MailTransporterFactory = () => MailTransport;
@@ -17,11 +22,12 @@ type MailTransporterFactory = () => MailTransport;
  */
 const createProductionTransporter: MailTransporterFactory = () => {
   return {
-    sendMail: async (options: { from: string; to: string; subject: string; html: string }) => {
+    sendMail: async options => {
       try {
+        const template = await options.html;
         const sendEmailCommand = createSendEmailCommand({
           destination: { toAddresses: [options.to] },
-          message: { body: { html: { data: options.html } }, subject: { data: options.subject } },
+          message: { body: { html: { data: template } }, subject: { data: options.subject } },
           source: options.from,
         });
 
@@ -58,18 +64,19 @@ const createDevelopmentTransporter: MailTransporterFactory = () => {
   });
 
   return {
-    sendMail: async (options) => {
+    sendMail: async options => {
       try {
+        const template = await options.html;
         const result = await transporter.sendMail({
           from: options.from,
           to: options.to,
           subject: options.subject,
-          html: options.html,
+          html: template,
         });
 
         if (result.rejected.length > 0) {
           const formatter = new Intl.ListFormat('pt-BR', { style: 'long', type: 'conjunction' });
-          const rejected = result.rejected.map(r => typeof r === 'string' ? r : r.address);
+          const rejected = result.rejected.map(r => (typeof r === 'string' ? r : r.address));
           return fail(`E-mail rejeitado: ${formatter.format(rejected)}`);
         }
 
@@ -83,7 +90,7 @@ const createDevelopmentTransporter: MailTransporterFactory = () => {
 
         return fail('Erro desconhecido ao enviar e-mail');
       }
-    }
+    },
   };
 };
 
@@ -93,7 +100,7 @@ const createDevelopmentTransporter: MailTransporterFactory = () => {
  */
 const createMailer = (transporter: MailTransport) => {
   return {
-    sendMail: async (to: string, subject: string, html: string) => {
+    sendMail: async (to: string, subject: string, html: string | Promise<string>) => {
       await transporter.sendMail({
         from: env.MAIL_FROM,
         to,

@@ -1,5 +1,6 @@
 'use server';
 
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -11,11 +12,11 @@ import { type NewTopic } from '../types/topic';
 export async function createTopicMutation(params: NewTopicSchema): Promise<Result<string>> {
   const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     return fail('Você precisa estar autenticado para criar um novo tópico.');
   }
 
-  if (!isAdminOrAbove(session.user.role)) {
+  if (!isAdminOrAbove(user.role)) {
     return fail('Você precisa ser um administrador para criar um novo tópico.');
   }
 
@@ -26,7 +27,7 @@ export async function createTopicMutation(params: NewTopicSchema): Promise<Resul
   }
 
   const newTopic: NewTopic = {
-    authorId: session.user.id,
+    authorId: user.id,
     trailId: validatedParams.data.trailId,
     title: validatedParams.data.title,
     description: validatedParams.data.description,
@@ -41,7 +42,7 @@ export async function createTopicMutation(params: NewTopicSchema): Promise<Resul
   }
 
   revalidateTopics({
-    username: session.user.username,
+    username: user.username,
     trailId: newTopic.trailId,
   });
 

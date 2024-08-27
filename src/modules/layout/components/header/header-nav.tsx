@@ -8,7 +8,7 @@ import { MenuIcon } from 'lucide-react';
 import Link from 'next/link';
 
 type HeaderNavProps = {
-  user?: Pick<User, 'role' | 'username'>;
+  user: Pick<User, 'role' | 'username'> | null;
 };
 
 export function HeaderNav({ user }: HeaderNavProps) {
@@ -44,7 +44,7 @@ export function HeaderNav({ user }: HeaderNavProps) {
             </Button>
           )}
 
-          {typeof user !== 'undefined' ? (
+          {user !== null ? (
             <>
               <Button className="w-full" variant="destructive" asChild>
                 <SignOutForm className="w-full" formClassName="w-full">
@@ -78,7 +78,7 @@ export function HeaderNav({ user }: HeaderNavProps) {
           </Button>
         )}
 
-        {typeof user !== 'undefined' ? (
+        {user !== null ? (
           <>
             <Button variant="ghost" asChild>
               <SignOutForm>Sair</SignOutForm>

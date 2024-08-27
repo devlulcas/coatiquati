@@ -22,17 +22,16 @@ export function SignOutForm({ children, className, formClassName }: SignOutFormP
       toast({
         title: state.fail,
         variant: 'destructive',
-      })
+      });
     }
 
     if (isOk(state)) {
       toast({
         title: 'Até a próxima :)',
         variant: 'success',
-      })
+      });
     }
   }, [state, toast]);
-
 
   return (
     <form action={formAction} className={cn(formClassName)}>

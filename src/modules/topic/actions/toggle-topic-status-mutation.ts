@@ -1,5 +1,6 @@
 'use server';
 
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -9,11 +10,11 @@ import { TopicRepository } from '../repositories/topic-repository';
 export async function toggleTopicStatusMutation(topicId: number): Promise<Result<string>> {
   const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     return fail('Usuário não autenticado.');
   }
 
-  if (!isAdminOrAbove(session.user.role)) {
+  if (!isAdminOrAbove(user.role)) {
     return fail('Somente administradores podem editar tópicos.');
   }
 
@@ -35,7 +36,7 @@ export async function toggleTopicStatusMutation(topicId: number): Promise<Result
   }
 
   revalidateTopics({
-    username: session.user.username,
+    username: user.username,
     trailId: topicResult.value.trailId,
     topicId: topicResult.value.id,
   });

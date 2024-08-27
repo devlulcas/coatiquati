@@ -1,5 +1,6 @@
 'use server';
 
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { type ContentNewCommentTable } from '@/modules/database/schema/comment';
@@ -11,7 +12,7 @@ import { newCommentSchema, type NewCommentSchema } from '../schemas/new-comment-
 export async function commentOnContentMutation(params: NewCommentSchema): Promise<Result<string>> {
   const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     return fail('Somente usuários logados podem comentar.');
   }
 
@@ -27,7 +28,7 @@ export async function commentOnContentMutation(params: NewCommentSchema): Promis
     db.query.contentCommentTable.findFirst({
       where: (fields, operators) => {
         return operators.and(
-          operators.eq(fields.authorId, session.userId),
+          operators.eq(fields.authorId, user.id),
           operators.gt(fields.createdAt, new Date(Date.now() - SIXTY_SECONDS)),
         );
       },
@@ -35,12 +36,12 @@ export async function commentOnContentMutation(params: NewCommentSchema): Promis
   );
 
   if (lastCommentResult.type === 'ok' && lastCommentResult.value) {
-    log.warn('Tentativa de comentar muito rápido', { userId: session.userId });
+    log.warn('Tentativa de comentar muito rápido', { userId: user.id });
     return fail('Espere 60 segundos para comentar novamente');
   }
 
   const newComment: ContentNewCommentTable = {
-    authorId: session.userId,
+    authorId: user.id,
     contentId: params.contentId,
     content: params.content,
     parentCommentId: params.parentCommentId,
@@ -51,12 +52,12 @@ export async function commentOnContentMutation(params: NewCommentSchema): Promis
   try {
     await commentRepository.addCommentInContent(newComment);
 
-    log.info('Comentário criado', { authorId: session.user.id, on: 'content', contentId: params.contentId });
+    log.info('Comentário criado', { authorId: user.id, on: 'content', contentId: params.contentId });
 
     return ok('Comentário criado com sucesso');
   } catch (error) {
     log.error('Erro ao criar comentário', {
-      authorId: session.user.id,
+      authorId: user.id,
       on: 'content',
       contentId: params.contentId,
       error,

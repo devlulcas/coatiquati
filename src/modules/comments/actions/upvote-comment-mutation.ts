@@ -1,5 +1,6 @@
 'use server';
 
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -9,14 +10,14 @@ import { CommentVoteRepository } from '../repositories/comment-vote-repository';
 export async function upvoteCommentMutation(commentId: number): Promise<Result<string>> {
   const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     log.warn('Tentativa de votar em comentário sem usuário logado.', { commentId });
     return fail('Somente usuários logados podem votar em comentários.');
   }
 
   const commentVoteRepository = new CommentVoteRepository();
 
-  const currentUserVote = await wrapAsyncInResult(commentVoteRepository.getUserVote(commentId, session.userId));
+  const currentUserVote = await wrapAsyncInResult(commentVoteRepository.getUserVote(commentId, user.id));
 
   if (currentUserVote.type === 'fail') {
     return fail('Erro ao buscar voto do usuário.');
@@ -24,14 +25,14 @@ export async function upvoteCommentMutation(commentId: number): Promise<Result<s
 
   try {
     if (currentUserVote.value === VOTES.UPVOTE) {
-      await commentVoteRepository.removeVote(commentId, session.userId);
+      await commentVoteRepository.removeVote(commentId, user.id);
       return ok('Voto removido.');
     }
 
-    await commentVoteRepository.upvote(commentId, session.userId);
+    await commentVoteRepository.upvote(commentId, user.id);
     return ok('Voto computado.');
   } catch (error) {
-    log.error('Erro ao votar em comentário.', { commentId, userId: session.userId, error });
+    log.error('Erro ao votar em comentário.', { commentId, userId: user.id, error });
     return fail('Erro ao votar em comentário.');
   }
 }

@@ -73,7 +73,7 @@ export async function getRichTextContentQuery(baseContentId: number): Promise<
       id: rteResult.value.id,
       baseContentId: rteResult.value.baseContentId,
       asJson: rteResult.value.asJson,
-      contentType: 'rich_text',
+      contentType: 'richText',
       createdAt: rteResult.value.createdAt,
       deletedAt: rteResult.value.deletedAt,
       updatedAt: rteResult.value.updatedAt,

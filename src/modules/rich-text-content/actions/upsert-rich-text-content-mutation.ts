@@ -1,5 +1,6 @@
 'use server';
 
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { RichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
@@ -9,7 +10,7 @@ import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 export async function upsertRichTextContentMutation(params: NewRichTextContentSchema): Promise<Result<number>> {
   const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     return fail('Usuário não autenticado');
   }
 
@@ -17,7 +18,7 @@ export async function upsertRichTextContentMutation(params: NewRichTextContentSc
 
   const newContentResult = await wrapAsyncInResult(
     richTextContentRepository.upsert(
-      { title: params.title, topicId: params.topicId, authorId: session.userId },
+      { title: params.title, topicId: params.topicId, authorId: user.id },
       params.content,
     ),
   );

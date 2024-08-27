@@ -13,7 +13,7 @@ import { useFormState } from 'react-dom';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { fail, isFail } from '@/shared/lib/result';
 
-type SignUpFormSchema = z.infer<typeof userSignUpSchema>
+type SignUpFormSchema = z.infer<typeof userSignUpSchema>;
 
 export function SignUpForm() {
   const form = useForm<SignUpFormSchema>({
@@ -31,9 +31,7 @@ export function SignUpForm() {
         >
           <h1 className="text-3xl font-bold">Cadastrar-se</h1>
 
-          {isFail(state) && (
-            <ErrorMessage className='my-3' message={state.fail} />
-          )}
+          {isFail(state) && <ErrorMessage className="my-3" message={state.fail} />}
 
           <FormField
             control={form.control}

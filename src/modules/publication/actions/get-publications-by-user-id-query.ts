@@ -10,7 +10,7 @@ export async function getPublicationsByUserIdQuery(userId: string): Promise<Resu
     where: (fields, op) => op.eq(fields.id, userId),
   });
 
-  if (!user || user.isBanned) {
+  if (!user || user.bannedAt) {
     log.warn('Usuário não encontrado ou banido', { userId });
     return ok([]);
   }

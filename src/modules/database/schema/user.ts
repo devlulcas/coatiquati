@@ -42,6 +42,8 @@ export const userTableRelations = relations(userTable, ({ one, many }) => ({
 
 export const sessionTable = sqliteTable('userSession', {
   id: text('id').primaryKey(),
-  user_id: text('user_id').notNull().references(() => userTable.id),
+  user_id: text('user_id')
+    .notNull()
+    .references(() => userTable.id),
   expires_at: blob('expires_at', { mode: 'bigint' }).notNull(),
 });

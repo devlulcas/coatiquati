@@ -1,11 +1,11 @@
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import coatiSvg from '@/shared/assets/images/coati.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HeaderNav } from './header-nav';
 
 export async function Header() {
-  const session = await getPageSession();
+  const { user } = await validateRequest();
 
   return (
     <header className="sticky top-0 z-50 h-[--header-height] border-b bg-background/50 backdrop-blur-lg">
@@ -18,7 +18,7 @@ export async function Header() {
         </Link>
 
         <div className="flex items-center space-x-2">
-          <HeaderNav user={session?.user} />
+          <HeaderNav user={user} />
         </div>
       </div>
     </header>

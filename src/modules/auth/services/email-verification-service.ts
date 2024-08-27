@@ -5,7 +5,7 @@ import { isWithinExpiration } from '../utils/time';
 export class EmailVerificationService {
   constructor(
     private emailVerificationTokenRepository: EmailVerificationTokenRepository = new EmailVerificationTokenRepository(),
-  ) { }
+  ) {}
 
   /**
    * Gera um token de verificação de email para o usuário.
@@ -36,7 +36,7 @@ export class EmailVerificationService {
       return null;
     }
 
-    const isExpired = !isWithinExpiration(storedToken.expiresAt.getTime())
+    const isExpired = !isWithinExpiration(storedToken.expiresAt.getTime());
 
     if (isExpired) {
       const now = Date.now();

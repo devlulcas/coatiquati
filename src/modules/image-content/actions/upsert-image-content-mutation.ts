@@ -1,5 +1,6 @@
 'use server';
 
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { ImageContentRepository } from '@/modules/image-content/repositories/image-content-repository';
 import {
@@ -12,7 +13,7 @@ import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 export async function upsertImageContentMutation(params: NewImageContentSchema): Promise<Result<number>> {
   const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     return fail('Usuário não autenticado');
   }
 
@@ -27,7 +28,7 @@ export async function upsertImageContentMutation(params: NewImageContentSchema):
 
   const newContentId = await wrapAsyncInResult(
     imageContentRepository.upsert(
-      { title: params.title, topicId: params.topicId, authorId: session.userId },
+      { title: params.title, topicId: params.topicId, authorId: user.id },
       { description: params.description, src: params.src },
     ),
   );

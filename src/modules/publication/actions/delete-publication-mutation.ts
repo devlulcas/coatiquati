@@ -1,6 +1,7 @@
 'use server';
 
-import { isAdminOrAbove } from '@/modules/auth/utils/is';
+import { validateRequest } from '@/modules/auth/services/lucia';
+import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { publicationMediaTable, publicationTable } from '@/modules/database/schema/publication';
 import { log } from '@/modules/logging/lib/pino';
@@ -10,7 +11,7 @@ import { eq } from 'drizzle-orm';
 export async function deletePublicationMutation(pubId: number): Promise<Result<string>> {
   const { user } = await validateRequest();
 
-  if (session === null) {
+  if (!isAuthenticated(user)) {
     return fail('Somente um usuário autenticado pode deletar publicações!');
   }
 
@@ -32,15 +33,15 @@ export async function deletePublicationMutation(pubId: number): Promise<Result<s
   }
 
   const publication = publicationResult.value;
-  const isAuthor = publication.authorId === session.userId;
-  const isModerator = isAdminOrAbove(session.user.role);
+  const isAuthor = publication.authorId === user.id;
+  const isModerator = isAdminOrAbove(user.role);
 
   if (!isAuthor && !isModerator) {
     return fail('Você não tem permissão para deletar esta publicação');
   }
 
   if (isModerator) {
-    log.info('Moderador deletando publicação', { pubId, moderatorId: session.userId });
+    log.info('Moderador deletando publicação', { pubId, moderatorId: user.id });
   }
 
   const result = await db.transaction(async tx => {

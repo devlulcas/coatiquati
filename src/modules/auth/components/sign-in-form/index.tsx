@@ -31,9 +31,7 @@ export function SignInForm() {
         >
           <h1 className="text-3xl font-bold">Entrar</h1>
 
-          {isFail(state) && (
-            <ErrorMessage className='my-3' message={state.fail} />
-          )}
+          {isFail(state) && <ErrorMessage className="my-3" message={state.fail} />}
 
           <FormField
             control={form.control}

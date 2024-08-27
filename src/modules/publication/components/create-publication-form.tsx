@@ -1,6 +1,7 @@
 'use client';
 
-import { UploadButton } from '@/modules/media/components/generic-upload-component-pack';
+import { ImageUploadDialogTrigger } from '@/modules/file/components/image-upload-dialog-trigger';
+import { uploadImageToGallery } from '@/modules/file/services/upload-image-to-gallery';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { getEmbedIDFromYoutubeUrl } from '@/modules/video-content/lib/youtube';
 import { Button } from '@/shared/components/ui/button';
@@ -21,7 +22,7 @@ import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { VideoOffIcon, XIcon } from 'lucide-react';
+import { ImageUpIcon, VideoOffIcon, XIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -221,28 +222,23 @@ function AddMediaDialog({
               )}
             </div>
 
-            <UploadButton
-              endpoint="textEditorImage"
-              onClientUploadComplete={res => {
-                if (typeof res === 'undefined' || res.length === 0) {
-                  return toast({
-                    title: 'Erro ao realizar upload',
-                    variant: 'destructive',
-                  });
-                }
-
-                const file = res.find(file => file.url.length > 0);
-
-                if (!file) {
-                  return toast({
-                    title: 'Erro ao realizar upload',
-                    variant: 'destructive',
-                  });
-                }
-
-                setUrl(file.url);
+            <ImageUploadDialogTrigger
+              onFailedUpload={error => {
+                toast({
+                  title: 'Erro ao realizar upload',
+                  description: error.message,
+                  variant: 'destructive',
+                });
               }}
-            />
+              uploadImage={uploadImageToGallery}
+              onSuccessfulUpload={data => {
+                setUrl(data.url);
+              }}
+            >
+              <Button className="flex items-center gap-2">
+                <ImageUpIcon /> Adicionar imagem
+              </Button>
+            </ImageUploadDialogTrigger>
           </TabsContent>
 
           <TabsContent
@@ -251,7 +247,7 @@ function AddMediaDialog({
           >
             <div
               className={cn(
-                'aspect-video w-full overflow-hidden rounded-lg ',
+                'aspect-video w-full overflow-hidden rounded-lg',
                 youtubeId ? 'bg-black' : 'bg-neutral-900',
               )}
             >

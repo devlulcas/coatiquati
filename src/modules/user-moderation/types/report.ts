@@ -6,7 +6,7 @@ export type Report = ReportSelect & {
     username: string;
     avatar: string;
     email: string;
-    isBanned: boolean;
+    bannedAt: Date | null;
   };
   reportedEntity: {
     id: number;
@@ -17,6 +17,6 @@ export type Report = ReportSelect & {
     username: string;
     avatar: string;
     email: string;
-    isBanned: boolean;
+    bannedAt: Date | null;
   };
 };

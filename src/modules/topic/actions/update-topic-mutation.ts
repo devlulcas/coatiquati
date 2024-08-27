@@ -1,5 +1,6 @@
 'use server';
 
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -11,11 +12,11 @@ import { type UpdateTopic } from '../types/topic';
 export async function updateTopicMutation(params: UpdateTopicSchema): Promise<Result<string>> {
   const { user } = await validateRequest();
 
-  if (!isAuthenticated(session)) {
+  if (!isAuthenticated(user)) {
     return fail('Você precisa estar autenticado para atualizar um tópico.');
   }
 
-  if (!isAdminOrAbove(session.user.role)) {
+  if (!isAdminOrAbove(user.role)) {
     return fail('Você precisa ser um administrador para atualizar um tópico.');
   }
 
@@ -26,7 +27,7 @@ export async function updateTopicMutation(params: UpdateTopicSchema): Promise<Re
   }
 
   const updatedTopic: UpdateTopic = {
-    contributorId: session.userId,
+    contributorId: user.id,
     id: validatedParams.data.id,
     title: validatedParams.data.title,
     description: validatedParams.data.description,
@@ -44,7 +45,7 @@ export async function updateTopicMutation(params: UpdateTopicSchema): Promise<Re
   }
 
   revalidateTopics({
-    username: session.user.username,
+    username: user.username,
     trailId: validatedParams.data.trailId,
     topicId: validatedParams.data.id,
   });

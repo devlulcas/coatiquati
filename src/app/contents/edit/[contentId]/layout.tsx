@@ -1,4 +1,4 @@
-import { getPageSession } from '@/modules/auth/utils/get-page-session';
+import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import { redirect } from 'next/navigation';
@@ -13,15 +13,13 @@ type EditContentLayoutProps = {
 export default async function EditContentLayout({ children, params }: EditContentLayoutProps) {
   const contentId = Number(params.contentId);
 
-  const session = await getPageSession();
-  if (!session) redirect('/sign-in');
-  const userId = session.user.id;
+  const { user } = await validateRequest();
+  if (!user) redirect('/sign-in');
 
   const baseContentRepository = new BaseContentRepository();
   const baseContentData = await baseContentRepository.getBaseContent(contentId);
 
-  const canEdit = isAdminOrAbove(session.user.role) || baseContentData.author.id === userId;
-
+  const canEdit = isAdminOrAbove(user.role) || baseContentData.author.id === user.id;
   if (!canEdit) redirect('/');
 
   return <div className="container py-8">{children}</div>;

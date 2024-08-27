@@ -11,7 +11,7 @@ export async function protectWithRedirect({ acceptRoles, redirectTo }: ProtectWi
   const { user } = await validateRequest();
 
   if (!user) {
-    return redirect(redirectTo || "/sign-in");
+    return redirect(redirectTo || '/sign-in');
   }
 
   if (acceptRoles && !acceptRoles.includes(user.role)) {

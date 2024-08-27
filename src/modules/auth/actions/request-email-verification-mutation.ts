@@ -5,10 +5,10 @@ import { VerifyAccountEmail } from '@/modules/email/components/verify-account-em
 import { emailToHtml } from '@/modules/email/lib/email-to-html';
 import { mailer } from '@/modules/email/lib/mail';
 import { log } from '@/modules/logging/lib/pino';
-import { EmailVerificationService } from '../services/email-verification-service';
-import { isAuthenticated } from '../utils/is';
-import { validateRequest } from '../services/lucia';
 import { fail, ok } from '@/shared/lib/result';
+import { EmailVerificationService } from '../services/email-verification-service';
+import { validateRequest } from '../services/lucia';
+import { isAuthenticated } from '../utils/is';
 
 export async function requestEmailVerificationMutation() {
   const { user } = await validateRequest();

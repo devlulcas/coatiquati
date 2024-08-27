@@ -39,7 +39,7 @@ export default async function ReportListItem({ report }: ReportListItemProps) {
           reportId={report.id}
           user={{
             username: report.user.username,
-            isBanned: report.user.isBanned,
+            bannedAt: report.user.bannedAt,
           }}
         />
 

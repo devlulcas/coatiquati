@@ -1,5 +1,7 @@
 'use server';
 
+import { validateRequest } from '@/modules/auth/services/lucia';
+import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { publicationMediaTable, publicationTable } from '@/modules/database/schema/publication';
 import { log } from '@/modules/logging/lib/pino';
@@ -10,11 +12,11 @@ import { createPublicationSchema, type CreatePublicationSchema } from '../schema
 export async function publishContentMutation(params: CreatePublicationSchema): Promise<Result<number>> {
   const { user } = await validateRequest();
 
-  if (session === null) {
+  if (!isAuthenticated(user)) {
     return fail('Somente um usuário autenticado pode fazer publicações!');
   }
 
-  if (session.user.isBanned) {
+  if (user.bannedAt) {
     return fail('Usuários banidos não podem fazer publicações!');
   }
 
@@ -28,7 +30,7 @@ export async function publishContentMutation(params: CreatePublicationSchema): P
   const lastPublication = await db
     .select({ at: publicationTable.updatedAt })
     .from(publicationTable)
-    .where(eq(publicationTable.authorId, session.userId))
+    .where(eq(publicationTable.authorId, user.id))
     .orderBy(desc(publicationTable.id))
     .get();
 
@@ -46,7 +48,7 @@ export async function publishContentMutation(params: CreatePublicationSchema): P
       try {
         const pub = await tx
           .insert(publicationTable)
-          .values({ authorId: session.userId, content: validatedParams.data.content })
+          .values({ authorId: user.id, content: validatedParams.data.content })
           .returning({ id: publicationTable.id })
           .get();
 

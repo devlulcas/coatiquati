@@ -1,7 +1,7 @@
 'use client';
 
+import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { newImageContentSchema } from '@/modules/image-content/schemas/new-image-content-schema';
-import { ImageUploaderInput } from '@/modules/media/components/image-uploader-input';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
@@ -33,10 +33,26 @@ export function ImageContentBaseForm({ onSubmit, className, defaultValues }: Ima
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex h-full flex-col gap-4', className)}
       >
-        <ImageUploaderInput
-          endpoint="newImageContent"
-          value={form.watch('src')}
-          setValue={form.setValue.bind(form, 'src')}
+        <FormField
+          control={form.control}
+          name="src"
+          render={() => (
+            <FormItem>
+              <FormLabel className="sr-only">Imagem</FormLabel>
+              <FormControl>
+                <ImageUploadArea
+                  onFailedUpload={error => {
+                    form.setError('src', error);
+                  }}
+                  onSuccessfulUpload={data => {
+                    form.setValue('src', data.url);
+                  }}
+                  defaultValue={{ src: form.watch('src') }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
 
         <FormField

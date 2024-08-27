@@ -22,7 +22,7 @@ type BanActionConfirmationDialogProps = {
   reportId: number;
   user: {
     username: string;
-    isBanned: boolean;
+    bannedAt: Date | null;
   };
 };
 
@@ -61,7 +61,7 @@ export function BanActionConfirmationDialog({ reportId, user }: BanActionConfirm
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button type="button" className="items-center space-x-2" size="sm">
-          {user.isBanned ? (
+          {user.bannedAt ? (
             <>
               Remover ban <BirdIcon className="h-4 w-4" />
             </>
@@ -77,7 +77,7 @@ export function BanActionConfirmationDialog({ reportId, user }: BanActionConfirm
         <AlertDialogHeader>
           <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
           <AlertDialogDescription>
-            {user.isBanned
+            {user.bannedAt
               ? `Você deseja remover o banimento de ${user.username}?`
               : `Você deseja banir ${user.username}?`}
           </AlertDialogDescription>
@@ -85,7 +85,7 @@ export function BanActionConfirmationDialog({ reportId, user }: BanActionConfirm
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
 
-          {user.isBanned ? (
+          {user.bannedAt ? (
             <AlertDialogAction onClick={() => unbanMutation.mutate({ username: user.username })}>
               Remover ban
             </AlertDialogAction>
