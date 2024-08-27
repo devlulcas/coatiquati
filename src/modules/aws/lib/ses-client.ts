@@ -1,7 +1,13 @@
 import { env } from '@/env';
-import { type MessageRejected, SendEmailCommand, SESClient } from '@aws-sdk/client-ses';
+import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses';
 
-const sesClient = new SESClient({ region: env.AWS_REGION });
+const sesClient = new SESClient({
+  region: env.AWS_REGION,
+  credentials: {
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: env.AWS_ACCESS_KEY,
+  },
+});
 
 type SendEmailCommandParams = {
   destination: {
@@ -41,4 +47,4 @@ const createSendEmailCommand = (params: SendEmailCommandParams) => {
   });
 };
 
-export { sesClient, createSendEmailCommand };
+export { createSendEmailCommand, sesClient };
