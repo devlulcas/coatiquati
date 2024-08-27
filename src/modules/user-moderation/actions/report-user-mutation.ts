@@ -4,7 +4,7 @@ import { validateRequest } from '@/modules/auth/services/lucia';
 import { db } from '@/modules/database/db';
 import { reportTable, type ReportInsert } from '@/modules/database/schema/report';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { desc, eq } from 'drizzle-orm';
 import type { ReportReason } from '../constants/report';
 import { createReportSchema, type CreateReportSchema } from '../schemas/create-report';
@@ -40,7 +40,7 @@ export async function reportUserMutation(params: CreateReportSchema): Promise<Re
       .get(),
   );
 
-  if (lastReportFromUserResult.type === 'fail') {
+  if (isFail(lastReportFromUserResult)) {
     return fail('Erro ao buscar reportes do usuário');
   }
 

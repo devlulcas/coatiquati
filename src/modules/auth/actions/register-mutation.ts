@@ -1,20 +1,20 @@
 'use server';
 
-import { hash } from '@node-rs/argon2';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { generateId } from 'lucia';
+import { env } from '@/env';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
-import { roles } from '../constants/roles';
-import { auth } from '../services/lucia';
-import { log } from '@/modules/logging/lib/pino';
-import { EmailVerificationService } from '../services/email-verification-service';
-import { fail, ok, type Result } from '@/shared/lib/result';
-import { env } from '@/env';
-import { mailer } from '@/modules/email/lib/mail';
-import { emailToHtml } from '@/modules/email/lib/email-to-html';
 import { VerifyAccountEmail } from '@/modules/email/components/verify-account-email';
+import { emailToHtml } from '@/modules/email/lib/email-to-html';
+import { mailer } from '@/modules/email/lib/mail';
+import { log } from '@/modules/logging/lib/pino';
+import { fail, ok, type Result } from '@/shared/lib/result';
+import { hash } from 'argon2';
+import { generateId } from 'lucia';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { roles } from '../constants/roles';
+import { EmailVerificationService } from '../services/email-verification-service';
+import { auth } from '../services/lucia';
 
 export async function registerMutation(_: any, formData: FormData): Promise<Result> {
   const username = formData.get('username');
@@ -35,7 +35,7 @@ export async function registerMutation(_: any, formData: FormData): Promise<Resu
   const passwordHash = await hash(password, {
     memoryCost: 19456,
     timeCost: 2,
-    outputLen: 32,
+    hashLength: 32,
     parallelism: 1,
   });
 

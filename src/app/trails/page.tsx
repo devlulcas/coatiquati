@@ -5,6 +5,7 @@ import coatiSvg from '@/shared/assets/images/coati.svg';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
+import { isFail } from '@/shared/lib/result';
 import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
 
@@ -23,7 +24,7 @@ export default async function Page({ searchParams }: PageProps) {
     take: Number(searchParams.take ?? '30'),
   });
 
-  if (trailsResult.type === 'fail') {
+  if (isFail(trailsResult)) {
     return <ErrorMessage message={trailsResult.fail} className="container my-8" />;
   }
 

@@ -42,7 +42,7 @@
 5. Execute as migrations
 
    ```sh
-    pnpm run migrate
+    pnpm run db:migrate
    ```
 
 6. Inicie o servidor
@@ -108,3 +108,9 @@ O algoritmo de recomendação de conteúdo para o feed "Para você" será basead
 Ainda preciso estudar mais sobre a implementação desse algoritmo, mas a ideia é que a sua rede de amigos, tags favoritas, upvotes, downvotes e comentários sejam usados para recomendar conteúdo para você.
 
 [TensorFlow.js](https://www.tensorflow.org/js) parece ser uma boa opção para implementar esse algoritmo.
+
+## Mais sobre as ferramentas utilizadas
+
+- [Next.js](https://nextjs.org/)
+- [Turso](https://turso.tech/)
+- [Lucia](https://lucia-auth.com/)

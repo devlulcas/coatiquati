@@ -1,7 +1,7 @@
 'use server';
 
 import { userSignInSchema } from '@/modules/auth/schemas/user-sign-in-schema';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { UserRepository } from '../repositories/user-repository';
 import { type UserProfile } from '../types/user';
 
@@ -18,7 +18,7 @@ export async function getUserProfileQuery(username: string): Promise<Result<User
 
   const profileResult = await wrapAsyncInResult(userRepository.getUserProfile(validatedParams.data.username));
 
-  if (profileResult.type === 'fail') {
+  if (isFail(profileResult)) {
     return fail('Erro ao buscar perfil de usuário');
   }
 

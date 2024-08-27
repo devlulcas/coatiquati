@@ -3,6 +3,7 @@ import { getCommentResponsesQuery } from '@/modules/comments/actions/get-comment
 import { CommentRepository } from '@/modules/comments/repositories/comment-repository';
 import type { Comment } from '@/modules/comments/types/comment';
 import { log } from '@/modules/logging/lib/pino';
+import { isFail } from '@/shared/lib/result';
 import { redirect } from 'next/navigation';
 import { NextResponse, type NextRequest } from 'next/server';
 
@@ -15,7 +16,7 @@ type RouteProps = {
 export const GET = async (_: NextRequest, { params }: RouteProps): Promise<NextResponse<Comment[]>> => {
   const comments = await getCommentResponsesQuery(Number(params.commentId));
 
-  if (comments.type === 'fail') {
+  if (isFail(comments)) {
     return NextResponse.json([], { status: 404 });
   }
 

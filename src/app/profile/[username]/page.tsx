@@ -10,7 +10,7 @@ import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Separator } from '@/shared/components/ui/separator';
-import { unwrapOr } from '@/shared/lib/result';
+import { isFail, unwrapOr } from '@/shared/lib/result';
 import { StarsIcon } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -24,7 +24,7 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const profileResult = await getUserProfileQuery(decodeURIComponent(params.username));
 
-  if (profileResult.type === 'fail') {
+  if (isFail(profileResult)) {
     return <ErrorMessage message={profileResult.fail} className="container my-4" />;
   }
 
@@ -104,7 +104,7 @@ export default async function Page({ params }: PageProps) {
       <section className="mt-4">
         <h2 className="text-xl font-bold">Trilhas inscritas</h2>
 
-        {subscribedTrailsResult.type === 'fail' && <ErrorMessage message={subscribedTrailsResult.fail} />}
+        {isFail(subscribedTrailsResult) && <ErrorMessage message={subscribedTrailsResult.fail} />}
 
         {subscribedTrails.length === 0 && (
           <p>Parece que {profile.username} ainda não se inscreveu em nenhuma trilha.</p>

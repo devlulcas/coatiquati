@@ -1,7 +1,7 @@
 import { env } from '@/env';
 import type { CreatePresignedURLFn, DeleteFileByKeyFn, HeadFileByKeyFn } from '@/modules/file/lib/storage';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult } from '@/shared/lib/result';
 import { nanoid } from '@/shared/utils/nanoid';
 import { DeleteObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -56,7 +56,7 @@ export const deleteFileCommand: DeleteFileByKeyFn = async (key: string) => {
     ),
   );
 
-  if (deleteObjectResult.type === 'fail') {
+  if (isFail(deleteObjectResult)) {
     return fail('Falha ao remover arquivo com chave: ' + key);
   }
 
@@ -93,5 +93,5 @@ export const headFileCommand: HeadFileByKeyFn = async (key: string) => {
 };
 
 export function getURL(key: string) {
-  return `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/${key}`;
+  return `https://${env.S3_BUCKET}.s3.amazonaws.com/${key}`;
 }

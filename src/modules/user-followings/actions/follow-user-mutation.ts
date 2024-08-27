@@ -5,7 +5,7 @@ import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { userFollowerTable } from '@/modules/database/schema/user-follower';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { currentUserIsFollowingQuery } from './current-user-is-following-query';
@@ -25,7 +25,7 @@ export async function followUserMutation(userId: string): Promise<Result<string>
     }),
   );
 
-  if (userToFollowResult.type === 'fail' || !userToFollowResult.value) {
+  if (isFail(userToFollowResult) || !userToFollowResult.value) {
     return fail('Usuário não encontrado');
   }
 

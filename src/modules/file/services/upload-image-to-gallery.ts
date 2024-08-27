@@ -30,32 +30,24 @@ export async function uploadImageToGallery(image: ImageInput): Promise<UploadIma
   if (!uploadResponse.ok) throw new Error('Erro ao fazer upload da imagem');
 
   const response = await fetch('/api/file-upload', {
-    method: 'POST',
+    method: 'PUT',
     body: JSON.stringify({
       key: presignedUrl.key,
       description: image.alt,
     }),
   });
 
-  const json = (await response.json()) as Result<{ url: string; description: string }>;
+  const json = (await response.json()) as Result<string>;
 
   if (isFail(json)) {
     throw new Error(json.fail);
   }
 
-  console.log({
-    id: presignedUrl.key,
-    url: json.value.url,
-    height: image.height,
-    width: image.width,
-    alt: json.value.description,
-  });
-
   return {
     id: presignedUrl.key,
-    url: json.value.url,
+    url: json.value,
     height: image.height,
     width: image.width,
-    alt: json.value.description,
+    alt: image.alt,
   };
 }

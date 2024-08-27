@@ -11,7 +11,7 @@ export async function createPresignedURLHandler(request: Request) {
   const { user } = await validateRequest();
 
   if (!user) {
-    return new Response(JSON.stringify(fail('Somente usuários logados podem fazer upload de arquivos')), {
+    return Response.json(fail('Somente usuários logados podem fazer upload de arquivos'), {
       status: 401,
       headers: {
         'Content-type': 'application/json',
@@ -28,7 +28,7 @@ export async function createPresignedURLHandler(request: Request) {
     const errors = Object.values(flat.fieldErrors).flat();
     const message = formatter.format(errors);
 
-    return new Response(JSON.stringify(fail(message)), {
+    return Response.json(fail(message), {
       status: 400,
       headers: {
         'Content-type': 'application/json',
@@ -69,7 +69,7 @@ export async function createPresignedURLHandler(request: Request) {
 
   if (isFail(result)) {
     log.error(result);
-    return new Response(JSON.stringify(fail('Algo deu errado ao criar url de upload')), {
+    return Response.json(fail('Algo deu errado ao criar url de upload'), {
       status: 500,
       headers: {
         'Content-type': 'application/json',

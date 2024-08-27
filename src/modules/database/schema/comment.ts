@@ -11,7 +11,7 @@ export const contentCommentTable = sqliteTable(
   'comment',
   {
     id: integer('id').primaryKey().notNull(),
-    contentId: integer('contenId')
+    contentId: integer('contentId')
       .notNull()
       .references(() => contentTable.id, {
         onDelete: 'cascade',
@@ -24,7 +24,7 @@ export const contentCommentTable = sqliteTable(
         onUpdate: 'cascade',
       }),
     content: text('content').notNull(),
-    parentCommentId: integer('parenCommenId'),
+    parentCommentId: integer('parentCommentId'),
     ...tableTimestampColumns,
   },
   table => ({

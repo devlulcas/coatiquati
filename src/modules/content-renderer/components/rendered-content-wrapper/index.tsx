@@ -6,6 +6,7 @@ import type { Contributor } from '@/modules/user/types/user';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Separator } from '@/shared/components/ui/separator';
+import { isFail } from '@/shared/lib/result';
 import { EllipsisIcon } from 'lucide-react';
 import { ContentAuthorProfileLink } from './content-author-profile-link';
 import { EditContentButton } from './edit-content-button';
@@ -23,7 +24,7 @@ type RenderedContentWrapperProps = {
 export async function RenderedContentWrapper({ children, title, by, content }: RenderedContentWrapperProps) {
   const commentsResult = await getCommentsOnContentQuery(content.id);
 
-  if (commentsResult.type === 'fail') {
+  if (isFail(commentsResult)) {
     return <ErrorMessage message={commentsResult.fail} />;
   }
 

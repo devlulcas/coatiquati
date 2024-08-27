@@ -5,7 +5,7 @@ import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { RichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
 import { type NewRichTextContentSchema } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
-import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertRichTextContentMutation(params: NewRichTextContentSchema): Promise<Result<number>> {
   const { user } = await validateRequest();
@@ -23,7 +23,7 @@ export async function upsertRichTextContentMutation(params: NewRichTextContentSc
     ),
   );
 
-  if (newContentResult.type === 'fail') {
+  if (isFail(newContentResult)) {
     log.error('Falha ao alterar conteúdo de texto rico', newContentResult.fail);
     return fail('Falha ao alterar textual');
   }

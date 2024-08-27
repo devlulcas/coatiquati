@@ -1,6 +1,8 @@
 import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import type { User } from '@/modules/user/types/user';
+import { cn } from '@/shared/utils/cn';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { CheckCircle2Icon, DotIcon, EllipsisIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,9 +14,27 @@ type PublicationCardProps = {
   publication: Publication;
 };
 
-export function PublicationCard({ author, publication }: PublicationCardProps) {
+const publicationCardVariant = cva('flex border gap-4 bg-background/50 p-4', {
+  variants: {
+    variant: {
+      single: 'rounded',
+      top: 'rounded-t border-b-0',
+      middle: 'border-b-0 border-t-0',
+      bottom: 'rounded-b border-t-0',
+    },
+  },
+  defaultVariants: {
+    variant: 'single',
+  },
+});
+
+export function PublicationCard({
+  author,
+  publication,
+  variant,
+}: PublicationCardProps & VariantProps<typeof publicationCardVariant>) {
   return (
-    <article className="flex gap-4 bg-background/50 p-4">
+    <article className={cn(publicationCardVariant({ variant }))}>
       <Link href={createProfileUrl(author.username)}>
         <Image src={author.avatar} alt={author.username} width={40} height={40} className="rounded-full" />
       </Link>

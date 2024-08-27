@@ -231,7 +231,7 @@ function contentToRTEMapper(content: any): ContentWithRichTextPreview {
     author: content.author,
     contributors: content.contributors,
     createdAt: content.createdAt,
-    contentType: 'rich_text',
+    contentType: 'richText',
     id: content.id,
     updatedAt: content.updatedAt,
     deletedAt: content.deletedAt,

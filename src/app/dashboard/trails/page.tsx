@@ -7,6 +7,7 @@ import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
 import { contentStatus } from '@/shared/constants/content-status';
+import { isFail } from '@/shared/lib/result';
 import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
 
@@ -24,7 +25,7 @@ export default async function Page({ searchParams }: PageProps) {
     status: searchParams.status === 'all' ? undefined : searchParams.status,
   });
 
-  if (trailsResult.type === 'fail') {
+  if (isFail(trailsResult)) {
     return <ErrorMessage message={trailsResult.fail} className="container my-8" />;
   }
 

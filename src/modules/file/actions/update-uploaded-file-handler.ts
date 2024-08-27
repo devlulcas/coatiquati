@@ -11,7 +11,7 @@ export async function updateUploadedFileHandler(request: Request) {
   const { user } = await validateRequest();
 
   if (!user) {
-    return new Response(JSON.stringify(fail('Somente usuários logados podem fazer upload de arquivos')), {
+    return Response.json(fail('Somente usuários logados podem fazer upload de arquivos'), {
       status: 401,
       headers: {
         'Content-type': 'application/json',
@@ -22,7 +22,7 @@ export async function updateUploadedFileHandler(request: Request) {
   const json = await request.json();
 
   if (!json.key) {
-    return new Response(JSON.stringify(fail('Chave de arquivo ausente')), {
+    return Response.json(fail('Chave de arquivo ausente'), {
       status: 400,
       headers: {
         'Content-type': 'application/json',
@@ -70,7 +70,7 @@ export async function updateUploadedFileHandler(request: Request) {
   });
 
   if (isFail(updated)) {
-    return new Response(JSON.stringify(fail('Algo deu errado para salvar o arquivo')), {
+    return Response.json(fail('Algo deu errado para salvar o arquivo'), {
       status: 400,
       headers: {
         'Content-type': 'application/json',
@@ -80,5 +80,5 @@ export async function updateUploadedFileHandler(request: Request) {
 
   const url = storage.getURLFromKey(json.key);
 
-  return Response.json(JSON.stringify(ok(url)));
+  return Response.json(ok(url));
 }

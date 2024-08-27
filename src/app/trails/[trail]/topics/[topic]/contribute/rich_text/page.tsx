@@ -1,6 +1,7 @@
 import { NewRichTextContentForm } from '@/modules/rich-text-content/components/new-rich-text-content-form';
 import { getTopicQuery } from '@/modules/topic/actions/get-topic-query';
 import { ErrorMessage } from '@/shared/components/common/error-message';
+import { isFail } from '@/shared/lib/result';
 
 type PageProps = {
   params: {
@@ -12,7 +13,7 @@ export default async function Page({ params }: PageProps) {
   const topicId = Number(params.topic);
   const topicResult = await getTopicQuery(topicId);
 
-  if (topicResult.type === 'fail') {
+  if (isFail(topicResult)) {
     return <ErrorMessage message={topicResult.fail} className="container my-8" />;
   }
 

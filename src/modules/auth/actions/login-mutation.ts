@@ -2,12 +2,12 @@
 
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
+import { fail, type Result } from '@/shared/lib/result';
+import { verify } from 'argon2';
 import { eq } from 'drizzle-orm';
-import { verify } from '@node-rs/argon2';
-import { auth } from '../services/lucia';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { fail, type Result } from '@/shared/lib/result';
+import { auth } from '../services/lucia';
 
 export async function loginMutation(_: any, formData: FormData): Promise<Result> {
   const username = formData.get('username');
@@ -28,12 +28,7 @@ export async function loginMutation(_: any, formData: FormData): Promise<Result>
     return fail('Nome de usuário ou senha incorretos');
   }
 
-  const validPassword = await verify(existingUser.password_hash, password, {
-    memoryCost: 19456,
-    timeCost: 2,
-    outputLen: 32,
-    parallelism: 1,
-  });
+  const validPassword = await verify(existingUser.password_hash, password);
 
   if (!validPassword) {
     return fail('Nome de usuário ou senha incorretos');

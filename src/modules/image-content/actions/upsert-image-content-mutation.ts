@@ -8,7 +8,7 @@ import {
   type NewImageContentSchema,
 } from '@/modules/image-content/schemas/new-image-content-schema';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertImageContentMutation(params: NewImageContentSchema): Promise<Result<number>> {
   const { user } = await validateRequest();
@@ -33,7 +33,7 @@ export async function upsertImageContentMutation(params: NewImageContentSchema):
     ),
   );
 
-  if (newContentId.type === 'fail') {
+  if (isFail(newContentId)) {
     log.error('Falha ao alterar conteúdo de imagem.', newContentId.fail);
     return fail('Falha ao alterar conteúdo de imagem.');
   }

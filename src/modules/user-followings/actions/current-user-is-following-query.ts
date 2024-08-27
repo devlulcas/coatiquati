@@ -3,7 +3,7 @@
 import { db } from '@/modules/database/db';
 import { userFollowerTable } from '@/modules/database/schema/user-follower';
 import { log } from '@/modules/logging/lib/pino';
-import { ok, wrapAsyncInResult, type Ok } from '@/shared/lib/result';
+import { isFail, ok, wrapAsyncInResult, type Ok } from '@/shared/lib/result';
 import { and, eq } from 'drizzle-orm';
 
 export async function currentUserIsFollowingQuery(userId: string, followerId?: string): Promise<Ok<boolean>> {
@@ -17,7 +17,7 @@ export async function currentUserIsFollowingQuery(userId: string, followerId?: s
       .get(),
   );
 
-  if (isAlreadyFollowing.type === 'fail') {
+  if (isFail(isAlreadyFollowing)) {
     log.error('Erro ao buscar se usuário já está seguindo', isAlreadyFollowing.fail);
   }
 

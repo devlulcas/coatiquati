@@ -3,7 +3,7 @@
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidateTopics } from '../lib/revalidate-topic';
 import { TopicRepository } from '../repositories/topic-repository';
 import { updateTopicSchema, type UpdateTopicSchema } from '../schemas/edit-topic-schema';
@@ -39,7 +39,7 @@ export async function updateTopicMutation(params: UpdateTopicSchema): Promise<Re
   const topicRepository = new TopicRepository();
   const topicResult = await wrapAsyncInResult(topicRepository.updateTopic(updatedTopic));
 
-  if (topicResult.type === 'fail') {
+  if (isFail(topicResult)) {
     log.error('Falha ao atualizar um tópico.', topicResult.fail);
     return fail('Falha ao atualizar um tópico.');
   }

@@ -3,7 +3,7 @@
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidateTrails } from '../lib/revalidate-trail';
 import { TrailRepository } from '../repositories/trail-repository';
 import { updateTrailSchema, type UpdateTrailSchema } from '../schemas/edit-trail-schema';
@@ -40,7 +40,7 @@ export async function updateTrailMutation(params: UpdateTrailSchema): Promise<Re
 
   const trailResult = await wrapAsyncInResult(trailRepository.updateTrail(updatedTrail));
 
-  if (trailResult.type === 'fail') {
+  if (isFail(trailResult)) {
     return fail('Falha ao editar trilha.');
   }
 

@@ -3,6 +3,7 @@ import { TopicsTable } from '@/modules/topic/components/topics-table';
 import { getTrailByIdQuery } from '@/modules/trail/actions/get-trail-by-id-query';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
 import { ErrorMessage } from '@/shared/components/common/error-message';
+import { isFail } from '@/shared/lib/result';
 
 type PageProps = {
   params: {
@@ -15,7 +16,7 @@ export default async function Page({ params }: PageProps) {
 
   const trailResult = await getTrailByIdQuery(trailId);
 
-  if (trailResult.type === 'fail') {
+  if (isFail(trailResult)) {
     return <ErrorMessage message={trailResult.fail} className="container my-8" />;
   }
 

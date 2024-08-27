@@ -3,7 +3,7 @@
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidateTopics } from '../lib/revalidate-topic';
 import { TopicRepository } from '../repositories/topic-repository';
 
@@ -22,7 +22,7 @@ export async function toggleTopicStatusMutation(topicId: number): Promise<Result
 
   const topicResult = await wrapAsyncInResult(topicRepository.getTopicById(topicId, true));
 
-  if (topicResult.type === 'fail') {
+  if (isFail(topicResult)) {
     log.error('Falha ao buscar tópico.', topicResult.fail);
     return fail('Falha ao buscar tópico.');
   }

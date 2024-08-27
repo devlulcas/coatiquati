@@ -3,6 +3,7 @@ import ReportListItem from '@/modules/user-moderation/components/report-list-ite
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
+import { isFail } from '@/shared/lib/result';
 import { TrashIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -28,7 +29,7 @@ export default async function Page(props: PageProps) {
           </Button>
         </form>
 
-        {reportsResult.type === 'fail' ? (
+        {isFail(reportsResult) ? (
           <ErrorMessage message={reportsResult.fail} className="mt-4" />
         ) : (
           <ul className="mt-4 flex flex-col gap-1 divide-y-2">

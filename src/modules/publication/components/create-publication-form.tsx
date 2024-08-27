@@ -1,7 +1,6 @@
 'use client';
 
-import { ImageUploadDialogTrigger } from '@/modules/file/components/image-upload-dialog-trigger';
-import { uploadImageToGallery } from '@/modules/file/services/upload-image-to-gallery';
+import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { getEmbedIDFromYoutubeUrl } from '@/modules/video-content/lib/youtube';
 import { Button } from '@/shared/components/ui/button';
@@ -23,7 +22,6 @@ import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutati
 import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ImageUpIcon, VideoOffIcon, XIcon } from 'lucide-react';
-import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { publishContentMutation } from '../actions/publish-content-mutation';
@@ -193,9 +191,9 @@ function AddMediaDialog({
       <DialogTrigger asChild>
         <button
           type="button"
-          className="flex h-32 w-32 items-center justify-center rounded-md border bg-background/50 text-foreground shadow-md transition-colors hover:bg-background/75"
+          className="flex h-24 w-24 items-center justify-center rounded-md border bg-background/50 text-foreground shadow-md transition-colors hover:bg-background/75"
         >
-          Adicionar mídia
+          <ImageUpIcon />
         </button>
       </DialogTrigger>
 
@@ -207,38 +205,23 @@ function AddMediaDialog({
           </TabsList>
 
           <TabsContent
-            className="flex h-72 flex-col items-center justify-center gap-2 data-[state=inactive]:hidden data-[state=inactive]:h-0"
+            className="flex h-80 flex-col items-center justify-center gap-2 data-[state=inactive]:hidden data-[state=inactive]:h-0"
             value="image"
           >
-            <div className="flex w-full items-center justify-center">
-              {URL.canParse(url) && (
-                <Image
-                  src={url}
-                  alt={description || 'Imagem'}
-                  className="aspect-video w-fit overflow-hidden rounded"
-                  width={300}
-                  height={300}
-                />
-              )}
+            <div className="py-2">
+              <ImageUploadArea
+                onFailedUpload={error => {
+                  toast({
+                    title: 'Erro ao realizar upload',
+                    description: error.message,
+                    variant: 'destructive',
+                  });
+                }}
+                onSuccessfulUpload={data => {
+                  setUrl(data.url);
+                }}
+              />
             </div>
-
-            <ImageUploadDialogTrigger
-              onFailedUpload={error => {
-                toast({
-                  title: 'Erro ao realizar upload',
-                  description: error.message,
-                  variant: 'destructive',
-                });
-              }}
-              uploadImage={uploadImageToGallery}
-              onSuccessfulUpload={data => {
-                setUrl(data.url);
-              }}
-            >
-              <Button className="flex items-center gap-2">
-                <ImageUpIcon /> Adicionar imagem
-              </Button>
-            </ImageUploadDialogTrigger>
           </TabsContent>
 
           <TabsContent
@@ -274,7 +257,7 @@ function AddMediaDialog({
 
         <Input type="text" placeholder="Descrição" value={description} onChange={e => setDescription(e.target.value)} />
 
-        <Button className="mt-4 w-full" onClick={save}>
+        <Button className="mt-4 w-full" onClick={save} disabled={!url}>
           Adicionar
         </Button>
       </DialogContent>

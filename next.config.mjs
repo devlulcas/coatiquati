@@ -1,3 +1,9 @@
+import { config } from 'dotenv';
+config({ path: ['.env.local'] });
+
+const s3hostname = process.env.S3_BUCKET + '.s3.amazonaws.com';
+console.log(s3hostname);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -14,6 +20,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'placekitten.com',
+      },
+      {
+        protocol: 'https',
+        hostname: s3hostname,
       },
     ],
   },

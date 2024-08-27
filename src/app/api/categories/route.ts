@@ -1,5 +1,6 @@
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { searchTrailCategoriesQuery } from '@/modules/category/actions/search-trails-categories-query';
+import { isFail } from '@/shared/lib/result';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export const GET = async (request: NextRequest) => {
@@ -17,7 +18,7 @@ export const GET = async (request: NextRequest) => {
 
   const categoriesResult = await searchTrailCategoriesQuery({ skip, take, search });
 
-  if (categoriesResult.type === 'fail') {
+  if (isFail(categoriesResult)) {
     return NextResponse.json(
       {
         data: {

@@ -5,6 +5,7 @@ import { ErrorMessage } from '@/shared/components/common/error-message';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import { isFail } from '@/shared/lib/result';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { CheckIcon, MailIcon, SkullIcon, TrashIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -56,7 +57,7 @@ export default async function FeedbackPage(props: PageProps) {
           </Button>
         </form>
 
-        {feedbackResult.type === 'fail' ? (
+        {isFail(feedbackResult) ? (
           <ErrorMessage message={feedbackResult.fail} className="mt-4" />
         ) : (
           <ul className="mt-4 flex flex-col divide-y divide-primary/15 overflow-clip rounded">

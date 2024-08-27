@@ -2,7 +2,7 @@
 
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAuthenticated } from '@/modules/auth/utils/is';
-import { fail, ok, wrapAsyncInResult, wrapInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, wrapInResult, type Result } from '@/shared/lib/result';
 import { readFileSync } from 'fs';
 import { revalidatePath } from 'next/cache';
 import path from 'path';
@@ -40,7 +40,7 @@ export async function createNewFeedbackMutation(feedback: NewFeedbackFormValues)
     }),
   );
 
-  if (feedbackResult.type === 'fail') {
+  if (isFail(feedbackResult)) {
     return fail('Falha ao criar feedback.');
   }
 

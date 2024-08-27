@@ -19,13 +19,7 @@ export function PublicationMediaGrid({ medias }: { medias: PublicationMedia[] })
   const length = medias.length;
 
   return (
-    <div
-      className={cn(
-        'mt-4 grid gap-2',
-        length === 1 ? 'grid-cols-1' : 'grid-cols-2',
-        length <= 2 ? 'grid-rows-1' : 'grid-rows-2',
-      )}
-    >
+    <div className={cn('mt-4 grid gap-2')}>
       {medias.map((media, index) => (
         <div
           key={media.id}

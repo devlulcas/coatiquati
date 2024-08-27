@@ -2,7 +2,7 @@
 
 import { db } from '@/modules/database/db';
 import { log } from '@/modules/logging/lib/pino';
-import { ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import type { Publication } from '../types/publication';
 
 export async function getPublicationsByUserIdQuery(userId: string): Promise<Result<Publication[]>> {
@@ -34,7 +34,7 @@ export async function getPublicationsByUserIdQuery(userId: string): Promise<Resu
     }),
   );
 
-  if (pubs.type === 'fail') {
+  if (isFail(pubs)) {
     log.error('Falha ao buscar publicações', { userId });
     return pubs;
   }

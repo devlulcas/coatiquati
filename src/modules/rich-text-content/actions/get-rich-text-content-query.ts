@@ -5,7 +5,7 @@ import { log } from '@/modules/logging/lib/pino';
 import { RichTextContentRepository } from '@/modules/rich-text-content/repositories/rich-text-content-repository';
 import type { Topic } from '@/modules/topic/types/topic';
 import type { Trail } from '@/modules/trail/types/trail';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function getRichTextContentQuery(baseContentId: number): Promise<
   Result<{
@@ -18,7 +18,7 @@ export async function getRichTextContentQuery(baseContentId: number): Promise<
 
   const rteResult = await wrapAsyncInResult(richTextContentRepository.getByContentId(baseContentId));
 
-  if (rteResult.type === 'fail') {
+  if (isFail(rteResult)) {
     log.error('Falha ao buscar conteúdo de texto rico', rteResult.fail);
     return fail('Falha ao buscar conteúdo textual');
   }
@@ -64,7 +64,7 @@ export async function getRichTextContentQuery(baseContentId: number): Promise<
     title: rteResult.value.content.title,
     active: rteResult.value.content.active,
     author: rteResult.value.content.author,
-    contentType: 'rich_text',
+    contentType: 'richText',
     contributors: rteResult.value.content.contributors,
     createdAt: rteResult.value.content.createdAt,
     deletedAt: rteResult.value.content.deletedAt,

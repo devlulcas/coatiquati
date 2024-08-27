@@ -1,11 +1,11 @@
 {
-  "version": "5",
+  "version": "6",
   "dialect": "sqlite",
-  "id": "aaa6f20b-3774-49dc-a4a7-914166b92536",
+  "id": "fc0a1c2f-3758-4aef-a5a7-87b38b1eea36",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "comment_vote": {
-      "name": "comment_vote",
+    "commenVote": {
+      "name": "commenVote",
       "columns": {
         "id": {
           "name": "id",
@@ -14,15 +14,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "comment_id": {
-          "name": "comment_id",
+        "commenId": {
+          "name": "commenId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "useId": {
+          "name": "useId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -35,24 +35,24 @@
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -61,20 +61,20 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "comment_vote_comment_id_comment_id_fk": {
-          "name": "comment_vote_comment_id_comment_id_fk",
-          "tableFrom": "comment_vote",
+        "commenVote_commenId_comment_id_fk": {
+          "name": "commenVote_commenId_comment_id_fk",
+          "tableFrom": "commenVote",
           "tableTo": "comment",
-          "columnsFrom": ["comment_id"],
+          "columnsFrom": ["commenId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
-        "comment_vote_user_id_user_id_fk": {
-          "name": "comment_vote_user_id_user_id_fk",
-          "tableFrom": "comment_vote",
+        "commenVote_useId_user_id_fk": {
+          "name": "commenVote_useId_user_id_fk",
+          "tableFrom": "commenVote",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["useId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
@@ -93,15 +93,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "content_id": {
-          "name": "content_id",
+        "contentId": {
+          "name": "contentId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "useId": {
+          "name": "useId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -114,31 +114,31 @@
           "notNull": true,
           "autoincrement": false
         },
-        "parent_comment_id": {
-          "name": "parent_comment_id",
+        "parentCommentId": {
+          "name": "parentCommentId",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -147,29 +147,29 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "comment_content_id_content_id_fk": {
-          "name": "comment_content_id_content_id_fk",
+        "comment_contentId_content_id_fk": {
+          "name": "comment_contentId_content_id_fk",
           "tableFrom": "comment",
           "tableTo": "content",
-          "columnsFrom": ["content_id"],
+          "columnsFrom": ["contentId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
-        "comment_user_id_user_id_fk": {
-          "name": "comment_user_id_user_id_fk",
+        "comment_useId_user_id_fk": {
+          "name": "comment_useId_user_id_fk",
           "tableFrom": "comment",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["useId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
-        "comment_parent_comment_id_comment_id_fk": {
-          "name": "comment_parent_comment_id_comment_id_fk",
+        "comment_parentCommentId_comment_id_fk": {
+          "name": "comment_parentCommentId_comment_id_fk",
           "tableFrom": "comment",
           "tableTo": "comment",
-          "columnsFrom": ["parent_comment_id"],
+          "columnsFrom": ["parentCommentId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -178,11 +178,11 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "content_image": {
-      "name": "content_image",
+    "contentImage": {
+      "name": "contentImage",
       "columns": {
-        "content_type": {
-          "name": "content_type",
+        "contentType": {
+          "name": "contentType",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -210,31 +210,31 @@
           "notNull": true,
           "autoincrement": false
         },
-        "base_content_id": {
-          "name": "base_content_id",
+        "baseContentId": {
+          "name": "baseContentId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -243,11 +243,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "content_image_base_content_id_content_id_fk": {
-          "name": "content_image_base_content_id_content_id_fk",
-          "tableFrom": "content_image",
+        "contentImage_baseContentId_content_id_fk": {
+          "name": "contentImage_baseContentId_content_id_fk",
+          "tableFrom": "contentImage",
           "tableTo": "content",
-          "columnsFrom": ["base_content_id"],
+          "columnsFrom": ["baseContentId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
@@ -256,26 +256,26 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "content_rich_text": {
-      "name": "content_rich_text",
+    "contentRichText": {
+      "name": "contentRichText",
       "columns": {
-        "content_type": {
-          "name": "content_type",
+        "contentType": {
+          "name": "contentType",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'rich_text'"
+          "default": "'richText'"
         },
-        "preview_as_json": {
-          "name": "preview_as_json",
+        "previewAsJson": {
+          "name": "previewAsJson",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "as_json": {
-          "name": "as_json",
+        "asJson": {
+          "name": "asJson",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -288,31 +288,31 @@
           "notNull": true,
           "autoincrement": false
         },
-        "base_content_id": {
-          "name": "base_content_id",
+        "baseContentId": {
+          "name": "baseContentId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -321,11 +321,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "content_rich_text_base_content_id_content_id_fk": {
-          "name": "content_rich_text_base_content_id_content_id_fk",
-          "tableFrom": "content_rich_text",
+        "contentRichText_baseContentId_content_id_fk": {
+          "name": "contentRichText_baseContentId_content_id_fk",
+          "tableFrom": "contentRichText",
           "tableTo": "content",
-          "columnsFrom": ["base_content_id"],
+          "columnsFrom": ["baseContentId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
@@ -359,38 +359,38 @@
           "autoincrement": false,
           "default": true
         },
-        "topic_id": {
-          "name": "topic_id",
+        "topicId": {
+          "name": "topicId",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -399,20 +399,20 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "content_topic_id_topic_id_fk": {
-          "name": "content_topic_id_topic_id_fk",
+        "content_topicId_topic_id_fk": {
+          "name": "content_topicId_topic_id_fk",
           "tableFrom": "content",
           "tableTo": "topic",
-          "columnsFrom": ["topic_id"],
+          "columnsFrom": ["topicId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
-        "content_user_id_user_id_fk": {
-          "name": "content_user_id_user_id_fk",
+        "content_userId_user_id_fk": {
+          "name": "content_userId_user_id_fk",
           "tableFrom": "content",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "cascade"
@@ -421,11 +421,11 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "content_video": {
-      "name": "content_video",
+    "contentVideo": {
+      "name": "contentVideo",
       "columns": {
-        "content_type": {
-          "name": "content_type",
+        "contentType": {
+          "name": "contentType",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -453,31 +453,31 @@
           "notNull": true,
           "autoincrement": false
         },
-        "base_content_id": {
-          "name": "base_content_id",
+        "baseContentId": {
+          "name": "baseContentId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -486,11 +486,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "content_video_base_content_id_content_id_fk": {
-          "name": "content_video_base_content_id_content_id_fk",
-          "tableFrom": "content_video",
+        "contentVideo_baseContentId_content_id_fk": {
+          "name": "contentVideo_baseContentId_content_id_fk",
+          "tableFrom": "contentVideo",
           "tableTo": "content",
-          "columnsFrom": ["base_content_id"],
+          "columnsFrom": ["baseContentId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
@@ -499,135 +499,135 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "content_contribution": {
-      "name": "content_contribution",
+    "contentContribution": {
+      "name": "contentContribution",
       "columns": {
-        "content_id": {
-          "name": "content_id",
+        "contentId": {
+          "name": "contentId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "contributed_at": {
-          "name": "contributed_at",
+        "contributedAt": {
+          "name": "contributedAt",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP"
+          "default": "CURRENTTIMESTAMP"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "content_contribution_content_id_content_id_fk": {
-          "name": "content_contribution_content_id_content_id_fk",
-          "tableFrom": "content_contribution",
+        "contentContribution_contentId_content_id_fk": {
+          "name": "contentContribution_contentId_content_id_fk",
+          "tableFrom": "contentContribution",
           "tableTo": "content",
-          "columnsFrom": ["content_id"],
+          "columnsFrom": ["contentId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "content_contribution_user_id_user_id_fk": {
-          "name": "content_contribution_user_id_user_id_fk",
-          "tableFrom": "content_contribution",
+        "contentContribution_userId_user_id_fk": {
+          "name": "contentContribution_userId_user_id_fk",
+          "tableFrom": "contentContribution",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
-        "content_contribution_user_id_content_id_pk": {
-          "columns": ["content_id", "user_id"],
-          "name": "content_contribution_user_id_content_id_pk"
+        "contentContribution_userId_contentId_pk": {
+          "columns": ["userId", "contentId"],
+          "name": "contentContribution_userId_contentId_pk"
         }
       },
       "uniqueConstraints": {}
     },
-    "topic_contribution": {
-      "name": "topic_contribution",
+    "topicContribution": {
+      "name": "topicContribution",
       "columns": {
-        "topic_id": {
-          "name": "topic_id",
+        "topicId": {
+          "name": "topicId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "contributed_at": {
-          "name": "contributed_at",
+        "contributedAt": {
+          "name": "contributedAt",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP"
+          "default": "CURRENTTIMESTAMP"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "topic_contribution_topic_id_topic_id_fk": {
-          "name": "topic_contribution_topic_id_topic_id_fk",
-          "tableFrom": "topic_contribution",
+        "topicContribution_topicId_topic_id_fk": {
+          "name": "topicContribution_topicId_topic_id_fk",
+          "tableFrom": "topicContribution",
           "tableTo": "topic",
-          "columnsFrom": ["topic_id"],
+          "columnsFrom": ["topicId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "topic_contribution_user_id_user_id_fk": {
-          "name": "topic_contribution_user_id_user_id_fk",
-          "tableFrom": "topic_contribution",
+        "topicContribution_userId_user_id_fk": {
+          "name": "topicContribution_userId_user_id_fk",
+          "tableFrom": "topicContribution",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
-        "topic_contribution_user_id_topic_id_pk": {
-          "columns": ["topic_id", "user_id"],
-          "name": "topic_contribution_user_id_topic_id_pk"
+        "topicContribution_userId_topicId_pk": {
+          "columns": ["userId", "topicId"],
+          "name": "topicContribution_userId_topicId_pk"
         }
       },
       "uniqueConstraints": {}
     },
-    "trail_contribution": {
-      "name": "trail_contribution",
+    "trailContribution": {
+      "name": "trailContribution",
       "columns": {
-        "trail_id": {
-          "name": "trail_id",
+        "trailId": {
+          "name": "trailId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "contributed_at": {
-          "name": "contributed_at",
+        "contributedAt": {
+          "name": "contributedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -637,35 +637,35 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "trail_contribution_trail_id_trail_id_fk": {
-          "name": "trail_contribution_trail_id_trail_id_fk",
-          "tableFrom": "trail_contribution",
+        "trailContribution_trailId_trail_id_fk": {
+          "name": "trailContribution_trailId_trail_id_fk",
+          "tableFrom": "trailContribution",
           "tableTo": "trail",
-          "columnsFrom": ["trail_id"],
+          "columnsFrom": ["trailId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "trail_contribution_user_id_user_id_fk": {
-          "name": "trail_contribution_user_id_user_id_fk",
-          "tableFrom": "trail_contribution",
+        "trailContribution_userId_user_id_fk": {
+          "name": "trailContribution_userId_user_id_fk",
+          "tableFrom": "trailContribution",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
-        "trail_contribution_user_id_trail_id_pk": {
-          "columns": ["trail_id", "user_id"],
-          "name": "trail_contribution_user_id_trail_id_pk"
+        "trailContribution_userId_trailId_pk": {
+          "columns": ["userId", "trailId"],
+          "name": "trailContribution_userId_trailId_pk"
         }
       },
       "uniqueConstraints": {}
     },
-    "user_email_verification_token": {
-      "name": "user_email_verification_token",
+    "userEmailVerificationToken": {
+      "name": "userEmailVerificationToken",
       "columns": {
         "id": {
           "name": "id",
@@ -674,38 +674,38 @@
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "expires_at": {
-          "name": "expires_at",
+        "expiresAt": {
+          "name": "expiresAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -714,11 +714,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_email_verification_token_user_id_user_id_fk": {
-          "name": "user_email_verification_token_user_id_user_id_fk",
-          "tableFrom": "user_email_verification_token",
+        "userEmailVerificationToken_userId_user_id_fk": {
+          "name": "userEmailVerificationToken_userId_user_id_fk",
+          "tableFrom": "userEmailVerificationToken",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -737,8 +737,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -758,31 +758,31 @@
           "notNull": true,
           "autoincrement": false
         },
-        "software_version": {
-          "name": "software_version",
+        "softwareVersion": {
+          "name": "softwareVersion",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -791,11 +791,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "feedback_user_id_user_id_fk": {
-          "name": "feedback_user_id_user_id_fk",
+        "feedback_userId_user_id_fk": {
+          "name": "feedback_userId_user_id_fk",
           "tableFrom": "feedback",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -804,8 +804,99 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "user_password_reset_token": {
-      "name": "user_password_reset_token",
+    "file": {
+      "name": "file",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "checksum": {
+          "name": "checksum",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fileSize": {
+          "name": "fileSize",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fileType": {
+          "name": "fileType",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "filename": {
+          "name": "filename",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%s', 'now'))"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(strftime('%s', 'now'))"
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "file_userId_user_id_fk": {
+          "name": "file_userId_user_id_fk",
+          "tableFrom": "file",
+          "tableTo": "user",
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "userPasswordResetToken": {
+      "name": "userPasswordResetToken",
       "columns": {
         "id": {
           "name": "id",
@@ -814,8 +905,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -828,24 +919,24 @@
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -854,11 +945,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_password_reset_token_user_id_user_id_fk": {
-          "name": "user_password_reset_token_user_id_user_id_fk",
-          "tableFrom": "user_password_reset_token",
+        "userPasswordResetToken_userId_user_id_fk": {
+          "name": "userPasswordResetToken_userId_user_id_fk",
+          "tableFrom": "userPasswordResetToken",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -867,8 +958,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "publication_media": {
-      "name": "publication_media",
+    "publicationMedia": {
+      "name": "publicationMedia",
       "columns": {
         "id": {
           "name": "id",
@@ -877,8 +968,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "publication_id": {
-          "name": "publication_id",
+        "publicationId": {
+          "name": "publicationId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -905,24 +996,24 @@
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -931,11 +1022,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "publication_media_publication_id_publication_id_fk": {
-          "name": "publication_media_publication_id_publication_id_fk",
-          "tableFrom": "publication_media",
+        "publicationMedia_publicationId_publication_id_fk": {
+          "name": "publicationMedia_publicationId_publication_id_fk",
+          "tableFrom": "publicationMedia",
           "tableTo": "publication",
-          "columnsFrom": ["publication_id"],
+          "columnsFrom": ["publicationId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -961,31 +1052,31 @@
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -994,11 +1085,11 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "publication_user_id_user_id_fk": {
-          "name": "publication_user_id_user_id_fk",
+        "publication_userId_user_id_fk": {
+          "name": "publication_userId_user_id_fk",
           "tableFrom": "publication",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "cascade"
@@ -1017,15 +1108,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "reported_by_id": {
-          "name": "reported_by_id",
+        "reportedById": {
+          "name": "reportedById",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -1038,15 +1129,15 @@
           "notNull": true,
           "autoincrement": false
         },
-        "entity_id": {
-          "name": "entity_id",
+        "entityId": {
+          "name": "entityId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "entity_type": {
-          "name": "entity_type",
+        "entityType": {
+          "name": "entityType",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -1067,31 +1158,31 @@
           "autoincrement": false,
           "default": "'pending'"
         },
-        "moderator_id": {
-          "name": "moderator_id",
+        "moderatorId": {
+          "name": "moderatorId",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -1100,29 +1191,29 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "report_user_id_user_id_fk": {
-          "name": "report_user_id_user_id_fk",
+        "report_userId_user_id_fk": {
+          "name": "report_userId_user_id_fk",
           "tableFrom": "report",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "report_reported_by_id_user_id_fk": {
-          "name": "report_reported_by_id_user_id_fk",
+        "report_reportedById_user_id_fk": {
+          "name": "report_reportedById_user_id_fk",
           "tableFrom": "report",
           "tableTo": "user",
-          "columnsFrom": ["reported_by_id"],
+          "columnsFrom": ["reportedById"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "report_moderator_id_user_id_fk": {
-          "name": "report_moderator_id_user_id_fk",
+        "report_moderatorId_user_id_fk": {
+          "name": "report_moderatorId_user_id_fk",
           "tableFrom": "report",
           "tableTo": "user",
-          "columnsFrom": ["moderator_id"],
+          "columnsFrom": ["moderatorId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -1170,38 +1261,38 @@
           "autoincrement": false,
           "default": "'DRAFT'"
         },
-        "trail_id": {
-          "name": "trail_id",
+        "trailId": {
+          "name": "trailId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -1210,20 +1301,20 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "topic_trail_id_trail_id_fk": {
-          "name": "topic_trail_id_trail_id_fk",
+        "topic_trailId_trail_id_fk": {
+          "name": "topic_trailId_trail_id_fk",
           "tableFrom": "topic",
           "tableTo": "trail",
-          "columnsFrom": ["trail_id"],
+          "columnsFrom": ["trailId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "cascade"
         },
-        "topic_user_id_user_id_fk": {
-          "name": "topic_user_id_user_id_fk",
+        "topic_userId_user_id_fk": {
+          "name": "topic_userId_user_id_fk",
           "tableFrom": "topic",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "cascade"
@@ -1232,18 +1323,18 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "trail_subscrition": {
-      "name": "trail_subscrition",
+    "trailSubscrition": {
+      "name": "trailSubscrition",
       "columns": {
-        "trail_id": {
-          "name": "trail_id",
+        "trailId": {
+          "name": "trailId",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -1252,29 +1343,29 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "trail_subscrition_trail_id_trail_id_fk": {
-          "name": "trail_subscrition_trail_id_trail_id_fk",
-          "tableFrom": "trail_subscrition",
+        "trailSubscrition_trailId_trail_id_fk": {
+          "name": "trailSubscrition_trailId_trail_id_fk",
+          "tableFrom": "trailSubscrition",
           "tableTo": "trail",
-          "columnsFrom": ["trail_id"],
+          "columnsFrom": ["trailId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
-        "trail_subscrition_user_id_user_id_fk": {
-          "name": "trail_subscrition_user_id_user_id_fk",
-          "tableFrom": "trail_subscrition",
+        "trailSubscrition_userId_user_id_fk": {
+          "name": "trailSubscrition_userId_user_id_fk",
+          "tableFrom": "trailSubscrition",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {
-        "trail_subscrition_trail_id_user_id_pk": {
-          "columns": ["trail_id", "user_id"],
-          "name": "trail_subscrition_trail_id_user_id_pk"
+        "trailSubscrition_trailId_userId_pk": {
+          "columns": ["trailId", "userId"],
+          "name": "trailSubscrition_trailId_userId_pk"
         }
       },
       "uniqueConstraints": {}
@@ -1289,8 +1380,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -1321,11 +1412,11 @@
         }
       },
       "foreignKeys": {
-        "category_user_id_user_id_fk": {
-          "name": "category_user_id_user_id_fk",
+        "category_userId_user_id_fk": {
+          "name": "category_userId_user_id_fk",
           "tableFrom": "category",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "cascade"
@@ -1373,38 +1464,38 @@
           "autoincrement": false,
           "default": "'DRAFT'"
         },
-        "category_id": {
-          "name": "category_id",
+        "categoryId": {
+          "name": "categoryId",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -1413,20 +1504,20 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "trail_category_id_category_name_fk": {
-          "name": "trail_category_id_category_name_fk",
+        "trail_categoryId_category_name_fk": {
+          "name": "trail_categoryId_category_name_fk",
           "tableFrom": "trail",
           "tableTo": "category",
-          "columnsFrom": ["category_id"],
+          "columnsFrom": ["categoryId"],
           "columnsTo": ["name"],
           "onDelete": "set null",
           "onUpdate": "cascade"
         },
-        "trail_user_id_user_id_fk": {
-          "name": "trail_user_id_user_id_fk",
+        "trail_userId_user_id_fk": {
+          "name": "trail_userId_user_id_fk",
           "tableFrom": "trail",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "cascade"
@@ -1435,41 +1526,41 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "user_follower": {
-      "name": "user_follower",
+    "userFollower": {
+      "name": "userFollower",
       "columns": {
-        "user_id": {
-          "name": "user_id",
+        "userId": {
+          "name": "userId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "follower_id": {
-          "name": "follower_id",
+        "followerId": {
+          "name": "followerId",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -1478,35 +1569,35 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_follower_user_id_user_id_fk": {
-          "name": "user_follower_user_id_user_id_fk",
-          "tableFrom": "user_follower",
+        "userFollower_userId_user_id_fk": {
+          "name": "userFollower_userId_user_id_fk",
+          "tableFrom": "userFollower",
           "tableTo": "user",
-          "columnsFrom": ["user_id"],
+          "columnsFrom": ["userId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
-        "user_follower_follower_id_user_id_fk": {
-          "name": "user_follower_follower_id_user_id_fk",
-          "tableFrom": "user_follower",
+        "userFollower_followerId_user_id_fk": {
+          "name": "userFollower_followerId_user_id_fk",
+          "tableFrom": "userFollower",
           "tableTo": "user",
-          "columnsFrom": ["follower_id"],
+          "columnsFrom": ["followerId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {
-        "user_follower_follower_id_user_id_pk": {
-          "columns": ["follower_id", "user_id"],
-          "name": "user_follower_follower_id_user_id_pk"
+        "userFollower_followerId_userId_pk": {
+          "columns": ["followerId", "userId"],
+          "name": "userFollower_followerId_userId_pk"
         }
       },
       "uniqueConstraints": {}
     },
-    "user_key": {
-      "name": "user_key",
+    "userSession": {
+      "name": "userSession",
       "columns": {
         "id": {
           "name": "id",
@@ -1522,55 +1613,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "hashed_password": {
-          "name": "hashed_password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "user_key_user_id_user_id_fk": {
-          "name": "user_key_user_id_user_id_fk",
-          "tableFrom": "user_key",
-          "tableTo": "user",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "user_session": {
-      "name": "user_session",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "active_expires": {
-          "name": "active_expires",
-          "type": "blob",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "idle_expires": {
-          "name": "idle_expires",
+        "expires_at": {
+          "name": "expires_at",
           "type": "blob",
           "primaryKey": false,
           "notNull": true,
@@ -1579,9 +1623,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "user_session_user_id_user_id_fk": {
-          "name": "user_session_user_id_user_id_fk",
-          "tableFrom": "user_session",
+        "userSession_user_id_user_id_fk": {
+          "name": "userSession_user_id_user_id_fk",
+          "tableFrom": "userSession",
           "tableTo": "user",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
@@ -1609,6 +1653,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "role": {
           "name": "role",
           "type": "text",
@@ -1631,40 +1682,38 @@
           "autoincrement": false,
           "default": "'/avatars/original.png'"
         },
-        "email_verified": {
-          "name": "email_verified",
+        "verifiedAt": {
+          "name": "verifiedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": false
+          "autoincrement": false
         },
-        "is_banned": {
-          "name": "is_banned",
+        "bannedAt": {
+          "name": "bannedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false,
-          "default": false
+          "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "createdAt": {
+          "name": "createdAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "updated_at": {
-          "name": "updated_at",
+        "updatedAt": {
+          "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
           "default": "(strftime('%s', 'now'))"
         },
-        "deleted_at": {
-          "name": "deleted_at",
+        "deletedAt": {
+          "name": "deletedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -1693,5 +1742,8 @@
     "schemas": {},
     "tables": {},
     "columns": {}
+  },
+  "internal": {
+    "indexes": {}
   }
 }

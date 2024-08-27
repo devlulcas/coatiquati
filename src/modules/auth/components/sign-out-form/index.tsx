@@ -1,10 +1,12 @@
+'use client';
+
+import { useToast } from '@/shared/components/ui/use-toast';
+import { fail, isFail, isOk } from '@/shared/lib/result';
 import { cn } from '@/shared/utils/cn';
 import type { ClassValue } from 'clsx';
+import { useEffect } from 'react';
 import { useFormState } from 'react-dom';
 import { logoutMutation } from '../../actions/logout-mutation';
-import { fail, isFail, isOk } from '@/shared/lib/result';
-import { useEffect } from 'react';
-import { useToast } from '@/shared/components/ui/use-toast';
 
 type SignOutFormProps = {
   children: React.ReactNode;

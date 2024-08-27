@@ -8,7 +8,7 @@ export const isValidYoutubeUrl = (url: string) => {
 };
 
 export const getEmbedIDFromYoutubeUrl = (url: string) => {
-  if (!isValidYoutubeUrl(url)) {
+  if (!url || !isValidYoutubeUrl(url)) {
     return null;
   }
 

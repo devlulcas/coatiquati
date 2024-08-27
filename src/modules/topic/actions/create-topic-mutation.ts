@@ -3,7 +3,7 @@
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidateTopics } from '../lib/revalidate-topic';
 import { TopicRepository } from '../repositories/topic-repository';
 import { newTopicSchema, type NewTopicSchema } from '../schemas/new-topic-schema';
@@ -36,7 +36,7 @@ export async function createTopicMutation(params: NewTopicSchema): Promise<Resul
   const topicRepository = new TopicRepository();
   const topicResult = await wrapAsyncInResult(topicRepository.createTopic(newTopic));
 
-  if (topicResult.type === 'fail') {
+  if (isFail(topicResult)) {
     log.error('Falha ao criar um novo tópico.', topicResult.fail);
     return fail('Falha ao criar um novo tópico.');
   }

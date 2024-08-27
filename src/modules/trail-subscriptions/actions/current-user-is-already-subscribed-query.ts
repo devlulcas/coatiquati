@@ -3,7 +3,7 @@
 import { db } from '@/modules/database/db';
 import { trailSubscriptionTable } from '@/modules/database/schema/trail-subscription';
 import { log } from '@/modules/logging/lib/pino';
-import { ok, wrapAsyncInResult, type Ok } from '@/shared/lib/result';
+import { isFail, ok, wrapAsyncInResult, type Ok } from '@/shared/lib/result';
 import { and, eq } from 'drizzle-orm';
 
 export async function currentUserIsAlreadySubscribedQuery(trailId: number, userId: string): Promise<Ok<boolean>> {
@@ -17,7 +17,7 @@ export async function currentUserIsAlreadySubscribedQuery(trailId: number, userI
       .get(),
   );
 
-  if (isAlreadyFollowing.type === 'fail') {
+  if (isFail(isAlreadyFollowing)) {
     log.error('Falha ao buscar inscrição de trilha.', isAlreadyFollowing.fail);
     return ok(false);
   }

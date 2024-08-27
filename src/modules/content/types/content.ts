@@ -27,12 +27,12 @@ export type ContentWithImage = BaseContent & {
 };
 
 export type ContentWithRichText = BaseContent & {
-  contentType: 'rich_text';
+  contentType: 'richText';
   content: ContentRichText;
 };
 
 export type ContentWithRichTextPreview = BaseContent & {
-  contentType: 'rich_text';
+  contentType: 'richText';
   content: ContentRichTextPreview;
 };
 

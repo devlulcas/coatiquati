@@ -1,6 +1,7 @@
 import { TopicCardItem } from '@/modules/topic/components/topic-card-item';
 import { getTrailByIdQuery } from '@/modules/trail/actions/get-trail-by-id-query';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
+import { isFail } from '@/shared/lib/result';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -9,7 +10,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const trailResult = await getTrailByIdQuery(trailId);
 
-  if (trailResult.type === 'fail') {
+  if (isFail(trailResult)) {
     notFound();
   }
 
@@ -46,7 +47,7 @@ export default async function Page({ params }: PageProps) {
 
   const trailResult = await getTrailByIdQuery(trailId);
 
-  if (trailResult.type === 'fail') {
+  if (isFail(trailResult)) {
     notFound();
   }
 

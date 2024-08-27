@@ -1,5 +1,6 @@
 import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
+import { isFail } from '@/shared/lib/result';
 import { getRichTextContentQuery } from '../../actions/get-rich-text-content-query';
 
 type RichTextContentPageProps = {
@@ -9,7 +10,7 @@ type RichTextContentPageProps = {
 export default async function RichTextContentPage({ contentId }: RichTextContentPageProps) {
   const result = await getRichTextContentQuery(contentId);
 
-  if (result.type === 'fail') {
+  if (isFail(result)) {
     return (
       <div className="container rounded bg-destructive/50 py-8 text-destructive-foreground">
         <p>Erro ao buscar conteúdo.</p>

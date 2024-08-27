@@ -9,7 +9,7 @@ export function RenderCorrectContentCard({ data }: { data: Content }) {
       return <RenderImageContentCard data={data} />;
     case 'video':
       return <RenderVideoContentCard data={data} />;
-    case 'rich_text':
+    case 'richText':
       return <RenderRichTextContentCard data={data} />;
     default:
       throw new Error('Tipo de conteúdo inválido');

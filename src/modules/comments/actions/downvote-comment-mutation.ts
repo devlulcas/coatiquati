@@ -3,7 +3,7 @@
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { VOTES } from '../constants/votes';
 import { CommentVoteRepository } from '../repositories/comment-vote-repository';
 
@@ -19,7 +19,7 @@ export async function downvoteCommentMutation(commentId: number): Promise<Result
 
   const currentUserVoteResult = await wrapAsyncInResult(commentVoteRepository.getUserVote(commentId, user.id));
 
-  if (currentUserVoteResult.type === 'fail') {
+  if (isFail(currentUserVoteResult)) {
     return fail('Erro ao buscar voto do usuário.');
   }
 

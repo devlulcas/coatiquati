@@ -5,6 +5,7 @@ import { getUsersQuery } from '@/modules/user/actions/get-users-query';
 import { UsersTable } from '@/modules/user/components/users-table';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
+import { isFail } from '@/shared/lib/result';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -38,7 +39,7 @@ export default async function Page({ searchParams }: PageProps) {
             </Link>
           </Button>
         </div>
-        {trailsResult.type === 'fail' ? (
+        {isFail(trailsResult) ? (
           <ErrorMessage message={trailsResult.fail} className="mt-4" />
         ) : (
           <TrailsTable data={trailsResult.value} />
@@ -52,7 +53,7 @@ export default async function Page({ searchParams }: PageProps) {
 
       <section>
         <h2 className="mb-4 text-xl">Usuários</h2>
-        {usersResult.type === 'fail' ? (
+        {isFail(usersResult) ? (
           <ErrorMessage message={usersResult.fail} className="mt-4" />
         ) : (
           <UsersTable data={usersResult.value} />

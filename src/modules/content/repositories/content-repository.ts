@@ -54,7 +54,7 @@ export class ContentRepository {
 
     return {
       ...content,
-      contentType: 'rich_text',
+      contentType: 'richText',
       content: { ...resultRichtext, previewAsJson: JSON.parse(JSON.stringify(resultRichtext.previewAsJson)) },
     };
   }

@@ -1,12 +1,12 @@
 {
-  "version": "5",
+  "version": "7",
   "dialect": "sqlite",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1713302769716,
-      "tag": "0000_gray_moon_knight",
+      "version": "6",
+      "when": 1724771005211,
+      "tag": "0000_legal_mandarin",
       "breakpoints": true
     }
   ]

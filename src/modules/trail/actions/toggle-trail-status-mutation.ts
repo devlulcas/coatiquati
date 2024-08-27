@@ -2,7 +2,7 @@
 
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidateTrails } from '../lib/revalidate-trail';
 import { TrailRepository } from '../repositories/trail-repository';
 import { trailWithIdSchema, type TrailWithIdSchema } from '../schemas/trail-with-id-schema';
@@ -28,7 +28,7 @@ export async function toggleTrailStatusMutation(params: TrailWithIdSchema): Prom
 
   const trailResult = await wrapAsyncInResult(trailRepository.getTrailById(validatedParams.data.id));
 
-  if (trailResult.type === 'fail') {
+  if (isFail(trailResult)) {
     return fail('Trilha não encontrada.');
   }
 
