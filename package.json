@@ -12,6 +12,7 @@
     "fix": "eslint --fix .",
     "sanitize": "prettier --write . && eslint --fix . && tsc --noEmit",
     "format": "pnpm pretty && pnpm fix",
+    "cli:manage": "pnpm tsx ./cli/manager.ts",
     "db:generate": "pnpm drizzle-kit generate",
     "db:migrate": "pnpm tsx ./src/modules/database/migrate.ts",
     "db:push": "pnpm drizzle-kit push",
