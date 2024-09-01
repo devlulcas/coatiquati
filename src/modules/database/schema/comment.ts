@@ -50,7 +50,7 @@ export const contentCommentTableRelations = relations(contentCommentTable, ({ on
   votes: many(commentVoteTable),
 }));
 
-export const commentVoteTable = sqliteTable('commenVote', {
+export const commentVoteTable = sqliteTable('commentVote', {
   id: integer('id').primaryKey().notNull(),
   commentId: integer('commenId')
     .notNull()

@@ -1,4 +1,4 @@
-CREATE TABLE `commenVote` (
+CREATE TABLE `commentVote` (
 	`id` integer PRIMARY KEY NOT NULL,
 	`commenId` integer NOT NULL,
 	`useId` text NOT NULL,
