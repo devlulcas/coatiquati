@@ -1,3 +1,13 @@
+# COATIQUATI - Quase uma rede social, sempre uma ferramenta de aprendizado
+
+CoatiQuati é uma rede social de compartilhamento de conhecimento, onde você pode compartilhar seus conhecimentos com o mundo e aprender com a comunidade.
+
+A ideia do CoatiQuati é ser uma ferramenta de aprendizado com trilhas e tópicos de estudo criados por professores que servem como administradores da plataforma.
+
+Futuramente pretendo adicionar funcionalidades que dão ainda mais liberadade aos estudantes, como a possibilidade de criar trilhas de estudo e tópicos de estudo sem a necessidade de ser um professor.
+
+Tudo por aqui é gratuito, sem anúncios e sem rastreamento de dados. Apesar que talvez eu adicione alguma forma de analytics para saber como as pessoas estão utilizando a plataforma, mas pretendo ser transparente sobre isso e procurar uma plataforma de analytics que respeite a privacidade dos usuários.
+
 ## EXECUTANDO O PROJETO
 
 ### Pré-requisitos
@@ -52,6 +62,25 @@
    ```
 
 7. Acesse o servidor em `http://localhost:3000`
+
+### CLI
+
+#### Administrador
+
+- `pnpm cli:manage` - Inicia o gerenciador do CoatiQuati
+
+Atualmente o gerenciador do CoatiQuati só suporta a criação de contas e alteração de privilégios de usuário.
+
+![manage cli](./.github/images/manage.png)
+
+#### Banco de dados
+
+- `pnpm db:summon` - Inicia o banco de dados local
+- `pnpm db:destroy` - Destrói o banco de dados local
+- `pnpm db:generate` - Cria uma nova migration
+- `pnpm db:migrate` - Executa as migrations
+- `pnpm db:push` - Altera o banco de dados sem criar migrations, usar somente em dev
+- `pnpm db:pull` - Puxa a estrutura do banco de dados
 
 ### Trocando AWS SES por outro serviço de envio de e-mails
 
