@@ -44,6 +44,7 @@
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
+    "@radix-ui/react-tooltip": "^1.1.7",
     "@react-email/components": "0.0.23",
     "@react-email/render": "^1.0.0",
     "@t3-oss/env-nextjs": "^0.11.1",
@@ -61,7 +62,6 @@
     "@tiptap/react": "^2.6.6",
     "@tiptap/starter-kit": "^2.6.6",
     "@types/nodemailer": "^6.4.15",
-    "@uploadthing/react": "^6.7.2",
     "argon2": "^0.41.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -84,7 +84,6 @@
     "react-resizable-panels": "^2.1.1",
     "recharts": "^2.12.7",
     "tailwind-merge": "^2.5.2",
-    "uploadthing": "^6.13.2",
     "vaul": "^0.9.1",
     "zod": "^3.23.8"
   },

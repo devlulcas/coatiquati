@@ -1,7 +1,7 @@
-const { withUt } = require('uploadthing/tw');
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
-module.exports = withUt({
+module.exports = {
   darkMode: ['class'],
   content: ['./pages/**/*.{ts,tsx}', './components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', './src/**/*.{ts,tsx}'],
   theme: {
@@ -11,6 +11,9 @@ module.exports = withUt({
       screens: {
         '2xl': '1400px',
       },
+    },
+    fontFamily: {
+      sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
     },
     extend: {
       colors: {
@@ -60,6 +63,18 @@ module.exports = withUt({
           900: 'hsl(var(--brand-900))',
           950: 'hsl(var(--brand-950))',
         },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -88,4 +103,4 @@ module.exports = withUt({
     },
   },
   plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
-});
+};

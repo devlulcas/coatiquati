@@ -1,3 +1,4 @@
+import { env } from '@/env';
 import { TopicCardItem } from '@/modules/topic/components/topic-card-item';
 import { getTrailByIdQuery } from '@/modules/trail/actions/get-trail-by-id-query';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
@@ -20,13 +21,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       type: 'website',
       locale: 'pt_BR',
-      url: `https://coatiquati.wiki/trails/${trailId}`,
+      url: `${env.NEXT_PUBLIC_WEBSITE}/trails/${trailId}`,
       siteName: 'CoatiQuati',
       title: trailResult.value.title,
       description: trailResult.value.description,
       images: [
         {
-          url: 'https://coatiquati.wiki/og.png',
+          url: env.NEXT_PUBLIC_WEBSITE + '/og.png',
           width: 1200,
           height: 630,
           alt: 'CoatiQuati',

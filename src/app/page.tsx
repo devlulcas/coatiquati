@@ -12,7 +12,7 @@ export default async function Page() {
   return (
     <div className="flex h-[--view-height] flex-col justify-between pt-12">
       <div className="container flex h-full flex-col">
-        <h1 className="inline-block bg-gradient-to-r from-brand-500 via-violet-500 to-brand-500 bg-clip-text text-5xl font-black text-transparent lg:text-6xl">
+        <h1 className="inline-block bg-gradient-to-r from-brand-500 via-violet-500 to-brand-100 bg-clip-text text-5xl font-black text-transparent lg:text-6xl">
           CoatiQuati
         </h1>
 

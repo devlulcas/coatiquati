@@ -1,5 +1,9 @@
 import { SignOutForm } from '@/modules/auth/components/sign-out-form';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
+import { getFontQuery } from '@/modules/theme/actions/change-font-mutation';
+import { getThemeQuery } from '@/modules/theme/actions/change-theme-mutation';
+import { ChangeColorThemeForm } from '@/modules/theme/components/change-color-theme-form';
+import { ChangeFontThemeForm } from '@/modules/theme/components/change-font-theme-form';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import type { User } from '@/modules/user/types/user';
 import { Button } from '@/shared/components/ui/button';
@@ -11,8 +15,11 @@ type HeaderNavProps = {
   user: Pick<User, 'role' | 'username'> | null;
 };
 
-export function HeaderNav({ user }: HeaderNavProps) {
+export async function HeaderNav({ user }: HeaderNavProps) {
   const hasAdminAccess = user && isAdminOrAbove(user.role);
+  const theme = await getThemeQuery()
+  const font = await getFontQuery()
+
   return (
     <>
       <Button variant="link" asChild className="lg:hidden">
@@ -95,6 +102,9 @@ export function HeaderNav({ user }: HeaderNavProps) {
             <Link href="/sign-in">Entrar</Link>
           </Button>
         )}
+
+        <ChangeColorThemeForm initialTheme={theme.value} />
+        <ChangeFontThemeForm initialFont={font.value} />
       </div>
     </>
   );

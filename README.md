@@ -118,17 +118,33 @@ MIT License
 
 ## Funcionalidades futuras
 
-- [ ] Adicionar login com redes sociais
-- [ ] Adicionar suporte a outros serviços de armazenamento de arquivos
-- [ ] Suporte a criação de contas de administrador via CLI
+- [ ] Adicionar login com redes sociais (Bluesky? - No momento não vai rolar fazer isso)
+- [x] Adicionar suporte a outros serviços de armazenamento de arquivos (Basta implementar outros adaptadores)
 - [ ] Suporte a criação de conteúdo com markdown, além do WYSIWYG
 - [ ] Suporte a upload de LaTeX para papéis científicos
 - [ ] Suporte a upload de arquivos de áudio para micro-podcasts
 - [ ] Suporte a upload de arquivos PDF para artigos científicos e livros (com visualizador de PDF)
 - [ ] Sistema de tags para categorizar conteúdo
-- [ ] Feed de amigos (seguindo e seguidores)
-- [ ] Feed "Para você" com base no seu histórico de leitura, tags favoritas, upvotes, downvotes e comentários
+
+### Prioridades
+
+- [x] Suporte a criação de contas de administrador via CLI
+- [x] Acessibilidade: Fonte para dislexia
+- [ ] Ajustes na edição de conteúdo (auto-save, marcação de conteúdo como editado, rascunho local)
+- [ ] Nova tela de perfil com informações sobre o usuário
+- [ ] Permitir que professores adicionem "prompts" para os alunos escreverem sobre
 - [ ] Sinalizar conteúdo inapropriado para remoção
+- [ ] Denunciar usuários por comportamento inadequado
+- [ ] Feed de amigos (seguindo) cronológico
+- [ ] Acessibilidade: Alto contraste (dark mode)
+- [ ] Feed "Para você" com base no seu histórico de leitura, tags favoritas, upvotes, downvotes e comentários
+- [ ] Ferramenta: Pomodoro
+- [ ] Ferramenta/Conteúdo: Flashcards
+- [ ] Ferramenta/Conteúdo: Quiz
+- [ ] Ferramenta/Conteúdo/Conteúdo: Integração com o [Excalidraw](https://docs.excalidraw.com/docs/@excalidraw/excalidraw/api/props/excalidraw-api)
+- [ ] Ferramenta: Anotações
+- [ ] Grupos de estudo
+- [ ] Ferramenta: Calendário de estudos
 
 ## Algoritmo de recomendação de conteúdo para o feed "Para você"
 
