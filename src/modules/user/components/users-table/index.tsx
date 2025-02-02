@@ -1,11 +1,10 @@
+'use client'
+
 import { DataTable } from '@/shared/components/common/data-table';
-import { type User } from '../../types/user';
+import { useUsersQuery } from '../../hooks/use-users-query';
 import { usersColumns } from './columns';
 
-type UserTableProps = {
-  data: User[];
-};
-
-export function UsersTable({ data }: UserTableProps) {
-  return <DataTable columns={usersColumns} data={data} />;
+export function UsersTable() {
+  const q = useUsersQuery()
+  return <DataTable columns={usersColumns} data={q.data ?? []} />;
 }
