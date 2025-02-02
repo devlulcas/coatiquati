@@ -83,7 +83,8 @@ export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Re
   }
 
   try {
-    await userRepository.updateUser(validatedParams.data.userId, { role: desiredRole });
+    const user = await userRepository.getUserById(validatedParams.data.userId)
+    await userRepository.updateUser(validatedParams.data.userId, { ...user, role: desiredRole });
     return ok('Permissões de usuário alteradas com sucesso.');
   } catch (error) {
     log.error('Erro ao alterar as permissões de usuário', error);

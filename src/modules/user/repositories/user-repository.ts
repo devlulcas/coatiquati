@@ -8,16 +8,14 @@ import { eq } from 'drizzle-orm';
 export class UserRepository {
   async updateUser(id: string, user: UpdateUser): Promise<void> {
     try {
-      await db
+      const res = await db
         .update(userTable)
-        .set({
-          avatar: user.avatar,
-          username: user.username,
-          email: user.email,
-          verifiedAt: user.verifiedAt,
-        })
+        .set(user)
         .where(eq(userTable.id, id))
-        .execute();
+        .returning()
+        .run()
+
+      log.info(res)
     } catch (error) {
       log.error('Erro ao atualizar usuário', error);
       throw new Error('Erro ao atualizar usuário');

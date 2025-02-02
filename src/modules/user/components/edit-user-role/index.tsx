@@ -5,9 +5,11 @@ import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
+import { isFail } from '@/shared/lib/result';
 import { SkullIcon } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { setUserRoleMutation } from '../../actions/set-user-role-mutation';
+import { useUsersQueryCleanup } from '../../hooks/use-users-query';
 import { type User } from '../../types/user';
 
 type EditUserRoleProps = {
@@ -18,6 +20,8 @@ export function EditUserRole({ user }: EditUserRoleProps) {
   const [isConfirming, setIsConfirming] = useState(false);
   const [isLoading, startTransition] = useTransition();
   const { toast } = useToast();
+
+  const clearUsersQuery = useUsersQueryCleanup()
 
   if (isHighPrivilegeAdmin(user.role)) return null;
 
@@ -31,15 +35,18 @@ export function EditUserRole({ user }: EditUserRoleProps) {
 
   const onSubmit = () => {
     startTransition(async () => {
-      try {
-        await setUserRoleMutation({ userId: user.id, role: flippedRole.value });
-        toast({ title: `${user.username} agora é um ${flippedRole.label}` });
-      } catch (error) {
+      const mutation = await setUserRoleMutation({ userId: user.id, role: flippedRole.value });
+
+      if (isFail(mutation)) {
         toast({
           title: 'Erro ao editar permissão do usuário',
-          description: error instanceof Error ? error.message : String(error),
+          description: mutation.fail,
           variant: 'destructive',
         });
+      } else {
+        clearUsersQuery()
+        toast({ title: `${user.username} agora é um ${flippedRole.label}` });
+        closeConfirmDialog()
       }
     });
   };
