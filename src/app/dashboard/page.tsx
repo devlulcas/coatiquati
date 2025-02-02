@@ -1,4 +1,3 @@
-import { TrailCategoryForm } from '@/modules/category/components/trail-category-form';
 import { getTrailsQuery } from '@/modules/trail/actions/get-trails-query';
 import { TrailsTable } from '@/modules/trail/components/trails-table';
 import { getUsersQuery } from '@/modules/user/actions/get-users-query';
@@ -47,16 +46,11 @@ export default async function Page({ searchParams }: PageProps) {
       </section>
 
       <section>
-        <h2 className="mb-4 text-xl">Categorias</h2>
-        <TrailCategoryForm />
-      </section>
-
-      <section>
         <h2 className="mb-4 text-xl">Usuários</h2>
         {isFail(usersResult) ? (
           <ErrorMessage message={usersResult.fail} className="mt-4" />
         ) : (
-          <UsersTable data={usersResult.value} />
+          <UsersTable />
         )}
       </section>
     </div>
