@@ -36,7 +36,7 @@ export class Ball {
     this.effect = effect;
     this.x = this.effect.width * 0.25;
     this.y = this.effect.height * 0.25;
-    this.radius = Math.random() * 100 + 20;
+    this.radius = Math.random() * 100 + 50;
     this.speedX = Math.random() * 5 - 2.5;
     this.speedY = Math.random() * 5 - 2.5;
   }

@@ -1,9 +1,6 @@
 import { SignOutForm } from '@/modules/auth/components/sign-out-form';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
-import { getFontQuery } from '@/modules/theme/actions/change-font-mutation';
-import { getThemeQuery } from '@/modules/theme/actions/change-theme-mutation';
-import { ChangeColorThemeForm } from '@/modules/theme/components/change-color-theme-form';
-import { ChangeFontThemeForm } from '@/modules/theme/components/change-font-theme-form';
+import { ConfigDropdown, ConfigListing } from '@/modules/theme/components/config-dropdown';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import type { User } from '@/modules/user/types/user';
 import { Button } from '@/shared/components/ui/button';
@@ -16,10 +13,6 @@ type HeaderNavProps = {
 };
 
 export async function HeaderNav({ user }: HeaderNavProps) {
-  const hasAdminAccess = user && isAdminOrAbove(user.role);
-  const theme = await getThemeQuery()
-  const font = await getFontQuery()
-
   return (
     <>
       <Button variant="link" asChild className="lg:hidden">
@@ -35,38 +28,24 @@ export async function HeaderNav({ user }: HeaderNavProps) {
         <SheetContent
           hideCloseButton
           side="bottom"
-          className="flex flex-col items-center justify-center gap-4 bg-background/75 backdrop-blur-md lg:hidden"
+          className="flex flex-col gap-4 bg-background/75 backdrop-blur-md lg:hidden"
         >
-          <Button className="w-full" variant="secondary" asChild>
-            <Link href="/trails">Trilhas</Link>
-          </Button>
+          <div
+            className="flex flex-col items-center justify-center gap-4 *:bg-secondary"
+          >
 
-          <Button className="w-full" variant="secondary" asChild>
-            <Link href="/about">Sobre</Link>
-          </Button>
-
-          {hasAdminAccess && (
-            <Button className="w-full" variant="secondary" asChild>
-              <Link href="/dashboard">Dashboard</Link>
+            <Button className="w-full" variant="ghost" asChild>
+              <Link href="/trails">Trilhas</Link>
             </Button>
-          )}
 
-          {user !== null ? (
-            <>
-              <Button className="w-full" variant="destructive" asChild>
-                <SignOutForm className="w-full" formClassName="w-full">
-                  Sair
-                </SignOutForm>
-              </Button>
-              <Button className="w-full" variant="secondary" asChild>
-                <Link href={createProfileUrl(user.username)}>Perfil</Link>
-              </Button>
-            </>
-          ) : (
-            <Button className="w-full" variant="secondary" asChild>
-              <Link href="/sign-in">Entrar</Link>
+            <Button className="w-full" variant="ghost" asChild>
+              <Link href="/about">Sobre</Link>
             </Button>
-          )}
+
+            <NavItems user={user} />
+          </div>
+
+          <ConfigListing />
         </SheetContent>
       </Sheet>
 
@@ -79,33 +58,43 @@ export async function HeaderNav({ user }: HeaderNavProps) {
           <Link href="/about">Sobre</Link>
         </Button>
 
-        {hasAdminAccess && (
-          <Button variant="ghost" asChild>
-            <Link href="/dashboard">Dashboard</Link>
-          </Button>
-        )}
+        <NavItems user={user} />
 
-        {user !== null ? (
-          <>
-            <Button variant="ghost" asChild>
-              <SignOutForm>Sair</SignOutForm>
-            </Button>
-            <Button variant="ghost" asChild>
-              <Link href={createProfileUrl(user.username)}>Perfil</Link>
-            </Button>
-            <Button variant="ghost" asChild>
-              <Link href="/feedback">Feedback</Link>
-            </Button>
-          </>
-        ) : (
-          <Button variant="ghost" asChild>
-            <Link href="/sign-in">Entrar</Link>
-          </Button>
-        )}
-
-        <ChangeColorThemeForm initialTheme={theme.value} />
-        <ChangeFontThemeForm initialFont={font.value} />
+        <ConfigDropdown />
       </div>
     </>
   );
 }
+
+function NavItems({ user }: { user: Pick<User, 'role' | 'username'> | null }) {
+  const hasAdminAccess = user && isAdminOrAbove(user.role);
+
+  if (user !== null) {
+    return (
+      <>
+        {hasAdminAccess && (
+          <Button className="w-full" variant="ghost" asChild>
+            <Link href="/dashboard">Dashboard</Link>
+          </Button>
+        )}
+
+        <Button className="w-full" variant="ghost" asChild>
+          <Link href={createProfileUrl(user.username)}>Perfil</Link>
+        </Button>
+
+        <Button className="w-full bg-destructive md:bg-transparent md:text-red-500" variant="ghost" asChild>
+          <SignOutForm className="w-full" formClassName="w-full">
+            Sair
+          </SignOutForm>
+        </Button>
+      </>
+    )
+  }
+
+  return (
+    <Button className="w-full" variant="secondary" asChild>
+      <Link href="/sign-in">Entrar</Link>
+    </Button>
+  )
+}
+

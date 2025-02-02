@@ -43,7 +43,7 @@ export default async function Page() {
 
         <div className="absolute inset-0 z-[-1] h-[--safe-screen-height] overflow-hidden">
           <Image
-            className="absolute bottom-0 right-1/2 w-full translate-x-1/2 translate-y-1/2 blur-xl md:w-1/2"
+            className="absolute bottom-0 right-1/2 w-full translate-x-1/2 translate-y-1/2 blur-xl md:w-1/2 opacity-70"
             src={blobImage}
             alt="blob"
           />

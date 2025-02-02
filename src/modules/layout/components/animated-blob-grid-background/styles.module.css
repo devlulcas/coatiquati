@@ -1,0 +1,52 @@
+.blobs {
+  --blob: var(--brand-500);
+  background-image: radial-gradient(ellipse 81px 65px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
+    radial-gradient(ellipse 60px 62px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
+    radial-gradient(ellipse 54px 95px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
+    radial-gradient(ellipse 66px 56px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
+    radial-gradient(ellipse 82px 83px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
+    radial-gradient(ellipse 58px 90px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
+    radial-gradient(ellipse 83px 86px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
+    radial-gradient(ellipse 88px 93px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%);
+  background-size:
+    1077px 1209px,
+    881px 1077px,
+    681px 385px,
+    484px 357px,
+    786px 382px,
+    770px 1095px,
+    698px 317px,
+    287px 378px;
+  animation: blobs-dee5efbd 150s linear infinite;
+}
+
+.blobsOver {
+  background-image: radial-gradient(circle at 50% 50%, #0000 0, #0000 2px, #000 2px);
+  background-size: 8px 8px;
+  backdrop-filter: blur(5em) brightness(5) blur(1em);
+}
+
+@keyframes blobs-dee5efbd {
+  0% {
+    background-position:
+      319px 792px,
+      441px 1030px,
+      262px 67px,
+      86px 202px,
+      97px 280px,
+      338px 704px,
+      66px 267px,
+      177px 204px;
+  }
+  to {
+    background-position:
+      8935px 15300px,
+      -19822px -1124px,
+      13201px 8537px,
+      -11046px -4439px,
+      -8549px 9448px,
+      -5052px 28079px,
+      -10404px -4805px,
+      -2980px 2094px;
+  }
+}

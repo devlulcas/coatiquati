@@ -1,9 +1,13 @@
 import { env } from '@/env';
+import { AlmostSolidBackground } from '@/modules/layout/components/almost-solid-background';
 import { AnimatedBlobBackgroundScript } from '@/modules/layout/components/animated-blob-background-script';
+import { AnimatedBlogGridBackground } from '@/modules/layout/components/animated-blob-grid-background';
 import { Header } from '@/modules/layout/components/header';
 import { MainLayoutWrapper } from '@/modules/layout/components/main-layout-wrapper';
+import { getBackgroundQuery } from '@/modules/theme/actions/change-background-mutation';
 import { getFontQuery } from '@/modules/theme/actions/change-font-mutation';
 import { getThemeQuery } from '@/modules/theme/actions/change-theme-mutation';
+import { BackgroundConfig } from '@/modules/theme/constants/theme-keys';
 import { Providers } from '@/shared/components/common/providers';
 import { Toaster } from '@/shared/components/ui/toaster';
 import type { Metadata } from 'next';
@@ -66,6 +70,14 @@ type RootLayoutProps = {
 export default async function RootLayout({ children }: RootLayoutProps) {
   const theme = await getThemeQuery()
   const font = await getFontQuery()
+  const background = await getBackgroundQuery()
+  const blur = BackgroundConfig[background.value].wrapperBlur
+
+  const backgroundComponent = {
+    'blob': <AnimatedBlobBackgroundScript />,
+    'blob-grid': <AnimatedBlogGridBackground />,
+    'solid': <AlmostSolidBackground />,
+  }[background.value]
 
   return (
     <html
@@ -76,12 +88,12 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <link href="favicon.svg" rel="icon" />
       </head>
       <body >
-        <AnimatedBlobBackgroundScript />
+        {backgroundComponent}
 
         <Providers>
           <Toaster />
 
-          <MainLayoutWrapper>
+          <MainLayoutWrapper blur={blur}>
             <Header />
             <div className="min-h-[--view-height] overflow-x-hidden">{children}</div>
           </MainLayoutWrapper>

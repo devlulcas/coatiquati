@@ -45,7 +45,7 @@ canvas.height = window.innerHeight;
 
 paintGradient(canvas, ctx);
 
-effect.init(15);
+effect.init(25);
 
 window.addEventListener('resize', () => {
   canvas.width = window.innerWidth;
@@ -68,3 +68,11 @@ function animate() {
 animate();
 
 document.body.appendChild(canvas);
+
+window.REMOVE_ANIMATED_BLOB_BACKGROUND = () => {
+  if (canvas.parentNode) document.body.removeChild(canvas);
+};
+
+window.ADD_ANIMATED_BLOB_BACKGROUND = () => {
+  document.body.appendChild(canvas);
+};
