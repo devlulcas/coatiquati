@@ -1,63 +1,32 @@
-import type {
-  ContentImageInsert,
-  ContentImageSelect,
-  ContentInsert,
-  ContentRichTextInsert,
-  ContentRichTextSelect,
-  ContentSelect,
-  ContentVideoInsert,
-  ContentVideoSelect,
-} from '@/modules/database/schema/content';
+import type { ContentSelect } from '@/modules/database/schema/content';
 import type { Creatable, Updatable } from '@/modules/database/types/utils';
 import type { Contributor } from '@/modules/user/types/user';
+import type { ImageContentJSON, RichTextContentJSON, VideoContentJSON } from './content-json-field';
 
-type UpdatableContent<T> = Partial<Omit<T, 'createdAt'>> & {
-  contentId: T extends { id: infer U } ? U : never;
-  updatedAt: string;
-};
+export type RawBaseContent = ContentSelect
 
 export type BaseContent = Omit<ContentSelect, 'authorId' | 'contentType' | 'topicId'> & {
   author: Contributor;
   contributors: { user: Contributor }[];
 };
 
-export type ContentWithImage = BaseContent & {
+export type ImageContent = BaseContent & {
   contentType: 'image';
-  content: ContentImageSelect;
+  content: ImageContentJSON
 };
 
-export type ContentWithRichText = BaseContent & {
+export type RichTextContent = BaseContent & {
   contentType: 'richText';
-  content: ContentRichText;
+  content: RichTextContentJSON
 };
 
-export type ContentWithRichTextPreview = BaseContent & {
-  contentType: 'richText';
-  content: ContentRichTextPreview;
-};
-
-export type ContentWithVideo = BaseContent & {
+export type VideoContent = BaseContent & {
   contentType: 'video';
-  content: ContentVideoSelect;
+  content: VideoContentJSON
 };
 
-export type Content = ContentWithImage | ContentWithRichTextPreview | ContentWithVideo;
-export type NewContent = Creatable<ContentInsert>;
-export type UpdateContent = Omit<Updatable<ContentSelect>, 'authorId' | 'contentType'> & {
-  contributorId: ContentSelect['authorId'];
+export type Content = ImageContent | RichTextContent | VideoContent
+export type NewContent = Creatable<Content>;
+export type UpdateContent = Omit<Updatable<Content>, 'author' | 'contentType'> & {
+  contributorId: Content['author']['id'];
 };
-
-export type ContentRichTextPreview = Omit<ContentRichTextSelect, 'asJson'>;
-export type ContentRichText = Omit<ContentRichTextSelect, 'previewAsJson'>;
-export type NewContentRichText = Omit<Creatable<ContentRichTextInsert>, 'previewAsJson'>;
-export type UpdateContentRichText = Omit<UpdatableContent<ContentRichText>, 'previewAsJson'> & {
-  contributorId: ContentSelect['authorId'];
-};
-
-export type ContentImage = ContentImageSelect;
-export type NewContentImage = Omit<Creatable<ContentImageInsert>, 'contentId'>;
-export type UpdateContentImage = Omit<UpdatableContent<ContentImageSelect>, 'contentId' | 'updatedAt'>;
-
-export type ContentVideo = ContentVideoSelect;
-export type NewContentVideo = Omit<Creatable<ContentVideoInsert>, 'contentId'>;
-export type UpdateContentVideo = Omit<UpdatableContent<ContentVideoSelect>, 'contentId' | 'updatedAt'>;

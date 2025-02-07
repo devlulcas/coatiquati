@@ -1,4 +1,3 @@
-import type { ContentWithImage, ContentWithRichTextPreview, ContentWithVideo } from '@/modules/content/types/content';
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
 import { topicTable } from '@/modules/database/schema/topic';
@@ -9,7 +8,7 @@ import { eq } from 'drizzle-orm';
 import type { NewTopic, Topic, TopicWithContentArray, UpdateTopic } from '../types/topic';
 
 export class TopicRepository {
-  constructor(private readonly contributionRepository: ContributionRepository = new ContributionRepository()) {}
+  constructor(private readonly contributionRepository: ContributionRepository = new ContributionRepository()) { }
 
   async createTopic(topic: NewTopic): Promise<number> {
     try {
@@ -105,9 +104,6 @@ export class TopicRepository {
         contents: {
           with: {
             author: true,
-            richText: true,
-            image: true,
-            video: true,
             contributors: {
               with: {
                 user: true,
@@ -128,30 +124,8 @@ export class TopicRepository {
       throw new Error('Erro ao buscar tópico');
     }
 
-    const withImage: ContentWithImage[] = [];
-    const withRTE: ContentWithRichTextPreview[] = [];
-    const withVideo: ContentWithVideo[] = [];
-
-    data.contents.forEach(content => {
-      if (content.image?.contentType === 'image') {
-        withImage.push(contentToImageMapper(content));
-      }
-
-      if (content.richText?.contentType === 'richText') {
-        withRTE.push(contentToRTEMapper(content));
-      }
-
-      if (content.video?.contentType === 'video') {
-        withVideo.push(contentToVideoMapper(content));
-      }
-    });
-
-    const unifiedContents = [...withImage, ...withRTE, ...withVideo].sort((a, b) => a.id - b.id);
-
-    return {
-      ...data,
-      contents: unifiedContents,
-    };
+    // O cast aqui é só pela praticidade
+    return data as TopicWithContentArray
   }
 
   async updateTopic(topic: UpdateTopic): Promise<void> {
@@ -197,81 +171,4 @@ export class TopicRepository {
       throw new Error('Erro ao omitir tópico');
     }
   }
-}
-
-function contentToImageMapper(content: any): ContentWithImage {
-  const image: ContentWithImage = {
-    active: content.active,
-    author: content.author,
-    contributors: content.contributors,
-    createdAt: content.createdAt,
-    contentType: 'image',
-    id: content.id,
-    updatedAt: content.updatedAt,
-    deletedAt: content.deletedAt,
-    title: content.title,
-    content: {
-      baseContentId: content.image.baseContentId,
-      contentType: 'image',
-      createdAt: content.image.createdAt,
-      id: content.image.id,
-      updatedAt: content.image.updatedAt,
-      deletedAt: content.image.deletedAt,
-      src: content.image.src,
-      description: content.image.description,
-    },
-  };
-
-  return image;
-}
-
-function contentToRTEMapper(content: any): ContentWithRichTextPreview {
-  const rt: ContentWithRichTextPreview = {
-    active: content.active,
-    author: content.author,
-    contributors: content.contributors,
-    createdAt: content.createdAt,
-    contentType: 'richText',
-    id: content.id,
-    updatedAt: content.updatedAt,
-    deletedAt: content.deletedAt,
-    title: content.title,
-    content: {
-      baseContentId: content.richText.baseContentId,
-      contentType: 'richText',
-      createdAt: content.richText.createdAt,
-      id: content.richText.id,
-      updatedAt: content.richText.updatedAt,
-      deletedAt: content.richText.deletedAt,
-      previewAsJson: content.richText.previewAsJson,
-    },
-  };
-
-  return rt;
-}
-
-function contentToVideoMapper(content: any): ContentWithVideo {
-  const video: ContentWithVideo = {
-    active: content.active,
-    author: content.author,
-    contributors: content.contributors,
-    createdAt: content.createdAt,
-    contentType: 'video',
-    id: content.id,
-    updatedAt: content.updatedAt,
-    deletedAt: content.deletedAt,
-    title: content.title,
-    content: {
-      baseContentId: content.video.baseContentId,
-      contentType: 'video',
-      createdAt: content.video.createdAt,
-      id: content.video.id,
-      updatedAt: content.video.updatedAt,
-      deletedAt: content.video.deletedAt,
-      src: content.video.src,
-      description: content.video.description,
-    },
-  };
-
-  return video;
 }

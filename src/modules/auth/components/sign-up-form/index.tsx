@@ -1,17 +1,18 @@
 'use client';
 
+import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
+import { fail, isFail } from '@/shared/lib/result';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useFormState } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
-import { userSignUpSchema } from '../../schemas/user-sign-up-schema';
 import { registerMutation } from '../../actions/register-mutation';
-import { useFormState } from 'react-dom';
-import { ErrorMessage } from '@/shared/components/common/error-message';
-import { fail, isFail } from '@/shared/lib/result';
+import { userSignUpSchema } from '../../schemas/user-sign-up-schema';
+import { PasswordInput } from '../password-input';
 
 type SignUpFormSchema = z.infer<typeof userSignUpSchema>;
 
@@ -68,7 +69,7 @@ export function SignUpForm() {
               <FormItem>
                 <FormLabel>Senha</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="******" {...field} />
+                  <PasswordInput {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

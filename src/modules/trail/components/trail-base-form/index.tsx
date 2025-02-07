@@ -1,6 +1,6 @@
 'use client';
 
-import { TrailCategorySearchInput } from '@/modules/category/components/trail-category-search-input';
+import { CategoriesAsyncSelect } from '@/modules/category/components/categories-async-select';
 import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
@@ -50,14 +50,18 @@ export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseF
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
+          name="category"
+          render={() => (
+            <FormItem className='flex flex-col gap-2'>
               <FormLabel>Descrição</FormLabel>
               <FormControl>
-                <Input placeholder="Alguma descrição" {...field} />
+                <CategoriesAsyncSelect
+                  selectedCategory={{ name: form.watch('category') || '' }}
+                  setSelectedCategory={(category) => form.setValue('category', category.name)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -66,15 +70,12 @@ export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseF
 
         <FormField
           control={form.control}
-          name="category"
-          render={() => (
+          name="description"
+          render={({ field }) => (
             <FormItem>
-              <FormLabel>Categoria</FormLabel>
+              <FormLabel>Descrição</FormLabel>
               <FormControl>
-                <TrailCategorySearchInput
-                  value={form.watch('category') || ''}
-                  setValue={form.setValue.bind(form, 'category')}
-                />
+                <Input placeholder="Alguma descrição" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

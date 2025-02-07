@@ -21,7 +21,6 @@ export const trailContributionTable = sqliteTable(
     contributedAt: integer('contributedAt', { mode: 'timestamp' })
       .notNull()
       .default(NOW_AS_INTEGER)
-      .$onUpdate(() => new Date()),
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.trailId] }) }),
 );

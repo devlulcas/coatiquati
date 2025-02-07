@@ -6,7 +6,7 @@ import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { z } from 'zod';
-import { UserRepository } from '../repositories/user-repository';
+import { getUserById, updateUser } from '../repositories/user-repository';
 
 const setUserRoleUseCaseSchema = z.object({
   userId: z.string(),
@@ -48,9 +48,7 @@ export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Re
     return fail('Você não pode editar suas próprias permissões.');
   }
 
-  const userRepository = new UserRepository();
-
-  const targetUserResult = await wrapAsyncInResult(userRepository.getUserById(validatedParams.data.userId));
+  const targetUserResult = await wrapAsyncInResult(getUserById(validatedParams.data.userId));
 
   if (targetUserResult.type === 'fail' || targetUserResult.value === null) {
     log.warn('Usuário não encontrado', {
@@ -83,8 +81,8 @@ export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Re
   }
 
   try {
-    const user = await userRepository.getUserById(validatedParams.data.userId)
-    await userRepository.updateUser(validatedParams.data.userId, { ...user, role: desiredRole });
+    const user = await getUserById(validatedParams.data.userId)
+    await updateUser(validatedParams.data.userId, { ...user, role: desiredRole });
     return ok('Permissões de usuário alteradas com sucesso.');
   } catch (error) {
     log.error('Erro ao alterar as permissões de usuário', error);

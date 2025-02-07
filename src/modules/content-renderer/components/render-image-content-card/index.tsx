@@ -1,14 +1,14 @@
-import type { ContentWithImage } from '@/modules/content/types/content';
+import type { ImageContent } from '@/modules/content/types/content';
 import Image from 'next/image';
 import { ZoomedImage } from '../../../image-content/components/zoomed-image';
 import { RenderedContentWrapper } from '../rendered-content-wrapper';
 
-export async function RenderImageContentCard({ data }: { data: ContentWithImage }) {
+export async function RenderImageContentCard({ data }: { data: ImageContent }) {
   return (
     <RenderedContentWrapper
       title={data.title}
       by={data.author}
-      content={{ id: data.content.baseContentId, type: data.contentType }}
+      content={{ id: data.id, type: data.contentType }}
     >
       <div className="absolute right-2 top-1 z-10">
         <ZoomedImage content={data} />

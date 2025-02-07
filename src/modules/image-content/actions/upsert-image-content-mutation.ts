@@ -2,13 +2,14 @@
 
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAuthenticated } from '@/modules/auth/utils/is';
-import { ImageContentRepository } from '@/modules/image-content/repositories/image-content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { ContentType } from '@/modules/content/types/content-json-field';
 import {
   newImageContentSchema,
   type NewImageContentSchema,
 } from '@/modules/image-content/schemas/new-image-content-schema';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, isOk, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertImageContentMutation(params: NewImageContentSchema): Promise<Result<number>> {
   const { user } = await validateRequest();
@@ -17,20 +18,28 @@ export async function upsertImageContentMutation(params: NewImageContentSchema):
     return fail('Usuário não autenticado');
   }
 
-  const validatedParams = newImageContentSchema.safeParse(params);
+  const validated = newImageContentSchema.safeParse(params);
 
-  if (!validatedParams.success) {
-    log.error('Falha ao validar parâmetros.', { params, errors: validatedParams.error });
-    return fail(validatedParams.error.message);
+  if (!validated.success) {
+    log.error('Falha ao validar parâmetros.', { params, errors: validated.error });
+    return fail(validated.error.message);
   }
 
-  const imageContentRepository = new ImageContentRepository();
+  const repo = new BaseContentRepository();
+
+  const author = validated.data.id ? await repo.getAuthorId(validated.data.id) : null
+
+  const newAuthorId = author && isOk(author) ? author.value : user.id
 
   const newContentId = await wrapAsyncInResult(
-    imageContentRepository.upsert(
-      { title: params.title, topicId: params.topicId, authorId: user.id },
-      { description: params.description, src: params.src },
-    ),
+    repo.upsertBaseContent({
+      contentType: ContentType.Image,
+      id: validated.data.id,
+      title: params.title,
+      topicId: params.topicId,
+      authorId: newAuthorId,
+      content: { description: params.description, src: params.src },
+    }),
   );
 
   if (isFail(newContentId)) {

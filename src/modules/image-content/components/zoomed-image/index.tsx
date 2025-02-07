@@ -1,6 +1,6 @@
 'use client';
 
-import type { ContentWithImage } from '@/modules/content/types/content';
+import type { ImageContent } from '@/modules/content/types/content';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
@@ -22,7 +22,7 @@ import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 
 type ZoomedImageProps = {
-  content: ContentWithImage;
+  content: ImageContent;
 };
 
 export function ZoomedImage({ content }: ZoomedImageProps) {

@@ -22,12 +22,8 @@ export function VerifyAccountEmail({ name, url }: VerifyAccountEmailProps) {
         </Button>
 
         <Row>
-          <Text className="text-neutral-300">ou</Text>
-        </Row>
-
-        <Row>
           <Link href={url}>
-            Acesse este link para verificar sua conta: <strong>{url}</strong>
+            Ou acesse este link para verificar sua conta: <strong>{url}</strong>
           </Link>
         </Row>
       </Section>

@@ -5,7 +5,7 @@ import { isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidatePath } from 'next/cache';
-import { UserRepository } from '../repositories/user-repository';
+import { getUserById, updateUser } from '../repositories/user-repository';
 import { updateUserSchema, type UpdateUserSchema } from '../schemas/update-user-schema';
 
 export async function updateUserMutation(params: UpdateUserSchema): Promise<Result<string>> {
@@ -15,9 +15,7 @@ export async function updateUserMutation(params: UpdateUserSchema): Promise<Resu
     return fail('Você precisa estar logado para editar suas informações.');
   }
 
-  const userRepository = new UserRepository();
-
-  const currentUserResult = await wrapAsyncInResult(userRepository.getUserById(user.id));
+  const currentUserResult = await wrapAsyncInResult(getUserById(user.id));
 
   if (currentUserResult.type === 'fail' || currentUserResult.value === null) {
     log.warn('Usuário não encontrado', {
@@ -41,7 +39,7 @@ export async function updateUserMutation(params: UpdateUserSchema): Promise<Resu
   }
 
   try {
-    await userRepository.updateUser(user.id, {
+    await updateUser(user.id, {
       avatar: validatedParams.data.avatar,
       username: validatedParams.data.username,
       email: validatedParams.data.email,

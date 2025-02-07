@@ -22,12 +22,8 @@ export function ResetPasswordEmail({ name, url }: ResetPasswordEmailProps) {
         </Button>
 
         <Row>
-          <Text className="text-neutral-300">ou</Text>
-        </Row>
-
-        <Row>
           <Link href={url}>
-            Acesse este link para alterar sua senha: <strong>{url}</strong>
+            Ou acesse este link para alterar sua senha: <strong>{url}</strong>
           </Link>
         </Row>
       </Section>

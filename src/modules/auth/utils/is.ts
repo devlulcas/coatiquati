@@ -1,5 +1,4 @@
 import { roles, type Role } from '../constants/roles';
-import type { Session } from '../types/session';
 
 export const isAdmin = (role: string | null | undefined): role is Role => {
   return role === roles.ADMIN;
@@ -21,3 +20,7 @@ export const isAuthenticated = <T>(sessionOrUser?: T | null): sessionOrUser is T
 export const isAdminOrAbove = (role: string | null | undefined): role is Role => {
   return role === roles.ADMIN || role === roles.HIGH_PRIVILEGE_ADMIN;
 };
+
+export function hasPermission(perm: string, required: Role[]) {
+  return (required as string[]).includes(perm);
+}
