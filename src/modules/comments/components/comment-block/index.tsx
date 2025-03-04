@@ -4,11 +4,13 @@ import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-quer
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
+import { isOk } from '@/shared/lib/result';
 import { cn } from '@/shared/utils/cn';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowDownIcon, ArrowUpIcon, Loader2Icon } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Loader2Icon, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { useState } from 'react';
 import { downvoteCommentMutation } from '../../actions/downvote-comment-mutation';
+import { getuserCommentVoteQuery } from '../../actions/get-user-comment-vote-query';
 import { upvoteCommentMutation } from '../../actions/upvote-comment-mutation';
 import type { Comment } from '../../types/comment';
 import { AnswerCommentDrawerTrigger } from '../answer-comment-drawer-trigger';
@@ -65,62 +67,27 @@ export function CommentBlock({ comment }: CommentBlockProps) {
 }
 
 function VotingActions({ comment }: { comment: Comment }) {
-  const [votes, setVotes] = useState(comment.votes);
-
-  const updateOrAddVote = (vote: { userId: string; vote: number }) => {
-    setVotes(prevVotes => {
-      const voteIndex = prevVotes.findIndex(v => v.userId === vote.userId);
-
-      if (voteIndex === -1) {
-        return [...prevVotes, vote];
-      }
-
-      const oldVote = prevVotes[voteIndex];
-
-      if (oldVote.vote === vote.vote) {
-        vote.vote = 0;
-      }
-
-      const newVotes = [...prevVotes];
-
-      newVotes[voteIndex] = vote;
-
-      return newVotes;
-    });
-  };
-
-  const [upvoteCount, downvoteCount] = useMemo(() => {
-    let upvoteCount = 0;
-    let downvoteCount = 0;
-
-    votes.forEach(vote => {
-      if (vote.vote === 1) {
-        upvoteCount++;
-      } else if (vote.vote === -1) {
-        downvoteCount++;
-      }
-    });
-
-    return [upvoteCount, downvoteCount];
-  }, [votes]);
-
   const currentUserDataQuery = useCurrentUserDataQuery();
 
-  const currentUserVote = useMemo(() => {
-    return votes.find(vote => vote.userId === currentUserDataQuery.data?.id)?.vote ?? 0;
-  }, [votes, currentUserDataQuery.data?.id]);
+  const userVoteQuery = useQuery({
+    queryKey: ['USER_COMMENT_VOTE_QUERY_KEY', comment.id],
+    queryFn: () => getuserCommentVoteQuery(comment.id),
+    enabled: !!currentUserDataQuery.data
+  })
+
+  const [currentVote, setCurrentVote] = useState(userVoteQuery.data && isOk(userVoteQuery.data) ? userVoteQuery.data.value : 0)
 
   const upvoteMutation = useServerActionMutation({
     serverAction: upvoteCommentMutation,
     onSuccessfulAction: () => {
-      updateOrAddVote({ userId: currentUserDataQuery.data!.id, vote: 1 });
+      setCurrentVote(1)
     },
   });
 
   const downvoteMutation = useServerActionMutation({
     serverAction: downvoteCommentMutation,
     onSuccessfulAction: () => {
-      updateOrAddVote({ userId: currentUserDataQuery.data!.id, vote: -1 });
+      setCurrentVote(-1)
     },
   });
 
@@ -130,22 +97,11 @@ function VotingActions({ comment }: { comment: Comment }) {
         size="sm"
         type="button"
         variant="outline"
-        className={cn('flex items-center gap-2', currentUserVote === 1 && 'text-brand-500')}
+        className={cn('flex items-center gap-2', currentVote === 1 && 'text-brand-500')}
         onClick={() => upvoteMutation.mutate(comment.id)}
       >
-        <ArrowUpIcon size={16} />
-        <span>{upvoteCount}</span>
-      </Button>
-
-      <Button
-        size="sm"
-        type="button"
-        variant="outline"
-        className={cn('flex items-center gap-2', currentUserVote === -1 && 'text-brand-500')}
-        onClick={() => downvoteMutation.mutate(comment.id)}
-      >
-        <ArrowDownIcon size={16} />
-        <span>{downvoteCount}</span>
+        {currentVote !== -1 ? <ThumbsUp size={16} /> : <ThumbsDown size={16} />}
+        <span>{comment.voteCount}</span>
       </Button>
     </>
   );

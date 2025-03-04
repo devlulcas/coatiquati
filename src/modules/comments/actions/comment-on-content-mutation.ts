@@ -3,7 +3,7 @@
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
-import { type ContentNewCommentTable } from '@/modules/database/schema/comment';
+import { type NewComment } from '@/modules/database/schema/comment';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { CommentRepository } from '../repositories/comment-repository';
@@ -25,7 +25,7 @@ export async function commentOnContentMutation(params: NewCommentSchema): Promis
   const SIXTY_SECONDS = 60000;
 
   const lastCommentResult = await wrapAsyncInResult(
-    db.query.contentCommentTable.findFirst({
+    db.query.commentTable.findFirst({
       where: (fields, operators) => {
         return operators.and(
           operators.eq(fields.authorId, user.id),
@@ -40,7 +40,7 @@ export async function commentOnContentMutation(params: NewCommentSchema): Promis
     return fail('Espere 60 segundos para comentar novamente');
   }
 
-  const newComment: ContentNewCommentTable = {
+  const newComment: NewComment = {
     authorId: user.id,
     contentId: params.contentId,
     content: params.content,

@@ -1,10 +1,6 @@
-import type { ContentCommentTable } from '@/modules/database/schema/comment';
+import type { Comment as CommentTable } from '@/modules/database/schema/comment';
 import type { Contributor } from '@/modules/user/types/user';
 
-export type Comment = ContentCommentTable & {
+export type Comment = CommentTable & {
   author: Contributor;
-  votes: {
-    userId: string;
-    vote: number;
-  }[];
 };
