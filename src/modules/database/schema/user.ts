@@ -16,12 +16,12 @@ export type AuthUserTable = InferSelectModel<typeof userTable>;
 export const userTable = sqliteTable('user', {
   id: text('id').primaryKey(),
   username: text('username').notNull().unique(),
-  password_hash: text('password_hash').notNull(),
+  passwordHash: text('password_hash').notNull(),
   role: text('role').$type<Role>().notNull(),
   email: text('email').notNull().unique(),
   avatar: text('avatar').notNull().default('/avatars/original.png'),
-  verifiedAt: integer('verifiedAt', { mode: 'timestamp' }),
-  bannedAt: integer('bannedAt', { mode: 'timestamp' }),
+  verifiedAt: integer('verified_at', { mode: 'timestamp' }),
+  bannedAt: integer('banned_at', { mode: 'timestamp' }),
   ...tableTimestampColumns,
 });
 
@@ -40,7 +40,7 @@ export const userTableRelations = relations(userTable, ({ one, many }) => ({
   publications: many(publicationTable),
 }));
 
-export const sessionTable = sqliteTable('userSession', {
+export const sessionTable = sqliteTable('user_session', {
   id: text('id').primaryKey(),
   user_id: text('user_id')
     .notNull()

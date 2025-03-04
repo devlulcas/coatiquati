@@ -13,10 +13,10 @@ export const contentTable = sqliteTable('content', {
   id: integer('id').primaryKey().notNull(),
   title: text('title').notNull(),
   active: integer('active', { mode: 'boolean' }).notNull().default(true),
-  contentType: text('content-type').$type<ContentType>().notNull(),
+  contentType: text('content_type').$type<ContentType>().notNull(),
   content: text('content', { mode: 'json' }).$type<ContentJSON>().notNull(),
-  topicId: integer('topicId').references(() => topicTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
-  authorId: text('userId')
+  topicId: integer('topic_id').references(() => topicTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+  authorId: text('user_id')
     .notNull()
     .references(() => userTable.id, { onDelete: 'no action', onUpdate: 'cascade' }),
   ...tableTimestampColumns,

@@ -5,7 +5,7 @@ import { userTable } from './user';
 
 export const passwordResetTokenTable = sqliteTable('userPasswordResetToken', {
   id: text('id').primaryKey(),
-  userId: text('userId')
+  userId: text('user_id')
     .notNull()
     .references(() => userTable.id),
   expires: blob('expires', { mode: 'bigint' }).notNull(),

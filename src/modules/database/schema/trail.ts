@@ -1,4 +1,4 @@
-import { relations, sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { relations, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentStatus, type ContentStatus } from '../../../shared/constants/content-status';
 import { tableTimestampColumns } from '../lib/helpers';
@@ -16,11 +16,11 @@ export const trailTable = sqliteTable('trail', {
   description: text('description').notNull(),
   thumbnail: text('thumbnail').notNull(),
   status: text('status').$type<ContentStatus>().default(contentStatus.DRAFT).notNull(),
-  category: text('categoryId').references(() => categoryTable.name, {
+  category: text('category_id').references(() => categoryTable.name, {
     onDelete: 'set null',
     onUpdate: 'cascade',
   }),
-  authorId: text('userId')
+  authorId: text('user_id')
     .notNull()
     .references(() => userTable.id, {
       onDelete: 'no action',
@@ -48,18 +48,13 @@ export type NewCategoryTable = InferInsertModel<typeof categoryTable>;
 
 export const categoryTable = sqliteTable('category', {
   name: text('name').primaryKey().notNull().unique(),
-  authorId: text('userId')
+  authorId: text('user_id')
     .notNull()
     .references(() => userTable.id, {
       onDelete: 'set null',
       onUpdate: 'cascade',
     }),
-  createdAt: text('created_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
-  updatedAt: text('updated_at')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  ...tableTimestampColumns
 });
 
 export const categoryTableRelations = relations(categoryTable, ({ many }) => ({

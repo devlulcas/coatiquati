@@ -8,12 +8,12 @@ export type FeedbackInsert = InferInsertModel<typeof feedbackTable>;
 
 export const feedbackTable = sqliteTable('feedback', {
   id: integer('id').primaryKey(),
-  userId: text('userId')
+  userId: text('user_id')
     .notNull()
     .references(() => userTable.id),
   type: text('type').notNull().$type<'bug' | 'feature' | 'improvement'>(),
   content: text('content').notNull(),
-  softwareVersion: text('softwareVersion').notNull(),
+  softwareVersion: text('software_version').notNull(),
   ...tableTimestampColumns,
 });
 

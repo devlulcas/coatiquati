@@ -8,10 +8,10 @@ export type NewEmailVerificationToken = InferInsertModel<typeof emailVerificatio
 
 export const emailVerificationTokenTable = sqliteTable('userEmailVerificationToken', {
   id: text('id').primaryKey(),
-  userId: text('userId')
+  userId: text('user_id')
     .notNull()
     .references(() => userTable.id),
-  expiresAt: integer('expiresAt', { mode: 'timestamp' }).notNull(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
   ...tableTimestampColumns,
 });
 

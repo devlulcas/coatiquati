@@ -6,13 +6,13 @@ import { userTable } from './user';
 export const userFollowerTable = sqliteTable(
   'userFollower',
   {
-    userId: text('userId')
+    userId: text('user_id')
       .notNull()
       .references(() => userTable.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    followerId: text('followerId')
+    followerId: text('follower_id')
       .notNull()
       .references(() => userTable.id, {
         onDelete: 'cascade',

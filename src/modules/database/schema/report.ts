@@ -8,18 +8,18 @@ export type ReportSelect = InferSelectModel<typeof reportTable>;
 export type ReportInsert = InferInsertModel<typeof reportTable>;
 export const reportTable = sqliteTable('report', {
   id: integer('id').primaryKey(),
-  userId: text('userId')
+  userId: text('user_id')
     .notNull()
     .references(() => userTable.id),
-  reportedById: text('reportedById')
+  reportedById: text('reported_by_id')
     .notNull()
     .references(() => userTable.id),
   type: text('type').$type<ReportReason>().notNull(),
   reportedEntityId: integer('entityId').notNull(),
-  reportedEntityType: text('entityType').$type<'trail' | 'topic' | 'content' | 'publication'>().notNull(),
+  reportedEntityType: text('entity_type').$type<'trail' | 'topic' | 'content' | 'publication'>().notNull(),
   description: text('description').notNull(),
   status: text('status').$type<'pending' | 'resolved'>().notNull().default('pending'),
-  moderatorId: text('moderatorId').references(() => userTable.id),
+  moderatorId: text('moderator_id').references(() => userTable.id),
   ...tableTimestampColumns,
 });
 

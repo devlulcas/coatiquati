@@ -25,7 +25,7 @@ export type PublicationMediaSelect = InferSelectModel<typeof publicationMediaTab
 export type PublicationMediaInsert = InferInsertModel<typeof publicationMediaTable>;
 export const publicationMediaTable = sqliteTable('publicationMedia', {
   id: integer('id').primaryKey(),
-  publicationId: integer('publicationId')
+  publicationId: integer('publication_id')
     .notNull()
     .references(() => publicationTable.id, { onDelete: 'cascade' }),
   description: text('description').notNull(),

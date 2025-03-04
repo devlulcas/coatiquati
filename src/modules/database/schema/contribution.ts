@@ -12,13 +12,13 @@ import { userTable } from './user';
 export const trailContributionTable = sqliteTable(
   'trailContribution',
   {
-    trailId: integer('trailId')
+    trailId: integer('trail_id')
       .references(() => trailTable.id)
       .notNull(),
-    userId: text('userId')
+    userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: integer('contributedAt', { mode: 'timestamp' })
+    contributedAt: integer('contributed_at', { mode: 'timestamp' })
       .notNull()
       .default(NOW_AS_INTEGER)
   },
@@ -40,13 +40,13 @@ export const trailContributionTableRelations = relations(trailContributionTable,
 export const topicContributionTable = sqliteTable(
   'topicContribution',
   {
-    topicId: integer('topicId')
+    topicId: integer('topic_id')
       .references(() => topicTable.id)
       .notNull(),
-    userId: text('userId')
+    userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: text('contributedAt')
+    contributedAt: text('contributed_at')
       .default(sql`CURRENTTIMESTAMP`)
       .notNull(),
   },
@@ -68,13 +68,13 @@ export const topicContributionTableRelations = relations(topicContributionTable,
 export const contentContributionTable = sqliteTable(
   'contentContribution',
   {
-    contentId: integer('contentId')
+    contentId: integer('content_id')
       .references(() => contentTable.id)
       .notNull(),
-    userId: text('userId')
+    userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: text('contributedAt')
+    contributedAt: text('contributed_at')
       .default(sql`CURRENTTIMESTAMP`)
       .notNull(),
   },

@@ -6,13 +6,13 @@ import { userTable } from './user';
 export const trailSubscriptionTable = sqliteTable(
   'trailSubscrition',
   {
-    trailId: integer('trailId')
+    trailId: integer('trail_id')
       .notNull()
       .references(() => trailTable.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    userId: text('userId')
+    userId: text('user_id')
       .notNull()
       .references(() => userTable.id, {
         onDelete: 'cascade',

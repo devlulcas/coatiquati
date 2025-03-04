@@ -1,76 +1,86 @@
 import { relations, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
-import { foreignKey, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { foreignKey, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { contentTable } from './content';
 import { userTable } from './user';
 
-export type ContentCommentTable = InferSelectModel<typeof contentCommentTable>;
-export type ContentNewCommentTable = InferInsertModel<typeof contentCommentTable>;
+export type Comment = InferSelectModel<typeof commentTable>;
+export type NewComment = InferInsertModel<typeof commentTable>;
+export type CommentVote = InferSelectModel<typeof commentVoteTable>;
+export type NewCommentVote = InferInsertModel<typeof commentVoteTable>;
 
-export const contentCommentTable = sqliteTable(
-  'comment',
+export const commentTable = sqliteTable('comment', {
+  id: integer('id').primaryKey().notNull(),
+  contentId: integer('content_id').notNull().references(() => contentTable.id, { onDelete: 'cascade', onUpdate: 'cascade', }),
+  authorId: text('author_id').notNull().references(() => userTable.id, { onDelete: 'cascade', onUpdate: 'cascade', }),
+  content: text('content').notNull(),
+  parentCommentId: integer('parent_comment_id'),
+
+  // Métricas
+  voteCount: integer('vote_count').notNull().default(0),
+  replyCount: integer('reply_count').notNull().default(0),
+  isEdited: integer('is_edited', { mode: 'boolean' }).notNull().default(false),
+  ...tableTimestampColumns,
+},
+  table => ({
+    // Chaves estrangeira para si mesmo
+    parentCommentReference: foreignKey({
+      columns: [table.parentCommentId],
+      foreignColumns: [table.id],
+    }),
+    // Indices para buscas frequentes
+    contentIdIdx: uniqueIndex('content_id_idx').on(table.contentId),
+    authorIdIdx: uniqueIndex('author_id_idx').on(table.authorId),
+  }),
+);
+
+// Comment relations
+export const commentRelations = relations(commentTable, ({ one, many }) => ({
+  content: one(contentTable, {
+    fields: [commentTable.contentId],
+    references: [contentTable.id],
+  }),
+  author: one(userTable, {
+    fields: [commentTable.authorId],
+    references: [userTable.id],
+  }),
+  parentComment: one(commentTable, {
+    fields: [commentTable.parentCommentId],
+    references: [commentTable.id],
+  }),
+  childComments: many(commentTable),
+  votes: many(commentVoteTable),
+}));
+
+export const commentVoteTable = sqliteTable(
+  'comment_vote',
   {
     id: integer('id').primaryKey().notNull(),
-    contentId: integer('contentId')
+    commentId: integer('comment_id')
       .notNull()
-      .references(() => contentTable.id, {
+      .references(() => commentTable.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    authorId: text('useId')
+    userId: text('user_id')
       .notNull()
       .references(() => userTable.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    content: text('content').notNull(),
-    parentCommentId: integer('parentCommentId'),
+    // -1 | 1
+    value: integer('value').notNull().default(1),
     ...tableTimestampColumns,
   },
   table => ({
-    parentCommentReference: foreignKey(() => ({
-      columns: [table.parentCommentId],
-      foreignColumns: [table.id],
-    })),
+    userCommentUnique: uniqueIndex('user_comment_unique_idx').on(table.userId, table.commentId),
   }),
 );
-export const contentCommentTableRelations = relations(contentCommentTable, ({ one, many }) => ({
-  content: one(contentTable, {
-    fields: [contentCommentTable.contentId],
-    references: [contentTable.id],
-  }),
-  author: one(userTable, {
-    fields: [contentCommentTable.authorId],
-    references: [userTable.id],
-  }),
-  parentComment: one(contentCommentTable, {
-    fields: [contentCommentTable.parentCommentId],
-    references: [contentCommentTable.id],
-  }),
-  votes: many(commentVoteTable),
-}));
 
-export const commentVoteTable = sqliteTable('commentVote', {
-  id: integer('id').primaryKey().notNull(),
-  commentId: integer('commenId')
-    .notNull()
-    .references(() => contentCommentTable.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    }),
-  userId: text('useId')
-    .notNull()
-    .references(() => userTable.id, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    }),
-  vote: integer('vote').notNull(),
-  ...tableTimestampColumns,
-});
-export const commentVoteTableRelations = relations(commentVoteTable, ({ one }) => ({
-  comment: one(contentCommentTable, {
+export const commentVoteRelations = relations(commentVoteTable, ({ one }) => ({
+  comment: one(commentTable, {
     fields: [commentVoteTable.commentId],
-    references: [contentCommentTable.id],
+    references: [commentTable.id],
   }),
   user: one(userTable, {
     fields: [commentVoteTable.userId],
