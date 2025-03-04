@@ -1,20 +1,15 @@
 'use server';
 
-import { log } from '@/modules/logging/lib/pino';
-import { EmailVerificationService } from '../services/email-verification-service';
-import { auth } from '../services/lucia';
-import type { Session } from '../types/session';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
+import { log } from '@/modules/logging/lib/pino';
+import { fail, ok } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { fail } from '@/shared/lib/result';
+import { validateToken } from '../services/email-verification-service';
+import { auth } from '../services/lucia';
 
 export async function verifyEmailMutation(token: string) {
-  const emailVerificationServive = new EmailVerificationService();
-
-  const userId = await emailVerificationServive.validateToken(token).catch(error => {
+  const userId = await validateToken(token).catch(error => {
     log.error('Erro ao tentar validar token de verificação de e-mail', { error });
     return null;
   });
@@ -33,8 +28,7 @@ export async function verifyEmailMutation(token: string) {
     log.info('Conta verificada', { userId, updatedUser });
     const session = await auth.createSession(userId, {});
     const sessionCookie = auth.createSessionCookie(session.id);
-    cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-    return redirect('/');
+    return ok({ sessionCookie });
   } catch (error) {
     log.error('Erro ao tentar verificar conta', { error });
     return fail('Erro ao tentar verificar conta.');

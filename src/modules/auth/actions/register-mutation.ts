@@ -13,7 +13,7 @@ import { generateId } from 'lucia';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { roles } from '../constants/roles';
-import { EmailVerificationService } from '../services/email-verification-service';
+import { generateToken } from '../services/email-verification-service';
 import { auth } from '../services/lucia';
 
 export async function registerMutation(_: any, formData: FormData): Promise<Result> {
@@ -48,7 +48,7 @@ export async function registerMutation(_: any, formData: FormData): Promise<Resu
       .values({
         id: userId,
         username,
-        password_hash: passwordHash,
+        passwordHash: passwordHash,
         role: roles.USER,
         avatar: '/avatars/' + avatars[Math.floor(Math.random() * avatars.length)],
         bannedAt: null,
@@ -74,9 +74,7 @@ export async function registerMutation(_: any, formData: FormData): Promise<Resu
 }
 
 async function sendVerificationEmail(id: string, email: string, username: string) {
-  const emailVerificationService = new EmailVerificationService();
-
-  const token = await emailVerificationService.generateToken(id).catch(error => {
+  const token = await generateToken(id).catch(error => {
     log.error('Erro ao tentar gerar token de verificação de e-mail', { error });
     return null;
   });
@@ -87,7 +85,7 @@ async function sendVerificationEmail(id: string, email: string, username: string
     return fail('Erro ao tentar gerar token de verificação de e-mail.');
   }
 
-  const emailVerificationURL = new URL('api/verify-account', env.NEXT_PUBLIC_WEBSITE);
+  const emailVerificationURL = new URL('api/auth/verify-account', env.NEXT_PUBLIC_WEBSITE);
   emailVerificationURL.searchParams.set('token', token);
 
   try {

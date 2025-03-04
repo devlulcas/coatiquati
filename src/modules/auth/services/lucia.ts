@@ -1,14 +1,14 @@
-import { Lucia } from 'lucia';
-import { LibSQLAdapter } from '@lucia-auth/adapter-sqlite';
-import { cookies } from 'next/headers';
-import { cache } from 'react';
-import type { Session, User } from 'lucia';
 import { sqlite } from '@/modules/database/db';
 import type { AuthUserTable } from '@/modules/database/schema/user';
+import { LibSQLAdapter } from '@lucia-auth/adapter-sqlite';
+import type { Session, User } from 'lucia';
+import { Lucia } from 'lucia';
+import { cookies } from 'next/headers';
+import { cache } from 'react';
 
 const adapter = new LibSQLAdapter(sqlite, {
   user: 'user',
-  session: 'userSession',
+  session: 'user_session',
 });
 
 export const auth = new Lucia(adapter, {
@@ -51,7 +51,7 @@ export const validateRequest = cache(
         const sessionCookie = auth.createBlankSessionCookie();
         cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
       }
-    } catch {}
+    } catch { }
     return result;
   },
 );

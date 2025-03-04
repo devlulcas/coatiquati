@@ -28,7 +28,7 @@ export async function loginMutation(_: any, formData: FormData): Promise<Result>
     return fail('Nome de usuário ou senha incorretos');
   }
 
-  const validPassword = await verify(existingUser.password_hash, password);
+  const validPassword = await verify(existingUser.passwordHash, password);
 
   if (!validPassword) {
     return fail('Nome de usuário ou senha incorretos');

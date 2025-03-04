@@ -6,7 +6,7 @@ import { emailToHtml } from '@/modules/email/lib/email-to-html';
 import { mailer } from '@/modules/email/lib/mail';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok } from '@/shared/lib/result';
-import { EmailVerificationService } from '../services/email-verification-service';
+import { generateToken } from '../services/email-verification-service';
 import { validateRequest } from '../services/lucia';
 import { isAuthenticated } from '../utils/is';
 
@@ -21,9 +21,7 @@ export async function requestEmailVerificationMutation() {
     return fail('O e-mail já foi verificado.');
   }
 
-  const emailVerificationService = new EmailVerificationService();
-
-  const token = await emailVerificationService.generateToken(user.id).catch(error => {
+  const token = await generateToken(user.id).catch(error => {
     log.error('Erro ao tentar gerar token de verificação de e-mail', { error });
     return null;
   });
@@ -34,7 +32,7 @@ export async function requestEmailVerificationMutation() {
     return fail('Erro ao tentar gerar token de verificação de e-mail.');
   }
 
-  const emailVerificationURL = new URL('api/verify-account', env.NEXT_PUBLIC_WEBSITE);
+  const emailVerificationURL = new URL('api/auth/verify-account', env.NEXT_PUBLIC_WEBSITE);
   emailVerificationURL.searchParams.set('token', token);
 
   try {
