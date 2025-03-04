@@ -10,12 +10,13 @@ import { ArrowLeftIcon, FileIcon, ImageIcon, TextIcon, VideoIcon } from 'lucide-
 import Link from 'next/link';
 
 type PageProps = {
-  params: {
+  params: Promise<{
     topic: string;
-  };
+  }>;
 };
 
-export default async function Page({ params }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
   const topicId = Number(params.topic);
 
   const topicResult = await getTopicQuery(topicId);

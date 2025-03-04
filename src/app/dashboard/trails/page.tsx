@@ -3,10 +3,11 @@ import { DashboardTrailForm } from '@/modules/trail/components/dashboard-trail-f
 import { DashboardTrailResultView } from '@/modules/trail/components/dashboard-trail-result-view';
 
 type PageProps = {
-  searchParams: Record<keyof TrailSearchSchema, string>;
+  searchParams: Promise<Record<keyof TrailSearchSchema, string>>;
 };
 
-export default function Page({ searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
   return (
     <main className="container py-8">
       <DashboardTrailForm />

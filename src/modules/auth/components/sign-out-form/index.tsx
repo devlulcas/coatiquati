@@ -4,8 +4,7 @@ import { useToast } from '@/shared/components/ui/use-toast';
 import { fail, isFail, isOk } from '@/shared/lib/result';
 import { cn } from '@/shared/utils/cn';
 import type { ClassValue } from 'clsx';
-import { useEffect } from 'react';
-import { useFormState } from 'react-dom';
+import { useEffect, useActionState } from 'react';
 import { logoutMutation } from '../../actions/logout-mutation';
 
 type SignOutFormProps = {
@@ -15,7 +14,7 @@ type SignOutFormProps = {
 };
 
 export function SignOutForm({ children, className, formClassName }: SignOutFormProps) {
-  const [state, formAction, isPending] = useFormState(logoutMutation, fail('undefined'));
+  const [state, formAction, isPending] = useActionState(logoutMutation, fail('undefined'));
 
   const { toast } = useToast();
 

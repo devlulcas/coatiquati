@@ -11,7 +11,7 @@ export async function setFontMutation(font: Font): Promise<Result<string>> {
     return fail('Fonte inválida');
   }
 
-  const jar = cookies();
+  const jar = await cookies();
   jar.set(FONT_COOKIE_NAME, font, {
     sameSite: 'lax',
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
@@ -22,6 +22,7 @@ export async function setFontMutation(font: Font): Promise<Result<string>> {
 }
 
 export async function getFontQuery(): Promise<Ok<Font>> {
-  const font = (cookies().get(FONT_COOKIE_NAME)?.value || 'dark') as Font;
+  const jar = await cookies();
+  const font = (jar.get(FONT_COOKIE_NAME)?.value || 'dark') as Font;
   return ok(font === 'dyslexic' ? 'dyslexic' : 'common');
 }

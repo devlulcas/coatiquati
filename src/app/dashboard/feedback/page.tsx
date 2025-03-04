@@ -11,15 +11,16 @@ import { CheckIcon, MailIcon, SkullIcon, TrashIcon } from 'lucide-react';
 import Link from 'next/link';
 
 type PageProps = {
-  searchParams: {
+  searchParams: Promise<{
     type?: string;
     page?: string;
-  };
+  }>;
 };
 
 export default async function FeedbackPage(props: PageProps) {
-  const page = props.searchParams.page ? parseInt(props.searchParams.page) : 1;
-  const type = props.searchParams.type;
+  const searchParams = await props.searchParams;
+  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const type = searchParams.type;
 
   const feedbackResult = await getFeedbackListQuery(page, type);
 

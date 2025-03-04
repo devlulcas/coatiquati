@@ -11,7 +11,7 @@ export async function setBackgroundMutation(background: Background): Promise<Res
     return fail('Tema inválido');
   }
 
-  const jar = cookies();
+  const jar = await cookies();
   jar.set(BACKGROUND_COOKIE_NAME, background, {
     sameSite: 'lax',
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
@@ -22,6 +22,7 @@ export async function setBackgroundMutation(background: Background): Promise<Res
 }
 
 export async function getBackgroundQuery(): Promise<Ok<Background>> {
-  const background = (cookies().get(BACKGROUND_COOKIE_NAME)?.value || 'dark') as Background;
+  const jar = await cookies();
+  const background = (jar.get(BACKGROUND_COOKIE_NAME)?.value || 'dark') as Background;
   return ok(VALID_BACKGROUNDS.includes(background) ? background : 'blob');
 }

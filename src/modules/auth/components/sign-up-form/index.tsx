@@ -1,3 +1,4 @@
+import { useActionState } from "react";
 'use client';
 
 import { ErrorMessage } from '@/shared/components/common/error-message';
@@ -7,7 +8,6 @@ import { Input } from '@/shared/components/ui/input';
 import { fail, isFail } from '@/shared/lib/result';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useFormState } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
 import { registerMutation } from '../../actions/register-mutation';
@@ -21,7 +21,7 @@ export function SignUpForm() {
     resolver: zodResolver(userSignUpSchema),
   });
 
-  const [state, formAction, isPending] = useFormState(registerMutation, fail('undefined'));
+  const [state, formAction, isPending] = useActionState(registerMutation, fail('undefined'));
 
   return (
     <div className="flex h-[--view-height] flex-col items-center justify-center">

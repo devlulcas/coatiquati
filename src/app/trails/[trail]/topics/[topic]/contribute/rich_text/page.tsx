@@ -4,12 +4,13 @@ import { ErrorMessage } from '@/shared/components/common/error-message';
 import { isFail } from '@/shared/lib/result';
 
 type PageProps = {
-  params: {
+  params: Promise<{
     topic: string;
-  };
+  }>;
 };
 
-export default async function Page({ params }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
   const topicId = Number(params.topic);
   const topicResult = await getTopicQuery(topicId);
 

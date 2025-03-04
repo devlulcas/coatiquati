@@ -11,7 +11,7 @@ export async function setThemeMutation(theme: Theme): Promise<Result<string>> {
     return fail('Tema inválido');
   }
 
-  const jar = cookies();
+  const jar = await cookies();
   jar.set(THEME_COOKIE_NAME, theme, {
     sameSite: 'lax',
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
@@ -22,6 +22,7 @@ export async function setThemeMutation(theme: Theme): Promise<Result<string>> {
 }
 
 export async function getThemeQuery(): Promise<Ok<Theme>> {
-  const theme = (cookies().get(THEME_COOKIE_NAME)?.value || 'dark') as Theme;
+  const jar = await cookies();
+  const theme = (jar.get(THEME_COOKIE_NAME)?.value || 'dark') as Theme;
   return ok(theme === 'light' ? 'light' : 'dark');
 }

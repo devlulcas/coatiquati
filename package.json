@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "dev:dbg": "pnpm dev | pnpm pino-pretty --config .pino-prettyrc",
     "start": "next start",
@@ -72,13 +72,13 @@
     "hono": "^4.7.2",
     "lucia": "^3.2.2",
     "lucide-react": "^0.435.0",
-    "next": "14.2.6",
+    "next": "15.2.1",
     "nodemailer": "^6.10.0",
     "nuqs": "^2.4.0",
     "oslo": "^1.2.1",
     "pino": "^9.6.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-dropzone": "^14.3.8",
     "react-email": "3.0.1",
     "react-hook-form": "^7.54.2",
@@ -94,8 +94,8 @@
     "@clack/prompts": "^0.7.0",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "22.5.0",
-    "@types/react": "18.3.4",
-    "@types/react-dom": "18.3.0",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "autoprefixer": "10.4.20",
@@ -103,7 +103,7 @@
     "drizzle-dbml-generator": "^0.9.0",
     "drizzle-kit": "^0.24.2",
     "eslint": "8.57.0",
-    "eslint-config-next": "14.2.6",
+    "eslint-config-next": "15.2.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-react": "^1.1.7",
     "pino-pretty": "^11.3.0",
@@ -116,5 +116,11 @@
     "tsx": "^4.19.3",
     "typescript": "5.5.4"
   },
-  "packageManager": "pnpm@9.0.6+sha256.0624e30eff866cdeb363b15061bdb7fd9425b17bc1bb42c22f5f4efdea21f6b3"
+  "packageManager": "pnpm@9.0.6+sha256.0624e30eff866cdeb363b15061bdb7fd9425b17bc1bb42c22f5f4efdea21f6b3",
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.0.10",
+      "@types/react-dom": "19.0.4"
+    }
+  }
 }

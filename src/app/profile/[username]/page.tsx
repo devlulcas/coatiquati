@@ -16,12 +16,13 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 type PageProps = {
-  params: {
+  params: Promise<{
     username: string;
-  };
+  }>;
 };
 
-export default async function Page({ params }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
   const profileResult = await getUserProfileQuery(decodeURIComponent(params.username));
 
   if (isFail(profileResult)) {

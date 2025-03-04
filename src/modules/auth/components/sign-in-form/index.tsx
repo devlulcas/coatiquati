@@ -1,3 +1,4 @@
+import { useActionState } from "react";
 'use client';
 
 import { ErrorMessage } from '@/shared/components/common/error-message';
@@ -9,7 +10,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useFormState } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
 import { loginMutation } from '../../actions/login-mutation';
@@ -22,7 +22,7 @@ export function SignInForm() {
     resolver: zodResolver(userSignInSchema),
   });
 
-  const [state, formAction, isPending] = useFormState(loginMutation, fail('undefined'));
+  const [state, formAction, isPending] = useActionState(loginMutation, fail('undefined'));
 
   return (
     <div className="flex h-[--view-height] flex-col items-center justify-center">

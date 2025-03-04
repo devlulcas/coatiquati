@@ -6,7 +6,8 @@ import { isFail } from '@/shared/lib/result';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const params = await props.params;
   const trailId = Number(params.trail);
 
   const trailResult = await getTrailByIdQuery(trailId);
@@ -38,12 +39,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 type PageProps = {
-  params: {
+  params: Promise<{
     trail: string;
-  };
+  }>;
 };
 
-export default async function Page({ params }: PageProps) {
+export default async function Page(props: PageProps) {
+  const params = await props.params;
   const trailId = Number(params.trail);
 
   const trailResult = await getTrailByIdQuery(trailId);

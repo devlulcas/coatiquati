@@ -10,14 +10,15 @@ import { SearchIcon } from 'lucide-react';
 import Image from 'next/image';
 
 type PageProps = {
-  searchParams: {
+  searchParams: Promise<{
     search?: string;
     skip?: string;
     take?: string;
-  };
+  }>;
 };
 
-export default async function Page({ searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
   const trailsResult = await getTrailsQuery({
     search: searchParams.search,
     skip: Number(searchParams.skip ?? '0'),

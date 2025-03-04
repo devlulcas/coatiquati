@@ -7,13 +7,7 @@ import { isFail } from '@/shared/lib/result';
 import { TrashIcon } from 'lucide-react';
 import Link from 'next/link';
 
-type PageProps = {
-  searchParams: {
-    user?: string;
-  };
-};
-
-export default async function Page(props: PageProps) {
+export default async function Page() {
   const reportsResult = await getReportsQuery();
 
   return (

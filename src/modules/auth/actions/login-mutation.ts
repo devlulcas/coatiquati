@@ -36,6 +36,7 @@ export async function loginMutation(_: any, formData: FormData): Promise<Result>
 
   const session = await auth.createSession(existingUser.id, {});
   const sessionCookie = auth.createSessionCookie(session.id);
-  cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+  const jar = await cookies();
+  jar.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
   return redirect('/');
 }

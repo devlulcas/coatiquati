@@ -63,7 +63,8 @@ export async function registerMutation(_: any, formData: FormData): Promise<Resu
 
     const session = await auth.createSession(userId, {});
     const sessionCookie = auth.createSessionCookie(session.id);
-    cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    const jar = await cookies();
+    jar.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
   } catch (e) {
     log.error(e);
 

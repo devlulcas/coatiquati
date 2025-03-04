@@ -31,7 +31,8 @@ export const auth = new Lucia(adapter, {
 
 export const validateRequest = cache(
   async (): Promise<{ user: User; session: Session } | { user: null; session: null }> => {
-    const sessionId = cookies().get(auth.sessionCookieName)?.value ?? null;
+    const jar = await cookies();
+    const sessionId = jar.get(auth.sessionCookieName)?.value ?? null;
     if (!sessionId) {
       return {
         user: null,
@@ -45,13 +46,13 @@ export const validateRequest = cache(
     try {
       if (result.session && result.session.fresh) {
         const sessionCookie = auth.createSessionCookie(result.session.id);
-        cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+        jar.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
       }
       if (!result.session) {
         const sessionCookie = auth.createBlankSessionCookie();
-        cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+        jar.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
       }
-    } catch {}
+    } catch { }
     return result;
   },
 );

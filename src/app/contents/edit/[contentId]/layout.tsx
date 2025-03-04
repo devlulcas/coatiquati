@@ -5,12 +5,18 @@ import { redirect } from 'next/navigation';
 
 type EditContentLayoutProps = {
   children: React.ReactNode;
-  params: {
+  params: Promise<{
     contentId: string;
-  };
+  }>;
 };
 
-export default async function EditContentLayout({ children, params }: EditContentLayoutProps) {
+export default async function EditContentLayout(props: EditContentLayoutProps) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const contentId = Number(params.contentId);
 
   const { user } = await validateRequest();
