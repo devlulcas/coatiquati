@@ -29,11 +29,14 @@ export function SignInForm() {
       <Form {...form}>
         <form
           method="POST"
-          className="flex h-fit min-w-[400px] flex-col gap-4 rounded-md relative border bg-card px-4 py-6 shadow-md"
+          className="relative flex h-fit min-w-[400px] flex-col gap-4 rounded-md border bg-card px-4 py-6 shadow-md"
           action={formAction}
         >
-          <div className='absolute left-1/2 -translate-x-1/2 filter grayscale hover:grayscale-0' style={{ bottom: 'calc(100% - 7.5px)' }}>
-            <Image src={coatisHanging} alt='coatis' title='Coatis filhotes - zooborns.com' />
+          <div
+            className="absolute left-1/2 -translate-x-1/2 grayscale filter hover:grayscale-0"
+            style={{ bottom: 'calc(100% - 7.5px)' }}
+          >
+            <Image src={coatisHanging} alt="coatis" title="Coatis filhotes - zooborns.com" />
           </div>
 
           <h1 className="text-3xl font-bold">Entrar</h1>

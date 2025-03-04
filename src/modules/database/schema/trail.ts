@@ -54,7 +54,7 @@ export const categoryTable = sqliteTable('category', {
       onDelete: 'set null',
       onUpdate: 'cascade',
     }),
-  ...tableTimestampColumns
+  ...tableTimestampColumns,
 });
 
 export const categoryTableRelations = relations(categoryTable, ({ many }) => ({

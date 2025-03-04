@@ -55,12 +55,12 @@ export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseF
           control={form.control}
           name="category"
           render={() => (
-            <FormItem className='flex flex-col gap-2'>
+            <FormItem className="flex flex-col gap-2">
               <FormLabel>Descrição</FormLabel>
               <FormControl>
                 <CategoriesAsyncSelect
                   selectedCategory={{ name: form.watch('category') || '' }}
-                  setSelectedCategory={(category) => form.setValue('category', category.name)}
+                  setSelectedCategory={category => form.setValue('category', category.name)}
                 />
               </FormControl>
               <FormMessage />

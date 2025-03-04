@@ -4,11 +4,7 @@ import type { Comment } from '../types/comment';
 
 export class CommentRepository {
   async addCommentInContent(comment: NewComment): Promise<void> {
-    const newComment = await db
-      .insert(commentTable)
-      .values(comment)
-      .returning({ id: commentTable.id })
-      .execute();
+    const newComment = await db.insert(commentTable).values(comment).returning({ id: commentTable.id }).execute();
 
     if (!newComment.length) {
       throw new Error('Erro ao adicionar comentário');

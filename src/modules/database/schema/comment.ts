@@ -9,19 +9,25 @@ export type NewComment = InferInsertModel<typeof commentTable>;
 export type CommentVote = InferSelectModel<typeof commentVoteTable>;
 export type NewCommentVote = InferInsertModel<typeof commentVoteTable>;
 
-export const commentTable = sqliteTable('comment', {
-  id: integer('id').primaryKey().notNull(),
-  contentId: integer('content_id').notNull().references(() => contentTable.id, { onDelete: 'cascade', onUpdate: 'cascade', }),
-  authorId: text('author_id').notNull().references(() => userTable.id, { onDelete: 'cascade', onUpdate: 'cascade', }),
-  content: text('content').notNull(),
-  parentCommentId: integer('parent_comment_id'),
+export const commentTable = sqliteTable(
+  'comment',
+  {
+    id: integer('id').primaryKey().notNull(),
+    contentId: integer('content_id')
+      .notNull()
+      .references(() => contentTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    authorId: text('author_id')
+      .notNull()
+      .references(() => userTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    content: text('content').notNull(),
+    parentCommentId: integer('parent_comment_id'),
 
-  // Métricas
-  voteCount: integer('vote_count').notNull().default(0),
-  replyCount: integer('reply_count').notNull().default(0),
-  isEdited: integer('is_edited', { mode: 'boolean' }).notNull().default(false),
-  ...tableTimestampColumns,
-},
+    // Métricas
+    voteCount: integer('vote_count').notNull().default(0),
+    replyCount: integer('reply_count').notNull().default(0),
+    isEdited: integer('is_edited', { mode: 'boolean' }).notNull().default(false),
+    ...tableTimestampColumns,
+  },
   table => ({
     // Chaves estrangeira para si mesmo
     parentCommentReference: foreignKey({

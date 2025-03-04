@@ -14,14 +14,17 @@ export async function getuserCommentVoteQuery(commentId: number): Promise<Result
     return ok(0);
   }
 
-  const voteResult = await wrapAsyncInResult(db
-    .select({ vote: commentVoteTable.value })
-    .from(commentVoteTable)
-    .where(and(eq(commentVoteTable.commentId, commentId), eq(commentVoteTable.userId, user.id))).get());
+  const voteResult = await wrapAsyncInResult(
+    db
+      .select({ vote: commentVoteTable.value })
+      .from(commentVoteTable)
+      .where(and(eq(commentVoteTable.commentId, commentId), eq(commentVoteTable.userId, user.id)))
+      .get(),
+  );
 
   if (isFail(voteResult)) {
-    return ok(0)
+    return ok(0);
   }
 
-  return ok(voteResult.value?.vote ?? 0)
+  return ok(voteResult.value?.vote ?? 0);
 }

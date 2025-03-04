@@ -5,9 +5,7 @@ import { HTTPException } from 'hono/http-exception';
 import { roles, type Role } from '../constants/roles';
 import { hasPermission } from '../utils/is';
 
-export const protectWithPermissionMiddlewareFactory = (
-  role: Role[] = [roles.ADMIN, roles.HIGH_PRIVILEGE_ADMIN],
-) =>
+export const protectWithPermissionMiddlewareFactory = (role: Role[] = [roles.ADMIN, roles.HIGH_PRIVILEGE_ADMIN]) =>
   createMiddleware<CustomContext>(async (c, next) => {
     const user = c.get('currentUser');
 

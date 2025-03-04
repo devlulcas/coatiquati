@@ -2,7 +2,6 @@ import { log } from '@/modules/logging/lib/pino';
 import { createVerificationToken, getVerificationTokenById } from '../repositories/email-verification-token-repository';
 import { isWithinExpiration } from '../utils/time';
 
-
 /**
  * Gera um token de verificação de email para o usuário.
  * Se o usuário já tiver um token válido, o mesmo token é retornado.

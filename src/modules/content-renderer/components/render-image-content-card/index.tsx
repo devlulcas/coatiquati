@@ -5,11 +5,7 @@ import { RenderedContentWrapper } from '../rendered-content-wrapper';
 
 export async function RenderImageContentCard({ data }: { data: ImageContent }) {
   return (
-    <RenderedContentWrapper
-      title={data.title}
-      by={data.author}
-      content={{ id: data.id, type: data.contentType }}
-    >
+    <RenderedContentWrapper title={data.title} by={data.author} content={{ id: data.id, type: data.contentType }}>
       <div className="absolute right-2 top-1 z-10">
         <ZoomedImage content={data} />
       </div>

@@ -6,11 +6,7 @@ import { RenderedContentWrapper } from '../rendered-content-wrapper';
 
 export async function RenderRichTextContentCard({ data }: { data: RichTextContent }) {
   return (
-    <RenderedContentWrapper
-      title={data.title}
-      by={data.author}
-      content={{ id: data.id, type: data.contentType }}
-    >
+    <RenderedContentWrapper title={data.title} by={data.author} content={{ id: data.id, type: data.contentType }}>
       <ReadonlyEditor content={data.content} />
       <Link href={`/contents/${data.id}`} className="text-md ml-1 flex items-center gap-2 text-muted-foreground">
         Ler mais <ArrowRightIcon size={16} />

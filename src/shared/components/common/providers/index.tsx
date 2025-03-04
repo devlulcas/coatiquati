@@ -7,5 +7,9 @@ import { useState } from 'react';
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
 
-  return <NuqsAdapter><QueryClientProvider client={queryClient}>{children}</QueryClientProvider></NuqsAdapter>;
+  return (
+    <NuqsAdapter>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </NuqsAdapter>
+  );
 }

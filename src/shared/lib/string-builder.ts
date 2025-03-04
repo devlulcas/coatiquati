@@ -9,4 +9,3 @@ export function makeCookieName<T extends string>(name: T): NamespacedName<T, 'ck
 export function makeLocalStorageName<T extends string>(name: T): NamespacedName<T, 'ls'> {
   return `${COATI_QUATI_NAMESPACE}${name}_ls`;
 }
-

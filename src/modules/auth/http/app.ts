@@ -6,11 +6,11 @@ import { verifyEmailMutation } from '../actions/verify-email-mutation';
 
 export const authApp = new Hono<CustomContext>();
 
-authApp.get('/verify-account', async (c) => {
-  const url = new URL(c.req.url)
+authApp.get('/verify-account', async c => {
+  const url = new URL(c.req.url);
   const token = url.searchParams.get('token') ?? '';
   const res = await verifyEmailMutation(token);
-  const jar = cookies()
+  const jar = cookies();
 
   if (isOk(res)) {
     jar.set(res.value.sessionCookie.name, res.value.sessionCookie.value, res.value.sessionCookie.attributes);

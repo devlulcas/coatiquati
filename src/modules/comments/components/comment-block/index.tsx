@@ -72,22 +72,24 @@ function VotingActions({ comment }: { comment: Comment }) {
   const userVoteQuery = useQuery({
     queryKey: ['USER_COMMENT_VOTE_QUERY_KEY', comment.id],
     queryFn: () => getuserCommentVoteQuery(comment.id),
-    enabled: !!currentUserDataQuery.data
-  })
+    enabled: !!currentUserDataQuery.data,
+  });
 
-  const [currentVote, setCurrentVote] = useState(userVoteQuery.data && isOk(userVoteQuery.data) ? userVoteQuery.data.value : 0)
+  const [currentVote, setCurrentVote] = useState(
+    userVoteQuery.data && isOk(userVoteQuery.data) ? userVoteQuery.data.value : 0,
+  );
 
   const upvoteMutation = useServerActionMutation({
     serverAction: upvoteCommentMutation,
     onSuccessfulAction: () => {
-      setCurrentVote(1)
+      setCurrentVote(1);
     },
   });
 
   const downvoteMutation = useServerActionMutation({
     serverAction: downvoteCommentMutation,
     onSuccessfulAction: () => {
-      setCurrentVote(-1)
+      setCurrentVote(-1);
     },
   });
 

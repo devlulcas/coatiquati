@@ -8,11 +8,11 @@ import type { WithOptionalID } from '@/shared/utils/with';
 import { eq } from 'drizzle-orm';
 
 export class BaseContentRepository {
-  constructor(private readonly contributionRepository = new ContributionRepository()) { }
+  constructor(private readonly contributionRepository = new ContributionRepository()) {}
 
   async upsertBaseContent(content: WithOptionalID<ContentInsert>): Promise<number> {
     try {
-      const res = await db.transaction(async (tx) => {
+      const res = await db.transaction(async tx => {
         const insertedContent = await tx
           .insert(contentTable)
           .values(content)
@@ -27,9 +27,9 @@ export class BaseContentRepository {
         log.info('Contribuição salva com sucesso', { content: insertedContent });
 
         return insertedContent.id;
-      })
+      });
 
-      return res
+      return res;
     } catch (error) {
       log.error(error);
       throw new Error('Erro ao salvar conteúdo');
@@ -75,12 +75,8 @@ export class BaseContentRepository {
 
   async getAuthorId(contentId: number): Promise<Result<string>> {
     const result = await wrapAsyncInResult(
-      db
-        .select({ authorId: contentTable.authorId })
-        .from(contentTable)
-        .where(eq(contentTable.id, contentId))
-        .get()
-    )
+      db.select({ authorId: contentTable.authorId }).from(contentTable).where(eq(contentTable.id, contentId)).get(),
+    );
 
     if (isFail(result) || !result.value) {
       log.error('Erro ao buscar autor do conteúdo', { contentId });

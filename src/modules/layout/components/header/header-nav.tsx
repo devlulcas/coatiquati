@@ -30,10 +30,7 @@ export async function HeaderNav({ user }: HeaderNavProps) {
           side="bottom"
           className="flex flex-col gap-4 bg-background/75 backdrop-blur-md lg:hidden"
         >
-          <div
-            className="flex flex-col items-center justify-center gap-4 *:bg-secondary"
-          >
-
+          <div className="flex flex-col items-center justify-center gap-4 *:bg-secondary">
             <Button className="w-full" variant="ghost" asChild>
               <Link href="/trails">Trilhas</Link>
             </Button>
@@ -88,13 +85,12 @@ function NavItems({ user }: { user: Pick<User, 'role' | 'username'> | null }) {
           </SignOutForm>
         </Button>
       </>
-    )
+    );
   }
 
   return (
     <Button className="w-full" variant="secondary" asChild>
       <Link href="/sign-in">Entrar</Link>
     </Button>
-  )
+  );
 }
-

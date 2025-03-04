@@ -47,11 +47,7 @@ export default async function Page({ searchParams }: PageProps) {
 
       <section>
         <h2 className="mb-4 text-xl">Usuários</h2>
-        {isFail(usersResult) ? (
-          <ErrorMessage message={usersResult.fail} className="mt-4" />
-        ) : (
-          <UsersTable />
-        )}
+        {isFail(usersResult) ? <ErrorMessage message={usersResult.fail} className="mt-4" /> : <UsersTable />}
       </section>
     </div>
   );

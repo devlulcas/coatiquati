@@ -26,7 +26,7 @@ app.use(loggerMiddleware());
 app.use(compress());
 app.use(prettyJSON());
 app.use(timeout(toMilliseconds(30, 'secs')));
-app.notFound((c) => c.json(fail('Não achamos essa rota por aqui!'), 404));
+app.notFound(c => c.json(fail('Não achamos essa rota por aqui!'), 404));
 // TODO: Adicionar proteção CSRF
 // TODO: Adicionar proteção CORS
 

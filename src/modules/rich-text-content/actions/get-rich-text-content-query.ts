@@ -34,7 +34,7 @@ export async function getRichTextContentQuery(baseContentId: number): Promise<
           },
         },
       },
-    })
+    }),
   );
 
   if (isFail(rteResult) || !rteResult.value) {
@@ -88,7 +88,7 @@ export async function getRichTextContentQuery(baseContentId: number): Promise<
     deletedAt: rteResult.value.deletedAt,
     updatedAt: rteResult.value.updatedAt,
     content: rteResult.value.content,
-    contentType: 'richText'
+    contentType: 'richText',
   };
 
   return ok({ richText, parentTrail, parentTopic });

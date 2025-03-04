@@ -18,9 +18,7 @@ export const trailContributionTable = sqliteTable(
     userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: integer('contributed_at', { mode: 'timestamp' })
-      .notNull()
-      .default(NOW_AS_INTEGER)
+    contributedAt: integer('contributed_at', { mode: 'timestamp' }).notNull().default(NOW_AS_INTEGER),
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.trailId] }) }),
 );

@@ -5,7 +5,11 @@ import { ErrorMessage } from '@/shared/components/common/error-message';
 import { isFail } from '@/shared/lib/result';
 import Image from 'next/image';
 
-export async function DashboardTrailResultView({ searchParams }: { searchParams: Record<keyof TrailSearchSchema, string> }) {
+export async function DashboardTrailResultView({
+  searchParams,
+}: {
+  searchParams: Record<keyof TrailSearchSchema, string>;
+}) {
   const trailsResult = await getTrailsQuery({
     search: searchParams.search,
     skip: Number(searchParams.skip ?? '0'),
@@ -35,5 +39,5 @@ export async function DashboardTrailResultView({ searchParams }: { searchParams:
         ))}
       </div>
     </>
-  )
+  );
 }

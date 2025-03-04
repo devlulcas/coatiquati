@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { CategoriesAsyncSelect } from '@/modules/category/components/categories-async-select';
 import type { TrailCategory } from '@/modules/category/types/trail-category';

@@ -67,7 +67,7 @@ export async function TrailHeading({ trail, className }: TrailHeadingProps) {
 
       <div
         className={cn(
-          'h-fit rounded-md p-[1px] relative overflow-hidden z-0',
+          'relative z-0 h-fit overflow-hidden rounded-md p-[1px]',
           isAlreadyFollowing ? 'bg-gradient-to-tr from-brand-500 to-brand-600' : 'bg-border',
         )}
       >
@@ -76,7 +76,7 @@ export async function TrailHeading({ trail, className }: TrailHeadingProps) {
           alt={trail.title}
           height={320}
           width={320}
-          className="h-auto w-full rounded-md border lg:h-80 lg:w-80 object-cover z-[1]"
+          className="z-[1] h-auto w-full rounded-md border object-cover lg:h-80 lg:w-80"
         />
       </div>
 

@@ -8,7 +8,7 @@ import { eq } from 'drizzle-orm';
 import type { NewTopic, Topic, TopicWithContentArray, UpdateTopic } from '../types/topic';
 
 export class TopicRepository {
-  constructor(private readonly contributionRepository: ContributionRepository = new ContributionRepository()) { }
+  constructor(private readonly contributionRepository: ContributionRepository = new ContributionRepository()) {}
 
   async createTopic(topic: NewTopic): Promise<number> {
     try {
@@ -125,7 +125,7 @@ export class TopicRepository {
     }
 
     // O cast aqui é só pela praticidade
-    return data as TopicWithContentArray
+    return data as TopicWithContentArray;
   }
 
   async updateTopic(topic: UpdateTopic): Promise<void> {

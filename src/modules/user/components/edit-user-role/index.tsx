@@ -21,7 +21,7 @@ export function EditUserRole({ user }: EditUserRoleProps) {
   const [isLoading, startTransition] = useTransition();
   const { toast } = useToast();
 
-  const clearUsersQuery = useUsersQueryCleanup()
+  const clearUsersQuery = useUsersQueryCleanup();
 
   if (isHighPrivilegeAdmin(user.role)) return null;
 
@@ -44,9 +44,9 @@ export function EditUserRole({ user }: EditUserRoleProps) {
           variant: 'destructive',
         });
       } else {
-        clearUsersQuery()
+        clearUsersQuery();
         toast({ title: `${user.username} agora é um ${flippedRole.label}` });
-        closeConfirmDialog()
+        closeConfirmDialog();
       }
     });
   };

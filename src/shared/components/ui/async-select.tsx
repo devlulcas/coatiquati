@@ -1,21 +1,10 @@
-import { useDebounce } from "@/shared/hooks/use-debounce";
-import { cn } from "@/shared/utils/cn";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
-import { Button } from "./button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "./command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "./popover";
+import { useDebounce } from '@/shared/hooks/use-debounce';
+import { cn } from '@/shared/utils/cn';
+import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { Button } from './button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './command';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
 
 export interface Option {
   value: string;
@@ -74,11 +63,11 @@ export function AsyncSelect<T>({
   notFound,
   loadingSkeleton,
   label,
-  placeholder = "Select...",
+  placeholder = 'Select...',
   value,
   onChange,
   disabled = false,
-  width = "200px",
+  width = '200px',
   className,
   triggerClassName,
   noResultsMessage,
@@ -91,7 +80,7 @@ export function AsyncSelect<T>({
   const [error, setError] = useState<string | null>(null);
   const [selectedValue, setSelectedValue] = useState(value);
   const [selectedOption, setSelectedOption] = useState<T | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, preload ? 0 : 300);
   const [originalOptions, setOriginalOptions] = useState<T[]>([]);
 
@@ -153,84 +142,77 @@ export function AsyncSelect<T>({
       fetchOptions();
     } else if (preload) {
       if (debouncedSearchTerm) {
-        setOptions(originalOptions.filter((option) => filterFn ? filterFn(option, debouncedSearchTerm) : true));
+        setOptions(originalOptions.filter(option => (filterFn ? filterFn(option, debouncedSearchTerm) : true)));
       } else {
         setOptions(originalOptions);
       }
     }
+
+    // TODO: FIX THIS
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher, debouncedSearchTerm, mounted, preload, filterFn]);
 
-  const handleSelect = useCallback((currentValue: string) => {
-    const newValue = clearable && currentValue === selectedValue ? "" : currentValue;
-    setSelectedValue(newValue);
-    setSelectedOption(options.find((option) => getOptionValue(option) === newValue) || null);
-    onChange(newValue);
-    setOpen(false);
-  }, [selectedValue, onChange, clearable, options, getOptionValue]);
+  const handleSelect = useCallback(
+    (currentValue: string) => {
+      const newValue = clearable && currentValue === selectedValue ? '' : currentValue;
+      setSelectedValue(newValue);
+      setSelectedOption(options.find(option => getOptionValue(option) === newValue) || null);
+      onChange(newValue);
+      setOpen(false);
+    },
+    [selectedValue, onChange, clearable, options, getOptionValue],
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild >
+      <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn(
-            "justify-between",
-            disabled && "opacity-50 cursor-not-allowed",
-            triggerClassName
-          )}
+          className={cn('justify-between', disabled && 'cursor-not-allowed opacity-50', triggerClassName)}
           style={{ width: width }}
           disabled={disabled}
         >
-          {selectedOption ? (
-            getDisplayValue(selectedOption)
-          ) : (
-            placeholder
-          )}
+          {selectedOption ? getDisplayValue(selectedOption) : placeholder}
           <ChevronsUpDown className="opacity-50" size={10} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent style={{ width: width }} className={cn("p-0", className)}>
+      <PopoverContent style={{ width: width }} className={cn('p-0', className)}>
         <Command shouldFilter={false}>
-          <div className="relative border-b w-full">
+          <div className="relative w-full border-b">
             <CommandInput
               placeholder={`Buscar ${label.toLowerCase()}...`}
               value={searchTerm}
-              onValueChange={(value) => {
+              onValueChange={value => {
                 setSearchTerm(value);
               }}
             />
             {loading && options.length > 0 && (
-              <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center">
+              <div className="absolute right-2 top-1/2 flex -translate-y-1/2 transform items-center">
                 <Loader2 className="h-4 w-4 animate-spin" />
               </div>
             )}
           </div>
           <CommandList>
-            {error && (
-              <div className="p-4 text-destructive text-center">
-                {error}
-              </div>
-            )}
-            {loading && options.length === 0 && (
-              loadingSkeleton || <DefaultLoadingSkeleton />
-            )}
-            {!loading && !error && options.length === 0 && (
-              notFound ? notFound(searchTerm) : <CommandEmpty>{noResultsMessage ?? `Sem ${label.toLowerCase()} encontrados.`}</CommandEmpty>
-            )}
+            {error && <div className="p-4 text-center text-destructive">{error}</div>}
+            {loading && options.length === 0 && (loadingSkeleton || <DefaultLoadingSkeleton />)}
+            {!loading &&
+              !error &&
+              options.length === 0 &&
+              (notFound ? (
+                notFound(searchTerm)
+              ) : (
+                <CommandEmpty>{noResultsMessage ?? `Sem ${label.toLowerCase()} encontrados.`}</CommandEmpty>
+              ))}
             <CommandGroup>
-              {options.map((option) => (
-                <CommandItem
-                  key={getOptionValue(option)}
-                  value={getOptionValue(option)}
-                  onSelect={handleSelect}
-                >
+              {options.map(option => (
+                <CommandItem key={getOptionValue(option)} value={getOptionValue(option)} onSelect={handleSelect}>
                   {renderOption(option)}
                   <Check
                     className={cn(
-                      "ml-auto h-3 w-3",
-                      selectedValue === getOptionValue(option) ? "opacity-100" : "opacity-0"
+                      'ml-auto h-3 w-3',
+                      selectedValue === getOptionValue(option) ? 'opacity-100' : 'opacity-0',
                     )}
                   />
                 </CommandItem>
@@ -246,13 +228,13 @@ export function AsyncSelect<T>({
 function DefaultLoadingSkeleton() {
   return (
     <CommandGroup>
-      {[1, 2, 3].map((i) => (
+      {[1, 2, 3].map(i => (
         <CommandItem key={i} disabled>
-          <div className="flex items-center gap-2 w-full">
-            <div className="h-6 w-6 rounded-full animate-pulse bg-muted" />
-            <div className="flex flex-col flex-1 gap-1">
-              <div className="h-4 w-24 animate-pulse bg-muted rounded" />
-              <div className="h-3 w-16 animate-pulse bg-muted rounded" />
+          <div className="flex w-full items-center gap-2">
+            <div className="h-6 w-6 animate-pulse rounded-full bg-muted" />
+            <div className="flex flex-1 flex-col gap-1">
+              <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+              <div className="h-3 w-16 animate-pulse rounded bg-muted" />
             </div>
           </div>
         </CommandItem>

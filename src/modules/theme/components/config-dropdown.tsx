@@ -10,61 +10,63 @@ import { getBackgroundQuery } from '../actions/change-background-mutation';
 import { ChangeBackgroundThemeForm } from './change-background-theme-form';
 
 export async function ConfigDropdown() {
-  const theme = await getThemeQuery()
-  const font = await getFontQuery()
-  const background = await getBackgroundQuery()
+  const theme = await getThemeQuery();
+  const font = await getFontQuery();
+  const background = await getBackgroundQuery();
 
   return (
     <DropdownMenu>
       <Button variant="ghost" asChild>
-        <DropdownMenuTrigger><span>Configurações</span> <SettingsIcon /></DropdownMenuTrigger>
+        <DropdownMenuTrigger>
+          <span>Configurações</span> <SettingsIcon />
+        </DropdownMenuTrigger>
       </Button>
 
       <DropdownMenuContent>
-        <DropdownMenuItem className='flex justify-between gap-5 items-center'>
+        <DropdownMenuItem className="flex items-center justify-between gap-5">
           <s>Tema de cor</s>
           <ChangeColorThemeForm initialTheme={theme.value} />
         </DropdownMenuItem>
-        <DropdownMenuItem className='flex justify-between gap-5 items-center'>
+        <DropdownMenuItem className="flex items-center justify-between gap-5">
           Fonte de texto
           <ChangeFontThemeForm initialFont={font.value} />
         </DropdownMenuItem>
-        <DropdownMenuItem className='flex justify-between gap-5 items-center'>
+        <DropdownMenuItem className="flex items-center justify-between gap-5">
           Fundo
           <ChangeBackgroundThemeForm initialBackground={background.value} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 
 export async function ConfigListing() {
-  const theme = await getThemeQuery()
-  const font = await getFontQuery()
-  const background = await getBackgroundQuery()
+  const theme = await getThemeQuery();
+  const font = await getFontQuery();
+  const background = await getBackgroundQuery();
 
   return (
     <>
-      <Button asChild className="w-full flex items-center justify-between" variant="outline">
+      <Button asChild className="flex w-full items-center justify-between" variant="outline">
         <div>
           <s>Tema de cor</s>
           <ChangeColorThemeForm initialTheme={theme.value} />
         </div>
       </Button>
 
-      <Button asChild className="w-full flex items-center justify-between" variant="outline">
+      <Button asChild className="flex w-full items-center justify-between" variant="outline">
         <div>
           Fonte de texto
           <ChangeFontThemeForm initialFont={font.value} />
         </div>
       </Button>
 
-      <Button asChild className="w-full flex items-center justify-between" variant="outline">
+      <Button asChild className="flex w-full items-center justify-between" variant="outline">
         <div>
           Fundo
           <ChangeBackgroundThemeForm initialBackground={background.value} />
         </div>
       </Button>
     </>
-  )
+  );
 }

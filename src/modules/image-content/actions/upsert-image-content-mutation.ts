@@ -27,9 +27,9 @@ export async function upsertImageContentMutation(params: NewImageContentSchema):
 
   const repo = new BaseContentRepository();
 
-  const author = validated.data.id ? await repo.getAuthorId(validated.data.id) : null
+  const author = validated.data.id ? await repo.getAuthorId(validated.data.id) : null;
 
-  const newAuthorId = author && isOk(author) ? author.value : user.id
+  const newAuthorId = author && isOk(author) ? author.value : user.id;
 
   const newContentId = await wrapAsyncInResult(
     repo.upsertBaseContent({

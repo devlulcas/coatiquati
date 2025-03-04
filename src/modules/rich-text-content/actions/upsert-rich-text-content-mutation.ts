@@ -5,7 +5,10 @@ import { isAuthenticated } from '@/modules/auth/utils/is';
 import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import { ContentType } from '@/modules/content/types/content-json-field';
 import { log } from '@/modules/logging/lib/pino';
-import { newRichTextContentSchema, type NewRichTextContentSchema } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
+import {
+  newRichTextContentSchema,
+  type NewRichTextContentSchema,
+} from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
 import { fail, isFail, isOk, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertRichTextContentMutation(params: NewRichTextContentSchema): Promise<Result<number>> {
@@ -24,9 +27,9 @@ export async function upsertRichTextContentMutation(params: NewRichTextContentSc
 
   const repo = new BaseContentRepository();
 
-  const author = validated.data.id ? await repo.getAuthorId(validated.data.id) : null
+  const author = validated.data.id ? await repo.getAuthorId(validated.data.id) : null;
 
-  const newAuthorId = author && isOk(author) ? author.value : user.id
+  const newAuthorId = author && isOk(author) ? author.value : user.id;
 
   const newContentId = await wrapAsyncInResult(
     repo.upsertBaseContent({

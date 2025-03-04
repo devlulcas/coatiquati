@@ -9,7 +9,7 @@ export const categoriesApp = new Hono<CustomContext>();
 
 categoriesApp.use('/*', protectWithSessionMiddleware, protectWithPermissionMiddlewareFactory());
 
-categoriesApp.get('/', async (c) => {
+categoriesApp.get('/', async c => {
   const skip = Number(c.req.query('skip')) || 0;
   const take = Number(c.req.query('take')) || 10;
   const search = c.req.query('search') || '';

@@ -5,17 +5,17 @@ export type ImageContentJSON = {
   description: string;
 };
 
-export type RichTextContentJSON = JSONContent
+export type RichTextContentJSON = JSONContent;
 
 export type VideoContentJSON = {
   src: string;
   description: string;
 };
 
-export type ContentJSON = ImageContentJSON | RichTextContentJSON | VideoContentJSON
+export type ContentJSON = ImageContentJSON | RichTextContentJSON | VideoContentJSON;
 
 export enum ContentType {
   Image = 'image',
   RichText = 'richText',
-  Video = 'video'
+  Video = 'video',
 }

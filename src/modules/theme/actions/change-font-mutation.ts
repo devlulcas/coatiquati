@@ -11,7 +11,7 @@ export async function setFontMutation(font: Font): Promise<Result<string>> {
     return fail('Fonte inválida');
   }
 
-  const jar = cookies()
+  const jar = cookies();
   jar.set(FONT_COOKIE_NAME, font, {
     sameSite: 'lax',
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),

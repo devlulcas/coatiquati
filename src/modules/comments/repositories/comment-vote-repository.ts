@@ -36,7 +36,7 @@ export class CommentVoteRepository {
   }
 
   private async voteComment(commentId: number, userId: string, vote: 1 | -1 | 0): Promise<void> {
-    await db.transaction(async (tx) => {
+    await db.transaction(async tx => {
       try {
         await tx
           .insert(commentVoteTable)
@@ -44,15 +44,19 @@ export class CommentVoteRepository {
           .returning({ id: commentVoteTable.id })
           .execute();
 
-        const currentVoteCount = await tx.select({ count: commentTable.voteCount }).from(commentTable).where(eq(commentTable.id, commentId)).get()
+        const currentVoteCount = await tx
+          .select({ count: commentTable.voteCount })
+          .from(commentTable)
+          .where(eq(commentTable.id, commentId))
+          .get();
 
         await tx.update(commentTable).set({
-          voteCount: currentVoteCount ? currentVoteCount.count + vote : 0
-        })
+          voteCount: currentVoteCount ? currentVoteCount.count + vote : 0,
+        });
       } catch (error) {
-        log.error(error)
-        tx.rollback()
+        log.error(error);
+        tx.rollback();
       }
-    })
+    });
   }
 }

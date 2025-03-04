@@ -40,7 +40,7 @@ const dyslexic = localFont({
       style: 'italic',
     },
   ],
-})
+});
 
 export const metadata: Metadata = {
   title: 'CoatiQuati',
@@ -68,26 +68,27 @@ type RootLayoutProps = {
 };
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const theme = await getThemeQuery()
-  const font = await getFontQuery()
-  const background = await getBackgroundQuery()
-  const blur = BackgroundConfig[background.value].wrapperBlur
+  const theme = await getThemeQuery();
+  const font = await getFontQuery();
+  const background = await getBackgroundQuery();
+  const blur = BackgroundConfig[background.value].wrapperBlur;
 
   const backgroundComponent = {
-    'blob': <AnimatedBlobBackgroundScript />,
+    blob: <AnimatedBlobBackgroundScript />,
     'blob-grid': <AnimatedBlogGridBackground />,
-    'solid': <AlmostSolidBackground />,
-  }[background.value]
+    solid: <AlmostSolidBackground />,
+  }[background.value];
 
   return (
     <html
       lang="pt-br"
       className={theme.value}
-      style={{ ['--font-sans' as string]: font.value === 'common' ? sans.style.fontFamily : dyslexic.style.fontFamily }}>
+      style={{ ['--font-sans' as string]: font.value === 'common' ? sans.style.fontFamily : dyslexic.style.fontFamily }}
+    >
       <head>
         <link href="favicon.svg" rel="icon" />
       </head>
-      <body >
+      <body>
         {backgroundComponent}
 
         <Providers>

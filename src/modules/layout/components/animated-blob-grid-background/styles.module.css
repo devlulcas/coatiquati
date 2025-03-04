@@ -1,6 +1,7 @@
 .blobs {
   --blob: var(--brand-500);
-  background-image: radial-gradient(ellipse 81px 65px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
+  background-image:
+    radial-gradient(ellipse 81px 65px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
     radial-gradient(ellipse 60px 62px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
     radial-gradient(ellipse 54px 95px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),
     radial-gradient(ellipse 66px 56px at 50% 50%, hsl(var(--blob)) 0%, transparent 100%),

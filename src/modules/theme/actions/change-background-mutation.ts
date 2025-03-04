@@ -11,7 +11,7 @@ export async function setBackgroundMutation(background: Background): Promise<Res
     return fail('Tema inválido');
   }
 
-  const jar = cookies()
+  const jar = cookies();
   jar.set(BACKGROUND_COOKIE_NAME, background, {
     sameSite: 'lax',
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),

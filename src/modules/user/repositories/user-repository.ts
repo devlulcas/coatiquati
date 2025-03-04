@@ -7,14 +7,9 @@ import { eq } from 'drizzle-orm';
 
 export async function updateUser(id: string, user: UpdateUser): Promise<void> {
   try {
-    const res = await db
-      .update(userTable)
-      .set(user)
-      .where(eq(userTable.id, id))
-      .returning()
-      .run()
+    const res = await db.update(userTable).set(user).where(eq(userTable.id, id)).returning().run();
 
-    log.info(res)
+    log.info(res);
   } catch (error) {
     log.error('Erro ao atualizar usuário', error);
     throw new Error('Erro ao atualizar usuário');
