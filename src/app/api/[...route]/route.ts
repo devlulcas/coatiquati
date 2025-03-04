@@ -1,5 +1,9 @@
+import { authApp } from '@/modules/auth/http/app';
+import { categoriesApp } from '@/modules/category/http/app';
+import { commentsApp } from '@/modules/comments/http/app';
 import type { CustomContext } from '@/modules/http/types/context';
 import { log } from '@/modules/logging/lib/pino';
+import { usersApp } from '@/modules/user/http/app';
 import { toMilliseconds } from '@/shared/lib/date';
 import { fail } from '@/shared/lib/result';
 import { DrizzleError } from 'drizzle-orm';
@@ -27,7 +31,10 @@ app.notFound((c) => c.json(fail('Não achamos essa rota por aqui!'), 404));
 // TODO: Adicionar proteção CORS
 
 // Rotas
-// TODO: Migrar rotas do NextJS para cá
+app.route('/categories', categoriesApp);
+app.route('/comments', commentsApp);
+app.route('/users', usersApp);
+app.route('/auth', authApp);
 
 // Error handling
 app.onError((err, c) => {
