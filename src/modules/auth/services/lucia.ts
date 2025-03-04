@@ -52,7 +52,7 @@ export const validateRequest = cache(
         const sessionCookie = auth.createBlankSessionCookie();
         jar.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
       }
-    } catch { }
+    } catch {}
     return result;
   },
 );

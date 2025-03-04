@@ -1,4 +1,3 @@
-import { useActionState } from "react";
 'use client';
 
 import { ErrorMessage } from '@/shared/components/common/error-message';
@@ -8,6 +7,7 @@ import { Input } from '@/shared/components/ui/input';
 import { fail, isFail } from '@/shared/lib/result';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useActionState } from 'react';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
 import { registerMutation } from '../../actions/register-mutation';

@@ -13,9 +13,7 @@ type EditContentLayoutProps = {
 export default async function EditContentLayout(props: EditContentLayoutProps) {
   const params = await props.params;
 
-  const {
-    children
-  } = props;
+  const { children } = props;
 
   const contentId = Number(params.contentId);
 
