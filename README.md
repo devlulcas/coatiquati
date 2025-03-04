@@ -159,3 +159,7 @@ Ainda preciso estudar mais sobre a implementação desse algoritmo, mas a ideia 
 - [Next.js](https://nextjs.org/)
 - [Turso](https://turso.tech/)
 - [Lucia](https://lucia-auth.com/)
+
+## Banco de dados
+
+![Diagrama do banco de dados](./docs/schema.svg)

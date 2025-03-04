@@ -19,7 +19,10 @@
     "db:push": "pnpm drizzle-kit push",
     "db:pull": "pnpm drizzle-kit pull",
     "db:summon": "turso dev --db-file dev.db",
-    "db:destroy": "trash dev.db dev.db-shm dev.db-wal"
+    "db:destroy": "trash dev.db dev.db-shm dev.db-wal",
+    "db:seed": "pnpm tsx ./src/modules/database/seed.ts",
+    "db:dev-reset": "pnpm db:destroy && pnpm db:summon && pnpm db:push && pnpm db:seed",
+    "db:docs": "pnpm tsx ./docs/dbml.ts && npx @softwaretechnik/dbml-renderer -i ./docs/schema.dbml -o ./docs/schema.svg"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.758.0",
