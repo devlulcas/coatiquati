@@ -28,7 +28,6 @@ export function SignInForm() {
     <div className="flex h-[--view-height] flex-col items-center justify-center">
       <Form {...form}>
         <form
-          method="POST"
           className="relative flex h-fit min-w-[400px] flex-col gap-4 rounded-md border bg-card px-4 py-6 shadow-md"
           action={formAction}
         >
