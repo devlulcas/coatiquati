@@ -47,7 +47,7 @@ async function registerUser(user: User, role: Role) {
     id: userId,
     role: role,
     username: user.username,
-    password_hash: passwordHash,
+    passwordHash: passwordHash,
     avatar: user.avatar,
     email: user.email,
     bannedAt: null,
