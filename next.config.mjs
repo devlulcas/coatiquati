@@ -25,6 +25,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: s3hostname,
       },
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
     ],
   },
 };

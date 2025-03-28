@@ -3,8 +3,9 @@
 import coatiAvif from '@/shared/assets/images/coati.avif';
 import coatiSvg from '@/shared/assets/images/coati.svg';
 import { ditherImage } from '@/shared/lib/dittering';
+import { LucideLoaderCircle } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Page() {
   const links = {
@@ -12,27 +13,37 @@ export default function Page() {
     me: 'https://github.com/devlulcas/',
   };
 
+  const [firstTime, setFirstTime] = useState(true);
+
   useEffect(() => {
-    if (typeof window !== 'undefined') ditherImage('coati');
+    let timeout: NodeJS.Timeout;
+
+    timeout = setTimeout(() => {
+      setFirstTime(false);
+    }, 1000);
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    }
   }, []);
 
   return (
     <div className="bg-background/90">
+      {firstTime && (
+        <div
+          className="fixed inset-0 z-[9999] h-[--view-height] w-dvw flex items-center justify-center bg-background/10 backdrop-blur-lg"
+        >
+          <LucideLoaderCircle className="h-8 w-8 animate-spin" />
+        </div>
+      )}
+
       <main
         className="container relative grid h-[--view-height]"
         style={{ display: 'grid', gridTemplateAreas: 'over' }}
       >
-        <div style={{ gridArea: 'over' }} className="h-[--view-height] w-full p-2">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={coatiAvif.src}
-            width={coatiAvif.width}
-            height={coatiAvif.height}
-            alt="Coati"
-            id="coati"
-            className="h-full w-full rounded-lg object-cover"
-          />
-        </div>
+        <HeroImage />
 
         <div
           className="m-4 mt-auto flex h-fit items-center gap-5 rounded-lg border bg-background/80 p-4 backdrop-blur-2xl"
@@ -65,4 +76,25 @@ export default function Page() {
       </main>
     </div>
   );
+}
+
+
+function HeroImage() {
+  useEffect(() => {
+    if (typeof window !== 'undefined') ditherImage('coati');
+  }, []);
+
+  return (
+    <div style={{ gridArea: 'over' }} className="h-[--view-height] w-full p-2">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={coatiAvif.src}
+        width={coatiAvif.width}
+        height={coatiAvif.height}
+        alt="Coati"
+        id="coati"
+        className="h-full w-full rounded-lg object-cover"
+      />
+    </div>
+  )
 }

@@ -26,6 +26,7 @@ export async function HeaderNav({ user }: HeaderNavProps) {
         </SheetTrigger>
 
         <SheetContent
+          title="Menu"
           hideCloseButton
           side="bottom"
           className="flex flex-col gap-4 bg-background/75 backdrop-blur-md lg:hidden"
@@ -53,6 +54,10 @@ export async function HeaderNav({ user }: HeaderNavProps) {
 
         <Button variant="ghost" asChild>
           <Link href="/about">Sobre</Link>
+        </Button>
+
+        <Button variant="ghost" asChild>
+          <Link href="/tools">Ferramentas</Link>
         </Button>
 
         <NavItems user={user} />

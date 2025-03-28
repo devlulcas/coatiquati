@@ -4,10 +4,9 @@ import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogTrigger
 } from '@/shared/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
@@ -65,84 +64,82 @@ export function EditUserDialogTrigger({ user, children }: EditUserDialogTriggerP
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mb-4">Editar {user.username}</DialogTitle>
-          <DialogDescription>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                  control={form.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nome de usuário</FormLabel>
-                      <FormControl>
-                        <Input placeholder="@exemplo" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome de usuário</FormLabel>
+                    <FormControl>
+                      <Input placeholder="@exemplo" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>E-mail</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="email@exemplo.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>E-mail</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="email@exemplo.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="avatar"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Avatar</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex flex-row space-x-2"
-                        >
-                          {AVATARS.map(avatar => (
-                            <label key={avatar} htmlFor={avatar}>
-                              <input
-                                className="peer sr-only"
-                                type="radio"
-                                id={avatar}
-                                value={avatar}
-                                checked={field.value === avatar}
-                                onChange={field.onChange}
-                                onBlur={field.onBlur}
-                                ref={field.ref}
-                              />
+              <FormField
+                control={form.control}
+                name="avatar"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Avatar</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-row space-x-2"
+                      >
+                        {AVATARS.map(avatar => (
+                          <label key={avatar} htmlFor={avatar}>
+                            <input
+                              className="peer sr-only"
+                              type="radio"
+                              id={avatar}
+                              value={avatar}
+                              checked={field.value === avatar}
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                              ref={field.ref}
+                            />
 
-                              <Image
-                                src={avatar}
-                                alt="Avatar"
-                                width={64}
-                                height={64}
-                                className="cursor-pointer rounded border-2 border-gray-200 peer-checked:border-brand-500"
-                              />
-                            </label>
-                          ))}
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                            <Image
+                              src={avatar}
+                              alt="Avatar"
+                              width={64}
+                              height={64}
+                              className="cursor-pointer rounded border-2 border-gray-200 peer-checked:border-brand-500"
+                            />
+                          </label>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <Button className="w-full" type="submit">
-                  Salvar
-                </Button>
-              </form>
-            </Form>
-          </DialogDescription>
+              <Button className="w-full" type="submit">
+                Salvar
+              </Button>
+            </form>
+          </Form>
         </DialogHeader>
       </DialogContent>
     </Dialog>

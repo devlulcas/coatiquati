@@ -95,7 +95,11 @@ Desde que sua implementação seja compatível com a interface `MailTransporterF
 > [!WARNING]
 > O serviço de armazenamento de arquivos deve ser compatível com o S3 da AWS. Se você deseja usar um serviço de armazenamento de arquivos que não seja compatível com o S3 da AWS você deve alterar o código fonte do projeto para que ele seja compatível com o serviço de armazenamento de arquivos que você deseja utilizar.
 
-Essa seção ainda não está pronta, alterações serão feitas em breve após o código ser refatorado para ser compatível com outros serviços de armazenamento de arquivos.
+1. Garanta que o serviço de armazenamento de arquivos que você deseja utilizar seja compatível com o S3 da AWS (o que é bem provável)
+
+2. Altere as variáveis de ambiente `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` e `AWS_REGION` no arquivo `.env.local` para as credenciais do serviço de armazenamento de arquivos que você deseja utilizar
+
+> Você pode alterar o código fonte do projeto para que ele seja compatível com o serviço de armazenamento de arquivos que você deseja utilizar
 
 ### Adicionando login com redes sociais
 
@@ -109,12 +113,10 @@ Para implementar essa funcionalidade você pode acessar a documentação da bibl
 
 MIT License
 
-> Seja livre colega! 🚀
-
 ## CONTATO
 
 [Lucas Alves Rego no Linkedin](https://www.linkedin.com/in/lucas-alves-rego/)
-[lucasrego.tech no meu site](https://lucasrego.tech/)
+[lucasalvesrego.com no meu site](https://lucasalvesrego.com/)
 
 ## Funcionalidades futuras
 
@@ -124,13 +126,13 @@ MIT License
 - [ ] Suporte a upload de LaTeX para papéis científicos
 - [ ] Suporte a upload de arquivos de áudio para micro-podcasts
 - [ ] Suporte a upload de arquivos PDF para artigos científicos e livros (com visualizador de PDF)
-- [ ] Sistema de tags para categorizar conteúdo
+- [ ] Sistema de tags para categorizar conteúdo automaticamente
 
 ### Prioridades
 
 - [x] Suporte a criação de contas de administrador via CLI
 - [x] Acessibilidade: Fonte para dislexia
-- [ ] Ajustes na edição de conteúdo (auto-save, marcação de conteúdo como editado, rascunho local)
+- [-] Ajustes na edição de conteúdo (auto-save, marcação de conteúdo como editado, rascunho local)
 - [ ] Nova tela de perfil com informações sobre o usuário
 - [ ] Permitir que professores adicionem "prompts" para os alunos escreverem sobre
 - [ ] Sinalizar conteúdo inapropriado para remoção

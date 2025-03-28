@@ -4,7 +4,7 @@ import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { getEmbedIDFromYoutubeUrl } from '@/modules/video-content/lib/youtube';
 import { Button } from '@/shared/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/shared/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -55,6 +55,16 @@ export function CreatePublicationForm() {
         title: 'Publicação criada',
         description: 'Sua publicação foi criada com sucesso!',
         variant: 'success',
+      });
+
+      const defaultValues: CreatePublicationSchema = {
+        content: '',
+        medias: [],
+      }
+
+      form.setValue('content', defaultValues.content);
+      mediaFieldArray.fields.forEach((_, index) => {
+        mediaFieldArray.remove(index);
       });
     },
     shouldRefresh: true,
@@ -198,6 +208,8 @@ function AddMediaDialog({
       </DialogTrigger>
 
       <DialogContent>
+        <DialogTitle>Adicionar mídia</DialogTitle>
+
         <Tabs defaultValue="image" onValueChange={value => setType(value as PublicationMedia['type'])}>
           <TabsList>
             <TabsTrigger value="image">Imagem</TabsTrigger>

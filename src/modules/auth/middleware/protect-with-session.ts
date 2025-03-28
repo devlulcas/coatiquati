@@ -6,7 +6,7 @@ import { fail } from 'assert';
 import { getCookie } from 'hono/cookie';
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
-import { auth } from '../services/lucia';
+import { auth, toPublicSession } from '../services/lucia';
 
 export const protectWithSessionMiddleware = createMiddleware<CustomContext>(async (c, next) => {
   const sessionCookie = getCookie(c, auth.sessionCookieName);
@@ -31,5 +31,6 @@ export const protectWithSessionMiddleware = createMiddleware<CustomContext>(asyn
 
   c.set('session', session);
   c.set('currentUser', profileResult.value);
+  c.set('publicSession', toPublicSession(profileResult.value));
   await next();
 });

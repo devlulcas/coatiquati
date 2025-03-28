@@ -5,7 +5,15 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { useState } from 'react';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: false,
+        cacheTime: 1000 * 60 * 5,
+      },
+    },
+  }));
 
   return (
     <NuqsAdapter>

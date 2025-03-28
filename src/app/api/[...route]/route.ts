@@ -3,6 +3,8 @@ import { categoriesApp } from '@/modules/category/http/app';
 import { commentsApp } from '@/modules/comments/http/app';
 import type { CustomContext } from '@/modules/http/types/context';
 import { log } from '@/modules/logging/lib/pino';
+import { pomodoroApp } from '@/modules/pomodoro/http/app';
+import { todoApp } from '@/modules/todo/http/app';
 import { usersApp } from '@/modules/user/http/app';
 import { toMilliseconds } from '@/shared/lib/date';
 import { fail } from '@/shared/lib/result';
@@ -35,6 +37,8 @@ app.route('/categories', categoriesApp);
 app.route('/comments', commentsApp);
 app.route('/users', usersApp);
 app.route('/auth', authApp);
+app.route('/pomodoro', pomodoroApp);
+app.route('/todos', todoApp);
 
 // Error handling
 app.onError((err, c) => {

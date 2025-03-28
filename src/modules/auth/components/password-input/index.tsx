@@ -25,7 +25,7 @@ const PasswordInput = forwardRef<HTMLInputElement, InputProps>(({ className, typ
       <Button
         variant="ghost"
         size="icon"
-        className="absolute bottom-1 right-1 flex h-7 w-7 items-center justify-center"
+        className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center"
         onClick={() => setShowPassword(!showPassword)}
       >
         <EyeOff

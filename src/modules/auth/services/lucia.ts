@@ -1,10 +1,12 @@
 import { sqlite } from '@/modules/database/db';
 import type { AuthUserTable } from '@/modules/database/schema/user';
+import type { PublicUser } from '@/modules/user/types/user';
 import { LibSQLAdapter } from '@lucia-auth/adapter-sqlite';
 import type { Session, User } from 'lucia';
 import { Lucia } from 'lucia';
 import { cookies } from 'next/headers';
 import { cache } from 'react';
+import type { PublicSession } from '../types/session';
 
 const adapter = new LibSQLAdapter(sqlite, {
   user: 'user',
@@ -52,10 +54,25 @@ export const validateRequest = cache(
         const sessionCookie = auth.createBlankSessionCookie();
         jar.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
       }
-    } catch {}
+    } catch { }
     return result;
   },
 );
+
+export const toPublicSession = (user?: User): PublicSession => {
+  if (!user) {
+    return { data: null, status: 'unauthenticated' };
+  }
+
+  const publicUser: PublicUser = {
+    id: user.id,
+    username: user.username,
+    avatar: user.avatar,
+    role: user.role,
+  };
+
+  return { data: publicUser, status: 'authenticated' };
+}
 
 declare module 'lucia' {
   interface Register {

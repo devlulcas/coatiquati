@@ -29,7 +29,7 @@ const tooltipContentVariants = cva(
 type TooltipContentProps = React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content> &
   VariantProps<typeof tooltipContentVariants>;
 
-const TooltipContent = React.forwardRef<React.ElementRef<typeof TooltipPrimitive.Content>, TooltipContentProps>(
+const TooltipContent = React.forwardRef<React.ComponentRef<typeof TooltipPrimitive.Content>, TooltipContentProps>(
   ({ className, variant, sideOffset = 4, ...props }, ref) => (
     <TooltipPrimitive.Content
       ref={ref}

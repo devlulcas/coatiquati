@@ -2,6 +2,7 @@ import { Marquee } from '@/modules/home/components/marquee';
 import { TrailCardCarouselSection } from '@/modules/home/components/trail-card-carousel-section';
 import { getRecentTrailsQuery } from '@/modules/trail/actions/get-recent-trails-by-id';
 import blobImage from '@/shared/assets/images/blob-hq.png';
+import { AppFeedbackCard } from '@/shared/components/common/app-feedback-card';
 import { ArrowUpRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -34,14 +35,20 @@ export default async function Page() {
         </Link>
 
         {trailsResult.type === 'ok' ? (
-          <TrailCardCarouselSection trails={trailsResult.value} className="mb-auto mt-auto" />
+          trailsResult.value.length > 0 ? (
+            <TrailCardCarouselSection trails={trailsResult.value} className="mb-auto mt-auto" />
+          ) : (
+            <AppFeedbackCard variant="warning" className="mb-auto mt-auto flex h-[50vh]">
+              Ainda não há nenhuma trilha
+            </AppFeedbackCard>
+          )
         ) : (
-          <div className="mb-auto mt-auto flex h-[50vh] items-center justify-center rounded border border-destructive bg-destructive/50 text-destructive-foreground">
-            <p className="text-pretty font-bold">Não foi possível carregar as trilhas recentes.</p>
-          </div>
+          <AppFeedbackCard variant="warning" className="mb-auto mt-auto flex h-[50vh]">
+            Não foi possível carregar as trilhas recentes.
+          </AppFeedbackCard>
         )}
 
-        <div className="absolute inset-0 z-[-1] h-[--safe-screen-height] overflow-hidden">
+        <div className="absolute inset-0 z-[-1] h-[--view-height] overflow-hidden">
           <Image
             className="absolute bottom-0 right-1/2 w-full translate-x-1/2 translate-y-1/2 opacity-70 blur-xl md:w-1/2"
             src={blobImage}
@@ -75,8 +82,8 @@ export default async function Page() {
           'política',
           'direito',
           'medicina',
-          'enfermagem',
-          'psicologia',
+          'aprenda algo novo',
+          'compartilhe conhecimento',
         ]}
       />
     </div>

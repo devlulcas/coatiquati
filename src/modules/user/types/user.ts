@@ -14,3 +14,5 @@ export type UserProfile = User & {
 export type UpdateUser = Partial<Pick<User, 'username' | 'avatar' | 'email' | 'role' | 'verifiedAt' | 'bannedAt'>>;
 
 export type UserId = AuthUserTable['id'];
+
+export type PublicUser = Pick<User, 'id' | 'username' | 'avatar' | 'role'>; 

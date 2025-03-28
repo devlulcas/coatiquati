@@ -1,6 +1,5 @@
-import { relations, sql } from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { NOW_AS_INTEGER } from '../lib/helpers';
 import { contentTable } from './content';
 import { topicTable } from './topic';
 import { trailTable } from './trail';
@@ -18,7 +17,7 @@ export const trailContributionTable = sqliteTable(
     userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: integer('contributed_at', { mode: 'timestamp' }).notNull().default(NOW_AS_INTEGER),
+    contributedAt: integer('contributed_at', { mode: 'timestamp' }).notNull(),
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.trailId] }) }),
 );
@@ -44,9 +43,7 @@ export const topicContributionTable = sqliteTable(
     userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: text('contributed_at')
-      .default(sql`CURRENTTIMESTAMP`)
-      .notNull(),
+    contributedAt: integer('contributed_at', { mode: 'timestamp' }).notNull(),
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.topicId] }) }),
 );
@@ -72,9 +69,7 @@ export const contentContributionTable = sqliteTable(
     userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: text('contributed_at')
-      .default(sql`CURRENTTIMESTAMP`)
-      .notNull(),
+    contributedAt: integer('contributed_at', { mode: 'timestamp' }).notNull(),
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.contentId] }) }),
 );
