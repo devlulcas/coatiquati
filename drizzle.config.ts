@@ -14,8 +14,7 @@ if (!DATABASE_AUTH_TOKEN) {
 }
 
 export default defineConfig({
-  dialect: 'sqlite',
-  driver: 'turso',
+  dialect: 'turso',
   schema: './src/modules/database/schema/*',
   dbCredentials: {
     url: DATABASE_URL,

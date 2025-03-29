@@ -6,7 +6,6 @@ import { contentContributionTable } from './contribution';
 import { topicTable } from './topic';
 import { userTable } from './user';
 
-
 export type ContentSelect = InferSelectModel<typeof contentTable>;
 export type ContentInsert = InferInsertModel<typeof contentTable>;
 

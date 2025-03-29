@@ -1,6 +1,7 @@
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
-import { categoryTable, trailTable } from '@/modules/database/schema/trail';
+import { categoryTable } from '@/modules/database/schema/category';
+import { trailTable } from '@/modules/database/schema/trail';
 import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
 import { asc, eq, type SQL } from 'drizzle-orm';
@@ -8,7 +9,7 @@ import type { TrailSearchSchema } from '../actions/get-trails-query';
 import type { NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
 
 export class TrailRepository {
-  constructor(private readonly contributionRepository: ContributionRepository = new ContributionRepository()) {}
+  constructor(private readonly contributionRepository: ContributionRepository = new ContributionRepository()) { }
 
   async createTrail(trail: NewTrail): Promise<number> {
     return db.transaction(async tx => {

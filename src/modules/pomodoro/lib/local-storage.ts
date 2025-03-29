@@ -1,4 +1,5 @@
-import type { PomodoroSession, PomodoroSettings } from '../../database/schema/pomodoro';
+import type { PomodoroSession } from '../../database/schema/pomodoro-sessions';
+import type { PomodoroSettings } from '../../database/schema/pomodoro-settings';
 
 const STORAGE_KEYS = {
   SETTINGS: 'pomodoro_settings',
@@ -45,4 +46,4 @@ export function addLocalSession(session: PomodoroSession): void {
 export function clearLocalPomodoroData(): void {
   localStorage.removeItem(STORAGE_KEYS.SETTINGS);
   localStorage.removeItem(STORAGE_KEYS.SESSIONS);
-} 
+}

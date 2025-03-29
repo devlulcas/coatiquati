@@ -17,7 +17,7 @@ export class ContributionRepository {
       if (contributesTo.trailId) {
         await tx
           .insert(trailContributionTable)
-          .values({ userId: user, trailId: contributesTo.trailId, contributedAt: new Date() })
+          .values({ userId: user, trailId: contributesTo.trailId })
           .onConflictDoNothing({ target: [trailContributionTable.userId, trailContributionTable.trailId] })
           .execute();
       }
@@ -25,7 +25,7 @@ export class ContributionRepository {
       if (contributesTo.topicId) {
         await tx
           .insert(topicContributionTable)
-          .values({ userId: user, topicId: contributesTo.topicId, contributedAt: new Date() })
+          .values({ userId: user, topicId: contributesTo.topicId })
           .onConflictDoNothing({ target: [topicContributionTable.userId, topicContributionTable.topicId] })
           .execute();
       }
@@ -33,7 +33,7 @@ export class ContributionRepository {
       if (contributesTo.contentId) {
         await tx
           .insert(contentContributionTable)
-          .values({ userId: user, contentId: contributesTo.contentId, contributedAt: new Date() })
+          .values({ userId: user, contentId: contributesTo.contentId })
           .onConflictDoNothing({ target: [contentContributionTable.userId, contentContributionTable.contentId] })
           .execute();
       }

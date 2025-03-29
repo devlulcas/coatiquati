@@ -1,6 +1,6 @@
 import { useSession } from '@/modules/auth/hooks/use-session';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { PomodoroSession } from '../../database/schema/pomodoro';
+import type { PomodoroSession } from '../../database/schema/pomodoro-sessions';
 import { createPomodoroSession, fetchPomodoroSessions } from '../lib/fetchers';
 import { addLocalSession, getLocalSessions, setLocalSessions } from '../lib/local-storage';
 import type { PomodoroSessionInput } from '../types/pomodoro';

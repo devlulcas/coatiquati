@@ -3,7 +3,8 @@
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
-import { publicationMediaTable, publicationTable } from '@/modules/database/schema/publication';
+import { publicationTable } from '@/modules/database/schema/publication';
+import { publicationMediaTable } from '@/modules/database/schema/publication-media';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';

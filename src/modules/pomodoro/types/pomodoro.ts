@@ -1,4 +1,5 @@
-import type { PomodoroSession, PomodoroSettings } from '../../database/schema/pomodoro';
+import type { PomodoroSession } from "@/modules/database/schema/pomodoro-sessions";
+import type { PomodoroSettings } from "@/modules/database/schema/pomodoro-settings";
 
 export type PomodoroSettingsInput = Omit<PomodoroSettings, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;
 export type PomodoroSessionInput = Omit<PomodoroSession, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;

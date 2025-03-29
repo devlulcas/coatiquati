@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/modules/database/db';
-import { categoryTable } from '@/modules/database/schema/trail';
+import { categoryTable } from '@/modules/database/schema/category';
 import { createPaginationSchemaWithSearch, type PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { like } from 'drizzle-orm';

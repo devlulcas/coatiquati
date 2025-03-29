@@ -3,7 +3,7 @@
 import { validateRequest } from '@/modules/auth/services/lucia';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
-import { categoryTable } from '@/modules/database/schema/trail';
+import { categoryTable } from '@/modules/database/schema/category';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { newTrailCategorySchema } from '../schemas/new-trail-category-schema';

@@ -1,6 +1,6 @@
 'use client';
 
-import type { PomodoroSettings } from '@/modules/database/schema/pomodoro';
+import type { PomodoroSettings } from '@/modules/database/schema/pomodoro-settings';
 import { usePomodoroManager } from '@/modules/pomodoro/hooks/use-pomodoro-manager';
 import { formatTimer } from '@/modules/pomodoro/lib/format-timer';
 import { pomodoroSessionStateLabels, type PomodoroTimerState } from '@/modules/pomodoro/types/pomodoro';

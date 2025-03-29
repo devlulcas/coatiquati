@@ -54,7 +54,6 @@ export async function getRichTextContentQuery(baseContentId: number): Promise<
     id: trail.id,
     title: trail.title,
     author: trail.author,
-    contributors: trail.contributors,
     category: trail.category,
     createdAt: trail.createdAt,
     deletedAt: trail.deletedAt,
@@ -62,6 +61,7 @@ export async function getRichTextContentQuery(baseContentId: number): Promise<
     status: trail.status,
     thumbnail: trail.thumbnail,
     updatedAt: trail.updatedAt,
+    contributors: trail.contributors,
   };
 
   const parentTopic: Topic = {

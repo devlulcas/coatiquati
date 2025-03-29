@@ -1,4 +1,5 @@
-import type { CategoryTable, NewCategoryTable, NewTrailTable, TrailTable } from '@/modules/database/schema/trail';
+import type { CategoryTable, NewCategoryTable } from '@/modules/database/schema/category';
+import type { NewTrailTable, TrailTable } from '@/modules/database/schema/trail';
 import type { Creatable, Updatable } from '@/modules/database/types/utils';
 import type { Topic } from '@/modules/topic/types/topic';
 import type { Contributor } from '@/modules/user/types/user';
@@ -11,7 +12,7 @@ export type UpdateCategory = Updatable<NewCategoryTable>;
 
 export type Trail = Omit<TrailTable, 'authorId' | 'category'> & {
   author: Contributor;
-  contributors: { user: Contributor; contributedAt: Date }[];
+  contributors: { user: Contributor }[];
   category: Category | null;
 };
 

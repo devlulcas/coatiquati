@@ -5,7 +5,8 @@ import { log } from '@/modules/logging/lib/pino';
 import { fail, isFail, ok, wrapAsyncInResult } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
-import { pomodoroSessions, pomodoroSettings, type PomodoroSettingsInsert } from '../../database/schema/pomodoro';
+import { pomodoroSessions } from '../../database/schema/pomodoro-sessions';
+import { pomodoroSettings, type PomodoroSettingsInsert } from '../../database/schema/pomodoro-settings';
 import { pomodoroSessionSchema, pomodoroSettingsSchema } from '../schemas/pomodoro-schema';
 
 export const pomodoroApp = new Hono<CustomContext>()
