@@ -1,6 +1,7 @@
 import { useToast } from '@/shared/components/ui/use-toast';
 import { isFail, type Result } from '@/shared/lib/result';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import type { User } from '../types/user';
 
 export const USERS_QK = 'USERS_QK';
@@ -8,7 +9,7 @@ export const USERS_QK = 'USERS_QK';
 export function useUsersQuery() {
   const { toast } = useToast();
 
-  return useQuery({
+  const query = useQuery({
     queryKey: [USERS_QK],
     queryFn: async () => {
       const res = await fetch('/api/users');
@@ -21,15 +22,20 @@ export function useUsersQuery() {
 
       return json.value;
     },
-    onError: err => {
-      const msg = err instanceof Error ? err.message : String(err);
+  });
+
+  useEffect(() => {
+    if (query.isError) {
+      const msg = query.error instanceof Error ? query.error.message : String(query.error);
       toast({
         title: 'Falha ao buscar usuários!',
         description: msg,
         variant: 'destructive',
       });
-    },
-  });
+    }
+  }, [query.isError, query.error, toast]);
+
+  return query;
 }
 
 export function useUsersQueryCleanup() {

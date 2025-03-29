@@ -22,14 +22,14 @@ importers:
         specifier: ^3.777.0
         version: 3.777.0
       '@hookform/resolvers':
-        specifier: ^3.10.0
-        version: 3.10.0(react-hook-form@7.55.0(react@19.1.0))
+        specifier: ^4.1.3
+        version: 4.1.3(react-hook-form@7.55.0(react@19.1.0))
       '@libsql/client':
-        specifier: ^0.9.0
-        version: 0.9.0
+        specifier: ^0.15.1
+        version: 0.15.1
       '@lucia-auth/adapter-sqlite':
         specifier: ^3.0.2
-        version: 3.0.2(@libsql/client@0.9.0)(lucia@3.2.2)
+        version: 3.0.2(@libsql/client@0.15.1)(lucia@3.2.2)
       '@radix-ui/react-alert-dialog':
         specifier: ^1.1.6
         version: 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -82,17 +82,17 @@ importers:
         specifier: ^1.1.8
         version: 1.1.8(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-email/components':
-        specifier: 0.0.33
-        version: 0.0.33(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: 0.0.34
+        version: 0.0.34(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-email/render':
         specifier: ^1.0.5
         version: 1.0.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@t3-oss/env-nextjs':
-        specifier: ^0.11.1
-        version: 0.11.1(typescript@5.8.2)(zod@3.24.2)
+        specifier: ^0.12.0
+        version: 0.12.0(typescript@5.8.2)(zod@3.24.2)
       '@tanstack/react-query':
-        specifier: ^4.36.1
-        version: 4.36.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^5.70.0
+        version: 5.70.0(react@19.1.0)
       '@tanstack/react-table':
         specifier: ^8.21.2
         version: 8.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -148,17 +148,17 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       drizzle-orm:
-        specifier: ^0.33.0
-        version: 0.33.0(@libsql/client@0.9.0)(@types/react@19.0.12)(react@19.1.0)
+        specifier: ^0.41.0
+        version: 0.41.0(@libsql/client@0.15.1)(gel@2.0.1)
       drizzle-seed:
         specifier: ^0.3.1
-        version: 0.3.1(drizzle-orm@0.33.0(@libsql/client@0.9.0)(@types/react@19.0.12)(react@19.1.0))
+        version: 0.3.1(drizzle-orm@0.41.0(@libsql/client@0.15.1)(gel@2.0.1))
       embla-carousel-react:
         specifier: 8.5.2
         version: 8.5.2(react@19.1.0)
       framer-motion:
-        specifier: ^11.18.2
-        version: 11.18.2(@emotion/is-prop-valid@1.3.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^12.6.2
+        version: 12.6.2(@emotion/is-prop-valid@1.3.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       hono:
         specifier: ^4.7.5
         version: 4.7.5
@@ -208,11 +208,11 @@ importers:
         specifier: ^2.15.1
         version: 2.15.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tailwind-merge:
-        specifier: ^2.6.0
-        version: 2.6.0
+        specifier: ^3.0.2
+        version: 3.0.2
       vaul:
-        specifier: ^0.9.9
-        version: 0.9.9(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+        specifier: ^1.1.2
+        version: 1.1.2(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       zod:
         specifier: ^3.24.2
         version: 3.24.2
@@ -230,7 +230,7 @@ importers:
         specifier: 22.13.14
         version: 22.13.14
       '@types/react':
-        specifier: 19.0.12
+        specifier: 19.0.10
         version: 19.0.12
       '@types/react-dom':
         specifier: 19.0.4
@@ -249,7 +249,7 @@ importers:
         version: 16.4.7
       drizzle-dbml-generator:
         specifier: ^0.10.0
-        version: 0.10.0(drizzle-orm@0.33.0(@libsql/client@0.9.0)(@types/react@19.0.12)(react@19.1.0))
+        version: 0.10.0(drizzle-orm@0.41.0(@libsql/client@0.15.1)(gel@2.0.1))
       drizzle-kit:
         specifier: ^0.30.6
         version: 0.30.6
@@ -1170,8 +1170,8 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
-  '@hookform/resolvers@3.10.0':
-    resolution: {integrity: sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==}
+  '@hookform/resolvers@4.1.3':
+    resolution: {integrity: sha512-Jsv6UOWYTrEFJ/01ZrnwVXs7KDvP8XIo115i++5PWvNkNvkrsTfGiLS6w+eJ57CYtUtDQalUWovCZDHFJ8u1VQ==}
     peerDependencies:
       react-hook-form: ^7.0.0
 
@@ -1325,54 +1325,54 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@libsql/client@0.9.0':
-    resolution: {integrity: sha512-mT+91wtb8pxK9SWd566D5W2VUCemksUMqICRBtf0WXiS7XzNcQhWyrwYOnVrVmTSze/SCCsNNEKIkCRwk/pr2Q==}
+  '@libsql/client@0.15.1':
+    resolution: {integrity: sha512-BzAj/nEoiH8FhOrFCrN9NFll97iMbTUQA/RfZbc+Na/Iyu9w/vt1+0zLf7OaQCTeQ+7g5ScanLuRMidTcz9XgQ==}
 
-  '@libsql/core@0.9.0':
-    resolution: {integrity: sha512-rCsS/EC32K8ARjDQJGqauGZmkR6orOOY4I7898PyQ/mmltAkMwRgz5kjEmYRZ42o7mP0ayJfbw28qgv7SRFEgg==}
+  '@libsql/core@0.15.1':
+    resolution: {integrity: sha512-7RDXHxD+H1UTBG67mCVEjTmbJfcEo0bFFyb4wFaGWYrrKAkDcYq7BhG67lTqd4EHSzUV7Ur/lk6f/EBMplm+Kg==}
 
-  '@libsql/darwin-arm64@0.4.7':
-    resolution: {integrity: sha512-yOL742IfWUlUevnI5PdnIT4fryY3LYTdLm56bnY0wXBw7dhFcnjuA7jrH3oSVz2mjZTHujxoITgAE7V6Z+eAbg==}
+  '@libsql/darwin-arm64@0.5.3':
+    resolution: {integrity: sha512-yAitxSuiaLT465uAvqXi1TzirXb+IOxa6sfC+uIuyCzAusLEhOFlEhutqenVx93lhPkJZJIiZkK1pIETIatnfg==}
     cpu: [arm64]
     os: [darwin]
 
-  '@libsql/darwin-x64@0.4.7':
-    resolution: {integrity: sha512-ezc7V75+eoyyH07BO9tIyJdqXXcRfZMbKcLCeF8+qWK5nP8wWuMcfOVywecsXGRbT99zc5eNra4NEx6z5PkSsA==}
+  '@libsql/darwin-x64@0.5.3':
+    resolution: {integrity: sha512-ZBVinaZcCxVoTuCTdW7vY97XIc13RjCEFG16Ix+zemtJbGFCTos7EUhkGWuWIWG/1HXYpFbXu4d5d7p6p4TlQA==}
     cpu: [x64]
     os: [darwin]
 
-  '@libsql/hrana-client@0.6.2':
-    resolution: {integrity: sha512-MWxgD7mXLNf9FXXiM0bc90wCjZSpErWKr5mGza7ERy2FJNNMXd7JIOv+DepBA1FQTIfI8TFO4/QDYgaQC0goNw==}
+  '@libsql/hrana-client@0.7.0':
+    resolution: {integrity: sha512-OF8fFQSkbL7vJY9rfuegK1R7sPgQ6kFMkDamiEccNUvieQ+3urzfDFI616oPl8V7T9zRmnTkSjMOImYCAVRVuw==}
 
-  '@libsql/isomorphic-fetch@0.2.5':
-    resolution: {integrity: sha512-8s/B2TClEHms2yb+JGpsVRTPBfy1ih/Pq6h6gvyaNcYnMVJvgQRY7wAa8U2nD0dppbCuDU5evTNMEhrQ17ZKKg==}
+  '@libsql/isomorphic-fetch@0.3.1':
+    resolution: {integrity: sha512-6kK3SUK5Uu56zPq/Las620n5aS9xJq+jMBcNSOmjhNf/MUvdyji4vrMTqD7ptY7/4/CAVEAYDeotUz60LNQHtw==}
     engines: {node: '>=18.0.0'}
 
   '@libsql/isomorphic-ws@0.1.5':
     resolution: {integrity: sha512-DtLWIH29onUYR00i0GlQ3UdcTRC6EP4u9w/h9LxpUZJWRMARk6dQwZ6Jkd+QdwVpuAOrdxt18v0K2uIYR3fwFg==}
 
-  '@libsql/linux-arm64-gnu@0.4.7':
-    resolution: {integrity: sha512-WlX2VYB5diM4kFfNaYcyhw5y+UJAI3xcMkEUJZPtRDEIu85SsSFrQ+gvoKfcVh76B//ztSeEX2wl9yrjF7BBCA==}
+  '@libsql/linux-arm64-gnu@0.5.3':
+    resolution: {integrity: sha512-20qUC4O16qhGl1GPIBABgroytzLoML5hhVYrM5jaYhRHg2kFN9PytKV+M75vlyLiJk7CJwkRUxD4Xwo4OODRVg==}
     cpu: [arm64]
     os: [linux]
 
-  '@libsql/linux-arm64-musl@0.4.7':
-    resolution: {integrity: sha512-6kK9xAArVRlTCpWeqnNMCoXW1pe7WITI378n4NpvU5EJ0Ok3aNTIC2nRPRjhro90QcnmLL1jPcrVwO4WD1U0xw==}
+  '@libsql/linux-arm64-musl@0.5.3':
+    resolution: {integrity: sha512-sv19UXkNo+J6lGSfv4tKjViqciU5MHdtcmaiyJ5BcsEouwDLp5gDbyr1iJHoQw+nWpsiNp1OO4x8JoqC6sZHkA==}
     cpu: [arm64]
     os: [linux]
 
-  '@libsql/linux-x64-gnu@0.4.7':
-    resolution: {integrity: sha512-CMnNRCmlWQqqzlTw6NeaZXzLWI8bydaXDke63JTUCvu8R+fj/ENsLrVBtPDlxQ0wGsYdXGlrUCH8Qi9gJep0yQ==}
+  '@libsql/linux-x64-gnu@0.5.3':
+    resolution: {integrity: sha512-fE/tkqGneXfMzQ5TY7ptoQXk8bRVGu6fVSmPiegCqmCcF457uO/7yqpQZyMav4viXAgmIkI15nyEo01ekaeBCg==}
     cpu: [x64]
     os: [linux]
 
-  '@libsql/linux-x64-musl@0.4.7':
-    resolution: {integrity: sha512-nI6tpS1t6WzGAt1Kx1n1HsvtBbZ+jHn0m7ogNNT6pQHZQj7AFFTIMeDQw/i/Nt5H38np1GVRNsFe99eSIMs9XA==}
+  '@libsql/linux-x64-musl@0.5.3':
+    resolution: {integrity: sha512-g/JIAmLJcsmhubfDtw5K4ipVx89Kr7V1cuoTFc/jDtBQNpfLVDOtNii3TTxvLg/yH+HRipE5Cus8hJdtysJXcw==}
     cpu: [x64]
     os: [linux]
 
-  '@libsql/win32-x64-msvc@0.4.7':
-    resolution: {integrity: sha512-7pJzOWzPm6oJUxml+PCDRzYQ4A1hTMHAciTAHfFK4fkbDZX33nWPVG7Y3vqdKtslcwAzwmrNDc6sXy2nwWnbiw==}
+  '@libsql/win32-x64-msvc@0.5.3':
+    resolution: {integrity: sha512-X7apIBRZNSSRh446NvUfq7AthUdH2OSLAAkzhOW48wCQxYheXU791WyOiroNl7s5HuIvJGAJUCR9hFLICYgWRg==}
     cpu: [x64]
     os: [win32]
 
@@ -2221,8 +2221,8 @@ packages:
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
-  '@react-email/components@0.0.33':
-    resolution: {integrity: sha512-/GKdT3YijT1iEWPAXF644jr12w5xVgzUr0zlbZGt2KOkGeFHNZUCL5UtRopmnjrH/Fayf8Gjv6q/4E2cZgDtdQ==}
+  '@react-email/components@0.0.34':
+    resolution: {integrity: sha512-9aUJJ4Yu5Cd5++2GHwdkmOHCghi0vPP/aZwMCGNNTovBTDCI3mc8YIUrDR7JfscrdkPK4s/E9AoD5lX6d/zITA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
@@ -2311,8 +2311,8 @@ packages:
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
 
-  '@react-email/text@0.0.11':
-    resolution: {integrity: sha512-a7nl/2KLpRHOYx75YbYZpWspUbX1DFY7JIZbOv5x0QU8SvwDbJt+Hm01vG34PffFyYvHEXrc6Qnip2RTjljNjg==}
+  '@react-email/text@0.1.0':
+    resolution: {integrity: sha512-LG+gEuxpoIiOojkv40iktP8UVjkJVZ+ksEEuf7zRvrcwLcVuzYyirlWdkGr4Vu/AhsD4FDRoxDWlWvLTx+WHUg==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: ^18.0 || ^19.0 || ^19.0.0-rc
@@ -2556,6 +2556,9 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
+  '@standard-schema/utils@0.3.0':
+    resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
+
   '@stroncium/procfs@1.2.1':
     resolution: {integrity: sha512-X1Iui3FUNZP18EUvysTHxt+Avu2nlVzyf90YM8OYgP6SGzTzzX/0JgObfO1AQQDzuZtNNz29bVh8h5R97JrjxA==}
     engines: {node: '>=8'}
@@ -2566,22 +2569,32 @@ packages:
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
-  '@t3-oss/env-core@0.11.1':
-    resolution: {integrity: sha512-MaxOwEoG1ntCFoKJsS7nqwgcxLW1SJw238AJwfJeaz3P/8GtkxXZsPPolsz1AdYvUTbe3XvqZ/VCdfjt+3zmKw==}
+  '@t3-oss/env-core@0.12.0':
+    resolution: {integrity: sha512-lOPj8d9nJJTt81mMuN9GMk8x5veOt7q9m11OSnCBJhwp1QrL/qR+M8Y467ULBSm9SunosryWNbmQQbgoiMgcdw==}
     peerDependencies:
       typescript: '>=5.0.0'
-      zod: ^3.0.0
+      valibot: ^1.0.0-beta.7 || ^1.0.0
+      zod: ^3.24.0
     peerDependenciesMeta:
       typescript:
         optional: true
+      valibot:
+        optional: true
+      zod:
+        optional: true
 
-  '@t3-oss/env-nextjs@0.11.1':
-    resolution: {integrity: sha512-rx2XL9+v6wtOqLNJbD5eD8OezKlQD1BtC0WvvtHwBgK66jnF5+wGqtgkKK4Ygie1LVmoDClths2T4tdFmRvGrQ==}
+  '@t3-oss/env-nextjs@0.12.0':
+    resolution: {integrity: sha512-rFnvYk1049RnNVUPvY8iQ55AuQh1Rr+qZzQBh3t++RttCGK4COpXGNxS4+45afuQq02lu+QAOy/5955aU8hRKw==}
     peerDependencies:
       typescript: '>=5.0.0'
-      zod: ^3.0.0
+      valibot: ^1.0.0-beta.7 || ^1.0.0
+      zod: ^3.24.0
     peerDependenciesMeta:
       typescript:
+        optional: true
+      valibot:
+        optional: true
+      zod:
         optional: true
 
   '@tailwindcss/typography@0.5.16':
@@ -2589,20 +2602,13 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20 || >=4.0.0-beta.1'
 
-  '@tanstack/query-core@4.36.1':
-    resolution: {integrity: sha512-DJSilV5+ytBP1FbFcEJovv4rnnm/CokuVvrBEtW/Va9DvuJ3HksbXUJEpI0aV1KtuL4ZoO9AVE6PyNLzF7tLeA==}
+  '@tanstack/query-core@5.70.0':
+    resolution: {integrity: sha512-ZkkjQAZjI6nS5OyAmaSQafQXK180Xvp0lZYk4BzrnskkTV8On3zSJUxOIXnh0h/8EgqRkCA9i879DiJovA1kGw==}
 
-  '@tanstack/react-query@4.36.1':
-    resolution: {integrity: sha512-y7ySVHFyyQblPl3J3eQBWpXZkliroki3ARnBKsdJchlgt7yJLRDUcf4B8soufgiYt3pEQIkBWBx1N9/ZPIeUWw==}
+  '@tanstack/react-query@5.70.0':
+    resolution: {integrity: sha512-z0tx1zz2CQ6nTm+fCaOp93FqsFjNgXtOy+4mC5ifQ4B+rJiMD0AGfJrYSGh/OuefhrzTYDAbkGUAGw6JzkWy8g==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
+      react: ^18 || ^19
 
   '@tanstack/react-table@8.21.2':
     resolution: {integrity: sha512-11tNlEDTdIhMJba2RBH+ecJ9l1zgS2kjmexDPAraulc8jeNA4xocSNeyzextT0XJyASil4XsCYlJmf5jEWAtYg==}
@@ -3464,14 +3470,15 @@ packages:
     resolution: {integrity: sha512-U4wWit0fyZuGuP7iNmRleQyK2V8wCuv57vf5l3MnG4z4fzNTjY/U13M8owyQ5RavqvqxBifWORaR3wIUzlN64g==}
     hasBin: true
 
-  drizzle-orm@0.33.0:
-    resolution: {integrity: sha512-SHy72R2Rdkz0LEq0PSG/IdvnT3nGiWuRk+2tXZQ90GVq/XQhpCzu/EFT3V2rox+w8MlkBQxifF8pCStNYnERfA==}
+  drizzle-orm@0.41.0:
+    resolution: {integrity: sha512-7A4ZxhHk9gdlXmTdPj/lREtP+3u8KvZ4yEN6MYVxBzZGex5Wtdc+CWSbu7btgF6TB0N+MNPrvW7RKBbxJchs/Q==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
-      '@cloudflare/workers-types': '>=3'
-      '@electric-sql/pglite': '>=0.1.1'
-      '@libsql/client': '*'
-      '@neondatabase/serverless': '>=0.1'
+      '@cloudflare/workers-types': '>=4'
+      '@electric-sql/pglite': '>=0.2.0'
+      '@libsql/client': '>=0.10.0'
+      '@libsql/client-wasm': '>=0.10.0'
+      '@neondatabase/serverless': '>=0.10.0'
       '@op-engineering/op-sqlite': '>=2'
       '@opentelemetry/api': ^1.4.1
       '@planetscale/database': '>=1'
@@ -3479,20 +3486,19 @@ packages:
       '@tidbcloud/serverless': '*'
       '@types/better-sqlite3': '*'
       '@types/pg': '*'
-      '@types/react': 19.0.10
       '@types/sql.js': '*'
       '@vercel/postgres': '>=0.8.0'
       '@xata.io/client': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
-      expo-sqlite: '>=13.2.0'
+      expo-sqlite: '>=14.0.0'
+      gel: '>=2'
       knex: '*'
       kysely: '*'
       mysql2: '>=2'
       pg: '>=8'
       postgres: '>=3'
       prisma: '*'
-      react: '>=18'
       sql.js: '>=1'
       sqlite3: '>=5'
     peerDependenciesMeta:
@@ -3503,6 +3509,8 @@ packages:
       '@electric-sql/pglite':
         optional: true
       '@libsql/client':
+        optional: true
+      '@libsql/client-wasm':
         optional: true
       '@neondatabase/serverless':
         optional: true
@@ -3520,8 +3528,6 @@ packages:
         optional: true
       '@types/pg':
         optional: true
-      '@types/react':
-        optional: true
       '@types/sql.js':
         optional: true
       '@vercel/postgres':
@@ -3534,6 +3540,8 @@ packages:
         optional: true
       expo-sqlite:
         optional: true
+      gel:
+        optional: true
       knex:
         optional: true
       kysely:
@@ -3545,8 +3553,6 @@ packages:
       postgres:
         optional: true
       prisma:
-        optional: true
-      react:
         optional: true
       sql.js:
         optional: true
@@ -3897,8 +3903,8 @@ packages:
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
-  framer-motion@11.18.2:
-    resolution: {integrity: sha512-5F5Och7wrvtLVElIpclDT0CBzMVg3dL22B64aZwHtsIY8RB4mXICLrkajK4G9R+ieSAGcgrLeae2SeUTg2pr6w==}
+  framer-motion@12.6.2:
+    resolution: {integrity: sha512-7LgPRlPs5aG8UxeZiMCMZz8firC53+2+9TnWV22tuSi38D3IFRxHRUqOREKckAkt6ztX+Dn6weLcatQilJTMcg==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0 || ^19.0.0
@@ -4286,8 +4292,8 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  libsql@0.4.7:
-    resolution: {integrity: sha512-T9eIRCs6b0J1SHKYIvD8+KCJMcWZ900iZyxdnSCdqxN12Z1ijzT+jY5nrk72Jw4B0HGzms2NgpryArlJqvc3Lw==}
+  libsql@0.5.3:
+    resolution: {integrity: sha512-S3WR8WNCJV1VXraBFUKjDA6+8LcNDJMLm+83qohm1O3YM1iVqV2+/XN3SXOxpxVjuL4g/rLrjO5kzygkPefCFQ==}
     cpu: [x64, arm64, wasm32]
     os: [darwin, linux, win32]
 
@@ -4415,11 +4421,11 @@ packages:
   mitt@3.0.1:
     resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
 
-  motion-dom@11.18.1:
-    resolution: {integrity: sha512-g76KvA001z+atjfxczdRtw/RXOM3OMSdd1f4DL77qCTF/+avrRJiawSG4yDibEQ215sr9kpinSlX2pCTJ9zbhw==}
+  motion-dom@12.6.1:
+    resolution: {integrity: sha512-8XVsriTUEVOepoIDgE/LDGdg7qaKXWdt+wQA/8z0p8YzJDLYL8gbimZ3YkCLlj7bB2i/4UBD/g+VO7y9ZY0zHQ==}
 
-  motion-utils@11.18.1:
-    resolution: {integrity: sha512-49Kt+HKjtbJKLtgO/LKj9Ld+6vw9BjH5d9sc40R/kVyH8GLAXgT42M2NnuPcJNuA3s9ZfZBUcwIgpmZWGEE+hA==}
+  motion-utils@12.5.0:
+    resolution: {integrity: sha512-+hFFzvimn0sBMP9iPxBa9OtRX35ZQ3py0UHnb8U29VD+d8lQ8zH3dTygJWqK7av2v6yhg7scj9iZuvTS0f4+SA==}
 
   mount-point@3.0.0:
     resolution: {integrity: sha512-jAhfD7ZCG+dbESZjcY1SdFVFqSJkh/yGbdsifHcPkvuLRO5ugK0Ssmd9jdATu29BTd4JiN+vkpMzVvsUgP3SZA==}
@@ -5313,8 +5319,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  tailwind-merge@2.6.0:
-    resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
+  tailwind-merge@3.0.2:
+    resolution: {integrity: sha512-l7z+OYZ7mu3DTqrL88RiKrKIqO3NcpEO8V/Od04bNpvk0kiIFndGEoqfuzvj4yuhRkHKjRkII2z+KS2HfPcSxw==}
 
   tailwindcss-animate@1.0.7:
     resolution: {integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==}
@@ -5460,11 +5466,6 @@ packages:
       '@types/react':
         optional: true
 
-  use-sync-external-store@1.4.0:
-    resolution: {integrity: sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   use-sync-external-store@1.5.0:
     resolution: {integrity: sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==}
     peerDependencies:
@@ -5488,11 +5489,11 @@ packages:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
 
-  vaul@0.9.9:
-    resolution: {integrity: sha512-7afKg48srluhZwIkaU+lgGtFCUsYBSGOl8vcc8N/M3YQlZFlynHD15AE+pwrYdc826o7nrIND4lL9Y6b9WWZZQ==}
+  vaul@1.1.2:
+    resolution: {integrity: sha512-ZFkClGpWyI2WUQjdLJ/BaGuV6AVQiJ3uELGk3OYtP+B6yCO7Cmn9vPFXVJkRaGkOJu3m8bQMgtyzNHixULceQA==}
     peerDependencies:
-      react: ^16.8 || ^17.0 || ^18.0
-      react-dom: ^16.8 || ^17.0 || ^18.0
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
 
   victory-vendor@36.9.2:
     resolution: {integrity: sha512-PnpQQMuxlwYdocC8fIJqVXvkeViHYzotI+NJrCuav0ZYFoq912ZHBk3mCeuj+5/VpodOjPe1z0Fk2ihgzlXqjQ==}
@@ -6581,8 +6582,9 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
-  '@hookform/resolvers@3.10.0(react-hook-form@7.55.0(react@19.1.0))':
+  '@hookform/resolvers@4.1.3(react-hook-form@7.55.0(react@19.1.0))':
     dependencies:
+      '@standard-schema/utils': 0.3.0
       react-hook-form: 7.55.0(react@19.1.0)
 
   '@humanfs/core@0.19.1': {}
@@ -6705,30 +6707,30 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
     optional: true
 
-  '@libsql/client@0.9.0':
+  '@libsql/client@0.15.1':
     dependencies:
-      '@libsql/core': 0.9.0
-      '@libsql/hrana-client': 0.6.2
+      '@libsql/core': 0.15.1
+      '@libsql/hrana-client': 0.7.0
       js-base64: 3.7.7
-      libsql: 0.4.7
+      libsql: 0.5.3
       promise-limit: 2.7.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@libsql/core@0.9.0':
+  '@libsql/core@0.15.1':
     dependencies:
       js-base64: 3.7.7
 
-  '@libsql/darwin-arm64@0.4.7':
+  '@libsql/darwin-arm64@0.5.3':
     optional: true
 
-  '@libsql/darwin-x64@0.4.7':
+  '@libsql/darwin-x64@0.5.3':
     optional: true
 
-  '@libsql/hrana-client@0.6.2':
+  '@libsql/hrana-client@0.7.0':
     dependencies:
-      '@libsql/isomorphic-fetch': 0.2.5
+      '@libsql/isomorphic-fetch': 0.3.1
       '@libsql/isomorphic-ws': 0.1.5
       js-base64: 3.7.7
       node-fetch: 3.3.2
@@ -6736,7 +6738,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@libsql/isomorphic-fetch@0.2.5': {}
+  '@libsql/isomorphic-fetch@0.3.1': {}
 
   '@libsql/isomorphic-ws@0.1.5':
     dependencies:
@@ -6746,26 +6748,26 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@libsql/linux-arm64-gnu@0.4.7':
+  '@libsql/linux-arm64-gnu@0.5.3':
     optional: true
 
-  '@libsql/linux-arm64-musl@0.4.7':
+  '@libsql/linux-arm64-musl@0.5.3':
     optional: true
 
-  '@libsql/linux-x64-gnu@0.4.7':
+  '@libsql/linux-x64-gnu@0.5.3':
     optional: true
 
-  '@libsql/linux-x64-musl@0.4.7':
+  '@libsql/linux-x64-musl@0.5.3':
     optional: true
 
-  '@libsql/win32-x64-msvc@0.4.7':
+  '@libsql/win32-x64-msvc@0.5.3':
     optional: true
 
-  '@lucia-auth/adapter-sqlite@3.0.2(@libsql/client@0.9.0)(lucia@3.2.2)':
+  '@lucia-auth/adapter-sqlite@3.0.2(@libsql/client@0.15.1)(lucia@3.2.2)':
     dependencies:
       lucia: 3.2.2
     optionalDependencies:
-      '@libsql/client': 0.9.0
+      '@libsql/client': 0.15.1
 
   '@napi-rs/wasm-runtime@0.2.7':
     dependencies:
@@ -7516,7 +7518,7 @@ snapshots:
     dependencies:
       react: 19.1.0
 
-  '@react-email/components@0.0.33(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@react-email/components@0.0.34(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
       '@react-email/body': 0.0.11(react@19.1.0)
       '@react-email/button': 0.0.19(react@19.1.0)
@@ -7537,7 +7539,7 @@ snapshots:
       '@react-email/row': 0.0.12(react@19.1.0)
       '@react-email/section': 0.0.16(react@19.1.0)
       '@react-email/tailwind': 1.0.4(react@19.1.0)
-      '@react-email/text': 0.0.11(react@19.1.0)
+      '@react-email/text': 0.1.0(react@19.1.0)
       react: 19.1.0
     transitivePeerDependencies:
       - react-dom
@@ -7603,7 +7605,7 @@ snapshots:
     dependencies:
       react: 19.1.0
 
-  '@react-email/text@0.0.11(react@19.1.0)':
+  '@react-email/text@0.1.0(react@19.1.0)':
     dependencies:
       react: 19.1.0
 
@@ -7959,6 +7961,8 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
+  '@standard-schema/utils@0.3.0': {}
+
   '@stroncium/procfs@1.2.1': {}
 
   '@swc/counter@0.1.3': {}
@@ -7967,18 +7971,17 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@t3-oss/env-core@0.11.1(typescript@5.8.2)(zod@3.24.2)':
-    dependencies:
-      zod: 3.24.2
+  '@t3-oss/env-core@0.12.0(typescript@5.8.2)(zod@3.24.2)':
     optionalDependencies:
       typescript: 5.8.2
+      zod: 3.24.2
 
-  '@t3-oss/env-nextjs@0.11.1(typescript@5.8.2)(zod@3.24.2)':
+  '@t3-oss/env-nextjs@0.12.0(typescript@5.8.2)(zod@3.24.2)':
     dependencies:
-      '@t3-oss/env-core': 0.11.1(typescript@5.8.2)(zod@3.24.2)
-      zod: 3.24.2
+      '@t3-oss/env-core': 0.12.0(typescript@5.8.2)(zod@3.24.2)
     optionalDependencies:
       typescript: 5.8.2
+      zod: 3.24.2
 
   '@tailwindcss/typography@0.5.16(tailwindcss@3.4.10(ts-node@10.9.2(@types/node@22.13.14)(typescript@5.8.2)))':
     dependencies:
@@ -7988,15 +7991,12 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.10(ts-node@10.9.2(@types/node@22.13.14)(typescript@5.8.2))
 
-  '@tanstack/query-core@4.36.1': {}
+  '@tanstack/query-core@5.70.0': {}
 
-  '@tanstack/react-query@4.36.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+  '@tanstack/react-query@5.70.0(react@19.1.0)':
     dependencies:
-      '@tanstack/query-core': 4.36.1
+      '@tanstack/query-core': 5.70.0
       react: 19.1.0
-      use-sync-external-store: 1.4.0(react@19.1.0)
-    optionalDependencies:
-      react-dom: 19.1.0(react@19.1.0)
 
   '@tanstack/react-table@8.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
@@ -8866,9 +8866,9 @@ snapshots:
 
   dotenv@16.4.7: {}
 
-  drizzle-dbml-generator@0.10.0(drizzle-orm@0.33.0(@libsql/client@0.9.0)(@types/react@19.0.12)(react@19.1.0)):
+  drizzle-dbml-generator@0.10.0(drizzle-orm@0.41.0(@libsql/client@0.15.1)(gel@2.0.1)):
     dependencies:
-      drizzle-orm: 0.33.0(@libsql/client@0.9.0)(@types/react@19.0.12)(react@19.1.0)
+      drizzle-orm: 0.41.0(@libsql/client@0.15.1)(gel@2.0.1)
 
   drizzle-kit@0.30.6:
     dependencies:
@@ -8880,17 +8880,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.33.0(@libsql/client@0.9.0)(@types/react@19.0.12)(react@19.1.0):
+  drizzle-orm@0.41.0(@libsql/client@0.15.1)(gel@2.0.1):
     optionalDependencies:
-      '@libsql/client': 0.9.0
-      '@types/react': 19.0.12
-      react: 19.1.0
+      '@libsql/client': 0.15.1
+      gel: 2.0.1
 
-  drizzle-seed@0.3.1(drizzle-orm@0.33.0(@libsql/client@0.9.0)(@types/react@19.0.12)(react@19.1.0)):
+  drizzle-seed@0.3.1(drizzle-orm@0.41.0(@libsql/client@0.15.1)(gel@2.0.1)):
     dependencies:
       pure-rand: 6.1.0
     optionalDependencies:
-      drizzle-orm: 0.33.0(@libsql/client@0.9.0)(@types/react@19.0.12)(react@19.1.0)
+      drizzle-orm: 0.41.0(@libsql/client@0.15.1)(gel@2.0.1)
 
   dunder-proto@1.0.1:
     dependencies:
@@ -9464,10 +9463,10 @@ snapshots:
 
   fraction.js@4.3.7: {}
 
-  framer-motion@11.18.2(@emotion/is-prop-valid@1.3.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  framer-motion@12.6.2(@emotion/is-prop-valid@1.3.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
-      motion-dom: 11.18.1
-      motion-utils: 11.18.1
+      motion-dom: 12.6.1
+      motion-utils: 12.5.0
       tslib: 2.8.1
     optionalDependencies:
       '@emotion/is-prop-valid': 1.3.1
@@ -9869,18 +9868,18 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  libsql@0.4.7:
+  libsql@0.5.3:
     dependencies:
       '@neon-rs/load': 0.0.4
       detect-libc: 2.0.2
     optionalDependencies:
-      '@libsql/darwin-arm64': 0.4.7
-      '@libsql/darwin-x64': 0.4.7
-      '@libsql/linux-arm64-gnu': 0.4.7
-      '@libsql/linux-arm64-musl': 0.4.7
-      '@libsql/linux-x64-gnu': 0.4.7
-      '@libsql/linux-x64-musl': 0.4.7
-      '@libsql/win32-x64-msvc': 0.4.7
+      '@libsql/darwin-arm64': 0.5.3
+      '@libsql/darwin-x64': 0.5.3
+      '@libsql/linux-arm64-gnu': 0.5.3
+      '@libsql/linux-arm64-musl': 0.5.3
+      '@libsql/linux-x64-gnu': 0.5.3
+      '@libsql/linux-x64-musl': 0.5.3
+      '@libsql/win32-x64-msvc': 0.5.3
 
   lilconfig@2.1.0: {}
 
@@ -9990,11 +9989,11 @@ snapshots:
 
   mitt@3.0.1: {}
 
-  motion-dom@11.18.1:
+  motion-dom@12.6.1:
     dependencies:
-      motion-utils: 11.18.1
+      motion-utils: 12.5.0
 
-  motion-utils@11.18.1: {}
+  motion-utils@12.5.0: {}
 
   mount-point@3.0.0:
     dependencies:
@@ -10967,7 +10966,7 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  tailwind-merge@2.6.0: {}
+  tailwind-merge@3.0.2: {}
 
   tailwindcss-animate@1.0.7(tailwindcss@3.4.10(ts-node@10.9.2(@types/node@22.13.14)(typescript@5.8.2))):
     dependencies:
@@ -11176,10 +11175,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.0.12
 
-  use-sync-external-store@1.4.0(react@19.1.0):
-    dependencies:
-      react: 19.1.0
-
   use-sync-external-store@1.5.0(react@19.1.0):
     dependencies:
       react: 19.1.0
@@ -11197,7 +11192,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vaul@0.9.9(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+  vaul@1.1.2(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@radix-ui/react-dialog': 1.1.6(@types/react-dom@19.0.4(@types/react@19.0.12))(@types/react@19.0.12)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0

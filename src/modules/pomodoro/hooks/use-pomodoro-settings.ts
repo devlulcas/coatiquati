@@ -1,5 +1,6 @@
 import { useSession } from '@/modules/auth/hooks/use-session';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import type { PomodoroSettings } from '../../database/schema/pomodoro-settings';
 import { fetchPomodoroSettings, updatePomodoroSettings } from '../lib/fetchers';
 import { DEFAULT_POMODORO_CONFIG, getLocalSettings, setLocalSettings } from '../lib/local-storage';
@@ -18,8 +19,13 @@ export function usePomodoroSettings({ onSuccess }: PomodoroSettingsOptions = {})
     queryKey: [POMODORO_SETTINGS_QUERY_KEY],
     queryFn: session.data ? fetchPomodoroSettings : getLocalSettings,
     enabled: true,
-    onSuccess
   });
+
+  useEffect(() => {
+    if (query.isSuccess && session.data) {
+      onSuccess?.(query.data);
+    }
+  }, [onSuccess, query.data, query.isSuccess, session.data]);
 
   return { ...query, data: query.data ?? DEFAULT_POMODORO_CONFIG };
 }
