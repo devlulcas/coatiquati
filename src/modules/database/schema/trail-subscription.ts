@@ -1,23 +1,19 @@
 import { relations } from 'drizzle-orm';
 import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { tableTimestampColumns } from '../lib/helpers';
 import { trailTable } from './trail';
 import { userTable } from './user';
 
 export const trailSubscriptionTable = sqliteTable(
-  'trailSubscrition',
+  'trail_subscrition',
   {
     trailId: integer('trail_id')
       .notNull()
-      .references(() => trailTable.id, {
-        onDelete: 'cascade',
-        onUpdate: 'cascade',
-      }),
+      .references(() => trailTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
     userId: text('user_id')
       .notNull()
-      .references(() => userTable.id, {
-        onDelete: 'cascade',
-        onUpdate: 'cascade',
-      }),
+      .references(() => userTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
+    ...tableTimestampColumns,
   },
   table => ({ pk: primaryKey({ columns: [table.trailId, table.userId] }) }),
 );

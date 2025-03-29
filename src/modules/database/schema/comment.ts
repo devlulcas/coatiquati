@@ -1,4 +1,4 @@
-import { relations, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { foreignKey, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { contentTable } from './content';
@@ -6,8 +6,6 @@ import { userTable } from './user';
 
 export type Comment = InferSelectModel<typeof commentTable>;
 export type NewComment = InferInsertModel<typeof commentTable>;
-export type CommentVote = InferSelectModel<typeof commentVoteTable>;
-export type NewCommentVote = InferInsertModel<typeof commentVoteTable>;
 
 export const commentTable = sqliteTable(
   'comment',
@@ -40,18 +38,8 @@ export const commentTable = sqliteTable(
   }),
 );
 
-// Comment relations
-export const commentRelations = relations(commentTable, ({ one, many }) => ({
-  content: one(contentTable, {
-    fields: [commentTable.contentId],
-    references: [contentTable.id],
-  }),
-  author: one(userTable, {
-    fields: [commentTable.authorId],
-    references: [userTable.id],
-  }),
-  votes: many(commentVoteTable),
-}));
+export type CommentVote = InferSelectModel<typeof commentVoteTable>;
+export type NewCommentVote = InferInsertModel<typeof commentVoteTable>;
 
 export const commentVoteTable = sqliteTable(
   'comment_vote',
@@ -77,14 +65,3 @@ export const commentVoteTable = sqliteTable(
     userCommentUnique: uniqueIndex('user_comment_unique_idx').on(table.userId, table.commentId),
   }),
 );
-
-export const commentVoteRelations = relations(commentVoteTable, ({ one }) => ({
-  comment: one(commentTable, {
-    fields: [commentVoteTable.commentId],
-    references: [commentTable.id],
-  }),
-  user: one(userTable, {
-    fields: [commentVoteTable.userId],
-    references: [userTable.id],
-  }),
-}));

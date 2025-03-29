@@ -6,6 +6,7 @@ import { userTable } from './user';
 
 export type ReportSelect = InferSelectModel<typeof reportTable>;
 export type ReportInsert = InferInsertModel<typeof reportTable>;
+
 export const reportTable = sqliteTable('report', {
   id: integer('id').primaryKey(),
   userId: text('user_id')

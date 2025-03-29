@@ -2,6 +2,7 @@ import { relations, type InferInsertModel, type InferSelectModel } from 'drizzle
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { contentStatus, type ContentStatus } from '../../../shared/constants/content-status';
 import { tableTimestampColumns } from '../lib/helpers';
+import { categoryTable } from './category';
 import { trailContributionTable } from './contribution';
 import { topicTable } from './topic';
 import { trailSubscriptionTable } from './trail-subscription';
@@ -41,22 +42,4 @@ export const trailTableRelations = relations(trailTable, ({ many, one }) => ({
     fields: [trailTable.authorId],
     references: [userTable.id],
   }),
-}));
-
-export type CategoryTable = InferSelectModel<typeof categoryTable>;
-export type NewCategoryTable = InferInsertModel<typeof categoryTable>;
-
-export const categoryTable = sqliteTable('category', {
-  name: text('name').primaryKey().notNull().unique(),
-  authorId: text('user_id')
-    .notNull()
-    .references(() => userTable.id, {
-      onDelete: 'set null',
-      onUpdate: 'cascade',
-    }),
-  ...tableTimestampColumns,
-});
-
-export const categoryTableRelations = relations(categoryTable, ({ many }) => ({
-  trails: many(trailTable),
 }));

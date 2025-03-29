@@ -6,9 +6,10 @@ import { contentContributionTable } from './contribution';
 import { topicTable } from './topic';
 import { userTable } from './user';
 
-// BASE
+
 export type ContentSelect = InferSelectModel<typeof contentTable>;
 export type ContentInsert = InferInsertModel<typeof contentTable>;
+
 export const contentTable = sqliteTable('content', {
   id: integer('id').primaryKey().notNull(),
   title: text('title').notNull(),
@@ -21,6 +22,7 @@ export const contentTable = sqliteTable('content', {
     .references(() => userTable.id, { onDelete: 'no action', onUpdate: 'cascade' }),
   ...tableTimestampColumns,
 });
+
 export const contentTableRelations = relations(contentTable, ({ one, many }) => ({
   topic: one(topicTable, {
     fields: [contentTable.topicId],

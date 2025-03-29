@@ -1,5 +1,7 @@
 import { relations, type InferSelectModel } from 'drizzle-orm';
-import { blob, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { AVATARS } from '../../../modules/user/constants/avatars';
+import { yolo } from '../../../shared/lib/yolo';
 import type { Role } from '../../auth/constants/roles';
 import { tableTimestampColumns } from '../lib/helpers';
 import { commentVoteTable } from './comment';
@@ -19,13 +21,13 @@ export const userTable = sqliteTable('user', {
   passwordHash: text('password_hash').notNull(),
   role: text('role').$type<Role>().notNull(),
   email: text('email').notNull().unique(),
-  avatar: text('avatar').notNull().default('/avatars/original.png'),
+  avatar: text('avatar').notNull().default(yolo.getRandomItem(AVATARS)),
   verifiedAt: integer('verified_at', { mode: 'timestamp' }),
   bannedAt: integer('banned_at', { mode: 'timestamp' }),
   ...tableTimestampColumns,
 });
 
-export const userTableRelations = relations(userTable, ({ one, many }) => ({
+export const userTableRelations = relations(userTable, ({ many }) => ({
   emailVerificationTokens: many(emailVerificationTokenTable),
   passwordResetTokens: many(passwordResetTokenTable),
   trailSubscriptions: many(trailSubscriptionTable),
@@ -35,15 +37,7 @@ export const userTableRelations = relations(userTable, ({ one, many }) => ({
   topicContributions: many(topicContributionTable),
   contentContributions: many(contentContributionTable),
   commentVotes: many(commentVoteTable),
-  followers: many(userFollowerTable, { relationName: 'followed' }),
-  following: many(userFollowerTable, { relationName: 'follower' }),
+  followers: many(userFollowerTable, { relationName: 'following' }),
+  following: many(userFollowerTable, { relationName: 'followers' }),
   publications: many(publicationTable),
 }));
-
-export const sessionTable = sqliteTable('user_session', {
-  id: text('id').primaryKey(),
-  user_id: text('user_id')
-    .notNull()
-    .references(() => userTable.id),
-  expires_at: blob('expires_at', { mode: 'bigint' }).notNull(),
-});

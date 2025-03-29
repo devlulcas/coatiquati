@@ -4,20 +4,14 @@ import { tableTimestampColumns } from '../lib/helpers';
 import { userTable } from './user';
 
 export const userFollowerTable = sqliteTable(
-  'userFollower',
+  'user_follower',
   {
     userId: text('user_id')
       .notNull()
-      .references(() => userTable.id, {
-        onDelete: 'cascade',
-        onUpdate: 'cascade',
-      }),
+      .references(() => userTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
     followerId: text('follower_id')
       .notNull()
-      .references(() => userTable.id, {
-        onDelete: 'cascade',
-        onUpdate: 'cascade',
-      }),
+      .references(() => userTable.id, { onDelete: 'cascade', onUpdate: 'cascade' }),
     ...tableTimestampColumns,
   },
   table => ({ pk: primaryKey({ columns: [table.followerId, table.userId] }) }),

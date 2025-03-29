@@ -15,7 +15,6 @@ export const fileTable = sqliteTable('file', {
   fileType: text('file_type').notNull(),
   filename: text('filename').notNull(),
   key: text('key').notNull(),
-  uploadedAt: integer('deleted_at', { mode: 'timestamp' }),
   ...tableTimestampColumns,
 });
 

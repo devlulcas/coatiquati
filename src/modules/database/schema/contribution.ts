@@ -1,15 +1,14 @@
 import { relations } from 'drizzle-orm';
 import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { tableTimestampColumns } from '../lib/helpers';
 import { contentTable } from './content';
 import { topicTable } from './topic';
 import { trailTable } from './trail';
 import { userTable } from './user';
 
-// Porque não usar apenas uma tabela de contribuições? Porque essa fazer essa abstração agora só vai complicar as coisas
-
 // Contribuições em trilhas
 export const trailContributionTable = sqliteTable(
-  'trailContribution',
+  'trail_contribution',
   {
     trailId: integer('trail_id')
       .references(() => trailTable.id)
@@ -17,7 +16,7 @@ export const trailContributionTable = sqliteTable(
     userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: integer('contributed_at', { mode: 'timestamp' }).notNull(),
+    ...tableTimestampColumns,
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.trailId] }) }),
 );
@@ -35,7 +34,7 @@ export const trailContributionTableRelations = relations(trailContributionTable,
 
 // Contribuições em tópicos
 export const topicContributionTable = sqliteTable(
-  'topicContribution',
+  'topic_contribution',
   {
     topicId: integer('topic_id')
       .references(() => topicTable.id)
@@ -43,7 +42,7 @@ export const topicContributionTable = sqliteTable(
     userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: integer('contributed_at', { mode: 'timestamp' }).notNull(),
+    ...tableTimestampColumns,
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.topicId] }) }),
 );
@@ -61,7 +60,7 @@ export const topicContributionTableRelations = relations(topicContributionTable,
 
 // Contribuições em conteúdos (Usuários comuns podem contribuir com conteúdos)
 export const contentContributionTable = sqliteTable(
-  'contentContribution',
+  'content_contribution',
   {
     contentId: integer('content_id')
       .references(() => contentTable.id)
@@ -69,7 +68,7 @@ export const contentContributionTable = sqliteTable(
     userId: text('user_id')
       .references(() => userTable.id)
       .notNull(),
-    contributedAt: integer('contributed_at', { mode: 'timestamp' }).notNull(),
+    ...tableTimestampColumns,
   },
   table => ({ pk: primaryKey({ columns: [table.userId, table.contentId] }) }),
 );

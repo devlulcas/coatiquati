@@ -6,7 +6,7 @@ import { userTable } from './user';
 export type EmailVerificationToken = InferSelectModel<typeof emailVerificationTokenTable>;
 export type NewEmailVerificationToken = InferInsertModel<typeof emailVerificationTokenTable>;
 
-export const emailVerificationTokenTable = sqliteTable('userEmailVerificationToken', {
+export const emailVerificationTokenTable = sqliteTable('user_email_verification_token', {
   id: text('id').primaryKey(),
   userId: text('user_id')
     .notNull()
