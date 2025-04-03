@@ -1,4 +1,4 @@
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
 import { fileTable } from '@/modules/database/schema/file';
 import { storage } from '@/modules/file/lib/storage';
@@ -8,7 +8,7 @@ import { fail, isFail, wrapAsyncInResult } from '@/shared/lib/result';
 
 // Gera a URL pré assinada
 export async function createPresignedURLHandler(request: Request) {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!user) {
     return Response.json(fail('Somente usuários logados podem fazer upload de arquivos'), {

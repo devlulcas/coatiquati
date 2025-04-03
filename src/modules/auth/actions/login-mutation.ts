@@ -2,12 +2,13 @@
 
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
+import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { fail, type Result } from '@/shared/lib/result';
 import { verify } from 'argon2';
 import { eq } from 'drizzle-orm';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { auth } from '../services/lucia';
+import { createSession, generateSessionToken } from '../services/auth';
+import { setSessionTokenCookie } from '../services/next';
 
 export async function loginMutation(_: any, formData: FormData): Promise<Result> {
   const username = formData.get('username');
@@ -34,9 +35,8 @@ export async function loginMutation(_: any, formData: FormData): Promise<Result>
     return fail('Nome de usuário ou senha incorretos');
   }
 
-  const session = await auth.createSession(existingUser.id, {});
-  const sessionCookie = auth.createSessionCookie(session.id);
-  const jar = await cookies();
-  jar.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-  return redirect('/');
+  const token = generateSessionToken();
+  const session = await createSession(token, existingUser.id);
+  await setSessionTokenCookie(token, session.expiresAt);
+  redirect(createProfileUrl(existingUser.username));
 }

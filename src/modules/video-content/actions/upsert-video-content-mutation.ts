@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import { ContentType } from '@/modules/content/types/content-json-field';
 import { log } from '@/modules/logging/lib/pino';
@@ -11,7 +11,7 @@ import {
 import { fail, isOk, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertVideoContentMutation(params: NewVideoContentSchema): Promise<Result<number>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!user) {
     return fail('Você precisa estar logado para criar um conteúdo de vídeo.');

@@ -7,13 +7,12 @@ import { mailer } from '@/modules/email/lib/mail';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok } from '@/shared/lib/result';
 import { generateToken } from '../services/email-verification-service';
-import { validateRequest } from '../services/lucia';
-import { isAuthenticated } from '../utils/is';
+import { validateRequest } from '../services/next';
 
 export async function requestEmailVerificationMutation() {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
-  if (!isAuthenticated(user)) {
+  if (!user) {
     return fail('Usuário não autenticado. A confirmação de e-mail só pode ser feita por usuários autenticados.');
   }
 

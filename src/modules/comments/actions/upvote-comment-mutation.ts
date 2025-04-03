@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -8,7 +8,7 @@ import { VOTES } from '../constants/votes';
 import { CommentVoteRepository } from '../repositories/comment-vote-repository';
 
 export async function upvoteCommentMutation(commentId: number): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
     log.warn('Tentativa de votar em comentário sem usuário logado.', { commentId });

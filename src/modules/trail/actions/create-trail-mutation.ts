@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { type NewTrailTable } from '@/modules/database/schema/trail';
 import { log } from '@/modules/logging/lib/pino';
@@ -10,7 +10,7 @@ import { TrailRepository } from '../repositories/trail-repository';
 import { newTrailSchema, type NewTrailSchema } from '../schemas/new-trail-schema';
 
 export async function createTrailMutation(params: NewTrailSchema): Promise<Result<number>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
     return fail('Você precisa estar logado para criar uma trilha.');

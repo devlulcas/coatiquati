@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { reportTable } from '@/modules/database/schema/report';
@@ -9,7 +9,7 @@ import { fail, ok, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 
 export async function ignoreReportMutation(reportId: number): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!user) {
     return fail('Entre para ignorar um reporte');

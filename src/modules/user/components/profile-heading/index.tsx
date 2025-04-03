@@ -1,4 +1,4 @@
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { FollowUserButton } from '@/modules/user-followings/components/follow-user-button';
 import { Button } from '@/shared/components/ui/button';
 import { BoltIcon } from 'lucide-react';
@@ -11,7 +11,7 @@ type ProfileHeadingProps = {
 };
 
 export async function ProfileHeading({ user }: ProfileHeadingProps) {
-  const { user: currentUser } = await validateRequest();
+  const { data: currentUser } = await validateRequest();
 
   const isCurrentUser = currentUser?.id === user.id;
 

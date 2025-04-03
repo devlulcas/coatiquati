@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { fail, isFail, ok, wrapAsyncInResult, wrapInResult, type Result } from '@/shared/lib/result';
 import { readFileSync } from 'fs';
@@ -15,7 +15,7 @@ const packageJsonSchema = z.object({
 });
 
 export async function createNewFeedbackMutation(feedback: NewFeedbackFormValues): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
     return fail('Você precisa estar logado para criar uma nova trilha.');

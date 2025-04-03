@@ -1,10 +1,13 @@
-import { blob, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import type { InferSelectModel } from 'drizzle-orm';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { userTable } from './user';
+
+export type SessionSelect = InferSelectModel<typeof sessionTable>;
 
 export const sessionTable = sqliteTable('user_session', {
   id: text('id').primaryKey(),
-  user_id: text('user_id')
+  userId: text('user_id')
     .notNull()
     .references(() => userTable.id),
-  expires_at: blob('expires_at', { mode: 'bigint' }).notNull(),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
 });

@@ -1,7 +1,7 @@
 'use server';
 
 import { roles } from '@/modules/auth/constants/roles';
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -16,7 +16,7 @@ const setUserRoleUseCaseSchema = z.object({
 export type SetUserRoleSchema = z.infer<typeof setUserRoleUseCaseSchema>;
 
 export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!user) {
     return fail('Você precisa estar logado para editar as permissões de um usuário.');

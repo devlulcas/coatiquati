@@ -1,20 +1,18 @@
 'use server';
 
-import { fail, type Result } from '@/shared/lib/result';
-import { cookies } from 'next/headers';
+import { type Result } from '@/shared/lib/result';
 import { redirect } from 'next/navigation';
-import { auth, validateRequest } from '../services/lucia';
+import { invalidateSession } from '../services/auth';
+import { deleteSessionTokenCookie, validateRequest } from '../services/next';
 
 export async function logoutMutation(): Promise<Result> {
-  const { session } = await validateRequest();
-  if (!session) {
-    return fail('Sessão inválida');
+  const session = await validateRequest();
+
+  if (session.data) {
+    await invalidateSession(session.data.sessionId);
   }
 
-  await auth.invalidateSession(session.id);
+  await deleteSessionTokenCookie();
 
-  const sessionCookie = auth.createBlankSessionCookie();
-  const jar = await cookies();
-  jar.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-  return redirect('/sign-in');
+  redirect('/sign-in');
 }

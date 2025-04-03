@@ -1,10 +1,10 @@
+import type { SessionSelect } from '@/modules/database/schema/session';
 import type { PublicUser } from '@/modules/user/types/user';
-import { type Session as LuciaSession } from 'lucia';
 
-export type Session = LuciaSession;
+export type Session = SessionSelect;
 
 export type PublicSession = {
-  data: PublicUser;
+  data: PublicUser & { sessionId: Session['id'] };
   status: 'authenticated';
 } | {
   data: null;

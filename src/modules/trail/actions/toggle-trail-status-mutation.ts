@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { revalidateTrails } from '../lib/revalidate-trail';
@@ -8,7 +8,7 @@ import { TrailRepository } from '../repositories/trail-repository';
 import { trailWithIdSchema, type TrailWithIdSchema } from '../schemas/trail-with-id-schema';
 
 export async function toggleTrailStatusMutation(params: TrailWithIdSchema): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
     return fail('Usuário não autenticado.');

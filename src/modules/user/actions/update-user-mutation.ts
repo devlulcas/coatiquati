@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -9,7 +9,7 @@ import { getUserById, updateUser } from '../repositories/user-repository';
 import { updateUserSchema, type UpdateUserSchema } from '../schemas/update-user-schema';
 
 export async function updateUserMutation(params: UpdateUserSchema): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!user) {
     return fail('Você precisa estar logado para editar suas informações.');

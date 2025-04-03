@@ -1,4 +1,4 @@
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { CreatePublicationForm } from '@/modules/publication/components/create-publication-form';
 import { UserPublicationList } from '@/modules/publication/components/user-publication-list';
 import { getTrailSubscriptionsByUserIdQuery } from '@/modules/trail-subscriptions/actions/get-trail-subscriptions-by-user-id-query';
@@ -41,9 +41,9 @@ export default async function Page(props: PageProps) {
 
   const mostSubscribedCategory = getMostSubscribedCategory(subscribedTrails);
 
-  const { user } = await validateRequest();
+  const session = await validateRequest();
 
-  const isCurrentUser = user && profile.id === user.id;
+  const isCurrentUser = session.data && profile.id === session.data.id;
 
   return (
     <main className="container py-4">

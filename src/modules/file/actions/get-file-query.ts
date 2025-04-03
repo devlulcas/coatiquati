@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import type { PaginationSchema } from '@/modules/database/types/pagination';
@@ -8,7 +8,7 @@ import { fail, isOk, ok, wrapAsyncInResult } from '@/shared/lib/result';
 import { fileType } from '../lib/file-type';
 
 export async function getFilesQuery(pagination: PaginationSchema = { skip: 0, take: 100 }) {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!user || !isAdminOrAbove(user.role)) {
     return fail('Usuário sem permissão para a ação!');

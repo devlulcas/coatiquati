@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { publicationTable } from '@/modules/database/schema/publication';
@@ -10,7 +10,7 @@ import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 
 export async function deletePublicationMutation(pubId: number): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
     return fail('Somente um usuário autenticado pode deletar publicações!');

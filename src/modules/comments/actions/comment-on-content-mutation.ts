@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { type NewComment } from '@/modules/database/schema/comment';
@@ -10,7 +10,7 @@ import { CommentRepository } from '../repositories/comment-repository';
 import { newCommentSchema, type NewCommentSchema } from '../schemas/new-comment-schema';
 
 export async function commentOnContentMutation(params: NewCommentSchema): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
     return fail('Somente usuários logados podem comentar.');

@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { fail, ok, type Result } from '@/shared/lib/result';
@@ -9,7 +9,7 @@ import type { ReportSearchSchema } from '../schemas/report-search';
 import type { Report } from '../types/report';
 
 export async function getReportsQuery(params: ReportSearchSchema = { skip: 0, take: 30 }): Promise<Result<Report[]>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!user || !isAdminOrAbove(user.role)) {
     return fail('Você não tem permissão para ver os reports');

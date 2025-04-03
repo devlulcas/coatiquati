@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -10,7 +10,7 @@ import { newTopicSchema, type NewTopicSchema } from '../schemas/new-topic-schema
 import { type NewTopic } from '../types/topic';
 
 export async function createTopicMutation(params: NewTopicSchema): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
     return fail('Você precisa estar autenticado para criar um novo tópico.');

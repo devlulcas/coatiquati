@@ -4,8 +4,8 @@ import {
   type EmailVerificationToken,
 } from '@/modules/database/schema/email-verification-token';
 import { log } from '@/modules/logging/lib/pino';
+import { encodeBase32LowerCaseNoPadding } from '@oslojs/encoding';
 import { eq } from 'drizzle-orm';
-import { generateIdFromEntropySize } from 'lucia';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
 import { isWithinExpiration } from '../utils/time';
 
@@ -28,7 +28,8 @@ export async function createVerificationToken(userId: string, database = db): Pr
       if (reusableStoredToken) return reusableStoredToken;
     }
 
-    const newToken = generateIdFromEntropySize(64);
+    const buffer = crypto.getRandomValues(new Uint8Array(64));
+    const newToken = encodeBase32LowerCaseNoPadding(buffer);
 
     const results = await database
       .insert(emailVerificationTokenTable)

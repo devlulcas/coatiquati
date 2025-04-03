@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { publicationTable } from '@/modules/database/schema/publication';
@@ -11,7 +11,7 @@ import { desc, eq } from 'drizzle-orm';
 import { createPublicationSchema, type CreatePublicationSchema } from '../schemas/create-publication';
 
 export async function publishContentMutation(params: CreatePublicationSchema): Promise<Result<number>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
     return fail('Somente um usuário autenticado pode fazer publicações!');

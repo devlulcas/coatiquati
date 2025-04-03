@@ -1,11 +1,11 @@
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import coatiSvg from '@/shared/assets/images/coati.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HeaderNav } from './header-nav';
 
 export async function Header() {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   return (
     <header className="sticky top-0 z-50 h-[--header-height] border-b bg-background/50 backdrop-blur-lg">

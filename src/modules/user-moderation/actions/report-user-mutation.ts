@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
 import { reportTable, type ReportInsert } from '@/modules/database/schema/report';
 import { log } from '@/modules/logging/lib/pino';
@@ -16,7 +16,7 @@ export async function reportUserMutation(params: CreateReportSchema): Promise<Re
     return fail(validatedParams.error.errors[0].message);
   }
 
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!user) {
     return fail('Entre para reportar um usuário');

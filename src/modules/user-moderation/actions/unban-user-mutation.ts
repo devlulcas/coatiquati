@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
@@ -9,9 +9,9 @@ import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/r
 import { eq } from 'drizzle-orm';
 
 export async function unbanUserMutation(params: { username: string }): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
-  if (user === null) {
+  if (!user) {
     return fail('Você não está autenticado');
   }
 

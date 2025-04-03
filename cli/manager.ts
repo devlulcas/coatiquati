@@ -5,7 +5,6 @@ import { hash } from 'argon2';
 import { config } from 'dotenv';
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/libsql';
-import { generateId } from 'lucia';
 import { type Role, roles } from '../src/modules/auth/constants/roles';
 import { schema } from '../src/modules/database/schema';
 import { userTable } from '../src/modules/database/schema/user';
@@ -41,7 +40,7 @@ async function registerUser(user: User, role: Role) {
     parallelism: 1,
   });
 
-  const userId = generateId(15);
+  const userId = crypto.randomUUID();
 
   const data = {
     id: userId,

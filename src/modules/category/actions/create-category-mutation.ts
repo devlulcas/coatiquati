@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { categoryTable } from '@/modules/database/schema/category';
@@ -9,7 +9,7 @@ import { fail, ok, type Result } from '@/shared/lib/result';
 import { newTrailCategorySchema } from '../schemas/new-trail-category-schema';
 
 export async function createCategoryMutation(name: string): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
     return fail('Falha ao criar categoria. Você precisa estar logado para criar uma categoria.');

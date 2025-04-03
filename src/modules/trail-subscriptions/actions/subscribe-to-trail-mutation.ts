@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { trailSubscriptionTable } from '@/modules/database/schema/trail-subscription';
@@ -11,7 +11,7 @@ import { revalidatePath } from 'next/cache';
 import { currentUserIsAlreadySubscribedQuery } from './current-user-is-already-subscribed-query';
 
 export async function subscribeToTrailMutation(trailId: TrailId): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user?.role)) return fail('Usuário não autenticado');
 

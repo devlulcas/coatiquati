@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
@@ -10,7 +10,7 @@ import { updateTopicSchema, type UpdateTopicSchema } from '../schemas/edit-topic
 import { type UpdateTopic } from '../types/topic';
 
 export async function updateTopicMutation(params: UpdateTopicSchema): Promise<Result<string>> {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
     return fail('Você precisa estar autenticado para atualizar um tópico.');

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { type roles } from '../constants/roles';
-import { validateRequest } from '../services/lucia';
+import { validateRequest } from '../services/next';
 
 type ProtectWithRedirectParams = {
   redirectTo?: string;
@@ -8,10 +8,10 @@ type ProtectWithRedirectParams = {
 };
 
 export async function protectWithRedirect({ acceptRoles, redirectTo }: ProtectWithRedirectParams) {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!user) {
-    return redirect(redirectTo || '/sign-in');
+    redirect(redirectTo || '/sign-in');
   }
 
   if (acceptRoles && !acceptRoles.includes(user.role)) {

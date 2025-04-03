@@ -1,4 +1,4 @@
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { currentUserIsAlreadySubscribedQuery } from '@/modules/trail-subscriptions/actions/current-user-is-already-subscribed-query';
 import { FollowTrailButton } from '@/modules/trail-subscriptions/components/follow-trail-button';
 import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
@@ -23,7 +23,7 @@ type TrailHeadingProps = {
 export async function TrailHeading({ trail, className }: TrailHeadingProps) {
   const allContributors = trail.contributors.map(contributor => contributor.user);
 
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   const checkIfUserIsAlreadySubscribed = async () => {
     if (user === null) return false;

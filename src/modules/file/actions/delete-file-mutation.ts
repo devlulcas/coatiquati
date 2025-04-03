@@ -1,4 +1,4 @@
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { fileTable } from '@/modules/database/schema/file';
@@ -8,7 +8,7 @@ import { fail, isFail, wrapAsyncInResult } from '@/shared/lib/result';
 import { and, eq } from 'drizzle-orm';
 
 export async function deleteFileMutation(key: string) {
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   if (!user) {
     return fail('Somente usuários logados podem fazer manipular arquivos');

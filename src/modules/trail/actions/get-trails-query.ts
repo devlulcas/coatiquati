@@ -1,6 +1,6 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/lucia';
+import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
@@ -37,7 +37,7 @@ export async function getTrailsQuery(params: TrailSearchSchema = { skip: 0, take
     return fail(validatedParams.error.errors.join(', '));
   }
 
-  const { user } = await validateRequest();
+  const { data: user } = await validateRequest();
 
   const trailRepository = new TrailRepository();
 
