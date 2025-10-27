@@ -1,7 +1,7 @@
-import { createClient } from '@libsql/client';
+import Database from 'better-sqlite3';
 import { config } from 'dotenv';
-import { drizzle } from 'drizzle-orm/libsql';
-import { migrate } from 'drizzle-orm/libsql/migrator';
+import { drizzle } from 'drizzle-orm/better-sqlite3';
+import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 import path from 'path';
 import { schema } from './schema';
 
@@ -10,10 +10,7 @@ config({ path: '.env.local' });
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) throw new Error('DATABASE_URL is not defined');
 
-const DATABASE_AUTH_TOKEN = process.env.DATABASE_AUTH_TOKEN;
-if (!DATABASE_AUTH_TOKEN) throw new Error('DATABASE_AUTH_TOKEN is not defined');
-
-const sqlite = createClient({ url: DATABASE_URL, authToken: DATABASE_AUTH_TOKEN });
+const sqlite = new Database(DATABASE_URL);
 
 const db = drizzle(sqlite, {
   schema: schema,
@@ -27,9 +24,9 @@ const db = drizzle(sqlite, {
 export type Database = typeof db;
 export type DBTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
-async function migrateDatabase() {
+function migrateDatabase() {
   const migrationFolderPath = path.resolve(__dirname, '../../../drizzle');
-  await migrate(db, { migrationsFolder: migrationFolderPath });
+  migrate(db, { migrationsFolder: migrationFolderPath });
   sqlite.close();
 }
 

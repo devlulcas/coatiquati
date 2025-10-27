@@ -7,7 +7,6 @@ export const env = createEnv({
   server: {
     MAINTENANCE_MODE: zBoolean,
     DATABASE_URL: z.string().min(1),
-    DATABASE_AUTH_TOKEN: z.string().min(1),
     MAIL_FROM: z.string().min(1),
     MAIL_ENV: z.string().min(1),
     DEV_MAIL_HOST: z.string().min(1),
@@ -27,7 +26,6 @@ export const env = createEnv({
     NEXT_PUBLIC_WEBSITE: process.env.NEXT_PUBLIC_WEBSITE,
     MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
     DATABASE_URL: process.env.DATABASE_URL,
-    DATABASE_AUTH_TOKEN: process.env.DATABASE_AUTH_TOKEN,
     MAIL_FROM: process.env.MAIL_FROM,
     MAIL_ENV: process.env.MAIL_ENV,
     DEV_MAIL_HOST: process.env.DEV_MAIL_HOST,

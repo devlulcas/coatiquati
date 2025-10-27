@@ -8,16 +8,10 @@ if (!DATABASE_URL) {
   throw new Error('DATABASE_URL is not defined');
 }
 
-const DATABASE_AUTH_TOKEN = process.env.DATABASE_AUTH_TOKEN;
-if (!DATABASE_AUTH_TOKEN) {
-  throw new Error('DATABASE_AUTH_TOKEN is not defined');
-}
-
 export default defineConfig({
-  dialect: 'turso',
+  dialect: 'sqlite',
   schema: './src/modules/database/schema/*',
   dbCredentials: {
     url: DATABASE_URL,
-    authToken: DATABASE_AUTH_TOKEN,
   },
 });
