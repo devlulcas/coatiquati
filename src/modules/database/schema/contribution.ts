@@ -1,4 +1,4 @@
-import { integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { contentTable } from './content';
 import { topicTable } from './topic';
@@ -6,7 +6,7 @@ import { trailTable } from './trail';
 import { userTable } from './user';
 
 // Contribuições em trilhas
-export const trailContributionTable = sqliteTable(
+export const trailContributionTable = pgTable(
   'trail_contribution',
   {
     trailId: integer('trail_id')
@@ -17,11 +17,11 @@ export const trailContributionTable = sqliteTable(
       .notNull(),
     ...tableTimestampColumns,
   },
-  table => ({ pk: primaryKey({ columns: [table.userId, table.trailId] }) }),
+  (table) => ({ pk: primaryKey({ columns: [table.userId, table.trailId] }) })
 );
 
 // Contribuições em tópicos
-export const topicContributionTable = sqliteTable(
+export const topicContributionTable = pgTable(
   'topic_contribution',
   {
     topicId: integer('topic_id')
@@ -32,11 +32,11 @@ export const topicContributionTable = sqliteTable(
       .notNull(),
     ...tableTimestampColumns,
   },
-  table => ({ pk: primaryKey({ columns: [table.userId, table.topicId] }) }),
+  (table) => ({ pk: primaryKey({ columns: [table.userId, table.topicId] }) })
 );
 
 // Contribuições em conteúdos (Usuários comuns podem contribuir com conteúdos)
-export const contentContributionTable = sqliteTable(
+export const contentContributionTable = pgTable(
   'content_contribution',
   {
     contentId: integer('content_id')
@@ -47,5 +47,5 @@ export const contentContributionTable = sqliteTable(
       .notNull(),
     ...tableTimestampColumns,
   },
-  table => ({ pk: primaryKey({ columns: [table.userId, table.contentId] }) }),
+  (table) => ({ pk: primaryKey({ columns: [table.userId, table.contentId] }) })
 );

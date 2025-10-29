@@ -1,11 +1,10 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { env } from '@/env';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import { schema } from './schema';
 
-const sqlite = new Database(env.DATABASE_URL);
+const client = postgres(env.DATABASE_URL);
 
-export const db = drizzle(sqlite, { schema });
+export const db = drizzle(client, { schema });
 
-type Database = typeof db;
 export type DBTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];

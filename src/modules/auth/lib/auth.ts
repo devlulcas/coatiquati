@@ -1,20 +1,20 @@
+import { env } from '@/env';
+import { toMilliseconds } from '@/shared/lib/date';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { admin, twoFactor, username } from 'better-auth/plugins';
 import { passkey } from 'better-auth/plugins/passkey';
-import { env } from '@/env';
-import { toMilliseconds } from '@/shared/lib/date';
 import { db } from '../../database/db';
 import { usernameSchema } from '../schemas/user-sign-up-schema';
 import { ac, roles } from './permissions';
 
 export const auth = betterAuth({
   appName: 'CoatiQuati',
-  database: drizzleAdapter(db, { provider: 'sqlite' }),
+  database: drizzleAdapter(db, { provider: 'pg' }),
   emailAndPassword: { enabled: true },
   plugins: [
     username({
-      usernameValidator: username => {
+      usernameValidator: (username) => {
         const result = usernameSchema.safeParse(username);
         return result.success;
       },

@@ -1,11 +1,15 @@
-import { type InferSelectModel, relations } from 'drizzle-orm';
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { relations } from 'drizzle-orm';
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { AVATARS } from '../../../modules/user/constants/avatars';
 import { yolo } from '../../../shared/lib/yolo';
 import type { Role } from '../../auth/constants/roles';
 import { tableTimestampColumns } from '../lib/helpers';
 import { commentVoteTable } from './comment';
-import { contentContributionTable, topicContributionTable, trailContributionTable } from './contribution';
+import {
+  contentContributionTable,
+  topicContributionTable,
+  trailContributionTable,
+} from './contribution';
 import { emailVerificationTokenTable } from './email-verification-token';
 import { passwordResetTokenTable } from './password-reset-token';
 import { publicationTable } from './publication';
@@ -13,17 +17,17 @@ import { trailTable } from './trail';
 import { trailSubscriptionTable } from './trail-subscription';
 import { userFollowerTable } from './user-follower';
 
-export type AuthUserTable = InferSelectModel<typeof userTable>;
+export type AuthUserTable = typeof userTable.$inferSelect;
 
-export const userTable = sqliteTable('user', {
+export const userTable = pgTable('user', {
   id: text('id').primaryKey(),
   username: text('username').notNull().unique(),
   passwordHash: text('password_hash').notNull(),
   role: text('role').$type<Role>().notNull(),
   email: text('email').notNull().unique(),
   avatar: text('avatar').notNull().default(yolo.getRandomItem(AVATARS)),
-  verifiedAt: integer('verified_at', { mode: 'timestamp' }),
-  bannedAt: integer('banned_at', { mode: 'timestamp' }),
+  verifiedAt: timestamp('verified_at'),
+  bannedAt: timestamp('banned_at'),
   ...tableTimestampColumns,
 });
 

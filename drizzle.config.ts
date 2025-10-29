@@ -9,7 +9,7 @@ if (!DATABASE_URL) {
 }
 
 export default defineConfig({
-  dialect: 'sqlite',
+  dialect: 'postgresql',
   schema: './src/modules/database/schema/*',
   dbCredentials: {
     url: DATABASE_URL,

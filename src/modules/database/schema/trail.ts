@@ -1,6 +1,13 @@
-import { type InferInsertModel, type InferSelectModel, relations } from 'drizzle-orm';
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { type ContentStatus, contentStatus } from '../../../shared/constants/content-status';
+import {
+  type InferInsertModel,
+  type InferSelectModel,
+  relations,
+} from 'drizzle-orm';
+import { pgTable, serial, text } from 'drizzle-orm/pg-core';
+import {
+  type ContentStatus,
+  contentStatus,
+} from '../../../shared/constants/content-status';
 import { tableTimestampColumns } from '../lib/helpers';
 import { categoryTable } from './category';
 import { trailContributionTable } from './contribution';
@@ -11,12 +18,15 @@ import { userTable } from './user';
 export type TrailTable = InferSelectModel<typeof trailTable>;
 export type NewTrailTable = InferInsertModel<typeof trailTable>;
 
-export const trailTable = sqliteTable('trail', {
-  id: integer('id').primaryKey().notNull(),
+export const trailTable = pgTable('trail', {
+  id: serial('id').primaryKey().notNull(),
   title: text('title').notNull(),
   description: text('description').notNull(),
   thumbnail: text('thumbnail').notNull(),
-  status: text('status').$type<ContentStatus>().default(contentStatus.DRAFT).notNull(),
+  status: text('status')
+    .$type<ContentStatus>()
+    .default(contentStatus.DRAFT)
+    .notNull(),
   category: text('category_id').references(() => categoryTable.name, {
     onDelete: 'set null',
     onUpdate: 'cascade',

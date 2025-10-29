@@ -1,14 +1,11 @@
-import { sql } from 'drizzle-orm';
-import { integer } from 'drizzle-orm/sqlite-core';
+import { timestamp } from 'drizzle-orm/pg-core';
 
-const NOW_AS_INTEGER = sql`(strftime('%s', 'now'))`;
-
-const createdAtColumn = integer('created_at', { mode: 'timestamp' }).notNull().default(NOW_AS_INTEGER);
-const updatedAtColumn = integer('updated_at', { mode: 'timestamp' })
+const createdAtColumn = timestamp('created_at').notNull().defaultNow();
+const updatedAtColumn = timestamp('updated_at')
   .notNull()
-  .default(NOW_AS_INTEGER)
+  .defaultNow()
   .$onUpdate(() => new Date());
-const deletedAtColumn = integer('deleted_at', { mode: 'timestamp' });
+const deletedAtColumn = timestamp('deleted_at');
 
 export const tableTimestampColumns = {
   createdAt: createdAtColumn,

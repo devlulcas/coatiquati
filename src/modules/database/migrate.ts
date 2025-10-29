@@ -1,8 +1,8 @@
-import path from 'node:path';
-import Database from 'better-sqlite3';
 import { config } from 'dotenv';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import path from 'node:path';
+import postgres from 'postgres';
 import { schema } from './schema';
 
 config({ path: '.env.local' });
@@ -10,9 +10,9 @@ config({ path: '.env.local' });
 const DATABASE_URL = process.env.DATABASE_URL;
 if (!DATABASE_URL) throw new Error('DATABASE_URL is not defined');
 
-const sqlite = new Database(DATABASE_URL);
+const client = postgres(DATABASE_URL);
 
-const db = drizzle(sqlite, {
+const db = drizzle(client, {
   schema: schema,
   logger: {
     logQuery(query, params) {
@@ -24,10 +24,10 @@ const db = drizzle(sqlite, {
 export type Database = typeof db;
 export type DBTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
-function migrateDatabase() {
+async function migrateDatabase() {
   const migrationFolderPath = path.resolve(__dirname, '../../../drizzle');
-  migrate(db, { migrationsFolder: migrationFolderPath });
-  sqlite.close();
+  await migrate(db, { migrationsFolder: migrationFolderPath });
+  await client.end();
 }
 
 migrateDatabase();
