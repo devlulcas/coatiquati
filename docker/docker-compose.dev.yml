@@ -1,0 +1,20 @@
+services:
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+  db:
+    image: postgres:18-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: cq_dev
+      POSTGRES_PASSWORD: cq_dev_password
+      POSTGRES_DB: cq_dev_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgressql
+
+volumes:
+  db:
