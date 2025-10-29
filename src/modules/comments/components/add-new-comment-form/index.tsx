@@ -1,5 +1,11 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
+import { AlertOctagonIcon, SendIcon } from 'lucide-react';
+import { useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import type { z } from 'zod';
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/alert';
 import { Button } from '@/shared/components/ui/button';
@@ -8,12 +14,6 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { toast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { cn } from '@/shared/utils/cn';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useQueryClient } from '@tanstack/react-query';
-import { AlertOctagonIcon, SendIcon } from 'lucide-react';
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
-import type { z } from 'zod';
 import { commentOnContentMutation } from '../../actions/comment-on-content-mutation';
 import { newCommentSchema } from '../../schemas/new-comment-schema';
 import { CircularProgress } from './circular-progress';

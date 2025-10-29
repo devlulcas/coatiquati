@@ -1,5 +1,5 @@
 import { Body, Container, Font, Head, Heading, Hr, Html, Img, Tailwind } from '@react-email/components';
-import React from 'react';
+import type React from 'react';
 
 type GenericEmailTemplateProps = {
   title: string;

@@ -1,13 +1,13 @@
 'use server';
 
+import { and, eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { trailSubscriptionTable } from '@/modules/database/schema/trail-subscription';
 import type { TrailId } from '@/modules/trail/types/trail';
 import { fail, ok, type Result } from '@/shared/lib/result';
-import { and, eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
 import { currentUserIsAlreadySubscribedQuery } from './current-user-is-already-subscribed-query';
 
 export async function subscribeToTrailMutation(trailId: TrailId): Promise<Result<string>> {

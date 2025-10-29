@@ -1,9 +1,12 @@
 'use client';
 
+import { motion } from 'framer-motion';
+import { LucideLoaderCircle, LucideX } from 'lucide-react';
+import { memo, useEffect, useState } from 'react';
 import type { PomodoroSettings } from '@/modules/database/schema/pomodoro-settings';
 import { usePomodoroManager } from '@/modules/pomodoro/hooks/use-pomodoro-manager';
 import { formatTimer } from '@/modules/pomodoro/lib/format-timer';
-import { pomodoroSessionStateLabels, type PomodoroTimerState } from '@/modules/pomodoro/types/pomodoro';
+import { type PomodoroTimerState, pomodoroSessionStateLabels } from '@/modules/pomodoro/types/pomodoro';
 import { useTodosManager } from '@/modules/todo/hooks/use-todos-manager';
 import { useSyncLocalData } from '@/modules/tools/hooks/use-sync-local-data';
 import { Button } from '@/shared/components/ui/button';
@@ -14,9 +17,6 @@ import { Label } from '@/shared/components/ui/label';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
 import { Switch } from '@/shared/components/ui/switch';
 import { cn } from '@/shared/utils/cn';
-import { motion } from 'framer-motion';
-import { LucideLoaderCircle, LucideX } from 'lucide-react';
-import { memo, useEffect, useState } from 'react';
 
 const castNumber = (value: unknown): number => {
   const n = Number(value);
@@ -34,25 +34,11 @@ const ensureNotZero = (value: unknown): number => {
 };
 
 export default function PomodoroPage() {
-  const {
-    timerState,
-    isLoadingSettings,
-    settings,
-    toggleTimer,
-    resetTimer,
-    skipTimer,
-    updateSettings,
-  } = usePomodoroManager();
+  const { timerState, isLoadingSettings, settings, toggleTimer, resetTimer, skipTimer, updateSettings } =
+    usePomodoroManager();
 
-  const {
-    newTodo,
-    setNewTodo,
-    isLoadingTodos,
-    todos,
-    handleCreateTodo,
-    handleToggleTodo,
-    handleDeleteTodo,
-  } = useTodosManager()
+  const { newTodo, setNewTodo, isLoadingTodos, todos, handleCreateTodo, handleToggleTodo, handleDeleteTodo } =
+    useTodosManager();
 
   // Sync local data when logging in
   useSyncLocalData();
@@ -255,7 +241,7 @@ const TimerGraph = memo(({ pomodoroDuration, timerStateTimeRemaining, timerState
       if (timeout) {
         clearTimeout(timeout);
       }
-    }
+    };
   }, []);
 
   if (firstTime) {
@@ -269,7 +255,7 @@ const TimerGraph = memo(({ pomodoroDuration, timerStateTimeRemaining, timerState
       >
         <LucideLoaderCircle className="h-8 w-8 animate-spin" />
       </motion.div>
-    )
+    );
   }
 
   return (

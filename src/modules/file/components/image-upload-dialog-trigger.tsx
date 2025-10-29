@@ -1,14 +1,14 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useId, useState } from 'react';
+import { type FileRejection, useDropzone } from 'react-dropzone';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { createImageFileSchema } from '@/modules/media/lib/create-image-file-schema';
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useId, useState } from 'react';
-import { type FileRejection, useDropzone } from 'react-dropzone';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { FileDropZone } from './file-drop-zone';
 
 const formSchema = z.object({

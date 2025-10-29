@@ -1,5 +1,5 @@
-import { cn } from '@/shared/utils/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/shared/utils/cn';
 
 const variants = cva('p-4 items-center justify-center rounded border', {
   variants: {
@@ -22,9 +22,7 @@ type AppFeedbackCardProps = {
 export function AppFeedbackCard({ children, className, variant }: AppFeedbackCardProps) {
   return (
     <div className={cn(variants({ variant, className }))}>
-      <p className="text-pretty font-bold">
-        {children}
-      </p>
+      <p className="text-pretty font-bold">{children}</p>
     </div>
   );
 }

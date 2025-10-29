@@ -1,17 +1,13 @@
+import { eq } from 'drizzle-orm';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
 import type { UpdateUser, User, UserProfile } from '@/modules/user/types/user';
-import { eq } from 'drizzle-orm';
 
 export async function updateUser(id: string, user: UpdateUser): Promise<void> {
   try {
-    const res = await db
-      .update(userTable)
-      .set(user)
-      .where(eq(userTable.id, id))
-      .returning();
+    const res = await db.update(userTable).set(user).where(eq(userTable.id, id)).returning();
     log.info(res);
   } catch (error) {
     log.error('Erro ao atualizar usuário', error);

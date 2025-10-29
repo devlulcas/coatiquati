@@ -1,3 +1,5 @@
+import { MenuIcon } from 'lucide-react';
+import Link from 'next/link';
 import { SignOutForm } from '@/modules/auth/components/sign-out-form';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { ConfigDropdown, ConfigListing } from '@/modules/theme/components/config-dropdown';
@@ -5,8 +7,6 @@ import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import type { User } from '@/modules/user/types/user';
 import { Button } from '@/shared/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/shared/components/ui/sheet';
-import { MenuIcon } from 'lucide-react';
-import Link from 'next/link';
 
 type HeaderNavProps = {
   user: Pick<User, 'role' | 'username'> | null;

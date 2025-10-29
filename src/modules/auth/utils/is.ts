@@ -1,4 +1,4 @@
-import { roles, type Role } from '../constants/roles';
+import { type Role, roles } from '../constants/roles';
 
 export const isAdmin = (role: string | null | undefined): role is Role => {
   return role === roles.ADMIN;

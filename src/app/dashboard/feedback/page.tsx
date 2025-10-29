@@ -1,3 +1,6 @@
+import { cva, type VariantProps } from 'class-variance-authority';
+import { CheckIcon, MailIcon, SkullIcon, TrashIcon } from 'lucide-react';
+import Link from 'next/link';
 import { getFeedbackListQuery } from '@/modules/feedback/actions/get-feedback-list-query';
 import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 import { UserRoleBadge } from '@/modules/user/components/user-role-badge';
@@ -6,9 +9,6 @@ import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
 import { isFail } from '@/shared/lib/result';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { CheckIcon, MailIcon, SkullIcon, TrashIcon } from 'lucide-react';
-import Link from 'next/link';
 
 type PageProps = {
   searchParams: Promise<{
@@ -77,7 +77,6 @@ export default async function FeedbackPage(props: PageProps) {
                             <span
                               className="flex h-5 w-5 items-center justify-center rounded-full bg-green-500/15"
                               title="Usuário verificado"
-                              aria-label="Usuário verificado"
                             >
                               <CheckIcon className="h-4 w-4 text-green-500" />
                             </span>
@@ -87,7 +86,6 @@ export default async function FeedbackPage(props: PageProps) {
                             <span
                               className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500/15"
                               title="Usuário banido"
-                              aria-label="Usuário banido"
                             >
                               <SkullIcon className="h-4 w-4 text-red-500" />
                             </span>

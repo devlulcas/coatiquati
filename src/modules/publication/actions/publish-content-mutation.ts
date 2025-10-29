@@ -1,5 +1,6 @@
 'use server';
 
+import { desc, eq } from 'drizzle-orm';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
@@ -7,8 +8,7 @@ import { publicationTable } from '@/modules/database/schema/publication';
 import { publicationMediaTable } from '@/modules/database/schema/publication-media';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result } from '@/shared/lib/result';
-import { desc, eq } from 'drizzle-orm';
-import { createPublicationSchema, type CreatePublicationSchema } from '../schemas/create-publication';
+import { type CreatePublicationSchema, createPublicationSchema } from '../schemas/create-publication';
 
 export async function publishContentMutation(params: CreatePublicationSchema): Promise<Result<number>> {
   const { data: user } = await validateRequest();

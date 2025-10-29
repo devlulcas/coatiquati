@@ -1,11 +1,11 @@
+import { TrashIcon } from 'lucide-react';
+import Link from 'next/link';
 import { getReportsQuery } from '@/modules/user-moderation/actions/get-reports-query';
 import ReportListItem from '@/modules/user-moderation/components/report-list-item';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { isFail } from '@/shared/lib/result';
-import { TrashIcon } from 'lucide-react';
-import Link from 'next/link';
 
 export default async function Page() {
   const reportsResult = await getReportsQuery();

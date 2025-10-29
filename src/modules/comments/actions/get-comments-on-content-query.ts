@@ -1,7 +1,7 @@
 'use server';
 
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { CommentRepository } from '../repositories/comment-repository';
 import type { Comment } from '../types/comment';
 

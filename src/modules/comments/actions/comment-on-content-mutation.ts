@@ -3,11 +3,11 @@
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
-import { type NewComment } from '@/modules/database/schema/comment';
+import type { NewComment } from '@/modules/database/schema/comment';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { CommentRepository } from '../repositories/comment-repository';
-import { newCommentSchema, type NewCommentSchema } from '../schemas/new-comment-schema';
+import { type NewCommentSchema, newCommentSchema } from '../schemas/new-comment-schema';
 
 export async function commentOnContentMutation(params: NewCommentSchema): Promise<Result<string>> {
   const { data: user } = await validateRequest();

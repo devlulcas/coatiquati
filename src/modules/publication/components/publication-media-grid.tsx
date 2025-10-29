@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { getEmbedIDFromYoutubeUrl } from '@/modules/video-content/lib/youtube';
 import {
@@ -11,7 +12,6 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
 import { cn } from '@/shared/utils/cn';
-import Link from 'next/link';
 import 'react-medium-image-zoom/dist/styles.css';
 import type { PublicationMedia } from '../types/publication';
 

@@ -1,9 +1,9 @@
 'use server';
 
+import type { z } from 'zod';
 import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result } from '@/shared/lib/result';
-import { type z } from 'zod';
 import { getUsers } from '../repositories/user-repository';
 import type { User } from '../types/user';
 

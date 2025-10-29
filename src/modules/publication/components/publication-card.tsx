@@ -1,11 +1,11 @@
-import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
-import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
-import type { User } from '@/modules/user/types/user';
-import { cn } from '@/shared/utils/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { CheckCircle2Icon, DotIcon, EllipsisIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
+import type { User } from '@/modules/user/types/user';
+import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
+import { cn } from '@/shared/utils/cn';
 import type { Publication } from '../types/publication';
 import { PublicationMediaGrid } from './publication-media-grid';
 

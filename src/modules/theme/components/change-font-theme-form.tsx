@@ -1,9 +1,9 @@
 'use client';
 
-import { cn } from '@/shared/utils/cn';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
 import { CaseLowerIcon, PuzzleIcon } from 'lucide-react';
 import { useTransition } from 'react';
+import { cn } from '@/shared/utils/cn';
 import { setFontMutation } from '../actions/change-font-mutation';
 import type { Font } from '../constants/theme-keys';
 

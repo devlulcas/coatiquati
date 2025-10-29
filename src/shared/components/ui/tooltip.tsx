@@ -1,9 +1,9 @@
 'use client';
 
-import { cn } from '@/shared/utils/cn';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
+import { cn } from '@/shared/utils/cn';
 
 const TooltipProvider = TooltipPrimitive.Provider;
 

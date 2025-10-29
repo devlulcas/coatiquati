@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { type roles } from '../constants/roles';
+import type { roles } from '../constants/roles';
 import { validateRequest } from '../services/next';
 
 type ProtectWithRedirectParams = {

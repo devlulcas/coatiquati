@@ -1,26 +1,20 @@
 'use client';
 
-import { Button } from '@/shared/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
-} from '@/shared/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { RadioGroup } from '@/shared/components/ui/radio-group';
-import { useToast } from '@/shared/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { type z } from 'zod';
+import type { z } from 'zod';
+import { Button } from '@/shared/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import { Input } from '@/shared/components/ui/input';
+import { RadioGroup } from '@/shared/components/ui/radio-group';
+import { useToast } from '@/shared/components/ui/use-toast';
 import { updateUserMutation } from '../../actions/update-user-mutation';
 import { AVATARS } from '../../constants/avatars';
 import { updateUserSchema } from '../../schemas/update-user-schema';
-import { type User } from '../../types/user';
+import type { User } from '../../types/user';
 
 const editUserFormSchema = updateUserSchema;
 

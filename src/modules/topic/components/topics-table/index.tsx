@@ -1,5 +1,5 @@
 import { DataTable } from '@/shared/components/common/data-table';
-import { type Topic } from '../../types/topic';
+import type { Topic } from '../../types/topic';
 import { topicsColumns } from './columns';
 
 type TopicTableProps = {

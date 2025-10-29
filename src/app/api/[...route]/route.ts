@@ -1,13 +1,3 @@
-import { authApp } from '@/modules/auth/http/app';
-import { categoriesApp } from '@/modules/category/http/app';
-import { commentsApp } from '@/modules/comments/http/app';
-import type { CustomContext } from '@/modules/http/types/context';
-import { log } from '@/modules/logging/lib/pino';
-import { pomodoroApp } from '@/modules/pomodoro/http/app';
-import { todoApp } from '@/modules/todo/http/app';
-import { usersApp } from '@/modules/user/http/app';
-import { toMilliseconds } from '@/shared/lib/date';
-import { fail } from '@/shared/lib/result';
 import { DrizzleError } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { compress } from 'hono/compress';
@@ -18,6 +8,16 @@ import { requestId } from 'hono/request-id';
 import { timeout } from 'hono/timeout';
 import { handle } from 'hono/vercel';
 import { ZodError } from 'zod';
+import { authApp } from '@/modules/auth/http/app';
+import { categoriesApp } from '@/modules/category/http/app';
+import { commentsApp } from '@/modules/comments/http/app';
+import type { CustomContext } from '@/modules/http/types/context';
+import { log } from '@/modules/logging/lib/pino';
+import { pomodoroApp } from '@/modules/pomodoro/http/app';
+import { todoApp } from '@/modules/todo/http/app';
+import { usersApp } from '@/modules/user/http/app';
+import { toMilliseconds } from '@/shared/lib/date';
+import { fail } from '@/shared/lib/result';
 
 export const dynamic = 'force-dynamic';
 

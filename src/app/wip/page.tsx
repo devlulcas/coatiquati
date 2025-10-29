@@ -1,6 +1,6 @@
-import coatiSvg from '@/shared/assets/images/coati.svg';
 import { FileWarningIcon } from 'lucide-react';
 import Image from 'next/image';
+import coatiSvg from '@/shared/assets/images/coati.svg';
 
 export default function WipPage() {
   return (

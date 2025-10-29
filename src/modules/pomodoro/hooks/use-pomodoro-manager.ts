@@ -1,9 +1,9 @@
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { env } from '@/env';
 import { useCreatePomodoroSession } from '@/modules/pomodoro/hooks/use-pomodoro-sessions';
 import { usePomodoroSettings, useUpdatePomodoroSettings } from '@/modules/pomodoro/hooks/use-pomodoro-settings';
-import { type PomodoroTimerState, type PomodoroTimerType } from '@/modules/pomodoro/types/pomodoro';
+import type { PomodoroTimerState, PomodoroTimerType } from '@/modules/pomodoro/types/pomodoro';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DEFAULT_POMODORO_CONFIG } from '../lib/local-storage';
 
 export function usePomodoroManager() {
@@ -24,14 +24,13 @@ export function usePomodoroManager() {
   });
 
   const { data: settings, isLoading: isLoadingSettings } = usePomodoroSettings({
-    onSuccess: (data) => {
-      setTimerState((prev) => ({
+    onSuccess: data => {
+      setTimerState(prev => ({
         ...prev,
         timeRemaining: data.pomodoroDuration,
       }));
-    }
+    },
   });
-
 
   const startNextTimer = useCallback(() => {
     let nextType: PomodoroTimerType;
@@ -57,20 +56,26 @@ export function usePomodoroManager() {
       nextDuration = settings.pomodoroDuration;
     }
 
-    setTimerState((prev) => ({
+    setTimerState(prev => ({
       previousType: prev.type,
       type: nextType,
       timeRemaining: nextDuration,
       state: 'running',
     }));
-  }, [settings.longBreakDuration, settings.pomodoroDuration, settings.shortBreakDuration, timerState.previousType, timerState.type]);
+  }, [
+    settings.longBreakDuration,
+    settings.pomodoroDuration,
+    settings.shortBreakDuration,
+    timerState.previousType,
+    timerState.type,
+  ]);
 
   const handleTimerComplete = useCallback(() => {
     setTimerState(prev => ({ ...prev, state: 'completed' }));
     alarmSound?.play();
 
     createSession({
-      startTime: new Date(Date.now() - (settings.pomodoroDuration) * 1000),
+      startTime: new Date(Date.now() - settings.pomodoroDuration * 1000),
       endTime: new Date(),
       type: timerState.type,
       completed: true,

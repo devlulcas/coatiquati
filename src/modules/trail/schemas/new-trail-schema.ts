@@ -1,5 +1,5 @@
-import { contentStatus } from '@/shared/constants/content-status';
 import { z } from 'zod';
+import { contentStatus } from '@/shared/constants/content-status';
 
 export const newTrailSchema = z.object({
   title: z

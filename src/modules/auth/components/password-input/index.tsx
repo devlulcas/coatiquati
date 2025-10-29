@@ -1,11 +1,11 @@
 'use client';
 
-import { Button } from '@/shared/components/ui/button';
-import { Input, type InputProps } from '@/shared/components/ui/input';
-import { cn } from '@/shared/utils/cn';
 import { motion } from 'framer-motion';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { forwardRef, useState } from 'react';
+import { Button } from '@/shared/components/ui/button';
+import { Input, type InputProps } from '@/shared/components/ui/input';
+import { cn } from '@/shared/utils/cn';
 
 const EyeOff = motion(EyeOffIcon);
 const EyeOn = motion(EyeIcon);

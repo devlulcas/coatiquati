@@ -1,10 +1,10 @@
 'use client';
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip';
-import { cn } from '@/shared/utils/cn';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
 import { MoonIcon, SunIcon } from 'lucide-react';
 import { useTransition } from 'react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip';
+import { cn } from '@/shared/utils/cn';
 import { setThemeMutation } from '../actions/change-theme-mutation';
 
 export function ChangeColorThemeForm({ initialTheme }: { initialTheme: 'dark' | 'light' }) {

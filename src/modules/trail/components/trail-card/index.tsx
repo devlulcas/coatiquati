@@ -1,13 +1,13 @@
+import { ArrowRightIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { ContributorList } from '@/modules/user/components/contributor-list';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/cn';
-import { ArrowRightIcon } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
 import { createTrailCategoryUrl, createTrailUrl } from '../../lib/create-trail-url';
-import { type Trail } from '../../types/trail';
+import type { Trail } from '../../types/trail';
 
 type TrailCardProps = {
   trail: Trail;

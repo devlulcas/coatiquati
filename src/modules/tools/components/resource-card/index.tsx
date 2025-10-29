@@ -12,7 +12,7 @@ type ResourceCardProps = {
   link: string;
   category: string;
   isExternal: boolean;
-}
+};
 
 export function ResourceCard({ title, description, icon, link, category, isExternal }: ResourceCardProps) {
   return (
@@ -57,5 +57,5 @@ export function ResourceCard({ title, description, icon, link, category, isExter
         )}
       </CardFooter>
     </Card>
-  )
+  );
 }

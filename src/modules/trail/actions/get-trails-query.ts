@@ -1,11 +1,11 @@
 'use server';
 
+import { z } from 'zod';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
 import { fail, ok, type Result } from '@/shared/lib/result';
-import { z } from 'zod';
 import { TrailRepository } from '../repositories/trail-repository';
 import type { Trail } from '../types/trail';
 

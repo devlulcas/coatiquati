@@ -1,12 +1,12 @@
 'use client';
 
+import { PencilIcon } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
-import { PencilIcon } from 'lucide-react';
 import { updateTrailMutation } from '../../actions/update-trail-mutation';
-import { type Trail } from '../../types/trail';
+import type { Trail } from '../../types/trail';
 import { TrailBaseForm } from '../trail-base-form';
 
 type EditTrailDialogTriggerProps = {

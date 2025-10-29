@@ -1,5 +1,5 @@
-import { roles } from '@/modules/auth/constants/roles';
 import { RatIcon, SquirrelIcon } from 'lucide-react';
+import { roles } from '@/modules/auth/constants/roles';
 
 type RoleVisualIdentifier = {
   label: string;

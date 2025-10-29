@@ -1,5 +1,5 @@
-import { newContentSchema } from '@/modules/content/schemas/new-content-schema';
 import { z } from 'zod';
+import { newContentSchema } from '@/modules/content/schemas/new-content-schema';
 
 export const newVideoContentSchema = newContentSchema.merge(
   z.object({

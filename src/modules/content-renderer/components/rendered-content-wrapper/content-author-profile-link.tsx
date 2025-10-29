@@ -1,8 +1,8 @@
 'use client';
+import Link from 'next/link';
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import type { Contributor } from '@/modules/user/types/user';
-import Link from 'next/link';
 
 type RenderedContentWrapperProps = {
   by: Contributor;

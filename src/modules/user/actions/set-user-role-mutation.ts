@@ -1,11 +1,11 @@
 'use server';
 
+import { z } from 'zod';
 import { roles } from '@/modules/auth/constants/roles';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
-import { z } from 'zod';
+import { fail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { getUserById, updateUser } from '../repositories/user-repository';
 
 const setUserRoleUseCaseSchema = z.object({

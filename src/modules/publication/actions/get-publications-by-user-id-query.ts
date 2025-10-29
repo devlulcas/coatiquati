@@ -2,7 +2,7 @@
 
 import { db } from '@/modules/database/db';
 import { log } from '@/modules/logging/lib/pino';
-import { isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import type { Publication } from '../types/publication';
 
 export async function getPublicationsByUserIdQuery(userId: string): Promise<Result<Publication[]>> {

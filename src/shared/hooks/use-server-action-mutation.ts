@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useState, useTransition } from 'react';
-import { unwrap, type Result } from '../lib/result';
+import { type Result, unwrap } from '../lib/result';
 
 type ServerActionFn<I, O> = (data: I) => Promise<Result<O>>;
 

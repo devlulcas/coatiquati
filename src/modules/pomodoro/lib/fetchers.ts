@@ -31,7 +31,6 @@ export async function updatePomodoroSettings(settings: PomodoroSettingsInput): P
   return data.value;
 }
 
-
 export async function fetchPomodoroSessions(): Promise<PomodoroSession[]> {
   const response = await fetch('/api/pomodoro/sessions');
   const data = await response.json();

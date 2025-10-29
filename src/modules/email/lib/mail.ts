@@ -1,7 +1,7 @@
+import nodemailer from 'nodemailer';
 import { env } from '@/env';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result } from '@/shared/lib/result';
-import nodemailer from 'nodemailer';
 
 type MailTransport = {
   sendMail: (options: {

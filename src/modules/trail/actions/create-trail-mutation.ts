@@ -2,12 +2,12 @@
 
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
-import { type NewTrailTable } from '@/modules/database/schema/trail';
+import type { NewTrailTable } from '@/modules/database/schema/trail';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { revalidateTrails } from '../lib/revalidate-trail';
 import { TrailRepository } from '../repositories/trail-repository';
-import { newTrailSchema, type NewTrailSchema } from '../schemas/new-trail-schema';
+import { type NewTrailSchema, newTrailSchema } from '../schemas/new-trail-schema';
 
 export async function createTrailMutation(params: NewTrailSchema): Promise<Result<number>> {
   const { data: user } = await validateRequest();

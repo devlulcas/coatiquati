@@ -1,7 +1,7 @@
+import { and, eq } from 'drizzle-orm';
 import { db } from '@/modules/database/db';
 import { commentTable, commentVoteTable } from '@/modules/database/schema/comment';
 import { log } from '@/modules/logging/lib/pino';
-import { and, eq } from 'drizzle-orm';
 
 export class CommentVoteRepository {
   async getUserVote(commentId: number, userId: string): Promise<1 | -1 | 0> {

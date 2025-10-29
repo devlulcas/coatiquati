@@ -1,7 +1,7 @@
-import { useDebounce } from '@/shared/hooks/use-debounce';
-import { cn } from '@/shared/utils/cn';
 import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
+import { useDebounce } from '@/shared/hooks/use-debounce';
+import { cn } from '@/shared/utils/cn';
 import { Button } from './button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './command';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';

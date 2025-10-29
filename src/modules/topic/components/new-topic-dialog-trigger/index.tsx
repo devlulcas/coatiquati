@@ -1,10 +1,10 @@
 'use client';
 
+import { PlusIcon } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
-import { PlusIcon } from 'lucide-react';
 import { createTopicMutation } from '../../actions/create-topic-mutation';
 import { TopicBaseForm } from '../topic-base-form';
 

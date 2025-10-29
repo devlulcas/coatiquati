@@ -4,7 +4,7 @@
 }
 
 .coati-animated-line::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 50px;
   top: 0;

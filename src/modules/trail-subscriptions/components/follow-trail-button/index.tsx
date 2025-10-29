@@ -1,10 +1,10 @@
 'use client';
 
-import { subscribeToTrailMutation } from '@/modules/trail-subscriptions/actions/subscribe-to-trail-mutation';
+import { Loader2Icon, StarIcon, StarOffIcon } from 'lucide-react';
 import type { TrailId } from '@/modules/trail/types/trail';
+import { subscribeToTrailMutation } from '@/modules/trail-subscriptions/actions/subscribe-to-trail-mutation';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
-import { Loader2Icon, StarIcon, StarOffIcon } from 'lucide-react';
 
 type FollowTrailButtonProps = {
   trailId: TrailId;

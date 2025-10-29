@@ -1,12 +1,12 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
-import { revalidatePath } from 'next/cache';
+import { fail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { getUserById, updateUser } from '../repositories/user-repository';
-import { updateUserSchema, type UpdateUserSchema } from '../schemas/update-user-schema';
+import { type UpdateUserSchema, updateUserSchema } from '../schemas/update-user-schema';
 
 export async function updateUserMutation(params: UpdateUserSchema): Promise<Result<string>> {
   const { data: user } = await validateRequest();

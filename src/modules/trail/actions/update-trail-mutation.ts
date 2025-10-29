@@ -3,10 +3,10 @@
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { revalidateTrails } from '../lib/revalidate-trail';
 import { TrailRepository } from '../repositories/trail-repository';
-import { updateTrailSchema, type UpdateTrailSchema } from '../schemas/edit-trail-schema';
+import { type UpdateTrailSchema, updateTrailSchema } from '../schemas/edit-trail-schema';
 import type { UpdateTrail } from '../types/trail';
 
 export async function updateTrailMutation(params: UpdateTrailSchema): Promise<Result<string>> {

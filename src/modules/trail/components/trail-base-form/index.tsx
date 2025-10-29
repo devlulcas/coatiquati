@@ -1,15 +1,15 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { ClassValue } from 'clsx';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { CategoriesAsyncSelect } from '@/modules/category/components/categories-async-select';
 import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { type ClassValue } from 'clsx';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { newTrailSchema, type NewTrailSchema } from '../../schemas/new-trail-schema';
+import { type NewTrailSchema, newTrailSchema } from '../../schemas/new-trail-schema';
 import type { Trail } from '../../types/trail';
 
 type TrailBaseFormProps = {

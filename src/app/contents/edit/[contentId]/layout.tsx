@@ -1,7 +1,7 @@
+import { redirect } from 'next/navigation';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
-import { redirect } from 'next/navigation';
 
 type EditContentLayoutProps = {
   children: React.ReactNode;

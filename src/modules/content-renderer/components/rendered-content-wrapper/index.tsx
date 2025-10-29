@@ -1,13 +1,13 @@
+import { EllipsisIcon } from 'lucide-react';
 import { getCommentsOnContentQuery } from '@/modules/comments/actions/get-comments-on-content-query';
 import { AddNewCommentForm } from '@/modules/comments/components/add-new-comment-form';
 import { CommentBlock } from '@/modules/comments/components/comment-block';
-import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
 import type { Contributor } from '@/modules/user/types/user';
+import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Separator } from '@/shared/components/ui/separator';
 import { isFail } from '@/shared/lib/result';
-import { EllipsisIcon } from 'lucide-react';
 import { ContentAuthorProfileLink } from './content-author-profile-link';
 import { EditContentButton } from './edit-content-button';
 

@@ -1,15 +1,15 @@
+import { eq } from 'drizzle-orm';
+import { Hono } from 'hono';
 import { protectWithSessionMiddleware } from '@/modules/auth/middleware/protect-with-session';
 import { db } from '@/modules/database/db';
 import type { CustomContext } from '@/modules/http/types/context';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, isFail, ok, wrapAsyncInResult } from '@/shared/lib/result';
-import { eq } from 'drizzle-orm';
-import { Hono } from 'hono';
 import { pomodoroSessions } from '../../database/schema/pomodoro-sessions';
-import { pomodoroSettings, type PomodoroSettingsInsert } from '../../database/schema/pomodoro-settings';
+import { type PomodoroSettingsInsert, pomodoroSettings } from '../../database/schema/pomodoro-settings';
 import { pomodoroSessionSchema, pomodoroSettingsSchema } from '../schemas/pomodoro-schema';
 
-export const pomodoroApp = new Hono<CustomContext>()
+export const pomodoroApp = new Hono<CustomContext>();
 
 pomodoroApp.use('/*', protectWithSessionMiddleware);
 
@@ -37,9 +37,7 @@ pomodoroApp.get('/settings', async c => {
       autoStartPomodoros: false,
     };
 
-    const createResult = await wrapAsyncInResult(
-      db.insert(pomodoroSettings).values(defaultSettings).returning().get(),
-    );
+    const createResult = await wrapAsyncInResult(db.insert(pomodoroSettings).values(defaultSettings).returning().get());
 
     if (isFail(createResult)) {
       log.error('Error creating default pomodoro settings', { error: createResult });
@@ -139,6 +137,3 @@ pomodoroApp.post('/sessions', async c => {
 
   return c.json(ok(sessionResult.value));
 });
-
-
-

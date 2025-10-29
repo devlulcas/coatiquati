@@ -1,5 +1,6 @@
 'use client';
 
+import { BirdIcon, SkullIcon } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,7 +15,6 @@ import {
 import { Button } from '@/shared/components/ui/button';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
-import { BirdIcon, SkullIcon } from 'lucide-react';
 import { banUserMutation } from '../actions/ban-user-mutation';
 import { unbanUserMutation } from '../actions/unban-user-mutation';
 

@@ -1,12 +1,12 @@
 'use server';
 
+import { verify } from 'argon2';
+import { eq } from 'drizzle-orm';
+import { redirect } from 'next/navigation';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { fail, type Result } from '@/shared/lib/result';
-import { verify } from 'argon2';
-import { eq } from 'drizzle-orm';
-import { redirect } from 'next/navigation';
 import { createSession, generateSessionToken } from '../services/auth';
 import { setSessionTokenCookie } from '../services/next';
 

@@ -1,14 +1,14 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
+import { Loader2Icon, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { useState } from 'react';
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { isOk } from '@/shared/lib/result';
 import { cn } from '@/shared/utils/cn';
-import { useQuery } from '@tanstack/react-query';
-import { Loader2Icon, ThumbsDown, ThumbsUp } from 'lucide-react';
-import { useState } from 'react';
 import { downvoteCommentMutation } from '../../actions/downvote-comment-mutation';
 import { getuserCommentVoteQuery } from '../../actions/get-user-comment-vote-query';
 import { upvoteCommentMutation } from '../../actions/upvote-comment-mutation';

@@ -1,6 +1,6 @@
+import { Hono } from 'hono';
 import type { CustomContext } from '@/modules/http/types/context';
 import { isOk } from '@/shared/lib/result';
-import { Hono } from 'hono';
 import { verifyEmailMutation } from '../actions/verify-email-mutation';
 import { setSessionTokenCookie, validateRequest } from '../services/next';
 
@@ -12,7 +12,7 @@ authApp.get('/verify-account', async c => {
   const res = await verifyEmailMutation(token);
 
   if (isOk(res)) {
-    await setSessionTokenCookie(res.value.token, res.value.session.expiresAt)
+    await setSessionTokenCookie(res.value.token, res.value.session.expiresAt);
     return c.redirect('/dashboard');
   } else {
     return c.json(res);
@@ -20,6 +20,6 @@ authApp.get('/verify-account', async c => {
 });
 
 authApp.get('/session', async c => {
-  const r = await validateRequest()
+  const r = await validateRequest();
   return c.json({ session: r });
-})
+});

@@ -1,3 +1,5 @@
+import { PlusIcon } from 'lucide-react';
+import Link from 'next/link';
 import { getTrailsQuery } from '@/modules/trail/actions/get-trails-query';
 import { TrailsTable } from '@/modules/trail/components/trails-table';
 import { getUsersQuery } from '@/modules/user/actions/get-users-query';
@@ -5,8 +7,6 @@ import { UsersTable } from '@/modules/user/components/users-table';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { isFail } from '@/shared/lib/result';
-import { PlusIcon } from 'lucide-react';
-import Link from 'next/link';
 
 type PageProps = {
   searchParams: Promise<{

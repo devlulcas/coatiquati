@@ -1,5 +1,5 @@
+import type { ClassValue } from 'clsx';
 import { cn } from '@/shared/utils/cn';
-import { type ClassValue } from 'clsx';
 import { getRoleVisualIdentifier } from '../../lib/get-role-visual-identifier';
 
 type UserRoleBadgeProps = {

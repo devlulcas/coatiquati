@@ -1,5 +1,5 @@
-import { protectWithRedirect } from '@/modules/auth/utils/protect-with-redirect';
 import Link from 'next/link';
+import { protectWithRedirect } from '@/modules/auth/utils/protect-with-redirect';
 
 type DashboardLayoutProps = {
   children: React.ReactNode;

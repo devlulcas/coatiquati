@@ -1,9 +1,9 @@
+import Image from 'next/image';
 import { getTrailsQuery, type TrailSearchSchema } from '@/modules/trail/actions/get-trails-query';
 import { TrailCard } from '@/modules/trail/components/trail-card';
 import coatiSvg from '@/shared/assets/images/coati.svg';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { isFail } from '@/shared/lib/result';
-import Image from 'next/image';
 
 export async function DashboardTrailResultView({
   searchParams,

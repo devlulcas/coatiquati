@@ -1,11 +1,11 @@
+import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { SettingsIcon } from 'lucide-react';
 import { getFontQuery } from '@/modules/theme/actions/change-font-mutation';
 import { getThemeQuery } from '@/modules/theme/actions/change-theme-mutation';
 import { ChangeColorThemeForm } from '@/modules/theme/components/change-color-theme-form';
 import { ChangeFontThemeForm } from '@/modules/theme/components/change-font-theme-form';
 import { Button } from '@/shared/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '@/shared/components/ui/dropdown-menu';
-import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
-import { SettingsIcon } from 'lucide-react';
 import { getBackgroundQuery } from '../actions/change-background-mutation';
 import { ChangeBackgroundThemeForm } from './change-background-theme-form';
 

@@ -1,10 +1,10 @@
+import { and, eq } from 'drizzle-orm';
 import { validateRequest } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
 import { fileTable } from '@/modules/database/schema/file';
 import { storage } from '@/modules/file/lib/storage';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, isFail, ok, wrapAsyncInResult } from '@/shared/lib/result';
-import { and, eq } from 'drizzle-orm';
 
 // Salva os metadados de uma imagem que foi salva no serviço de armazenamento
 export async function updateUploadedFileHandler(request: Request) {

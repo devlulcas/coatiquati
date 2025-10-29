@@ -1,7 +1,7 @@
 import type { JSONContent } from '@tiptap/core';
 
 export function getPreview(jsonContent: JSONContent): JSONContent {
-  let validContent = [];
+  const validContent = [];
 
   const initialContent = jsonContent.content ?? [];
 

@@ -1,5 +1,7 @@
 'use client';
 
+import { MessageSquarePlusIcon } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/shared/components/ui/button';
 import {
   Dialog,
@@ -18,8 +20,6 @@ import {
   DrawerTrigger,
 } from '@/shared/components/ui/drawer';
 import { useMediaQuery } from '@/shared/hooks/use-media-query';
-import { MessageSquarePlusIcon } from 'lucide-react';
-import { useState } from 'react';
 import type { Comment } from '../../types/comment';
 import { AddNewCommentForm } from '../add-new-comment-form';
 

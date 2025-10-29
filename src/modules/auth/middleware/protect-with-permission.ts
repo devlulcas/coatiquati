@@ -1,8 +1,8 @@
-import type { CustomContext } from '@/modules/http/types/context';
-import { fail } from '@/shared/lib/result';
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
-import { roles, type Role } from '../constants/roles';
+import type { CustomContext } from '@/modules/http/types/context';
+import { fail } from '@/shared/lib/result';
+import { type Role, roles } from '../constants/roles';
 import { hasPermission } from '../utils/is';
 
 export const protectWithPermissionMiddlewareFactory = (role: Role[] = [roles.ADMIN, roles.HIGH_PRIVILEGE_ADMIN]) =>

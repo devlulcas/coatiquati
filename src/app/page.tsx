@@ -1,11 +1,11 @@
+import { ArrowUpRightIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { Marquee } from '@/modules/home/components/marquee';
 import { TrailCardCarouselSection } from '@/modules/home/components/trail-card-carousel-section';
 import { getRecentTrailsQuery } from '@/modules/trail/actions/get-recent-trails-by-id';
 import blobImage from '@/shared/assets/images/blob-hq.png';
 import { AppFeedbackCard } from '@/shared/components/common/app-feedback-card';
-import { ArrowUpRightIcon } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
 
 export default async function Page() {
   const trailsResult = await getRecentTrailsQuery();

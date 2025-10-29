@@ -1,3 +1,5 @@
+import { SearchIcon } from 'lucide-react';
+import Image from 'next/image';
 import { getTrailsQuery } from '@/modules/trail/actions/get-trails-query';
 import { TrailCard } from '@/modules/trail/components/trail-card';
 import { groupTrailsByCategory } from '@/modules/trail/lib/group-trails-by-category';
@@ -6,8 +8,6 @@ import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { isFail } from '@/shared/lib/result';
-import { SearchIcon } from 'lucide-react';
-import Image from 'next/image';
 
 type PageProps = {
   searchParams: Promise<{

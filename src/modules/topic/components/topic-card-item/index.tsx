@@ -1,8 +1,8 @@
-import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
-import { ContributorList } from '@/modules/user/components/contributor-list';
-import { UpdatedAt } from '@/shared/components/common/updated-at';
 import { EllipsisIcon } from 'lucide-react';
 import Link from 'next/link';
+import { ContributorList } from '@/modules/user/components/contributor-list';
+import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
+import { UpdatedAt } from '@/shared/components/common/updated-at';
 import { createTopicUrl } from '../../lib/create-topic-url';
 import type { Topic } from '../../types/topic';
 

@@ -1,9 +1,12 @@
+import { StarsIcon } from 'lucide-react';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { validateRequest } from '@/modules/auth/services/next';
 import { CreatePublicationForm } from '@/modules/publication/components/create-publication-form';
 import { UserPublicationList } from '@/modules/publication/components/user-publication-list';
+import { TrailCard } from '@/modules/trail/components/trail-card';
 import { getTrailSubscriptionsByUserIdQuery } from '@/modules/trail-subscriptions/actions/get-trail-subscriptions-by-user-id-query';
 import { getMostSubscribedCategory } from '@/modules/trail-subscriptions/lib/get-most-subscribed-category';
-import { TrailCard } from '@/modules/trail/components/trail-card';
 import { getUserProfileQuery } from '@/modules/user/actions/get-user-profile-query';
 import { ProfileHeading } from '@/modules/user/components/profile-heading';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
@@ -11,9 +14,6 @@ import { ErrorMessage } from '@/shared/components/common/error-message';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Separator } from '@/shared/components/ui/separator';
 import { isFail, unwrapOr } from '@/shared/lib/result';
-import { StarsIcon } from 'lucide-react';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
 
 type PageProps = {
   params: Promise<{

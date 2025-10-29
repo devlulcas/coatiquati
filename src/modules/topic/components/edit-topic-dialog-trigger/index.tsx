@@ -1,12 +1,12 @@
 'use client';
 
+import { PencilIcon } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
-import { PencilIcon } from 'lucide-react';
 import { updateTopicMutation } from '../../actions/update-topic-mutation';
-import { type Topic } from '../../types/topic';
+import type { Topic } from '../../types/topic';
 import { TopicBaseForm } from '../topic-base-form';
 
 type EditTopicDialogTriggerProps = {

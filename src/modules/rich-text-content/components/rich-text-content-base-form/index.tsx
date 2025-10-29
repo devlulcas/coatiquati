@@ -1,19 +1,19 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { ClassValue } from 'clsx';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import type { z } from 'zod';
 import { Editor } from '@/modules/rich-text-content/components/editor';
 import {
-  newRichTextContentSchema,
   type NewRichTextContentSchema,
+  newRichTextContentSchema,
 } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { type ClassValue } from 'clsx';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import type { z } from 'zod';
 
 const newRichTextContentFormSchema = newRichTextContentSchema;
 type NewRichTextContentFormSchema = z.infer<typeof newRichTextContentFormSchema>;

@@ -1,4 +1,4 @@
-import { type DBTransaction } from '@/modules/database/db';
+import type { DBTransaction } from '@/modules/database/db';
 import {
   contentContributionTable,
   topicContributionTable,

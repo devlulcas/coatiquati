@@ -1,5 +1,5 @@
-import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import { useQuery } from '@tanstack/react-query';
+import type { PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
 import type { TrailCategory } from '../types/trail-category';
 
 export const TRAIL_CATEGORY_SEARCH_QUERY_KEY = 'TRAIL_CATEGORY_SEARCH_QUERY_KEY';

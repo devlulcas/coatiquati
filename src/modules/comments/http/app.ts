@@ -1,10 +1,10 @@
+import { Hono } from 'hono';
 import { protectWithSessionMiddleware } from '@/modules/auth/middleware/protect-with-session';
 import { getCommentResponsesQuery } from '@/modules/comments/actions/get-comment-responses-query';
 import { CommentRepository } from '@/modules/comments/repositories/comment-repository';
 import type { CustomContext } from '@/modules/http/types/context';
 import { log } from '@/modules/logging/lib/pino';
 import { isFail } from '@/shared/lib/result';
-import { Hono } from 'hono';
 
 export const commentsApp = new Hono<CustomContext>();
 

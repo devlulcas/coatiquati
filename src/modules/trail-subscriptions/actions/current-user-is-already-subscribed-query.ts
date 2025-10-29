@@ -1,10 +1,10 @@
 'use server';
 
+import { and, eq } from 'drizzle-orm';
 import { db } from '@/modules/database/db';
 import { trailSubscriptionTable } from '@/modules/database/schema/trail-subscription';
 import { log } from '@/modules/logging/lib/pino';
-import { isFail, ok, wrapAsyncInResult, type Ok } from '@/shared/lib/result';
-import { and, eq } from 'drizzle-orm';
+import { isFail, type Ok, ok, wrapAsyncInResult } from '@/shared/lib/result';
 
 export async function currentUserIsAlreadySubscribedQuery(trailId: number, userId: string): Promise<Ok<boolean>> {
   if (!userId) return ok(false);

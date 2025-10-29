@@ -1,9 +1,9 @@
 'use client';
-import { TrailCard } from '@/modules/trail/components/trail-card';
-import type { Trail } from '@/modules/trail/types/trail';
-import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/shared/components/ui/carousel';
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { TrailCard } from '@/modules/trail/components/trail-card';
+import type { Trail } from '@/modules/trail/types/trail';
+import { Carousel, type CarouselApi, CarouselContent, CarouselItem } from '@/shared/components/ui/carousel';
 
 type TrailCardCarouselSectionProps = { trails: Trail[] } & React.HTMLAttributes<HTMLDivElement>;
 

@@ -1,5 +1,9 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ImageUpIcon, VideoOffIcon, XIcon } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { getEmbedIDFromYoutubeUrl } from '@/modules/video-content/lib/youtube';
@@ -20,12 +24,8 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { cn } from '@/shared/utils/cn';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ImageUpIcon, VideoOffIcon, XIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
 import { publishContentMutation } from '../actions/publish-content-mutation';
-import { createPublicationSchema, type CreatePublicationSchema } from '../schemas/create-publication';
+import { type CreatePublicationSchema, createPublicationSchema } from '../schemas/create-publication';
 import type { PublicationMedia } from '../types/publication';
 import { PublicationImageEmbed, PublicationVideoEmbed } from './publication-media-grid';
 
@@ -60,7 +60,7 @@ export function CreatePublicationForm() {
       const defaultValues: CreatePublicationSchema = {
         content: '',
         medias: [],
-      }
+      };
 
       form.setValue('content', defaultValues.content);
       mediaFieldArray.fields.forEach((_, index) => {

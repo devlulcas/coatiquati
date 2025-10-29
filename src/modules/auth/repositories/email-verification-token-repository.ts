@@ -1,11 +1,11 @@
-import { db } from '@/modules/database/db';
-import {
-  emailVerificationTokenTable,
-  type EmailVerificationToken,
-} from '@/modules/database/schema/email-verification-token';
-import { log } from '@/modules/logging/lib/pino';
 import { encodeBase32LowerCaseNoPadding } from '@oslojs/encoding';
 import { eq } from 'drizzle-orm';
+import { db } from '@/modules/database/db';
+import {
+  type EmailVerificationToken,
+  emailVerificationTokenTable,
+} from '@/modules/database/schema/email-verification-token';
+import { log } from '@/modules/logging/lib/pino';
 import { EMAIL_VERIFICATION_TOKEN_EXPIRES_IN } from '../constants/email-verification-token';
 import { isWithinExpiration } from '../utils/time';
 

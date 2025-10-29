@@ -1,10 +1,10 @@
 'use client';
+import { PencilIcon } from 'lucide-react';
+import Link from 'next/link';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import type { Contributor } from '@/modules/user/types/user';
 import { Button } from '@/shared/components/ui/button';
-import { PencilIcon } from 'lucide-react';
-import Link from 'next/link';
 
 type RenderedContentWrapperProps = {
   by: Contributor;

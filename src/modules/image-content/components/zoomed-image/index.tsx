@@ -1,5 +1,8 @@
 'use client';
 
+import { ZoomInIcon } from 'lucide-react';
+import Link from 'next/link';
+import Zoom from 'react-medium-image-zoom';
 import type { ImageContent } from '@/modules/content/types/content';
 import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
@@ -16,9 +19,6 @@ import {
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/shared/components/ui/resizable';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
 import { useMediaQuery } from '@/shared/hooks/use-media-query';
-import { ZoomInIcon } from 'lucide-react';
-import Link from 'next/link';
-import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 
 type ZoomedImageProps = {

@@ -1,4 +1,4 @@
-import type { TodoSelect } from "@/modules/database/schema/todos";
+import type { TodoSelect } from '@/modules/database/schema/todos';
 
 const STORAGE_KEYS = {
   TODOS: 'pomodoro_todos',
@@ -35,4 +35,4 @@ export function deleteLocalTodo(id: number): void {
 
 export function clearLocalTodosData(): void {
   localStorage.removeItem(STORAGE_KEYS.TODOS);
-} 
+}

@@ -3,7 +3,7 @@
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { VOTES } from '../constants/votes';
 import { CommentVoteRepository } from '../repositories/comment-vote-repository';
 

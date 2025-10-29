@@ -1,7 +1,7 @@
-import type { RichTextContent } from '@/modules/content/types/content';
-import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 import { ArrowRightIcon } from 'lucide-react';
 import Link from 'next/link';
+import type { RichTextContent } from '@/modules/content/types/content';
+import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 import { RenderedContentWrapper } from '../rendered-content-wrapper';
 
 export async function RenderRichTextContentCard({ data }: { data: RichTextContent }) {

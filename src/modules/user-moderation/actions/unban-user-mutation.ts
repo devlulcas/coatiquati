@@ -1,12 +1,12 @@
 'use server';
 
+import { eq } from 'drizzle-orm';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
-import { eq } from 'drizzle-orm';
+import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 
 export async function unbanUserMutation(params: { username: string }): Promise<Result<string>> {
   const { data: user } = await validateRequest();

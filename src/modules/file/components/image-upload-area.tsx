@@ -1,12 +1,12 @@
 'use client';
 
-import { createImageFileSchema } from '@/modules/media/lib/create-image-file-schema';
-import { useToast } from '@/shared/components/ui/use-toast';
-import { cn } from '@/shared/utils/cn';
 import { useMutation } from '@tanstack/react-query';
 import NextImage from 'next/image';
 import { useId, useState } from 'react';
 import { type FileRejection, useDropzone } from 'react-dropzone';
+import { createImageFileSchema } from '@/modules/media/lib/create-image-file-schema';
+import { useToast } from '@/shared/components/ui/use-toast';
+import { cn } from '@/shared/utils/cn';
 import { uploadImageToGallery } from '../services/upload-image-to-gallery';
 
 const imageSchema = createImageFileSchema();

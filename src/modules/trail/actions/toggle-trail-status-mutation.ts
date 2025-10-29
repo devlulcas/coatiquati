@@ -2,10 +2,10 @@
 
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
-import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { revalidateTrails } from '../lib/revalidate-trail';
 import { TrailRepository } from '../repositories/trail-repository';
-import { trailWithIdSchema, type TrailWithIdSchema } from '../schemas/trail-with-id-schema';
+import { type TrailWithIdSchema, trailWithIdSchema } from '../schemas/trail-with-id-schema';
 
 export async function toggleTrailStatusMutation(params: TrailWithIdSchema): Promise<Result<string>> {
   const { data: user } = await validateRequest();

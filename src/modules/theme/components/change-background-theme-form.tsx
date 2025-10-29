@@ -1,10 +1,10 @@
 'use client';
 
+import { useTransition } from 'react';
 import { Label } from '@/shared/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
-import { useTransition } from 'react';
 import { setBackgroundMutation } from '../actions/change-background-mutation';
-import { BackgroundConfig, VALID_BACKGROUNDS, type Background } from '../constants/theme-keys';
+import { type Background, BackgroundConfig, VALID_BACKGROUNDS } from '../constants/theme-keys';
 
 export function ChangeBackgroundThemeForm({ initialBackground }: { initialBackground: Background }) {
   const [_, startTransition] = useTransition();

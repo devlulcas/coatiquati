@@ -1,4 +1,4 @@
-import { contentStatus, type ContentStatus } from '@/shared/constants/content-status';
+import { type ContentStatus, contentStatus } from '@/shared/constants/content-status';
 import { cn } from '@/shared/utils/cn';
 
 export function ContentStatusBadge({ status }: { status: ContentStatus }) {

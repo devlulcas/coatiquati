@@ -5,11 +5,11 @@ import { isAuthenticated } from '@/modules/auth/utils/is';
 import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
 import { ContentType } from '@/modules/content/types/content-json-field';
 import {
-  newImageContentSchema,
   type NewImageContentSchema,
+  newImageContentSchema,
 } from '@/modules/image-content/schemas/new-image-content-schema';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, isOk, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, isOk, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 
 export async function upsertImageContentMutation(params: NewImageContentSchema): Promise<Result<number>> {
   const { data: user } = await validateRequest();

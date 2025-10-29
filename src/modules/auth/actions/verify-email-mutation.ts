@@ -1,10 +1,10 @@
 'use server';
 
+import { eq } from 'drizzle-orm';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok } from '@/shared/lib/result';
-import { eq } from 'drizzle-orm';
 import { createSession, generateSessionToken, invalidateAllSessions } from '../services/auth';
 import { validateToken } from '../services/email-verification-service';
 

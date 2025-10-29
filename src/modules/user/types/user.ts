@@ -1,4 +1,4 @@
-import { type AuthUserTable } from '@/modules/database/schema/user';
+import type { AuthUserTable } from '@/modules/database/schema/user';
 import type { Trail } from '@/modules/trail/types/trail';
 
 export type Contributor = Pick<AuthUserTable, 'id' | 'username' | 'avatar'>;
@@ -15,4 +15,7 @@ export type UpdateUser = Partial<Pick<User, 'username' | 'avatar' | 'email' | 'r
 
 export type UserId = AuthUserTable['id'];
 
-export type PublicUser = Pick<User, 'id' | 'username' | 'avatar' | 'role' | 'bannedAt' | 'createdAt' | 'updatedAt' | 'email' | 'verifiedAt'>; 
+export type PublicUser = Pick<
+  User,
+  'id' | 'username' | 'avatar' | 'role' | 'bannedAt' | 'createdAt' | 'updatedAt' | 'email' | 'verifiedAt'
+>;

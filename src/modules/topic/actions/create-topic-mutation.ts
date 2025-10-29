@@ -3,11 +3,11 @@
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { revalidateTopics } from '../lib/revalidate-topic';
 import { TopicRepository } from '../repositories/topic-repository';
-import { newTopicSchema, type NewTopicSchema } from '../schemas/new-topic-schema';
-import { type NewTopic } from '../types/topic';
+import { type NewTopicSchema, newTopicSchema } from '../schemas/new-topic-schema';
+import type { NewTopic } from '../types/topic';
 
 export async function createTopicMutation(params: NewTopicSchema): Promise<Result<string>> {
   const { data: user } = await validateRequest();

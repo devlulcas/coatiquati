@@ -1,7 +1,7 @@
-import { Button } from '@/shared/components/ui/button';
-import { website } from '@/shared/constants/website';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Button } from '@/shared/components/ui/button';
+import { website } from '@/shared/constants/website';
 
 import racoon from './raccoon.png';
 

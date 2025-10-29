@@ -1,12 +1,12 @@
 'use client';
 
-import { SortedColumnHeader } from '@/shared/components/common/data-table';
-import { Button } from '@/shared/components/ui/button';
-import { type ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import Link from 'next/link';
+import { SortedColumnHeader } from '@/shared/components/common/data-table';
+import { Button } from '@/shared/components/ui/button';
 import { createTopicUrl } from '../../lib/create-topic-url';
-import { type Topic } from '../../types/topic';
+import type { Topic } from '../../types/topic';
 import { EditTopicDialogTrigger } from '../edit-topic-dialog-trigger';
 import { ToggleTopicStatusForm } from '../toggle-topic-status-form';
 

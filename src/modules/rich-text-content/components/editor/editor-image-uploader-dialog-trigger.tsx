@@ -1,9 +1,9 @@
 'use client';
 
+import type { Editor } from '@tiptap/react';
 import { ImageUploadDialogTrigger } from '@/modules/file/components/image-upload-dialog-trigger';
 import { uploadImageToGallery } from '@/modules/file/services/upload-image-to-gallery';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { type Editor } from '@tiptap/react';
 
 type EditormageUploaderDialogTriggerProps = { editor: Editor | null; children: React.ReactNode };
 export function EditormageUploaderDialogTrigger({ children, editor }: EditormageUploaderDialogTriggerProps) {

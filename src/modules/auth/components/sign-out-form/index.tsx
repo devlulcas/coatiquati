@@ -1,10 +1,10 @@
 'use client';
 
+import type { ClassValue } from 'clsx';
+import { useActionState, useEffect } from 'react';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { fail, isFail, isOk } from '@/shared/lib/result';
 import { cn } from '@/shared/utils/cn';
-import type { ClassValue } from 'clsx';
-import { useEffect, useActionState } from 'react';
 import { logoutMutation } from '../../actions/logout-mutation';
 
 type SignOutFormProps = {

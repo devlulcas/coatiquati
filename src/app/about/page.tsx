@@ -1,11 +1,11 @@
 'use client';
 
-import coatiAvif from '@/shared/assets/images/coati.avif';
-import coatiSvg from '@/shared/assets/images/coati.svg';
-import { ditherImage } from '@/shared/lib/dittering';
 import { LucideLoaderCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import coatiAvif from '@/shared/assets/images/coati.avif';
+import coatiSvg from '@/shared/assets/images/coati.svg';
+import { ditherImage } from '@/shared/lib/dittering';
 
 export default function Page() {
   const links = {
@@ -26,15 +26,13 @@ export default function Page() {
       if (timeout) {
         clearTimeout(timeout);
       }
-    }
+    };
   }, []);
 
   return (
     <div className="bg-background/90">
       {firstTime && (
-        <div
-          className="fixed inset-0 z-[9999] h-[--view-height] w-dvw flex items-center justify-center bg-background/10 backdrop-blur-lg"
-        >
+        <div className="fixed inset-0 z-[9999] h-[--view-height] w-dvw flex items-center justify-center bg-background/10 backdrop-blur-lg">
           <LucideLoaderCircle className="h-8 w-8 animate-spin" />
         </div>
       )}
@@ -78,7 +76,6 @@ export default function Page() {
   );
 }
 
-
 function HeroImage() {
   useEffect(() => {
     if (typeof window !== 'undefined') ditherImage('coati');
@@ -96,5 +93,5 @@ function HeroImage() {
         className="h-full w-full rounded-lg object-cover"
       />
     </div>
-  )
+  );
 }

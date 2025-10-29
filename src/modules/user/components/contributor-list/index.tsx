@@ -1,5 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { createProfileUrl } from '../../lib/create-profile-url';
 import type { Contributor } from '../../types/user';
 

@@ -1,13 +1,13 @@
 'use server';
 
+import { and, eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { userFollowerTable } from '@/modules/database/schema/user-follower';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
-import { and, eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
+import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { currentUserIsFollowingQuery } from './current-user-is-following-query';
 
 export async function followUserMutation(userId: string): Promise<Result<string>> {

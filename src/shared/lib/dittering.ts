@@ -76,7 +76,7 @@ export function ditherImage(imageId: string): void {
             const newPixelIndex = (newY * canvas.width + newX) * 4;
 
             for (let i = 0; i < 3; i++) {
-              let errorValue = quantError[i] * err.factor;
+              const errorValue = quantError[i] * err.factor;
               data[newPixelIndex + i] = Math.min(255, Math.max(0, data[newPixelIndex + i] + errorValue));
             }
           }
@@ -93,7 +93,7 @@ export function ditherImage(imageId: string): void {
 
   // Se a imagem já carregou a gente roda o onload na mão!
   if (imgElement.complete) {
-    // @ts-ignore
+    // @ts-expect-error
     imgElement.onload();
   }
 }

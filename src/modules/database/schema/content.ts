@@ -1,4 +1,4 @@
-import { relations, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { type InferInsertModel, type InferSelectModel, relations } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import type { ContentJSON, ContentType } from '../../../modules/content/types/content-json-field';
 import { tableTimestampColumns } from '../lib/helpers';

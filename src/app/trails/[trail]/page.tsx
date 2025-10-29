@@ -1,10 +1,10 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { env } from '@/env';
 import { TopicCardItem } from '@/modules/topic/components/topic-card-item';
 import { getTrailByIdQuery } from '@/modules/trail/actions/get-trail-by-id-query';
 import { TrailHeading } from '@/modules/trail/components/trail-heading';
 import { isFail } from '@/shared/lib/result';
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 
 export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const params = await props.params;

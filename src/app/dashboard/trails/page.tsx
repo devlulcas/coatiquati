@@ -1,4 +1,4 @@
-import { type TrailSearchSchema } from '@/modules/trail/actions/get-trails-query';
+import type { TrailSearchSchema } from '@/modules/trail/actions/get-trails-query';
 import { DashboardTrailForm } from '@/modules/trail/components/dashboard-trail-form-search';
 import { DashboardTrailResultView } from '@/modules/trail/components/dashboard-trail-result-view';
 

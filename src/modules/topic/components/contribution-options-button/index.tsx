@@ -1,12 +1,12 @@
 'use client';
 
+import { AnimatePresence, motion, useCycle } from 'framer-motion';
+import { ImagePlusIcon, ScrollTextIcon, VideoIcon } from 'lucide-react';
+import Link from 'next/link';
 import { NewImageContentDialogTrigger } from '@/modules/image-content/components/new-image-content-dialog-trigger';
 import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { NewVideoContentDialogTrigger } from '@/modules/video-content/components/new-video-content-dialog-trigger';
 import { Button } from '@/shared/components/ui/button';
-import { AnimatePresence, motion, useCycle } from 'framer-motion';
-import { ImagePlusIcon, ScrollTextIcon, VideoIcon } from 'lucide-react';
-import Link from 'next/link';
 import { createTopicUrl } from '../../lib/create-topic-url';
 
 type ContributionOptionsButtonProps = {

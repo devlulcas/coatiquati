@@ -4,7 +4,7 @@ import { db } from '@/modules/database/db';
 import { log } from '@/modules/logging/lib/pino';
 import type { Trail } from '@/modules/trail/types/trail';
 import type { UserId } from '@/modules/user/types/user';
-import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 
 export async function getTrailSubscriptionsByUserIdQuery(userId: UserId): Promise<Result<Trail[]>> {
   const subscriptions = await wrapAsyncInResult(

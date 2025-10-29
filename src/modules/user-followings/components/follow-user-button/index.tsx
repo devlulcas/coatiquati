@@ -1,9 +1,9 @@
 'use client';
 
+import { UserMinus2Icon, UserPlus2Icon } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
-import { UserMinus2Icon, UserPlus2Icon } from 'lucide-react';
 import { followUserMutation } from '../../actions/follow-user-mutation';
 
 type FollowUserButtonProps = {

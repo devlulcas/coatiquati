@@ -1,11 +1,11 @@
+import { eq } from 'drizzle-orm';
 import type { BaseContent } from '@/modules/content/types/content';
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
-import { contentTable, type ContentInsert } from '@/modules/database/schema/content';
+import { type ContentInsert, contentTable } from '@/modules/database/schema/content';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import type { WithOptionalID } from '@/shared/utils/with';
-import { eq } from 'drizzle-orm';
 
 export class BaseContentRepository {
   constructor(private readonly contributionRepository = new ContributionRepository()) {}

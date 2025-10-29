@@ -1,9 +1,9 @@
 'use client';
 
-import { isAdminOrAbove } from '@/modules/auth/utils/is';
-import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { isAdminOrAbove } from '@/modules/auth/utils/is';
+import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { createTrailUrl } from '../../lib/create-trail-url';
 
 export function VisualizeTrailAsAdmin({ trailId }: { trailId: number }) {

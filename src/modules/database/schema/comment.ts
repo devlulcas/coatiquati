@@ -1,4 +1,4 @@
-import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { foreignKey, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { contentTable } from './content';

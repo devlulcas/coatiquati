@@ -1,5 +1,5 @@
 import { db } from '@/modules/database/db';
-import { feedbackTable, type FeedbackInsert } from '@/modules/database/schema/feedback';
+import { type FeedbackInsert, feedbackTable } from '@/modules/database/schema/feedback';
 import type { PaginationSchema } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
 import type { Feedback, FeedbackType } from '../types/feedback';

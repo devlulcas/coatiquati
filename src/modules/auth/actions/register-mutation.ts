@@ -1,5 +1,7 @@
 'use server';
 
+import { hash } from 'argon2';
+import { redirect } from 'next/navigation';
 import { env } from '@/env';
 import { db } from '@/modules/database/db';
 import { userTable } from '@/modules/database/schema/user';
@@ -8,8 +10,6 @@ import { emailToHtml } from '@/modules/email/lib/email-to-html';
 import { mailer } from '@/modules/email/lib/mail';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result } from '@/shared/lib/result';
-import { hash } from 'argon2';
-import { redirect } from 'next/navigation';
 import { roles } from '../constants/roles';
 import { createSession, generateSessionToken } from '../services/auth';
 import { generateToken } from '../services/email-verification-service';

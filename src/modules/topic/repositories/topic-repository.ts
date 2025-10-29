@@ -1,10 +1,10 @@
+import { eq } from 'drizzle-orm';
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
 import { topicTable } from '@/modules/database/schema/topic';
 import type { PaginationSchemaWithSearchAndFilter } from '@/modules/database/types/pagination';
 import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
-import { eq } from 'drizzle-orm';
 import type { NewTopic, Topic, TopicWithContentArray, UpdateTopic } from '../types/topic';
 
 export class TopicRepository {

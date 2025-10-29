@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { SESSION_COOKIE_NAME } from './modules/auth/constants/cookies';
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
@@ -16,17 +16,17 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // O TEMPO DE VIDA DO COOKIE É AUMENTADO A CADA REQUISIÇÃO GET POR CONTA DE UMA LIMITAÇÃO DO NEXT.JS AO USARMOS SERVER ACTIONS ETC E TAL
-  if (request.method === "GET") {
+  if (request.method === 'GET') {
     const response = NextResponse.next();
     const token = request.cookies.get(SESSION_COOKIE_NAME)?.value ?? null;
 
     if (token !== null) {
       response.cookies.set(SESSION_COOKIE_NAME, token, {
-        path: "/",
+        path: '/',
         maxAge: 60 * 60 * 24 * 30,
-        sameSite: "lax",
+        sameSite: 'lax',
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production"
+        secure: process.env.NODE_ENV === 'production',
       });
     }
 
@@ -34,15 +34,15 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   }
 
   // MIDDLEWARE DE PROTEÇÃO CSRF
-  const originHeader = request.headers.get("Origin");
+  const originHeader = request.headers.get('Origin');
 
-  const primaryHostHeader = request.headers.get("Host");
-  const secondaryHostHeader = request.headers.get("X-Forwarded-Host");
+  const primaryHostHeader = request.headers.get('Host');
+  const secondaryHostHeader = request.headers.get('X-Forwarded-Host');
   const hostHeader = primaryHostHeader ?? secondaryHostHeader;
 
   if (originHeader === null || hostHeader === null) {
     return new NextResponse(null, {
-      status: 403
+      status: 403,
     });
   }
 
@@ -52,13 +52,13 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     origin = new URL(originHeader);
   } catch {
     return new NextResponse(null, {
-      status: 403
+      status: 403,
     });
   }
 
   if (origin.host !== hostHeader) {
     return new NextResponse(null, {
-      status: 403
+      status: 403,
     });
   }
 

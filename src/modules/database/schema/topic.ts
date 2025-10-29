@@ -1,6 +1,6 @@
-import { relations, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { type InferInsertModel, type InferSelectModel, relations } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { contentStatus, type ContentStatus } from '../../../shared/constants/content-status';
+import { type ContentStatus, contentStatus } from '../../../shared/constants/content-status';
 import { tableTimestampColumns } from '../lib/helpers';
 import { contentTable } from './content';
 import { topicContributionTable } from './contribution';

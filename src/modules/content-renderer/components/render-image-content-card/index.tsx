@@ -1,5 +1,5 @@
-import type { ImageContent } from '@/modules/content/types/content';
 import Image from 'next/image';
+import type { ImageContent } from '@/modules/content/types/content';
 import { ZoomedImage } from '../../../image-content/components/zoomed-image';
 import { RenderedContentWrapper } from '../rendered-content-wrapper';
 

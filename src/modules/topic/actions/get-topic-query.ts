@@ -2,7 +2,7 @@
 
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
-import { wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { TopicRepository } from '../repositories/topic-repository';
 import type { TopicWithContentArray } from '../types/topic';
 

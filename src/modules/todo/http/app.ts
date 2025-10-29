@@ -1,14 +1,14 @@
+import { and, eq } from 'drizzle-orm';
+import { Hono } from 'hono';
 import { protectWithSessionMiddleware } from '@/modules/auth/middleware/protect-with-session';
 import { db } from '@/modules/database/db';
 import type { CustomContext } from '@/modules/http/types/context';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, isFail, ok, wrapAsyncInResult } from '@/shared/lib/result';
-import { and, eq } from 'drizzle-orm';
-import { Hono } from 'hono';
 import { todos } from '../../database/schema/todos';
 import { todoSchema } from '../schemas/todo-schema';
 
-export const todoApp = new Hono<CustomContext>()
+export const todoApp = new Hono<CustomContext>();
 
 todoApp.use('/*', protectWithSessionMiddleware);
 
@@ -17,12 +17,7 @@ todoApp.get('/', async c => {
   const user = c.get('currentUser');
 
   const todosResult = await wrapAsyncInResult(
-    db
-      .select()
-      .from(todos)
-      .where(eq(todos.userId, user.id))
-      .orderBy(todos.createdAt)
-      .all(),
+    db.select().from(todos).where(eq(todos.userId, user.id)).orderBy(todos.createdAt).all(),
   );
 
   if (isFail(todosResult)) {
@@ -112,5 +107,3 @@ todoApp.delete('/:id', async c => {
 
   return c.json(ok(todoResult.value));
 });
-
-

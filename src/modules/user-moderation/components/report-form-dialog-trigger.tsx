@@ -1,4 +1,7 @@
 'use client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import type { z } from 'zod';
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
@@ -6,11 +9,8 @@ import { Input } from '@/shared/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import type { z } from 'zod';
 import { reportUserMutation } from '../actions/report-user-mutation';
-import { REPORT_REASONS, REPORT_REASON_LABELS } from '../constants/report';
+import { REPORT_REASON_LABELS, REPORT_REASONS } from '../constants/report';
 import { createReportSchema } from '../schemas/create-report';
 
 type ReportFormDialogTriggerProps = {

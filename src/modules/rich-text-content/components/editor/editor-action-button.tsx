@@ -1,8 +1,8 @@
 'use client';
 
+import type { ClassValue } from 'clsx';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/cn';
-import type { ClassValue } from 'clsx';
 
 type EditorActionButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   icon: React.ReactNode;

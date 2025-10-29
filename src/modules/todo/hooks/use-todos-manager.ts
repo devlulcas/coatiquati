@@ -1,10 +1,5 @@
-import {
-  useCreateTodo,
-  useDeleteTodo,
-  useTodos,
-  useUpdateTodo,
-} from '@/modules/todo/hooks/use-todos';
 import { useCallback, useState } from 'react';
+import { useCreateTodo, useDeleteTodo, useTodos, useUpdateTodo } from '@/modules/todo/hooks/use-todos';
 
 export function useTodosManager() {
   const { data: todos, isLoading: isLoadingTodos } = useTodos();

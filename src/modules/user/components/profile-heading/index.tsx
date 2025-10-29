@@ -1,8 +1,8 @@
+import { BoltIcon } from 'lucide-react';
+import Image from 'next/image';
 import { validateRequest } from '@/modules/auth/services/next';
 import { FollowUserButton } from '@/modules/user-followings/components/follow-user-button';
 import { Button } from '@/shared/components/ui/button';
-import { BoltIcon } from 'lucide-react';
-import Image from 'next/image';
 import type { UserProfile } from '../../types/user';
 import { EditUserDialogTrigger } from '../edit-user-dialog-trigger';
 

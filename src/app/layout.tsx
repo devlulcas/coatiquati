@@ -1,3 +1,6 @@
+import type { Metadata } from 'next';
+import { Poppins } from 'next/font/google';
+import localFont from 'next/font/local';
 import { env } from '@/env';
 import { AlmostSolidBackground } from '@/modules/layout/components/almost-solid-background';
 import { AnimatedBlobBackgroundScript } from '@/modules/layout/components/animated-blob-background-script';
@@ -10,13 +13,14 @@ import { getThemeQuery } from '@/modules/theme/actions/change-theme-mutation';
 import { BackgroundConfig } from '@/modules/theme/constants/theme-keys';
 import { Providers } from '@/shared/components/common/providers';
 import { Toaster } from '@/shared/components/ui/toaster';
-import type { Metadata } from 'next';
-import { Poppins } from 'next/font/google';
-import localFont from 'next/font/local';
 import '../shared/assets/styles/globals.css';
 import '../shared/assets/styles/utils.css';
 
-const sans = Poppins({ weight: ['400', '500', '600', '700', '800', '900'], subsets: ['latin'], preload: true });
+const sans = Poppins({
+  weight: ['400', '500', '600', '700', '800', '900'],
+  subsets: ['latin'],
+  preload: true,
+});
 const dyslexic = localFont({
   src: [
     {
@@ -81,9 +85,11 @@ export default async function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <html
-      lang="pt-br"
+      lang="pt-BR"
       className={theme.value}
-      style={{ ['--font-sans' as string]: font.value === 'common' ? sans.style.fontFamily : dyslexic.style.fontFamily }}
+      style={{
+        ['--font-sans' as string]: font.value === 'common' ? sans.style.fontFamily : dyslexic.style.fontFamily,
+      }}
     >
       <head>
         <link href="favicon.svg" rel="icon" />

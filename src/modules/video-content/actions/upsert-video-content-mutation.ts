@@ -5,10 +5,10 @@ import { BaseContentRepository } from '@/modules/content/repositories/base-conte
 import { ContentType } from '@/modules/content/types/content-json-field';
 import { log } from '@/modules/logging/lib/pino';
 import {
-  newVideoContentSchema,
   type NewVideoContentSchema,
+  newVideoContentSchema,
 } from '@/modules/video-content/schemas/new-video-content-schema';
-import { fail, isOk, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isOk, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 
 export async function upsertVideoContentMutation(params: NewVideoContentSchema): Promise<Result<number>> {
   const { data: user } = await validateRequest();

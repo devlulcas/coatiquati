@@ -1,14 +1,14 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import type { z } from 'zod';
 import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { newImageContentSchema } from '@/modules/image-content/schemas/new-image-content-schema';
 import { Button } from '@/shared/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { type z } from 'zod';
 
 const imageContentSchema = newImageContentSchema;
 

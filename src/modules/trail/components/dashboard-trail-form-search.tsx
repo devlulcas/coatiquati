@@ -1,5 +1,7 @@
 'use client';
 
+import { SearchIcon } from 'lucide-react';
+import { parseAsString, useQueryState } from 'nuqs';
 import { CategoriesAsyncSelect } from '@/modules/category/components/categories-async-select';
 import type { TrailCategory } from '@/modules/category/types/trail-category';
 import { Button } from '@/shared/components/ui/button';
@@ -7,8 +9,6 @@ import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
 import { contentStatus } from '@/shared/constants/content-status';
-import { SearchIcon } from 'lucide-react';
-import { parseAsString, useQueryState } from 'nuqs';
 
 export function DashboardTrailForm() {
   const [selectedCategory, setSelectedCategory] = useQueryState('category', parseAsString.withDefault(''));

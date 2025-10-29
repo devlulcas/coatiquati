@@ -1,7 +1,7 @@
-import { useToast } from '@/shared/components/ui/use-toast';
-import { isFail, type Result } from '@/shared/lib/result';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
+import { useToast } from '@/shared/components/ui/use-toast';
+import { isFail, type Result } from '@/shared/lib/result';
 import type { User } from '../types/user';
 
 const USERS_QK = 'USERS_QK';

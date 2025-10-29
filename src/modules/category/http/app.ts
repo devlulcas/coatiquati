@@ -1,9 +1,9 @@
+import { Hono } from 'hono';
 import { protectWithPermissionMiddlewareFactory } from '@/modules/auth/middleware/protect-with-permission';
 import { protectWithSessionMiddleware } from '@/modules/auth/middleware/protect-with-session';
 import { searchTrailCategoriesQuery } from '@/modules/category/actions/search-trails-categories-query';
 import type { CustomContext } from '@/modules/http/types/context';
 import { isFail } from '@/shared/lib/result';
-import { Hono } from 'hono';
 
 export const categoriesApp = new Hono<CustomContext>();
 

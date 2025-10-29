@@ -1,10 +1,10 @@
 'use client';
 
+import { useTransition } from 'react';
 import { ContentStatusBadge } from '@/modules/content/components/content-status-badge';
 import { Button } from '@/shared/components/ui/button';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { contentStatus } from '@/shared/constants/content-status';
-import { useTransition } from 'react';
 import { toggleTrailStatusMutation } from '../../actions/toggle-trail-status-mutation';
 import type { Trail } from '../../types/trail';
 

@@ -1,7 +1,7 @@
 'use server';
 
-import { type Result } from '@/shared/lib/result';
 import { redirect } from 'next/navigation';
+import type { Result } from '@/shared/lib/result';
 import { invalidateSession } from '../services/auth';
 import { deleteSessionTokenCookie, validateRequest } from '../services/next';
 

@@ -1,6 +1,6 @@
+import Link from 'next/link';
 import { NewTrailForm } from '@/modules/trail/components/new-trail-form';
 import { Button } from '@/shared/components/ui/button';
-import Link from 'next/link';
 
 export default async function Page() {
   return (

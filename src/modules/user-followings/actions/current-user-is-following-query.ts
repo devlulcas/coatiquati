@@ -1,10 +1,10 @@
 'use server';
 
+import { and, eq } from 'drizzle-orm';
 import { db } from '@/modules/database/db';
 import { userFollowerTable } from '@/modules/database/schema/user-follower';
 import { log } from '@/modules/logging/lib/pino';
-import { isFail, ok, wrapAsyncInResult, type Ok } from '@/shared/lib/result';
-import { and, eq } from 'drizzle-orm';
+import { isFail, type Ok, ok, wrapAsyncInResult } from '@/shared/lib/result';
 
 export async function currentUserIsFollowingQuery(userId: string, followerId?: string): Promise<Ok<boolean>> {
   if (!followerId) return ok(false);

@@ -1,16 +1,16 @@
 'use client';
 
+import { SkullIcon } from 'lucide-react';
+import { useState, useTransition } from 'react';
 import { roles } from '@/modules/auth/constants/roles';
 import { isAdmin, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { isFail } from '@/shared/lib/result';
-import { SkullIcon } from 'lucide-react';
-import { useState, useTransition } from 'react';
 import { setUserRoleMutation } from '../../actions/set-user-role-mutation';
 import { useUsersQueryCleanup } from '../../hooks/use-users-query';
-import { type User } from '../../types/user';
+import type { User } from '../../types/user';
 
 type EditUserRoleProps = {
   user: User;

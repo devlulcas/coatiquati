@@ -1,11 +1,11 @@
 'use server';
 
+import { and, eq } from 'drizzle-orm';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { commentVoteTable } from '@/modules/database/schema/comment';
-import { isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
-import { and, eq } from 'drizzle-orm';
+import { isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 
 export async function getuserCommentVoteQuery(commentId: number): Promise<Result<number>> {
   const { data: user } = await validateRequest();

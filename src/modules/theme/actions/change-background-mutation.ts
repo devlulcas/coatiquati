@@ -1,8 +1,8 @@
 'use server';
 
-import { fail, ok, type Ok, type Result } from '@/shared/lib/result';
 import { cookies } from 'next/headers';
-import { BACKGROUND_COOKIE_NAME, VALID_BACKGROUNDS, type Background } from '../constants/theme-keys';
+import { fail, type Ok, ok, type Result } from '@/shared/lib/result';
+import { BACKGROUND_COOKIE_NAME, type Background, VALID_BACKGROUNDS } from '../constants/theme-keys';
 
 export async function setBackgroundMutation(background: Background): Promise<Result<string>> {
   const isValidBackground = VALID_BACKGROUNDS.includes(background);

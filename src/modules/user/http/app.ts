@@ -1,6 +1,6 @@
+import { Hono } from 'hono';
 import { protectWithSessionMiddleware } from '@/modules/auth/middleware/protect-with-session';
 import type { CustomContext } from '@/modules/http/types/context';
-import { Hono } from 'hono';
 import { getUsersQuery } from '../actions/get-users-query';
 
 export const usersApp = new Hono<CustomContext>();

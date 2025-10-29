@@ -1,13 +1,13 @@
-import { RenderCorrectContentCard } from '@/modules/content-renderer/components/render-correct-content-card';
+import { ArrowLeftIcon, FileIcon, ImageIcon, TextIcon, VideoIcon } from 'lucide-react';
+import Link from 'next/link';
 import type { Content } from '@/modules/content/types/content';
+import { RenderCorrectContentCard } from '@/modules/content-renderer/components/render-correct-content-card';
 import { getTopicQuery } from '@/modules/topic/actions/get-topic-query';
 import { ContributionOptionsButton } from '@/modules/topic/components/contribution-options-button';
 import { createTrailUrl } from '@/modules/trail/lib/create-trail-url';
 import { ErrorMessage } from '@/shared/components/common/error-message';
 import { Button } from '@/shared/components/ui/button';
 import { isFail } from '@/shared/lib/result';
-import { ArrowLeftIcon, FileIcon, ImageIcon, TextIcon, VideoIcon } from 'lucide-react';
-import Link from 'next/link';
 
 type PageProps = {
   params: Promise<{
@@ -108,7 +108,7 @@ function accumulateContentType(
     },
   };
 
-  let res = [];
+  const res = [];
 
   for (const content of data) {
     const existentIdx = res.findIndex(it => it.type === content.contentType);

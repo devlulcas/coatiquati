@@ -1,13 +1,13 @@
 'use server';
 
+import { eq } from 'drizzle-orm';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { publicationTable } from '@/modules/database/schema/publication';
 import { publicationMediaTable } from '@/modules/database/schema/publication-media';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
-import { eq } from 'drizzle-orm';
+import { fail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 
 export async function deletePublicationMutation(pubId: number): Promise<Result<string>> {
   const { data: user } = await validateRequest();

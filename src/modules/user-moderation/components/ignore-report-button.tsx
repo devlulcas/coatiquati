@@ -1,9 +1,9 @@
 'use client';
 
+import { TrashIcon } from 'lucide-react';
 import { Button } from '@/shared/components/ui/button';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
-import { TrashIcon } from 'lucide-react';
 import { ignoreReportMutation } from '../actions/ignore-report-mutation';
 
 type IgnoreReportButtonProps = {

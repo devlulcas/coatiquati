@@ -6,10 +6,10 @@ import { BaseContentRepository } from '@/modules/content/repositories/base-conte
 import { ContentType } from '@/modules/content/types/content-json-field';
 import { log } from '@/modules/logging/lib/pino';
 import {
-  newRichTextContentSchema,
   type NewRichTextContentSchema,
+  newRichTextContentSchema,
 } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
-import { fail, isFail, isOk, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, isOk, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 
 export async function upsertRichTextContentMutation(params: NewRichTextContentSchema): Promise<Result<number>> {
   const { data: user } = await validateRequest();

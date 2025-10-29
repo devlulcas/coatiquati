@@ -1,5 +1,9 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import Image from 'next/image';
+import { useForm } from 'react-hook-form';
+import type { z } from 'zod';
 import { ImageUploadDialogTrigger } from '@/modules/file/components/image-upload-dialog-trigger';
 import { uploadImageToGallery } from '@/modules/file/services/upload-image-to-gallery';
 import { newImageContentSchema } from '@/modules/image-content/schemas/new-image-content-schema';
@@ -8,10 +12,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { cn } from '@/shared/utils/cn';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Image from 'next/image';
-import { useForm } from 'react-hook-form';
-import { type z } from 'zod';
 
 const imageContentSchema = newImageContentSchema;
 

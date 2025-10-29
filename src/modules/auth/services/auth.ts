@@ -1,3 +1,6 @@
+import { sha256 } from '@oslojs/crypto/sha2';
+import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
+import { eq } from 'drizzle-orm';
 import { db } from '@/modules/database/db';
 import { sessionTable } from '@/modules/database/schema/session';
 import { userTable } from '@/modules/database/schema/user';
@@ -5,9 +8,6 @@ import { log } from '@/modules/logging/lib/pino';
 import type { User } from '@/modules/user/types/user';
 import { toMilliseconds } from '@/shared/lib/date';
 import { isFail, wrapAsyncInResult } from '@/shared/lib/result';
-import { sha256 } from '@oslojs/crypto/sha2';
-import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
-import { eq } from 'drizzle-orm';
 import type { PublicSession, Session } from '../types/session';
 
 export const toPublicSession = (user?: User, session?: Session): PublicSession => {

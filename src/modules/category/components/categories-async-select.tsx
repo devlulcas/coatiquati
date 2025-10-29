@@ -1,5 +1,6 @@
 'use client';
 
+import { useTransition } from 'react';
 import { createCategoryMutation } from '@/modules/category/actions/create-category-mutation';
 import { searchTrailCategoriesQuery } from '@/modules/category/actions/search-trails-categories-query';
 import type { TrailCategory } from '@/modules/category/types/trail-category';
@@ -7,7 +8,6 @@ import { AsyncSelect } from '@/shared/components/ui/async-select';
 import { Button } from '@/shared/components/ui/button';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { isFail } from '@/shared/lib/result';
-import { useTransition } from 'react';
 
 export function CategoriesAsyncSelect({
   selectedCategory,

@@ -1,9 +1,9 @@
 'use server';
 
 import { userSignInSchema } from '@/modules/auth/schemas/user-sign-in-schema';
-import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { getUserProfile } from '../repositories/user-repository';
-import { type UserProfile } from '../types/user';
+import type { UserProfile } from '../types/user';
 
 const getUserProfileSchema = userSignInSchema.pick({ username: true });
 

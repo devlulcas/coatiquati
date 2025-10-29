@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const pomodoroSettingsSchema = z.object({
   pomodoroDuration: z.number().min(1).max(60),
