@@ -12,17 +12,17 @@ import type {
 } from '../../../modules/content/types/content-json-field';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
-import { topic } from './topic';
+import { topics } from './topic';
 
-export type SelectContent = typeof content.$inferSelect;
-export type InsertContent = typeof content.$inferInsert;
-export const content = pgTable('content', {
+export type SelectContent = typeof contents.$inferSelect;
+export type InsertContent = typeof contents.$inferInsert;
+export const contents = pgTable('content', {
   id: serial('id').primaryKey().notNull(),
   title: text('title').notNull(),
   active: boolean('active').notNull().default(true),
   contentType: text('content_type').$type<ContentType>().notNull(),
   content: jsonb('content').$type<ContentJSON>().notNull(),
-  topicId: integer('topic_id').references(() => topic.id, {
+  topicId: integer('topic_id').references(() => topics.id, {
     onDelete: 'cascade',
     onUpdate: 'cascade',
   }),

@@ -2,9 +2,9 @@ import { boolean, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 
-export type SelectPomodoroSession = typeof pomodoroSession.$inferSelect;
-export type InsertPomodoroSession = typeof pomodoroSession.$inferInsert;
-export const pomodoroSession = pgTable('pomodoro_sessions', {
+export type SelectPomodoroSession = typeof pomodoroSessions.$inferSelect;
+export type InsertPomodoroSession = typeof pomodoroSessions.$inferInsert;
+export const pomodoroSessions = pgTable('pomodoro_session', {
   id: serial('id').primaryKey(),
   userId: text('user_id')
     .notNull()

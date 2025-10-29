@@ -1,13 +1,20 @@
 'use server';
 
-import { and, eq } from 'drizzle-orm';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
-import { commentVoteTable } from '@/modules/database/schema/comment';
-import { isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import { commentVotes } from '@/modules/database/schema/comment';
+import {
+  isFail,
+  ok,
+  type Result,
+  wrapAsyncInResult,
+} from '@/shared/lib/result';
+import { and, eq } from 'drizzle-orm';
 
-export async function getuserCommentVoteQuery(commentId: number): Promise<Result<number>> {
+export async function getuserCommentVoteQuery(
+  commentId: number
+): Promise<Result<number>> {
   const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
@@ -16,10 +23,15 @@ export async function getuserCommentVoteQuery(commentId: number): Promise<Result
 
   const voteResult = await wrapAsyncInResult(
     db
-      .select({ vote: commentVoteTable.value })
-      .from(commentVoteTable)
-      .where(and(eq(commentVoteTable.commentId, commentId), eq(commentVoteTable.userId, user.id)))
-      .get(),
+      .select({ vote: commentVotes.value })
+      .from(commentVotes)
+      .where(
+        and(
+          eq(commentVotes.commentId, commentId),
+          eq(commentVotes.userId, user.id)
+        )
+      )
+      .get()
   );
 
   if (isFail(voteResult)) {

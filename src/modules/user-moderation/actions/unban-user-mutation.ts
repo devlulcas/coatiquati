@@ -1,14 +1,21 @@
 'use server';
 
-import { eq } from 'drizzle-orm';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
-import { userTable } from '@/modules/database/schema/user';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import {
+  fail,
+  isFail,
+  ok,
+  type Result,
+  wrapAsyncInResult,
+} from '@/shared/lib/result';
+import { eq } from 'drizzle-orm';
 
-export async function unbanUserMutation(params: { username: string }): Promise<Result<string>> {
+export async function unbanUserMutation(params: {
+  username: string;
+}): Promise<Result<string>> {
   const { data: user } = await validateRequest();
 
   if (!user) {
@@ -28,10 +35,10 @@ export async function unbanUserMutation(params: { username: string }): Promise<R
   }
 
   const userResult = await wrapAsyncInResult(
-    db.query.userTable.findFirst({
+    db.query.user.findFirst({
       columns: { id: true, bannedAt: true },
       where: (fields, op) => op.eq(fields.username, params.username),
-    }),
+    })
   );
 
   if (isFail(userResult) || !userResult.value) {
@@ -39,7 +46,11 @@ export async function unbanUserMutation(params: { username: string }): Promise<R
   }
 
   try {
-    await db.update(userTable).set({ bannedAt: null }).where(eq(userTable.id, user.id)).execute();
+    await db
+      .update(user)
+      .set({ bannedAt: null })
+      .where(eq(user.id, user.id))
+      .execute();
     log.info(`Banimento removido: ${user.id} por ${user.id}`);
     return ok('Banimento removido com sucesso');
   } catch (error) {

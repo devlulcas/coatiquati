@@ -5,11 +5,11 @@ import {
 } from '../../../shared/constants/content-status';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
-import { category } from './category';
+import { categories } from './category';
 
-export type SelectTrail = typeof trail.$inferSelect;
-export type InsertTrail = typeof trail.$inferInsert;
-export const trail = pgTable('trail', {
+export type SelectTrail = typeof trails.$inferSelect;
+export type InsertTrail = typeof trails.$inferInsert;
+export const trails = pgTable('trail', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
   description: text('description').notNull(),
@@ -18,7 +18,7 @@ export const trail = pgTable('trail', {
     .$type<ContentStatus>()
     .default(contentStatus.DRAFT)
     .notNull(),
-  category: integer('category_id').references(() => category.id, {
+  category: integer('category_id').references(() => categories.id, {
     onDelete: 'set null',
     onUpdate: 'cascade',
   }),

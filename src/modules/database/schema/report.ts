@@ -3,9 +3,9 @@ import type { ReportReason } from '../../../modules/user-moderation/constants/re
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 
-export type SelectReport = typeof report.$inferSelect;
-export type InsertReport = typeof report.$inferInsert;
-export const report = pgTable('report', {
+export type SelectReport = typeof reports.$inferSelect;
+export type InsertReport = typeof reports.$inferInsert;
+export const reports = pgTable('report', {
   id: serial('id').primaryKey(),
   userId: text('user_id')
     .notNull()

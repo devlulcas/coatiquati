@@ -2,11 +2,18 @@
 
 import { db } from '@/modules/database/db';
 import { log } from '@/modules/logging/lib/pino';
-import { isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import {
+  isFail,
+  ok,
+  type Result,
+  wrapAsyncInResult,
+} from '@/shared/lib/result';
 import type { Publication } from '../types/publication';
 
-export async function getPublicationsByUserIdQuery(userId: string): Promise<Result<Publication[]>> {
-  const user = await db.query.userTable.findFirst({
+export async function getPublicationsByUserIdQuery(
+  userId: string
+): Promise<Result<Publication[]>> {
+  const user = await db.query.user.findFirst({
     where: (fields, op) => op.eq(fields.id, userId),
   });
 
@@ -17,7 +24,8 @@ export async function getPublicationsByUserIdQuery(userId: string): Promise<Resu
 
   const pubs: Result<Publication[]> = await wrapAsyncInResult(
     db.query.publicationTable.findMany({
-      where: (fields, op) => op.and(op.eq(fields.authorId, userId), op.isNull(fields.deletedAt)),
+      where: (fields, op) =>
+        op.and(op.eq(fields.authorId, userId), op.isNull(fields.deletedAt)),
       orderBy: (fields, op) => op.desc(fields.createdAt),
       with: {
         medias: {
@@ -31,7 +39,7 @@ export async function getPublicationsByUserIdQuery(userId: string): Promise<Resu
           },
         },
       },
-    }),
+    })
   );
 
   if (isFail(pubs)) {

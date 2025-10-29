@@ -1,15 +1,16 @@
 'use server';
 
-import { eq } from 'drizzle-orm';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { reportTable } from '@/modules/database/schema/report';
-import { userTable } from '@/modules/database/schema/user';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result } from '@/shared/lib/result';
+import { eq } from 'drizzle-orm';
 
-export async function banUserMutation(params: { reportId: number }): Promise<Result<string>> {
+export async function banUserMutation(params: {
+  reportId: number;
+}): Promise<Result<string>> {
   const { data: user } = await validateRequest();
 
   if (!user) {
@@ -48,7 +49,7 @@ export async function banUserMutation(params: { reportId: number }): Promise<Res
     return fail('Você não pode banir um administrador de alto privilégio');
   }
 
-  return db.transaction(async db => {
+  return db.transaction(async (db) => {
     try {
       await db
         .update(reportTable)
@@ -57,12 +58,14 @@ export async function banUserMutation(params: { reportId: number }): Promise<Res
         .execute();
 
       await db
-        .update(userTable)
+        .update(user)
         .set({ bannedAt: new Date() })
-        .where(eq(userTable.id, report.reportedUser.id))
+        .where(eq(user.id, report.reportedUser.id))
         .execute();
 
-      log.info(`Usuário banido: ${report.reportedUser.id} por ${user.id} via reporte ${params.reportId}`);
+      log.info(
+        `Usuário banido: ${report.reportedUser.id} por ${user.id} via reporte ${params.reportId}`
+      );
 
       return ok('Usuário banido');
     } catch (error) {

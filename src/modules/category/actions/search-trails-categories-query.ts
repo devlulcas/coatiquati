@@ -1,16 +1,21 @@
 'use server';
 
-import { like } from 'drizzle-orm';
 import { db } from '@/modules/database/db';
-import { categoryTable } from '@/modules/database/schema/category';
-import { createPaginationSchemaWithSearch, type PaginationSchemaWithSearch } from '@/modules/database/types/pagination';
+import { categories } from '@/modules/database/schema/category';
+import {
+  createPaginationSchemaWithSearch,
+  type PaginationSchemaWithSearch,
+} from '@/modules/database/types/pagination';
 import { fail, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import { like } from 'drizzle-orm';
 import type { TrailCategory } from '../types/trail-category';
 
 export async function searchTrailCategoriesQuery(
-  params?: Partial<PaginationSchemaWithSearch>,
+  params?: Partial<PaginationSchemaWithSearch>
 ): Promise<Result<TrailCategory[]>> {
-  const validatedParams = createPaginationSchemaWithSearch(42, 0).optional().safeParse(params);
+  const validatedParams = createPaginationSchemaWithSearch(42, 0)
+    .optional()
+    .safeParse(params);
 
   if (!validatedParams.success) {
     return fail('Falha ao buscar categorias.');
@@ -20,10 +25,15 @@ export async function searchTrailCategoriesQuery(
   const skip = params?.skip || 0;
   const take = params?.take || 40;
 
-  let query = db.select({ name: categoryTable.name }).from(categoryTable).offset(skip).limit(take).$dynamic();
+  let query = db
+    .select({ name: categories.name })
+    .from(categories)
+    .offset(skip)
+    .limit(take)
+    .$dynamic();
 
   if (search) {
-    query = query.where(like(categoryTable.name, `%${search}%`));
+    query = query.where(like(categories.name, `%${search}%`));
   }
 
   return wrapAsyncInResult(query.all());

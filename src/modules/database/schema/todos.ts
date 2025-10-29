@@ -2,9 +2,9 @@ import { boolean, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 
-export type SelectTodo = typeof todo.$inferSelect;
-export type InsertTodo = typeof todo.$inferInsert;
-export const todo = pgTable('todos', {
+export type SelectTodo = typeof todos.$inferSelect;
+export type InsertTodo = typeof todos.$inferInsert;
+export const todos = pgTable('todo', {
   id: serial('id').primaryKey(),
   userId: text('user_id')
     .notNull()

@@ -3,13 +3,18 @@
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
-import type { NewComment } from '@/modules/database/schema/comment';
+import type { InsertComment } from '@/modules/database/schema/comment';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import { CommentRepository } from '../repositories/comment-repository';
-import { type NewCommentSchema, newCommentSchema } from '../schemas/new-comment-schema';
+import {
+  type NewCommentSchema,
+  newCommentSchema,
+} from '../schemas/new-comment-schema';
 
-export async function commentOnContentMutation(params: NewCommentSchema): Promise<Result<string>> {
+export async function commentOnContentMutation(
+  params: NewCommentSchema
+): Promise<Result<string>> {
   const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
@@ -29,10 +34,10 @@ export async function commentOnContentMutation(params: NewCommentSchema): Promis
       where: (fields, operators) => {
         return operators.and(
           operators.eq(fields.authorId, user.id),
-          operators.gt(fields.createdAt, new Date(Date.now() - SIXTY_SECONDS)),
+          operators.gt(fields.createdAt, new Date(Date.now() - SIXTY_SECONDS))
         );
       },
-    }),
+    })
   );
 
   if (lastCommentResult.type === 'ok' && lastCommentResult.value) {
@@ -40,7 +45,7 @@ export async function commentOnContentMutation(params: NewCommentSchema): Promis
     return fail('Espere 60 segundos para comentar novamente');
   }
 
-  const newComment: NewComment = {
+  const newComment: InsertComment = {
     authorId: user.id,
     contentId: params.contentId,
     content: params.content,
@@ -52,7 +57,11 @@ export async function commentOnContentMutation(params: NewCommentSchema): Promis
   try {
     await commentRepository.addCommentInContent(newComment);
 
-    log.info('Comentário criado', { authorId: user.id, on: 'content', contentId: params.contentId });
+    log.info('Comentário criado', {
+      authorId: user.id,
+      on: 'content',
+      contentId: params.contentId,
+    });
 
     return ok('Comentário criado com sucesso');
   } catch (error) {

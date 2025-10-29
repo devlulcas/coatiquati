@@ -1,11 +1,18 @@
-import type { ContentSelect } from '@/modules/database/schema/content';
+import type { SelectContent } from '@/modules/database/schema/content';
 import type { Creatable, Updatable } from '@/modules/database/types/utils';
 import type { Contributor } from '@/modules/user/types/user';
-import type { ImageContentJSON, RichTextContentJSON, VideoContentJSON } from './content-json-field';
+import type {
+  ImageContentJSON,
+  RichTextContentJSON,
+  VideoContentJSON,
+} from './content-json-field';
 
-type RawBaseContent = ContentSelect;
+type RawBaseContent = SelectContent;
 
-export type BaseContent = Omit<ContentSelect, 'authorId' | 'contentType' | 'topicId'> & {
+export type BaseContent = Omit<
+  SelectContent,
+  'authorId' | 'contentType' | 'topicId'
+> & {
   author: Contributor;
   contributors: { user: Contributor }[];
 };

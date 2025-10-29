@@ -9,17 +9,17 @@ import {
 } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
-import { content } from './content';
+import { contents } from './content';
 
-export type SelectComment = typeof comment.$inferSelect;
-export type InsertComment = typeof comment.$inferInsert;
-export const comment = pgTable(
+export type SelectComment = typeof comments.$inferSelect;
+export type InsertComment = typeof comments.$inferInsert;
+export const comments = pgTable(
   'comment',
   {
     id: serial('id').primaryKey().notNull(),
     contentId: integer('content_id')
       .notNull()
-      .references(() => content.id, {
+      .references(() => contents.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
@@ -50,15 +50,15 @@ export const comment = pgTable(
   ]
 );
 
-export type SelectCommentVote = typeof commentVote.$inferSelect;
-export type InsertCommentVote = typeof commentVote.$inferInsert;
-export const commentVote = pgTable(
+export type SelectCommentVote = typeof commentVotes.$inferSelect;
+export type InsertCommentVote = typeof commentVotes.$inferInsert;
+export const commentVotes = pgTable(
   'comment_vote',
   {
     id: serial('id').primaryKey().notNull(),
     commentId: integer('comment_id')
       .notNull()
-      .references(() => comment.id, {
+      .references(() => comments.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),

@@ -3,23 +3,31 @@
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
-import { categoryTable } from '@/modules/database/schema/category';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { newTrailCategorySchema } from '../schemas/new-trail-category-schema';
 
-export async function createCategoryMutation(name: string): Promise<Result<string>> {
+export async function createCategoryMutation(
+  name: string
+): Promise<Result<string>> {
   const { data: user } = await validateRequest();
 
   if (!isAuthenticated(user)) {
-    return fail('Falha ao criar categoria. Você precisa estar logado para criar uma categoria.');
+    return fail(
+      'Falha ao criar categoria. Você precisa estar logado para criar uma categoria.'
+    );
   }
 
   if (!isAdminOrAbove(user.role)) {
-    return fail('Falha ao criar categoria. Você precisa ser um administrador para criar uma categoria.');
+    return fail(
+      'Falha ao criar categoria. Você precisa ser um administrador para criar uma categoria.'
+    );
   }
 
-  const validatedParams = newTrailCategorySchema.safeParse({ name, authorId: user.id });
+  const validatedParams = newTrailCategorySchema.safeParse({
+    name,
+    authorId: user.id,
+  });
 
   if (!validatedParams.success) {
     return fail('Falha ao criar categoria.');
@@ -29,7 +37,7 @@ export async function createCategoryMutation(name: string): Promise<Result<strin
     const category = validatedParams.data;
 
     await db
-      .insert(categoryTable)
+      .insert(category)
       .values({ name: category.name, authorId: category.authorId })
       .onConflictDoNothing()
       .execute();

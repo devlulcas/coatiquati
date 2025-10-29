@@ -1,30 +1,49 @@
-import { eq } from 'drizzle-orm';
 import type { BaseContent } from '@/modules/content/types/content';
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
-import { type ContentInsert, contentTable } from '@/modules/database/schema/content';
+import {
+  contents,
+  type InsertContent,
+} from '@/modules/database/schema/content';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import {
+  fail,
+  isFail,
+  ok,
+  type Result,
+  wrapAsyncInResult,
+} from '@/shared/lib/result';
 import type { WithOptionalID } from '@/shared/utils/with';
+import { eq } from 'drizzle-orm';
 
 export class BaseContentRepository {
-  constructor(private readonly contributionRepository = new ContributionRepository()) {}
+  constructor(
+    private readonly contributionRepository = new ContributionRepository()
+  ) {}
 
-  async upsertBaseContent(content: WithOptionalID<ContentInsert>): Promise<number> {
+  async upsertBaseContent(
+    content: WithOptionalID<InsertContent>
+  ): Promise<number> {
     try {
-      const res = await db.transaction(async tx => {
+      const res = await db.transaction(async (tx) => {
         const insertedContent = await tx
-          .insert(contentTable)
+          .insert(content)
           .values(content)
-          .onConflictDoUpdate({ target: [contentTable.id], set: content })
-          .returning({ id: contentTable.id })
+          .onConflictDoUpdate({ target: [content.id], set: content })
+          .returning({ id: content.id })
           .get();
 
         log.info('Conteúdo salvo com sucesso', { content: insertedContent });
 
-        await this.contributionRepository.save(content.authorId, { contentId: insertedContent.id }, tx);
+        await this.contributionRepository.save(
+          content.authorId,
+          { contentId: insertedContent.id },
+          tx
+        );
 
-        log.info('Contribuição salva com sucesso', { content: insertedContent });
+        log.info('Contribuição salva com sucesso', {
+          content: insertedContent,
+        });
 
         return insertedContent.id;
       });
@@ -57,7 +76,11 @@ export class BaseContentRepository {
 
   async enableBaseContent(id: number): Promise<void> {
     try {
-      await db.update(contentTable).set({ active: true }).where(eq(contentTable.id, id)).execute();
+      await db
+        .update(contents)
+        .set({ active: true })
+        .where(eq(contents.id, id))
+        .execute();
     } catch (error) {
       log.error('Erro ao habilitar conteúdo.', { id, error });
       throw new Error('Erro ao habilitar conteúdo.');
@@ -66,7 +89,11 @@ export class BaseContentRepository {
 
   async omitBaseContent(id: number): Promise<void> {
     try {
-      await db.update(contentTable).set({ active: false }).where(eq(contentTable.id, id)).execute();
+      await db
+        .update(contents)
+        .set({ active: false })
+        .where(eq(contents.id, id))
+        .execute();
     } catch (error) {
       log.error('Erro ao desabilitar conteúdo.', { id, error });
       throw new Error('Erro ao desabilitar conteúdo.');
@@ -75,7 +102,11 @@ export class BaseContentRepository {
 
   async getAuthorId(contentId: number): Promise<Result<string>> {
     const result = await wrapAsyncInResult(
-      db.select({ authorId: contentTable.authorId }).from(contentTable).where(eq(contentTable.id, contentId)).get(),
+      db
+        .select({ authorId: contents.authorId })
+        .from(contents)
+        .where(eq(contents.id, contentId))
+        .get()
     );
 
     if (isFail(result) || !result.value) {

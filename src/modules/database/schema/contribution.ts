@@ -1,15 +1,15 @@
 import { integer, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
-import { content } from './content';
-import { topic } from './topic';
-import { trail } from './trail';
+import { contents } from './content';
+import { topics } from './topic';
+import { trails } from './trail';
 
-export const trailContribution = pgTable(
+export const trailContributions = pgTable(
   'trail_contribution',
   {
     trailId: integer('trail_id')
-      .references(() => trail.id)
+      .references(() => trails.id)
       .notNull(),
     userId: text('user_id')
       .references(() => user.id)
@@ -20,11 +20,11 @@ export const trailContribution = pgTable(
 );
 
 // Contribuições em tópicos
-export const topicContribution = pgTable(
+export const topicContributions = pgTable(
   'topic_contribution',
   {
     topicId: integer('topic_id')
-      .references(() => topic.id)
+      .references(() => topics.id)
       .notNull(),
     userId: text('user_id')
       .references(() => user.id)
@@ -35,11 +35,11 @@ export const topicContribution = pgTable(
 );
 
 // Contribuições em conteúdos (Usuários comuns podem contribuir com conteúdos)
-export const contentContribution = pgTable(
+export const contentContributions = pgTable(
   'content_contribution',
   {
     contentId: integer('content_id')
-      .references(() => content.id)
+      .references(() => contents.id)
       .notNull(),
     userId: text('user_id')
       .references(() => user.id)

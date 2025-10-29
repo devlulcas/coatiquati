@@ -1,22 +1,29 @@
-import { asc, eq, type SQL } from 'drizzle-orm';
 import { ContributionRepository } from '@/modules/contributions/repositories/contribution-repository';
 import { db } from '@/modules/database/db';
-import { categoryTable } from '@/modules/database/schema/category';
+import { categories } from '@/modules/database/schema/category';
 import { trailTable } from '@/modules/database/schema/trail';
 import { log } from '@/modules/logging/lib/pino';
 import { contentStatus } from '@/shared/constants/content-status';
+import { asc, eq, type SQL } from 'drizzle-orm';
 import type { TrailSearchSchema } from '../actions/get-trails-query';
-import type { NewTrail, Trail, TrailWithTopicArray, UpdateTrail } from '../types/trail';
+import type {
+  NewTrail,
+  Trail,
+  TrailWithTopicArray,
+  UpdateTrail,
+} from '../types/trail';
 
 export class TrailRepository {
-  constructor(private readonly contributionRepository: ContributionRepository = new ContributionRepository()) {}
+  constructor(
+    private readonly contributionRepository: ContributionRepository = new ContributionRepository()
+  ) {}
 
   async createTrail(trail: NewTrail): Promise<number> {
-    return db.transaction(async tx => {
+    return db.transaction(async (tx) => {
       try {
         if (trail.category) {
           await tx
-            .insert(categoryTable)
+            .insert(categories)
             .values({ name: trail.category, authorId: trail.authorId })
             .onConflictDoNothing()
             .execute();
@@ -24,7 +31,11 @@ export class TrailRepository {
           log.info('Categoria inserida', { category: trail.category });
         }
 
-        const newTrail = await tx.insert(trailTable).values(trail).returning({ id: trailTable.id }).get();
+        const newTrail = await tx
+          .insert(trailTable)
+          .values(trail)
+          .returning({ id: trailTable.id })
+          .get();
         log.info('Trilha inserida', newTrail);
 
         return newTrail.id;
@@ -37,23 +48,24 @@ export class TrailRepository {
   }
 
   async getTrailById(id: number, database = db): Promise<TrailWithTopicArray> {
-    const data: TrailWithTopicArray | undefined = await database.query.trailTable.findFirst({
-      with: {
-        contributors: { with: { user: true } },
-        category: true,
-        author: true,
-        topics: {
-          with: {
-            author: true,
-            contributors: {
-              with: {
-                user: true,
+    const data: TrailWithTopicArray | undefined =
+      await database.query.trailTable.findFirst({
+        with: {
+          contributors: { with: { user: true } },
+          category: true,
+          author: true,
+          topics: {
+            with: {
+              author: true,
+              contributors: {
+                with: {
+                  user: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
 
     if (!data) {
       log.error('Trilha não encontrada', { id });
@@ -63,7 +75,10 @@ export class TrailRepository {
     return data;
   }
 
-  async getTrails(params: TrailSearchSchema, includeDraft = false): Promise<Trail[]> {
+  async getTrails(
+    params: TrailSearchSchema,
+    includeDraft = false
+  ): Promise<Trail[]> {
     try {
       return db.query.trailTable.findMany({
         limit: params.take,
@@ -72,7 +87,11 @@ export class TrailRepository {
           const filters: SQL[] = [];
 
           for (const [field, value] of Object.entries(params)) {
-            if (field === 'status' && value === contentStatus.DRAFT && !includeDraft) {
+            if (
+              field === 'status' &&
+              value === contentStatus.DRAFT &&
+              !includeDraft
+            ) {
               continue;
             }
 
@@ -106,7 +125,8 @@ export class TrailRepository {
   async getRecentTrails(): Promise<Trail[]> {
     return db.query.trailTable.findMany({
       limit: 20,
-      where: (fields, operators) => operators.eq(fields.status, contentStatus.PUBLISHED),
+      where: (fields, operators) =>
+        operators.eq(fields.status, contentStatus.PUBLISHED),
       orderBy: asc(trailTable.createdAt),
       with: {
         contributors: { with: { user: true } },
@@ -128,20 +148,28 @@ export class TrailRepository {
       throw new Error('Trilha não encontrada');
     }
 
-    return db.transaction(async tx => {
+    return db.transaction(async (tx) => {
       try {
         if (trail.category) {
           await tx
-            .insert(categoryTable)
+            .insert(categories)
             .values({ name: trail.category, authorId: currentTrail.authorId })
             .onConflictDoNothing()
             .execute();
         }
 
-        await tx.update(trailTable).set(trail).where(eq(trailTable.id, trail.id)).execute();
+        await tx
+          .update(trailTable)
+          .set(trail)
+          .where(eq(trailTable.id, trail.id))
+          .execute();
 
         if (trail.contributorId !== currentTrail.authorId) {
-          await this.contributionRepository.save(trail.contributorId, { trailId: trail.id }, tx);
+          await this.contributionRepository.save(
+            trail.contributorId,
+            { trailId: trail.id },
+            tx
+          );
         }
       } catch (error) {
         log.error('Erro ao atualizar trilha', { error, trail });
@@ -153,20 +181,36 @@ export class TrailRepository {
 
   async omitTrail(id: number): Promise<void> {
     try {
-      await db.update(trailTable).set({ status: contentStatus.DRAFT }).where(eq(trailTable.id, id)).execute();
+      await db
+        .update(trailTable)
+        .set({ status: contentStatus.DRAFT })
+        .where(eq(trailTable.id, id))
+        .execute();
     } catch (error) {
       console.clear();
-      log.error(`Erro ao omitir trilha ${error instanceof Error ? error.message : ''}`, { error, id });
+      log.error(
+        `Erro ao omitir trilha ${error instanceof Error ? error.message : ''}`,
+        { error, id }
+      );
       throw new Error('Erro ao omitir trilha');
     }
   }
 
   async enableTrail(id: number): Promise<void> {
     try {
-      await db.update(trailTable).set({ status: contentStatus.PUBLISHED }).where(eq(trailTable.id, id)).execute();
+      await db
+        .update(trailTable)
+        .set({ status: contentStatus.PUBLISHED })
+        .where(eq(trailTable.id, id))
+        .execute();
     } catch (error) {
       console.clear();
-      log.error(`Erro ao habilitar trilha ${error instanceof Error ? error.message : ''}`, { error, id });
+      log.error(
+        `Erro ao habilitar trilha ${
+          error instanceof Error ? error.message : ''
+        }`,
+        { error, id }
+      );
       throw new Error('Erro ao habilitar trilha');
     }
   }

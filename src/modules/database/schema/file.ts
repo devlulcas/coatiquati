@@ -2,9 +2,9 @@ import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 
-export type SelectFile = typeof file.$inferSelect;
-export type InsertFile = typeof file.$inferInsert;
-export const file = pgTable('file', {
+export type SelectFile = typeof files.$inferSelect;
+export type InsertFile = typeof files.$inferInsert;
+export const files = pgTable('file', {
   id: serial('id').primaryKey(),
   userId: text('user_id')
     .notNull()

@@ -1,29 +1,45 @@
 'use server';
 
+import { db } from '@/modules/database/db';
+import { user } from '@/modules/database/schema/user';
+import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
+import { fail, type Result } from '@/shared/lib/result';
 import { verify } from 'argon2';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
-import { db } from '@/modules/database/db';
-import { userTable } from '@/modules/database/schema/user';
-import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
-import { fail, type Result } from '@/shared/lib/result';
 import { createSession, generateSessionToken } from '../services/auth';
 import { setSessionTokenCookie } from '../services/next';
 
-export async function loginMutation(_: any, formData: FormData): Promise<Result> {
+export async function loginMutation(
+  _: any,
+  formData: FormData
+): Promise<Result> {
   const username = formData.get('username');
 
-  if (typeof username !== 'string' || username.length < 3 || username.length > 31 || !/^[a-z0-9_-]+$/.test(username)) {
+  if (
+    typeof username !== 'string' ||
+    username.length < 3 ||
+    username.length > 31 ||
+    !/^[a-z0-9_-]+$/.test(username)
+  ) {
     return fail('Nome de usuário inválido');
   }
 
   const password = formData.get('password');
 
-  if (typeof password !== 'string' || password.length < 6 || password.length > 255) {
+  if (
+    typeof password !== 'string' ||
+    password.length < 6 ||
+    password.length > 255
+  ) {
     return fail('Senha inválida');
   }
 
-  const existingUser = await db.select().from(userTable).where(eq(userTable.username, username)).get();
+  const existingUser = await db
+    .select()
+    .from(user)
+    .where(eq(user.username, username))
+    .get();
 
   if (!existingUser) {
     return fail('Nome de usuário ou senha incorretos');

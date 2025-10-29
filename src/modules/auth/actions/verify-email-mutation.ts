@@ -1,16 +1,22 @@
 'use server';
 
-import { eq } from 'drizzle-orm';
 import { db } from '@/modules/database/db';
-import { userTable } from '@/modules/database/schema/user';
+import { user } from '@/modules/database/schema/user';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok } from '@/shared/lib/result';
-import { createSession, generateSessionToken, invalidateAllSessions } from '../services/auth';
+import { eq } from 'drizzle-orm';
+import {
+  createSession,
+  generateSessionToken,
+  invalidateAllSessions,
+} from '../services/auth';
 import { validateToken } from '../services/email-verification-service';
 
 export async function verifyEmailMutation(token: string) {
-  const userId = await validateToken(token).catch(error => {
-    log.error('Erro ao tentar validar token de verificação de e-mail', { error });
+  const userId = await validateToken(token).catch((error) => {
+    log.error('Erro ao tentar validar token de verificação de e-mail', {
+      error,
+    });
     return null;
   });
 
@@ -21,9 +27,9 @@ export async function verifyEmailMutation(token: string) {
   try {
     await invalidateAllSessions(userId);
     const updatedUser = await db
-      .update(userTable)
+      .update(user)
       .set({ verifiedAt: new Date() })
-      .where(eq(userTable.id, userId))
+      .where(eq(user.id, userId))
       .execute();
     log.info('Conta verificada', { userId, updatedUser });
     const token = generateSessionToken();

@@ -1,25 +1,39 @@
 'use server';
 
-import { and, eq } from 'drizzle-orm';
 import { db } from '@/modules/database/db';
-import { userFollowerTable } from '@/modules/database/schema/user-follower';
+import { userFollowers } from '@/modules/database/schema/user-follower';
 import { log } from '@/modules/logging/lib/pino';
 import { isFail, type Ok, ok, wrapAsyncInResult } from '@/shared/lib/result';
+import { and, eq } from 'drizzle-orm';
 
-export async function currentUserIsFollowingQuery(userId: string, followerId?: string): Promise<Ok<boolean>> {
+export async function currentUserIsFollowingQuery(
+  userId: string,
+  followerId?: string
+): Promise<Ok<boolean>> {
   if (!followerId) return ok(false);
 
   const isAlreadyFollowing = await wrapAsyncInResult(
     db
-      .select({ id: userFollowerTable.userId })
-      .from(userFollowerTable)
-      .where(and(eq(userFollowerTable.userId, userId), eq(userFollowerTable.followerId, followerId)))
-      .get(),
+      .select({ id: userFollowers.userId })
+      .from(userFollowers)
+      .where(
+        and(
+          eq(userFollowers.userId, userId),
+          eq(userFollowers.followerId, followerId)
+        )
+      )
+      .get()
   );
 
   if (isFail(isAlreadyFollowing)) {
-    log.error('Erro ao buscar se usuário já está seguindo', isAlreadyFollowing.fail);
+    log.error(
+      'Erro ao buscar se usuário já está seguindo',
+      isAlreadyFollowing.fail
+    );
   }
 
-  return ok(isAlreadyFollowing.type === 'ok' && typeof isAlreadyFollowing.value !== 'undefined');
+  return ok(
+    isAlreadyFollowing.type === 'ok' &&
+      typeof isAlreadyFollowing.value !== 'undefined'
+  );
 }

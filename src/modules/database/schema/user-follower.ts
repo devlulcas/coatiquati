@@ -2,7 +2,7 @@ import { pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 
-export const userFollowerTable = pgTable(
+export const userFollowers = pgTable(
   'user_follower',
   {
     userId: text('user_id')

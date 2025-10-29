@@ -1,14 +1,20 @@
-import type { CategoryTable, NewCategoryTable } from '@/modules/database/schema/category';
-import type { NewTrailTable, TrailTable } from '@/modules/database/schema/trail';
+import type {
+  InsertCategory,
+  SelectCategory,
+} from '@/modules/database/schema/category';
+import type {
+  NewTrailTable,
+  TrailTable,
+} from '@/modules/database/schema/trail';
 import type { Creatable, Updatable } from '@/modules/database/types/utils';
 import type { Topic } from '@/modules/topic/types/topic';
 import type { Contributor } from '@/modules/user/types/user';
 
-type Category = Omit<CategoryTable, 'authorId'>;
+type Category = Omit<SelectCategory, 'authorId'>;
 
-type NewCategory = Creatable<NewCategoryTable>;
+type NewCategory = Creatable<InsertCategory>;
 
-type UpdateCategory = Updatable<NewCategoryTable>;
+type UpdateCategory = Updatable<InsertCategory>;
 
 export type Trail = Omit<TrailTable, 'authorId' | 'category'> & {
   author: Contributor;
