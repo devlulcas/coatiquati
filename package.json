@@ -17,7 +17,7 @@
     "db:dev-clean-setup-up": "pnpm db:destroy",
     "db:dev-clean-setup-init": "pnpm db:push && pnpm db:seed",
     "db:dev-show": "pnpm drizzle-kit studio",
-    "knip": "knip --fix --format"
+    "knip": "knip --fix --allow-remove-files --format"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.779.0",
@@ -94,20 +94,14 @@
     "@types/node": "22.13.14",
     "@types/react": "19.0.10",
     "@types/react-dom": "19.0.4",
-    "@typescript-eslint/eslint-plugin": "^8.29.0",
-    "@typescript-eslint/parser": "^8.29.0",
     "autoprefixer": "10.4.21",
     "dotenv": "^16.4.7",
     "drizzle-kit": "^0.30.6",
-    "eslint": "9.23.0",
     "knip": "^5.66.4",
     "pino-pretty": "^13.0.0",
     "postcss": "8.4.41",
-    "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "3.4.10",
     "tailwindcss-animate": "^1.0.7",
-    "trash-cli": "^6.0.0",
     "tsx": "^4.19.3",
     "typescript": "5.8.2"
   },
