@@ -21,7 +21,7 @@ export const createPresignedURLCommand: CreatePresignedURLFn = async (
   const key = nanoid(32);
 
   const putObjectCommand = new PutObjectCommand({
-    Bucket: env.S3_BUCKET,
+    Bucket: env.BUCKET,
     Key: key,
     ContentType: fileType,
     ContentLength: fileSize,
@@ -50,7 +50,7 @@ export const deleteFileCommand: DeleteFileByKeyFn = async (key: string) => {
   const deleteObjectResult = await wrapAsyncInResult(
     s3Client.send(
       new DeleteObjectCommand({
-        Bucket: env.S3_BUCKET,
+        Bucket: env.BUCKET,
         Key: key,
       }),
     ),
@@ -66,7 +66,7 @@ export const deleteFileCommand: DeleteFileByKeyFn = async (key: string) => {
 export const headFileCommand: HeadFileByKeyFn = async (key: string) => {
   try {
     const cmd = new HeadObjectCommand({
-      Bucket: env.S3_BUCKET,
+      Bucket: env.BUCKET,
       Key: key,
     });
 
@@ -93,5 +93,5 @@ export const headFileCommand: HeadFileByKeyFn = async (key: string) => {
 };
 
 export function getURL(key: string) {
-  return `https://${env.S3_BUCKET}.s3.amazonaws.com/${key}`;
+  return `https://${env.BUCKET}.s3.amazonaws.com/${key}`;
 }
