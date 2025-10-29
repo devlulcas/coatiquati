@@ -4,7 +4,9 @@ import { validateRequest } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
 import { reportTable, type ReportInsert } from '@/modules/database/schema/report';
 import { log } from '@/modules/logging/lib/pino';
+import { toMilliseconds } from '@/shared/lib/date';
 import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
+import { formatDistanceToNow } from 'date-fns';
 import { desc, eq } from 'drizzle-orm';
 import type { ReportReason } from '../constants/report';
 import { createReportSchema, type CreateReportSchema } from '../schemas/create-report';
@@ -36,24 +38,23 @@ export async function reportUserMutation(params: CreateReportSchema): Promise<Re
       .from(reportTable)
       .where(eq(reportTable.reportedById, user.id))
       .orderBy(desc(reportTable.createdAt))
-      .limit(1)
-      .get(),
+      .limit(1),
   );
 
   if (isFail(lastReportFromUserResult)) {
     return fail('Erro ao buscar reportes do usuário');
   }
 
-  const lastReportFromUser = lastReportFromUserResult.value;
+  const lastReportFromUser = lastReportFromUserResult.value[0];
 
-  const FITTEEN_MINUTES = 900000;
+  const mins = toMilliseconds(15, 'mins');
 
-  const timeSinceLastReport = lastReportFromUser
-    ? Date.now() - lastReportFromUser.createdAt.getTime()
-    : FITTEEN_MINUTES;
+  const timeSinceLastReport = lastReportFromUser ? Date.now() - lastReportFromUser.createdAt.getTime() : mins;
 
-  if (timeSinceLastReport < FITTEEN_MINUTES) {
-    return fail('Aguarde 15 minutos antes de fazer outro reporte');
+  if (timeSinceLastReport < mins) {
+    return fail(
+      `Aguarde ${formatDistanceToNow(lastReportFromUser.createdAt, { addSuffix: true })} antes de fazer outro reporte`,
+    );
   }
 
   // Salva o reporte
