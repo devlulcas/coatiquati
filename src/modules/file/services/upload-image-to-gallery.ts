@@ -1,14 +1,14 @@
 import { isFail, type Result } from '@/shared/lib/result';
 import { fetchPresignedUrl } from './fetch-presigned-url';
 
-export type ImageInput = {
+type ImageInput = {
   file: File;
   height: number;
   width: number;
   alt: string;
 };
 
-export type UploadImageToGalleryResult = {
+type UploadImageToGalleryResult = {
   id: string;
   url: string;
   height: number;

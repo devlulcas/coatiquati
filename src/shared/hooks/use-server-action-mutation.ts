@@ -34,14 +34,14 @@ type ServerActionMutationState<O> =
       serverActionResult: null;
     };
 
-export type ServerActionMutationOptions<I, O> = {
+type ServerActionMutationOptions<I, O> = {
   serverAction: ServerActionFn<I, O>;
   onSuccessfulAction?: ServerActionOnSuccessfulAction<O>;
   onFailedAction?: ServerActionOnFailedAction;
   shouldRefresh?: boolean;
 };
 
-export type ServerActionMutationReturn<O> = ServerActionMutationState<O> & {
+type ServerActionMutationReturn<O> = ServerActionMutationState<O> & {
   mutate: (data: any) => Promise<void>;
   isTransitionStarted: boolean;
 };

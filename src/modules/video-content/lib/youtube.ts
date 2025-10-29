@@ -1,9 +1,8 @@
-export const YOUTUBE_REGEX =
+const YOUTUBE_REGEX =
   /^(https?:\/\/)?(www\.|music\.)?(youtube\.com|youtu\.be|youtube-nocookie\.com)\/(?!channel\/)(?!@)(.+)?$/;
-export const YOUTUBE_REGEX_GLOBAL =
-  /^(https?:\/\/)?(www\.|music\.)?(youtube\.com|youtu\.be)\/(?!channel\/)(?!@)(.+)?$/g;
+const YOUTUBE_REGEX_GLOBAL = /^(https?:\/\/)?(www\.|music\.)?(youtube\.com|youtu\.be)\/(?!channel\/)(?!@)(.+)?$/g;
 
-export const isValidYoutubeUrl = (url: string) => {
+const isValidYoutubeUrl = (url: string) => {
   return url.match(YOUTUBE_REGEX);
 };
 

@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import type { User } from '../types/user';
 
-export const USERS_QK = 'USERS_QK';
+const USERS_QK = 'USERS_QK';
 
 export function useUsersQuery() {
   const { toast } = useToast();

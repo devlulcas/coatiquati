@@ -6,4 +6,4 @@ export const newContentSchema = z.object({
   title: z.string({ required_error: 'O título do conteúdo é obrigatório' }),
 });
 
-export type NewContentSchema = z.infer<typeof newContentSchema>;
+type NewContentSchema = z.infer<typeof newContentSchema>;

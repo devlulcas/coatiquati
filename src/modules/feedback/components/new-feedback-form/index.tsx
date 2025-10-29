@@ -21,7 +21,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { createNewFeedbackMutation } from '../../actions/create-new-feedback-mutation';
 
-export const formSchema = z.object({
+const formSchema = z.object({
   type: z.union([z.literal('bug'), z.literal('feature'), z.literal('improvement')]),
   text: z.any(),
 });

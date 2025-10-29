@@ -5,7 +5,7 @@ import { createTodo, deleteTodo, fetchTodos, updateTodo } from '../lib/fetchers'
 import { addLocalTodo, deleteLocalTodo, getLocalTodos, setLocalTodos, updateLocalTodo } from '../lib/local-storage';
 import type { TodoInput } from '../types/todo';
 
-export const TODOS_QUERY_KEY = 'TODOS_QUERY_KEY';
+const TODOS_QUERY_KEY = 'TODOS_QUERY_KEY';
 
 export function useTodos() {
   const { data: session } = useSession();
@@ -24,7 +24,7 @@ export function useCreateTodo() {
   const { data: session } = useSession();
 
   return useMutation<TodoSelect, Error, TodoInput>({
-    mutationFn: async (todoInput) => {
+    mutationFn: async todoInput => {
       if (session.data) {
         return createTodo(todoInput);
       } else {
@@ -80,7 +80,7 @@ export function useDeleteTodo() {
   const { data: session } = useSession();
 
   return useMutation<void, Error, number>({
-    mutationFn: async (id) => {
+    mutationFn: async id => {
       if (session.data) {
         return deleteTodo(id);
       } else {
@@ -110,8 +110,8 @@ export function useSyncLocalTodos() {
           createTodo({
             text: todo.text,
             completed: todo.completed,
-          })
-        )
+          }),
+        ),
       );
 
       // Clear local todos after successful sync
@@ -121,4 +121,4 @@ export function useSyncLocalTodos() {
       queryClient.invalidateQueries({ queryKey: [TODOS_QUERY_KEY] });
     },
   });
-} 
+}

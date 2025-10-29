@@ -5,9 +5,9 @@ import { createPomodoroSession, fetchPomodoroSessions } from '../lib/fetchers';
 import { addLocalSession, getLocalSessions, setLocalSessions } from '../lib/local-storage';
 import type { PomodoroSessionInput } from '../types/pomodoro';
 
-export const POMODORO_SESSIONS_QUERY_KEY = 'POMODORO_SESSIONS_QUERY_KEY';
+const POMODORO_SESSIONS_QUERY_KEY = 'POMODORO_SESSIONS_QUERY_KEY';
 
-export function usePomodoroSessions() {
+function usePomodoroSessions() {
   const { data: session } = useSession();
 
   return useQuery<PomodoroSession[], Error>({
@@ -22,7 +22,7 @@ export function useCreatePomodoroSession() {
   const { data: session } = useSession();
 
   return useMutation<PomodoroSession, Error, PomodoroSessionInput>({
-    mutationFn: async (sessionInput) => {
+    mutationFn: async sessionInput => {
       if (session.data) {
         return createPomodoroSession(sessionInput);
       } else {
@@ -63,8 +63,8 @@ export function useSyncLocalSessions() {
             type: session.type,
             completed: session.completed,
             deletedAt: session.deletedAt,
-          })
-        )
+          }),
+        ),
       );
 
       // Clear local sessions after successful sync
@@ -74,4 +74,4 @@ export function useSyncLocalSessions() {
       queryClient.invalidateQueries({ queryKey: [POMODORO_SESSIONS_QUERY_KEY] });
     },
   });
-} 
+}

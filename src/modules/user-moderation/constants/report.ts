@@ -1,4 +1,4 @@
-export const REPORT_REASON = {
+const REPORT_REASON = {
   notSafeForWork: 'not_safe_for_work',
   hateSpeech: 'hate_speech',
   harassmentOrBullying: 'harassment_or_bullying',
@@ -34,9 +34,9 @@ export const REPORT_REASON_LABELS: Record<ReportReason, string> = {
   violent_or_graphic_content: 'Conteúdo violento ou gráfico',
 };
 
-export const REPORT_ENTITY_TYPE = ['trail', 'topic', 'content', 'publication'] as const;
-export type ReportEntityType = (typeof REPORT_ENTITY_TYPE)[number];
-export const REPORT_ENTITY_TYPE_LABELS: Record<ReportEntityType, string> = {
+const REPORT_ENTITY_TYPE = ['trail', 'topic', 'content', 'publication'] as const;
+type ReportEntityType = (typeof REPORT_ENTITY_TYPE)[number];
+const REPORT_ENTITY_TYPE_LABELS: Record<ReportEntityType, string> = {
   trail: 'Trilha',
   topic: 'Tópico',
   content: 'Conteúdo',

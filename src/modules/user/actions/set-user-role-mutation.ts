@@ -13,7 +13,7 @@ const setUserRoleUseCaseSchema = z.object({
   role: z.string(),
 });
 
-export type SetUserRoleSchema = z.infer<typeof setUserRoleUseCaseSchema>;
+type SetUserRoleSchema = z.infer<typeof setUserRoleUseCaseSchema>;
 
 export async function setUserRoleMutation(params: SetUserRoleSchema): Promise<Result<string>> {
   const { data: user } = await validateRequest();

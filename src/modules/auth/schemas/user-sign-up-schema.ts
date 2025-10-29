@@ -10,7 +10,7 @@ export const passwordSchema = z
   .min(6, { message: 'A senha deve ter pelo menos 6 caracteres' })
   .max(255, { message: 'A senha deve ter no máximo 255 caracteres' });
 
-export const emailSchema = z.string({ required_error: 'O email é obrigatório' }).email({
+const emailSchema = z.string({ required_error: 'O email é obrigatório' }).email({
   message: 'O email deve ser válido',
 });
 

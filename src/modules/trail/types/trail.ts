@@ -4,11 +4,11 @@ import type { Creatable, Updatable } from '@/modules/database/types/utils';
 import type { Topic } from '@/modules/topic/types/topic';
 import type { Contributor } from '@/modules/user/types/user';
 
-export type Category = Omit<CategoryTable, 'authorId'>;
+type Category = Omit<CategoryTable, 'authorId'>;
 
-export type NewCategory = Creatable<NewCategoryTable>;
+type NewCategory = Creatable<NewCategoryTable>;
 
-export type UpdateCategory = Updatable<NewCategoryTable>;
+type UpdateCategory = Updatable<NewCategoryTable>;
 
 export type Trail = Omit<TrailTable, 'authorId' | 'category'> & {
   author: Contributor;

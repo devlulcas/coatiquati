@@ -1,21 +1,21 @@
-import type { PomodoroSession } from "@/modules/database/schema/pomodoro-sessions";
-import type { PomodoroSettings } from "@/modules/database/schema/pomodoro-settings";
+import type { PomodoroSession } from '@/modules/database/schema/pomodoro-sessions';
+import type { PomodoroSettings } from '@/modules/database/schema/pomodoro-settings';
 
 export type PomodoroSettingsInput = Omit<PomodoroSettings, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;
 export type PomodoroSessionInput = Omit<PomodoroSession, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;
 
 export type PomodoroTimerType = 'pomodoro' | 'short_break' | 'long_break';
 
-export type PomodoroSessionState = 'idle' | 'running' | 'paused' | 'completed'
+type PomodoroSessionState = 'idle' | 'running' | 'paused' | 'completed';
 
 export type PomodoroTimerState = {
   previousType: PomodoroTimerType;
   type: PomodoroTimerType;
   timeRemaining: number;
   state: 'idle' | 'running' | 'paused' | 'completed';
-}
+};
 
-export type PomodoroStats = {
+type PomodoroStats = {
   totalPomodoros: number;
   totalShortBreaks: number;
   totalLongBreaks: number;
@@ -23,7 +23,7 @@ export type PomodoroStats = {
   totalBreakTime: number; // in minutes
   streak: number;
   lastCompletedDate: string | null;
-}
+};
 
 export const pomodoroSessionStateLabels: Record<PomodoroSessionState, string> = {
   idle: 'Iniciar',
@@ -32,7 +32,7 @@ export const pomodoroSessionStateLabels: Record<PomodoroSessionState, string> = 
   completed: 'Completado',
 };
 
-export const pomodoroTimerTypeLabels: Record<PomodoroTimerType, string> = {
+const pomodoroTimerTypeLabels: Record<PomodoroTimerType, string> = {
   pomodoro: 'Pomodoro',
   short_break: 'Pausa curta',
   long_break: 'Pausa longa',

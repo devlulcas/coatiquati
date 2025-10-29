@@ -3,7 +3,7 @@ export type Ok<T> = {
   value: T;
 };
 
-export type Fail = {
+type Fail = {
   type: 'fail';
   fail: string;
 };

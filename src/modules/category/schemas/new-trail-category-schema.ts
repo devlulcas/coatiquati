@@ -8,4 +8,4 @@ export const newTrailCategorySchema = z.object({
   authorId: z.string({ required_error: 'Autor da categoria é obrigatório.' }),
 });
 
-export type NewTrailCategorySchema = z.infer<typeof newTrailCategorySchema>;
+type NewTrailCategorySchema = z.infer<typeof newTrailCategorySchema>;

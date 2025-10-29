@@ -4,7 +4,7 @@ export const isAdmin = (role: string | null | undefined): role is Role => {
   return role === roles.ADMIN;
 };
 
-export const isUser = (role: string | null | undefined) => {
+const isUser = (role: string | null | undefined) => {
   return role === roles.USER;
 };
 

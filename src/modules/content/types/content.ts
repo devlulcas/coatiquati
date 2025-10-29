@@ -3,7 +3,7 @@ import type { Creatable, Updatable } from '@/modules/database/types/utils';
 import type { Contributor } from '@/modules/user/types/user';
 import type { ImageContentJSON, RichTextContentJSON, VideoContentJSON } from './content-json-field';
 
-export type RawBaseContent = ContentSelect;
+type RawBaseContent = ContentSelect;
 
 export type BaseContent = Omit<ContentSelect, 'authorId' | 'contentType' | 'topicId'> & {
   author: Contributor;
@@ -26,7 +26,7 @@ export type VideoContent = BaseContent & {
 };
 
 export type Content = ImageContent | RichTextContent | VideoContent;
-export type NewContent = Creatable<Content>;
-export type UpdateContent = Omit<Updatable<Content>, 'author' | 'contentType'> & {
+type NewContent = Creatable<Content>;
+type UpdateContent = Omit<Updatable<Content>, 'author' | 'contentType'> & {
   contributorId: Content['author']['id'];
 };

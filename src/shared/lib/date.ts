@@ -29,11 +29,11 @@ const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
   timeStyle: 'medium',
 });
 
-export function formatDateTime(date: Date | number, _ = 'short-date-medium-time') {
+function formatDateTime(date: Date | number, _ = 'short-date-medium-time') {
   return dateFormatter.format(date);
 }
 
-export const toDateInputValue = (date: Date, type: 'date' | 'datetime-local') => {
+const toDateInputValue = (date: Date, type: 'date' | 'datetime-local') => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
@@ -48,14 +48,14 @@ export const toDateInputValue = (date: Date, type: 'date' | 'datetime-local') =>
   return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
-export const minInputDate = (minDate?: string, minDays = 0) => {
+const minInputDate = (minDate?: string, minDays = 0) => {
   if (!minDate) return toDateInputValue(new Date(), 'datetime-local');
   const minDateAsDate = new Date(minDate);
 
   return toDateInputValue(addDays(minDateAsDate, minDays), 'datetime-local');
 };
 
-export function toRelativeDate(date: Date, prefix: { future: string; past: string } = { future: 'em', past: 'há' }) {
+function toRelativeDate(date: Date, prefix: { future: string; past: string } = { future: 'em', past: 'há' }) {
   const now = new Date();
 
   const diffYears = Math.abs(differenceInCalendarYears(now, date));

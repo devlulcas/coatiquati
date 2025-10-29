@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import type { User } from '../types/user';
 
-export const CURRENT_USER_DATA_QUERY_KEY = 'CURRENT_USER_DATA_QUERY_KEY';
+const CURRENT_USER_DATA_QUERY_KEY = 'CURRENT_USER_DATA_QUERY_KEY';
 
 async function fetchCurrentUser(): Promise<unknown> {
   try {

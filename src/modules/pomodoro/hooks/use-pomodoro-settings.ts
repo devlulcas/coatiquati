@@ -6,11 +6,11 @@ import { fetchPomodoroSettings, updatePomodoroSettings } from '../lib/fetchers';
 import { DEFAULT_POMODORO_CONFIG, getLocalSettings, setLocalSettings } from '../lib/local-storage';
 import type { PomodoroSettingsInput } from '../types/pomodoro';
 
-export const POMODORO_SETTINGS_QUERY_KEY = 'POMODORO_SETTINGS_QUERY_KEY';
+const POMODORO_SETTINGS_QUERY_KEY = 'POMODORO_SETTINGS_QUERY_KEY';
 
 type PomodoroSettingsOptions = {
   onSuccess?: (data: PomodoroSettings) => void;
-}
+};
 
 export function usePomodoroSettings({ onSuccess }: PomodoroSettingsOptions = {}) {
   const { data: session } = useSession();
@@ -35,7 +35,7 @@ export function useUpdatePomodoroSettings() {
   const { data: session } = useSession();
 
   return useMutation<PomodoroSettings, Error, PomodoroSettingsInput>({
-    mutationFn: async (settings) => {
+    mutationFn: async settings => {
       if (session.data) {
         return updatePomodoroSettings(settings);
       } else {
@@ -50,4 +50,4 @@ export function useUpdatePomodoroSettings() {
       queryClient.invalidateQueries({ queryKey: [POMODORO_SETTINGS_QUERY_KEY] });
     },
   });
-} 
+}
