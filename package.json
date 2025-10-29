@@ -23,7 +23,7 @@
     "db:dev-clean-setup-up": "pnpm db:destroy",
     "db:dev-clean-setup-init": "pnpm db:push && pnpm db:seed",
     "db:dev-show": "pnpm drizzle-kit studio",
-    "db:docs": "pnpm tsx ./docs/dbml.ts && npx @softwaretechnik/dbml-renderer -i ./docs/schema.dbml -o ./docs/schema.svg"
+    "knip": "knip --fix --format"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.779.0",
@@ -113,6 +113,7 @@
     "eslint-config-next": "15.2.4",
     "eslint-config-prettier": "^10.1.1",
     "eslint-config-react": "^1.1.7",
+    "knip": "^5.66.4",
     "pino-pretty": "^13.0.0",
     "postcss": "8.4.41",
     "prettier": "^3.5.3",
