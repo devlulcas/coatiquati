@@ -1,8 +1,4 @@
-import {
-  type InferInsertModel,
-  type InferSelectModel,
-  relations,
-} from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import { integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import {
   type ContentStatus,
@@ -14,8 +10,8 @@ import { topicContributionTable } from './contribution';
 import { trailTable } from './trail';
 import { userTable } from './user';
 
-export type TopicTable = InferSelectModel<typeof topicTable>;
-export type NewTopicTable = InferInsertModel<typeof topicTable>;
+export type TopicTable = typeof topicTable.$inferSelect;
+export type NewTopicTable = typeof topicTable.$inferInsert;
 
 export const topicTable = pgTable('topic', {
   id: serial('id').primaryKey().notNull(),

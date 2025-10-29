@@ -1,14 +1,10 @@
-import {
-  type InferInsertModel,
-  type InferSelectModel,
-  relations,
-} from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import { pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { userTable } from './user';
 
-export type FeedbackSelect = InferSelectModel<typeof feedbackTable>;
-export type FeedbackInsert = InferInsertModel<typeof feedbackTable>;
+export type FeedbackSelect = typeof feedbackTable.$inferSelect;
+export type FeedbackInsert = typeof feedbackTable.$inferInsert;
 
 export const feedbackTable = pgTable('feedback', {
   id: serial('id').primaryKey(),

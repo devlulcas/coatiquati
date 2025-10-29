@@ -1,10 +1,9 @@
-import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { boolean, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { userTable } from './user';
 
-export type TodoSelect = InferSelectModel<typeof todos>;
-export type TodoInsert = InferInsertModel<typeof todos>;
+export type TodoSelect = typeof todos.$inferSelect;
+export type TodoInsert = typeof todos.$inferInsert;
 
 export const todos = pgTable('todos', {
   id: serial('id').primaryKey(),

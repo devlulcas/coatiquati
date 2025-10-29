@@ -1,4 +1,3 @@
-import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import {
   boolean,
   foreignKey,
@@ -12,8 +11,8 @@ import { tableTimestampColumns } from '../lib/helpers';
 import { contentTable } from './content';
 import { userTable } from './user';
 
-export type Comment = InferSelectModel<typeof commentTable>;
-export type NewComment = InferInsertModel<typeof commentTable>;
+export type Comment = typeof commentTable.$inferSelect;
+export type NewComment = typeof commentTable.$inferInsert;
 
 export const commentTable = pgTable(
   'comment',
@@ -52,8 +51,8 @@ export const commentTable = pgTable(
   })
 );
 
-export type CommentVote = InferSelectModel<typeof commentVoteTable>;
-export type NewCommentVote = InferInsertModel<typeof commentVoteTable>;
+export type CommentVote = typeof commentVoteTable.$inferSelect;
+export type NewCommentVote = typeof commentVoteTable.$inferInsert;
 
 export const commentVoteTable = pgTable(
   'comment_vote',

@@ -1,8 +1,4 @@
-import {
-  type InferInsertModel,
-  type InferSelectModel,
-  relations,
-} from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import {
   boolean,
   integer,
@@ -20,8 +16,8 @@ import { contentContributionTable } from './contribution';
 import { topicTable } from './topic';
 import { userTable } from './user';
 
-export type ContentSelect = InferSelectModel<typeof contentTable>;
-export type ContentInsert = InferInsertModel<typeof contentTable>;
+export type ContentSelect = typeof contentTable.$inferSelect;
+export type ContentInsert = typeof contentTable.$inferInsert;
 
 export const contentTable = pgTable('content', {
   id: serial('id').primaryKey().notNull(),

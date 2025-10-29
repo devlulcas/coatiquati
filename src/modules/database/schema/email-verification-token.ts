@@ -1,18 +1,12 @@
-import {
-  type InferInsertModel,
-  type InferSelectModel,
-  relations,
-} from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { userTable } from './user';
 
-export type EmailVerificationToken = InferSelectModel<
-  typeof emailVerificationTokenTable
->;
-export type NewEmailVerificationToken = InferInsertModel<
-  typeof emailVerificationTokenTable
->;
+export type EmailVerificationToken =
+  typeof emailVerificationTokenTable.$inferSelect;
+export type NewEmailVerificationToken =
+  typeof emailVerificationTokenTable.$inferInsert;
 
 export const emailVerificationTokenTable = pgTable(
   'user_email_verification_token',

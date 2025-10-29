@@ -1,14 +1,10 @@
-import {
-  type InferInsertModel,
-  type InferSelectModel,
-  relations,
-} from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import { boolean, integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { userTable } from './user';
 
-export type PomodoroSettings = InferSelectModel<typeof pomodoroSettings>;
-export type PomodoroSettingsInsert = InferInsertModel<typeof pomodoroSettings>;
+export type PomodoroSettings = typeof pomodoroSettings.$inferSelect;
+export type PomodoroSettingsInsert = typeof pomodoroSettings.$inferInsert;
 
 export const pomodoroSettings = pgTable('pomodoro_settings', {
   id: serial('id').primaryKey(),

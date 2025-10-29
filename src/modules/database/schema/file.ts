@@ -1,14 +1,10 @@
-import {
-  type InferInsertModel,
-  type InferSelectModel,
-  relations,
-} from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { userTable } from './user';
 
-export type FileSelect = InferSelectModel<typeof fileTable>;
-export type FileInsert = InferInsertModel<typeof fileTable>;
+export type FileSelect = typeof fileTable.$inferSelect;
+export type FileInsert = typeof fileTable.$inferInsert;
 
 export const fileTable = pgTable('file', {
   userId: text('user_id')

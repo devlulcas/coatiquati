@@ -1,15 +1,11 @@
-import {
-  type InferInsertModel,
-  type InferSelectModel,
-  relations,
-} from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import { integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import type { ReportReason } from '../../../modules/user-moderation/constants/report';
 import { tableTimestampColumns } from '../lib/helpers';
 import { userTable } from './user';
 
-export type ReportSelect = InferSelectModel<typeof reportTable>;
-export type ReportInsert = InferInsertModel<typeof reportTable>;
+export type ReportSelect = typeof reportTable.$inferSelect;
+export type ReportInsert = typeof reportTable.$inferInsert;
 
 export const reportTable = pgTable('report', {
   id: serial('id').primaryKey(),

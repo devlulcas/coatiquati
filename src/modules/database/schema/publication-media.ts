@@ -1,18 +1,10 @@
-import {
-  type InferInsertModel,
-  type InferSelectModel,
-  relations,
-} from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import { integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { publicationTable } from './publication';
 
-export type PublicationMediaSelect = InferSelectModel<
-  typeof publicationMediaTable
->;
-export type PublicationMediaInsert = InferInsertModel<
-  typeof publicationMediaTable
->;
+export type PublicationMediaSelect = typeof publicationMediaTable.$inferSelect;
+export type PublicationMediaInsert = typeof publicationMediaTable.$inferInsert;
 
 export const publicationMediaTable = pgTable('publication_media', {
   id: serial('id').primaryKey(),

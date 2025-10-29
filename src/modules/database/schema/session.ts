@@ -1,8 +1,7 @@
-import type { InferSelectModel } from 'drizzle-orm';
 import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { userTable } from './user';
 
-export type SessionSelect = InferSelectModel<typeof sessionTable>;
+export type SessionSelect = typeof sessionTable.$inferSelect;
 
 export const sessionTable = pgTable('user_session', {
   id: text('id').primaryKey(),

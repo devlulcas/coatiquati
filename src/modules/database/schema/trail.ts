@@ -1,8 +1,4 @@
-import {
-  type InferInsertModel,
-  type InferSelectModel,
-  relations,
-} from 'drizzle-orm';
+import { relations } from 'drizzle-orm';
 import { pgTable, serial, text } from 'drizzle-orm/pg-core';
 import {
   type ContentStatus,
@@ -15,8 +11,8 @@ import { topicTable } from './topic';
 import { trailSubscriptionTable } from './trail-subscription';
 import { userTable } from './user';
 
-export type TrailTable = InferSelectModel<typeof trailTable>;
-export type NewTrailTable = InferInsertModel<typeof trailTable>;
+export type TrailTable = typeof trailTable.$inferSelect;
+export type NewTrailTable = typeof trailTable.$inferInsert;
 
 export const trailTable = pgTable('trail', {
   id: serial('id').primaryKey().notNull(),
