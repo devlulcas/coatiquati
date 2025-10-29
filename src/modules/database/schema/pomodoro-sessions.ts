@@ -1,31 +1,19 @@
-import { relations } from 'drizzle-orm';
 import { boolean, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
-import { userTable } from './user';
+import { user } from './auth';
 
-export type PomodoroSession = typeof pomodoroSessions.$inferSelect;
-export type PomodoroSessionInsert = typeof pomodoroSessions.$inferInsert;
-
-export const pomodoroSessions = pgTable('pomodoro_sessions', {
+export type SelectPomodoroSession = typeof pomodoroSession.$inferSelect;
+export type InsertPomodoroSession = typeof pomodoroSession.$inferInsert;
+export const pomodoroSession = pgTable('pomodoro_sessions', {
   id: serial('id').primaryKey(),
   userId: text('user_id')
     .notNull()
-    .references(() => userTable.id),
-  startTime: timestamp('start_time').notNull(),
-  endTime: timestamp('end_time').notNull(),
+    .references(() => user.id),
+  startTime: timestamp('start_time', { mode: 'date' }).notNull(),
+  endTime: timestamp('end_time', { mode: 'date' }).notNull(),
   type: text('type')
     .notNull()
     .$type<'pomodoro' | 'short_break' | 'long_break'>(),
   completed: boolean('completed').notNull().default(false),
   ...tableTimestampColumns,
 });
-
-export const pomodoroSessionsRelations = relations(
-  pomodoroSessions,
-  ({ one }) => ({
-    user: one(userTable, {
-      fields: [pomodoroSessions.userId],
-      references: [userTable.id],
-    }),
-  })
-);

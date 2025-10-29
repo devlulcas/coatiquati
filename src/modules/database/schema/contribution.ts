@@ -1,51 +1,50 @@
 import { integer, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
-import { contentTable } from './content';
-import { topicTable } from './topic';
-import { trailTable } from './trail';
-import { userTable } from './user';
+import { user } from './auth';
+import { content } from './content';
+import { topic } from './topic';
+import { trail } from './trail';
 
-// Contribuições em trilhas
-export const trailContributionTable = pgTable(
+export const trailContribution = pgTable(
   'trail_contribution',
   {
     trailId: integer('trail_id')
-      .references(() => trailTable.id)
+      .references(() => trail.id)
       .notNull(),
     userId: text('user_id')
-      .references(() => userTable.id)
+      .references(() => user.id)
       .notNull(),
     ...tableTimestampColumns,
   },
-  (table) => ({ pk: primaryKey({ columns: [table.userId, table.trailId] }) })
+  (table) => [primaryKey({ columns: [table.userId, table.trailId] })]
 );
 
 // Contribuições em tópicos
-export const topicContributionTable = pgTable(
+export const topicContribution = pgTable(
   'topic_contribution',
   {
     topicId: integer('topic_id')
-      .references(() => topicTable.id)
+      .references(() => topic.id)
       .notNull(),
     userId: text('user_id')
-      .references(() => userTable.id)
+      .references(() => user.id)
       .notNull(),
     ...tableTimestampColumns,
   },
-  (table) => ({ pk: primaryKey({ columns: [table.userId, table.topicId] }) })
+  (table) => [primaryKey({ columns: [table.userId, table.topicId] })]
 );
 
 // Contribuições em conteúdos (Usuários comuns podem contribuir com conteúdos)
-export const contentContributionTable = pgTable(
+export const contentContribution = pgTable(
   'content_contribution',
   {
     contentId: integer('content_id')
-      .references(() => contentTable.id)
+      .references(() => content.id)
       .notNull(),
     userId: text('user_id')
-      .references(() => userTable.id)
+      .references(() => user.id)
       .notNull(),
     ...tableTimestampColumns,
   },
-  (table) => ({ pk: primaryKey({ columns: [table.userId, table.contentId] }) })
+  (table) => [primaryKey({ columns: [table.userId, table.contentId] })]
 );

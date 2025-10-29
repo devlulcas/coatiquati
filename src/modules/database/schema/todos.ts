@@ -1,15 +1,14 @@
 import { boolean, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
-import { userTable } from './user';
+import { user } from './auth';
 
-export type TodoSelect = typeof todos.$inferSelect;
-export type TodoInsert = typeof todos.$inferInsert;
-
-export const todos = pgTable('todos', {
+export type SelectTodo = typeof todo.$inferSelect;
+export type InsertTodo = typeof todo.$inferInsert;
+export const todo = pgTable('todos', {
   id: serial('id').primaryKey(),
   userId: text('user_id')
     .notNull()
-    .references(() => userTable.id),
+    .references(() => user.id),
   text: text('text').notNull(),
   completed: boolean('completed').notNull().default(false),
   ...tableTimestampColumns,

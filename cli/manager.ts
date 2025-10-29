@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { type Role, roles } from '../src/modules/auth/constants/roles';
 import { schema } from '../src/modules/database/schema';
-import { userTable } from '../src/modules/database/schema/user';
+import { user } from '../src/modules/database/schema/user';
 
 config({ path: '.env.local' });
 
@@ -49,27 +49,31 @@ async function registerUser(user: User, role: Role) {
     deletedAt: null,
   };
 
-  return db.insert(userTable).values(data).onConflictDoUpdate({
-    target: userTable.email,
+  return db.insert(user).values(data).onConflictDoUpdate({
+    target: user.email,
     set: data,
   });
 }
 
 async function updateUser(username: string, role: Role) {
-  return db.update(userTable).set({ role: role }).where(eq(userTable.username, username)).run();
+  return db
+    .update(user)
+    .set({ role: role })
+    .where(eq(user.username, username))
+    .run();
 }
 
 async function findUserByUsername(username: string) {
-  return db.select().from(userTable).where(eq(userTable.username, username)).get();
+  return db.select().from(user).where(eq(user.username, username)).get();
 }
 
 async function findUserByEmail(email: string) {
-  return db.select().from(userTable).where(eq(userTable.email, email)).get();
+  return db.select().from(user).where(eq(user.email, email)).get();
 }
 
 async function withLoading<T>(
   promise: Promise<T>,
-  opts: { start: string; stop: string; error: string; exit: boolean },
+  opts: { start: string; stop: string; error: string; exit: boolean }
 ) {
   const s = p.spinner();
   try {
@@ -91,7 +95,7 @@ async function withLoading<T>(
 async function promptUserEmail() {
   const email = await p.text({
     message: 'Digite o email que deseja buscar ou criar:',
-    validate: value => {
+    validate: (value) => {
       if (value.length < 6) {
         return 'Email inválido: muito curto, deve ter no mínimo 6 caracteres';
       }
@@ -117,7 +121,7 @@ async function promptUserEmail() {
 async function promptUsername(): Promise<string> {
   const username = await p.text({
     message: 'Digite o nome de usuário que deseja buscar ou criar:',
-    validate: value => {
+    validate: (value) => {
       if (value.length < 3) {
         return 'Nome de usuário inválido: muito curto, deve ter no mínimo 3 caracteres';
       }
@@ -145,12 +149,17 @@ async function promptUsername(): Promise<string> {
   });
 
   const goBack = () => {
-    p.note(`Nome de usuário ${username} já está em uso. Tente outro.`, 'Conflito de nome de usuário');
+    p.note(
+      `Nome de usuário ${username} já está em uso. Tente outro.`,
+      'Conflito de nome de usuário'
+    );
     return promptUsername() as Promise<string>;
   };
 
   if (usernameAlreadyTaken) {
-    await promptBasicConfirm(`Nome de usuário ${username} já está em uso. Deseja tentar outro?`);
+    await promptBasicConfirm(
+      `Nome de usuário ${username} já está em uso. Deseja tentar outro?`
+    );
     return goBack();
   }
 
@@ -161,7 +170,10 @@ async function promptUserRole() {
   const role = await p.select({
     message: 'Selecione o grau de permissão do usuário:',
     options: [
-      { value: roles.HIGH_PRIVILEGE_ADMIN, label: 'Administrador de alta permissão - Poder ilimitado' },
+      {
+        value: roles.HIGH_PRIVILEGE_ADMIN,
+        label: 'Administrador de alta permissão - Poder ilimitado',
+      },
       { value: roles.ADMIN, label: 'Administrador - Poder limitado' },
       { value: roles.USER, label: 'Usuário comum - Poder mínimo' },
     ],
@@ -178,7 +190,10 @@ async function promptUserRole() {
 async function promptUserPassword() {
   const password = await p.password({
     message: 'Digite a senha do usuário:',
-    validate: value => (value.length < 6 ? 'Senha inválida: muito curta, deve ter no mínimo 6 caracteres' : undefined),
+    validate: (value) =>
+      value.length < 6
+        ? 'Senha inválida: muito curta, deve ter no mínimo 6 caracteres'
+        : undefined,
   });
 
   if (p.isCancel(password)) {
@@ -214,7 +229,7 @@ async function main() {
 
   if (emailAlreadyTaken) {
     const confirm = await promptBasicConfirm(
-      `Usuário encontrado: ${emailAlreadyTaken.username} (${emailAlreadyTaken.email}). Deseja atualizar o usuário?`,
+      `Usuário encontrado: ${emailAlreadyTaken.username} (${emailAlreadyTaken.email}). Deseja atualizar o usuário?`
     );
 
     if (!confirm) {
@@ -237,7 +252,9 @@ async function main() {
   const username = await promptUsername();
   const password = await promptUserPassword();
   const role = await promptUserRole();
-  const confirm = await promptBasicConfirm(`Criar usuário ${username} (${email}) com permissão ${role}?`);
+  const confirm = await promptBasicConfirm(
+    `Criar usuário ${username} (${email}) com permissão ${role}?`
+  );
 
   if (!confirm) {
     outro('Operação cancelada');
@@ -245,7 +262,9 @@ async function main() {
   }
 
   const avatars = ['grape.png', 'mint.png', 'original.png', 'peach.png'];
-  const avatar = `/avatars/${avatars[Math.floor(Math.random() * avatars.length)]}`;
+  const avatar = `/avatars/${
+    avatars[Math.floor(Math.random() * avatars.length)]
+  }`;
 
   await withLoading(registerUser({ username, email, password, avatar }, role), {
     start: 'Criando usuário...',
@@ -257,7 +276,7 @@ async function main() {
   outro(`Usuário ${username} criado com sucesso!`);
 }
 
-main().catch(error => {
+main().catch((error) => {
   outro(`Erro inesperado: ${error.message}`);
   process.exit(1);
 });

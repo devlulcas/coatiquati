@@ -1,23 +1,17 @@
-import { relations } from 'drizzle-orm';
-import { pgTable, text } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
-import { trailTable } from './trail';
-import { userTable } from './user';
+import { user } from './auth';
 
-export type CategoryTable = typeof categoryTable.$inferSelect;
-export type NewCategoryTable = typeof categoryTable.$inferInsert;
-
-export const categoryTable = pgTable('category', {
+export type SelectCategory = typeof category.$inferSelect;
+export type InsertCategory = typeof category.$inferInsert;
+export const category = pgTable('category', {
+  id: serial('id').primaryKey().notNull(),
   name: text('name').primaryKey().notNull().unique(),
   authorId: text('user_id')
     .notNull()
-    .references(() => userTable.id, {
+    .references(() => user.id, {
       onDelete: 'set null',
       onUpdate: 'cascade',
     }),
   ...tableTimestampColumns,
 });
-
-export const categoryTableRelations = relations(categoryTable, ({ many }) => ({
-  trails: many(trailTable),
-}));

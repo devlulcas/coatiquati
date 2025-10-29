@@ -1,39 +1,26 @@
-import { relations } from 'drizzle-orm';
 import { integer, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
-import { trailTable } from './trail';
-import { userTable } from './user';
+import { user } from './auth';
+import { trail } from './trail';
 
-export const trailSubscriptionTable = pgTable(
-  'trail_subscrition',
+export type SelectTrailSubscription = typeof trailSubscription.$inferSelect;
+export type InsertTrailSubscription = typeof trailSubscription.$inferInsert;
+export const trailSubscription = pgTable(
+  'trail_subscription',
   {
     trailId: integer('trail_id')
       .notNull()
-      .references(() => trailTable.id, {
+      .references(() => trail.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
     userId: text('user_id')
       .notNull()
-      .references(() => userTable.id, {
+      .references(() => user.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
     ...tableTimestampColumns,
   },
-  (table) => ({ pk: primaryKey({ columns: [table.trailId, table.userId] }) })
-);
-
-export const trailSubscriptionTableRelations = relations(
-  trailSubscriptionTable,
-  ({ one }) => ({
-    trail: one(trailTable, {
-      fields: [trailSubscriptionTable.trailId],
-      references: [trailTable.id],
-    }),
-    user: one(userTable, {
-      fields: [trailSubscriptionTable.userId],
-      references: [userTable.id],
-    }),
-  })
+  (table) => [primaryKey({ columns: [table.trailId, table.userId] })]
 );

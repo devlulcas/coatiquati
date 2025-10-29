@@ -8,25 +8,24 @@ import {
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
-import { contentTable } from './content';
-import { userTable } from './user';
+import { user } from './auth';
+import { content } from './content';
 
-export type Comment = typeof commentTable.$inferSelect;
-export type NewComment = typeof commentTable.$inferInsert;
-
-export const commentTable = pgTable(
+export type SelectComment = typeof comment.$inferSelect;
+export type InsertComment = typeof comment.$inferInsert;
+export const comment = pgTable(
   'comment',
   {
     id: serial('id').primaryKey().notNull(),
     contentId: integer('content_id')
       .notNull()
-      .references(() => contentTable.id, {
+      .references(() => content.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
     authorId: text('author_id')
       .notNull()
-      .references(() => userTable.id, {
+      .references(() => user.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
@@ -39,34 +38,33 @@ export const commentTable = pgTable(
     isEdited: boolean('is_edited').notNull().default(false),
     ...tableTimestampColumns,
   },
-  (table) => ({
+  (table) => [
     // Chaves estrangeira para si mesmo
-    parentCommentReference: foreignKey({
+    foreignKey({
       columns: [table.parentCommentId],
       foreignColumns: [table.id],
     }),
     // Indices para buscas frequentes
-    contentIdIdx: uniqueIndex('content_id_idx').on(table.contentId),
-    authorIdIdx: uniqueIndex('author_id_idx').on(table.authorId),
-  })
+    uniqueIndex('content_id_idx').on(table.contentId),
+    uniqueIndex('author_id_idx').on(table.authorId),
+  ]
 );
 
-export type CommentVote = typeof commentVoteTable.$inferSelect;
-export type NewCommentVote = typeof commentVoteTable.$inferInsert;
-
-export const commentVoteTable = pgTable(
+export type SelectCommentVote = typeof commentVote.$inferSelect;
+export type InsertCommentVote = typeof commentVote.$inferInsert;
+export const commentVote = pgTable(
   'comment_vote',
   {
     id: serial('id').primaryKey().notNull(),
     commentId: integer('comment_id')
       .notNull()
-      .references(() => commentTable.id, {
+      .references(() => comment.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
     userId: text('user_id')
       .notNull()
-      .references(() => userTable.id, {
+      .references(() => user.id, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
@@ -74,10 +72,7 @@ export const commentVoteTable = pgTable(
     value: integer('value').notNull().default(1),
     ...tableTimestampColumns,
   },
-  (table) => ({
-    userCommentUnique: uniqueIndex('user_comment_unique_idx').on(
-      table.userId,
-      table.commentId
-    ),
-  })
+  (table) => [
+    uniqueIndex('user_comment_unique_idx').on(table.userId, table.commentId),
+  ]
 );

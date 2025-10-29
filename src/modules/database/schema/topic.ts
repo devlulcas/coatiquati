@@ -1,19 +1,15 @@
-import { relations } from 'drizzle-orm';
 import { integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import {
   type ContentStatus,
   contentStatus,
 } from '../../../shared/constants/content-status';
 import { tableTimestampColumns } from '../lib/helpers';
-import { contentTable } from './content';
-import { topicContributionTable } from './contribution';
-import { trailTable } from './trail';
-import { userTable } from './user';
+import { user } from './auth';
+import { trail } from './trail';
 
-export type TopicTable = typeof topicTable.$inferSelect;
-export type NewTopicTable = typeof topicTable.$inferInsert;
-
-export const topicTable = pgTable('topic', {
+export type SelectTopic = typeof topic.$inferSelect;
+export type InsertTopic = typeof topic.$inferInsert;
+export const topic = pgTable('topic', {
   id: serial('id').primaryKey().notNull(),
   title: text('title').notNull(),
   description: text('description').notNull(),
@@ -24,28 +20,15 @@ export const topicTable = pgTable('topic', {
     .notNull(),
   trailId: integer('trail_id')
     .notNull()
-    .references(() => trailTable.id, {
+    .references(() => trail.id, {
       onDelete: 'no action',
       onUpdate: 'cascade',
     }),
   authorId: text('user_id')
     .notNull()
-    .references(() => userTable.id, {
+    .references(() => user.id, {
       onDelete: 'no action',
       onUpdate: 'cascade',
     }),
   ...tableTimestampColumns,
 });
-
-export const topicTableRelations = relations(topicTable, ({ many, one }) => ({
-  trail: one(trailTable, {
-    fields: [topicTable.trailId],
-    references: [trailTable.id],
-  }),
-  author: one(userTable, {
-    fields: [topicTable.authorId],
-    references: [userTable.id],
-  }),
-  contributors: many(topicContributionTable),
-  contents: many(contentTable),
-}));

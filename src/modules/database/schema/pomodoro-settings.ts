@@ -1,16 +1,14 @@
-import { relations } from 'drizzle-orm';
 import { boolean, integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
-import { userTable } from './user';
+import { user } from './auth';
 
-export type PomodoroSettings = typeof pomodoroSettings.$inferSelect;
-export type PomodoroSettingsInsert = typeof pomodoroSettings.$inferInsert;
-
+export type SelectPomodoroSettings = typeof pomodoroSettings.$inferSelect;
+export type InsertPomodoroSettings = typeof pomodoroSettings.$inferInsert;
 export const pomodoroSettings = pgTable('pomodoro_settings', {
   id: serial('id').primaryKey(),
   userId: text('user_id')
     .notNull()
-    .references(() => userTable.id),
+    .references(() => user.id),
   pomodoroDuration: integer('pomodoro_duration')
     .notNull()
     .default(25 * 60), // in seconds
@@ -24,13 +22,3 @@ export const pomodoroSettings = pgTable('pomodoro_settings', {
   autoStartPomodoros: boolean('auto_start_pomodoros').notNull().default(false),
   ...tableTimestampColumns,
 });
-
-export const pomodoroSettingsRelations = relations(
-  pomodoroSettings,
-  ({ one }) => ({
-    user: one(userTable, {
-      fields: [pomodoroSettings.userId],
-      references: [userTable.id],
-    }),
-  })
-);

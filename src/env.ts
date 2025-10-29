@@ -1,3 +1,7 @@
+import { config } from 'dotenv';
+
+config({ path: '.env.local' });
+
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
@@ -8,7 +12,6 @@ export const env = createEnv({
     MAINTENANCE_MODE: zBoolean,
     DATABASE_URL: z.string().min(1),
     MAIL_FROM: z.string().min(1),
-    MAIL_ENV: z.string().min(1),
     MAIL_HOST: z.string().min(1),
     MAIL_PORT: z.string().min(1),
     MAIL_USER: z.string().min(1),
@@ -27,7 +30,6 @@ export const env = createEnv({
     MAINTENANCE_MODE: process.env.MAINTENANCE_MODE,
     DATABASE_URL: process.env.DATABASE_URL,
     MAIL_FROM: process.env.MAIL_FROM,
-    MAIL_ENV: process.env.MAIL_ENV,
     MAIL_HOST: process.env.MAIL_HOST,
     MAIL_PORT: process.env.MAIL_PORT,
     MAIL_USER: process.env.MAIL_USER,

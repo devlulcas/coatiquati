@@ -1,11 +1,13 @@
 import { timestamp } from 'drizzle-orm/pg-core';
 
-const createdAtColumn = timestamp('created_at').notNull().defaultNow();
+const createdAtColumn = timestamp('created_at').defaultNow().notNull();
+
 const updatedAtColumn = timestamp('updated_at')
-  .notNull()
   .defaultNow()
-  .$onUpdate(() => new Date());
-const deletedAtColumn = timestamp('deleted_at');
+  .$onUpdate(() => /* @__PURE__ */ new Date())
+  .notNull();
+
+const deletedAtColumn = timestamp('created_at');
 
 export const tableTimestampColumns = {
   createdAt: createdAtColumn,

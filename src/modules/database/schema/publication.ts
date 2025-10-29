@@ -1,31 +1,18 @@
-import { relations } from 'drizzle-orm';
 import { pgTable, serial, text } from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
-import { publicationMediaTable } from './publication-media';
-import { userTable } from './user';
+import { user } from './auth';
 
-export type PublicationSelect = typeof publicationTable.$inferSelect;
-export type PublicationInsert = typeof publicationTable.$inferInsert;
+export type SelectPublication = typeof publication.$inferSelect;
+export type InsertPublication = typeof publication.$inferInsert;
 
-export const publicationTable = pgTable('publication', {
+export const publication = pgTable('publication', {
   id: serial('id').primaryKey(),
   content: text('content').notNull(),
-  authorId: text('userId')
+  authorId: text('author_id')
     .notNull()
-    .references(() => userTable.id, {
+    .references(() => user.id, {
       onDelete: 'no action',
       onUpdate: 'cascade',
     }),
   ...tableTimestampColumns,
 });
-
-export const publicationTableRelations = relations(
-  publicationTable,
-  ({ one, many }) => ({
-    author: one(userTable, {
-      fields: [publicationTable.authorId],
-      references: [userTable.id],
-    }),
-    medias: many(publicationMediaTable),
-  })
-);

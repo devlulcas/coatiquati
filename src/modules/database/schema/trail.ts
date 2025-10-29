@@ -1,21 +1,16 @@
-import { relations } from 'drizzle-orm';
-import { pgTable, serial, text } from 'drizzle-orm/pg-core';
+import { integer, pgTable, serial, text } from 'drizzle-orm/pg-core';
 import {
   type ContentStatus,
   contentStatus,
 } from '../../../shared/constants/content-status';
 import { tableTimestampColumns } from '../lib/helpers';
-import { categoryTable } from './category';
-import { trailContributionTable } from './contribution';
-import { topicTable } from './topic';
-import { trailSubscriptionTable } from './trail-subscription';
-import { userTable } from './user';
+import { user } from './auth';
+import { category } from './category';
 
-export type TrailTable = typeof trailTable.$inferSelect;
-export type NewTrailTable = typeof trailTable.$inferInsert;
-
-export const trailTable = pgTable('trail', {
-  id: serial('id').primaryKey().notNull(),
+export type SelectTrail = typeof trail.$inferSelect;
+export type InsertTrail = typeof trail.$inferInsert;
+export const trail = pgTable('trail', {
+  id: serial('id').primaryKey(),
   title: text('title').notNull(),
   description: text('description').notNull(),
   thumbnail: text('thumbnail').notNull(),
@@ -23,29 +18,15 @@ export const trailTable = pgTable('trail', {
     .$type<ContentStatus>()
     .default(contentStatus.DRAFT)
     .notNull(),
-  category: text('category_id').references(() => categoryTable.name, {
+  category: integer('category_id').references(() => category.id, {
     onDelete: 'set null',
     onUpdate: 'cascade',
   }),
   authorId: text('user_id')
     .notNull()
-    .references(() => userTable.id, {
+    .references(() => user.id, {
       onDelete: 'no action',
       onUpdate: 'cascade',
     }),
   ...tableTimestampColumns,
 });
-
-export const trailTableRelations = relations(trailTable, ({ many, one }) => ({
-  category: one(categoryTable, {
-    fields: [trailTable.category],
-    references: [categoryTable.name],
-  }),
-  subscriptions: many(trailSubscriptionTable),
-  topics: many(topicTable),
-  contributors: many(trailContributionTable),
-  author: one(userTable, {
-    fields: [trailTable.authorId],
-    references: [userTable.id],
-  }),
-}));
