@@ -12,10 +12,7 @@ export type VideoContentJSON = {
   description: string;
 };
 
-export type ContentJSON = ImageContentJSON | RichTextContentJSON | VideoContentJSON;
-
-export enum ContentType {
-  Image = 'image',
-  RichText = 'richText',
-  Video = 'video',
-}
+export type ContentJSON =
+  | ImageContentJSON
+  | RichTextContentJSON
+  | VideoContentJSON;

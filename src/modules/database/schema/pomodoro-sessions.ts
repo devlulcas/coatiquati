@@ -1,19 +1,39 @@
-import { boolean, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import * as t from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 
 export type SelectPomodoroSession = typeof pomodoroSessions.$inferSelect;
 export type InsertPomodoroSession = typeof pomodoroSessions.$inferInsert;
-export const pomodoroSessions = pgTable('pomodoro_session', {
-  id: serial('id').primaryKey(),
-  userId: text('user_id')
+
+export enum PomodoroSessionType {
+  POMODORO = 1,
+  SHORT_BREAK = 2,
+  LONG_BREAK = 3,
+}
+
+export const pomodoroSessions = t.pgTable('pomodoro_session', {
+  id: t.serial('id').primaryKey(),
+  userId: t
+    .text('user_id')
     .notNull()
-    .references(() => user.id),
-  startTime: timestamp('start_time', { mode: 'date' }).notNull(),
-  endTime: timestamp('end_time', { mode: 'date' }).notNull(),
-  type: text('type')
-    .notNull()
-    .$type<'pomodoro' | 'short_break' | 'long_break'>(),
-  completed: boolean('completed').notNull().default(false),
+    .references(() => user.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  startTime: t.timestamp('start_time', { mode: 'date' }).notNull(),
+  endTime: t.timestamp('end_time', { mode: 'date' }).notNull(),
+  type: t.smallint('type').notNull().$type<PomodoroSessionType>(),
+  completed: t.boolean('completed').notNull().default(false),
   ...tableTimestampColumns,
 });
+
+export const pomodoroSessionsRelations = relations(
+  pomodoroSessions,
+  ({ one }) => ({
+    user: one(user, {
+      fields: [pomodoroSessions.userId],
+      references: [user.id],
+    }),
+  })
+);

@@ -1,37 +1,41 @@
-import * as authSchema from './schema/auth';
-import * as categorySchema from './schema/category';
-import * as commentSchema from './schema/comment';
-import * as contentSchema from './schema/content';
-import * as contributionSchema from './schema/contribution';
-import * as feedbackSchema from './schema/feedback';
-import * as fileSchema from './schema/file';
-import * as pomodoroSessionsSchema from './schema/pomodoro-sessions';
-import * as pomodoroSettingsSchema from './schema/pomodoro-settings';
-import * as publicationSchema from './schema/publication';
-import * as publicationMediaSchema from './schema/publication-media';
-import * as reportSchema from './schema/report';
-import * as todosSchema from './schema/todos';
-import * as topicSchema from './schema/topic';
-import * as trailSchema from './schema/trail';
-import * as trailSubscriptionSchema from './schema/trail-subscription';
-import * as userFollowerSchema from './schema/user-follower';
+import * as auth from './schema/auth';
+import * as category from './schema/category';
+import * as comment from './schema/comment';
+import * as commentVote from './schema/comment-vote';
+import * as content from './schema/content';
+import * as contribution from './schema/contribution';
+import * as feedback from './schema/feedback';
+import * as feedbackResponse from './schema/feedback-response';
+import * as file from './schema/file';
+import * as pomodoroSessions from './schema/pomodoro-sessions';
+import * as pomodoroSettings from './schema/pomodoro-settings';
+import * as publication from './schema/publication';
+import * as publicationMedia from './schema/publication-media';
+import * as report from './schema/report';
+import * as todos from './schema/todos';
+import * as topic from './schema/topic';
+import * as trail from './schema/trail';
+import * as trailSubscription from './schema/trail-subscription';
+import * as userFollower from './schema/user-follower';
 
 export const schema = {
-  ...categorySchema,
-  ...commentSchema,
-  ...contentSchema,
-  ...contributionSchema,
-  ...authSchema,
-  ...feedbackSchema,
-  ...fileSchema,
-  ...pomodoroSessionsSchema,
-  ...pomodoroSettingsSchema,
-  ...publicationMediaSchema,
-  ...publicationSchema,
-  ...reportSchema,
-  ...todosSchema,
-  ...topicSchema,
-  ...trailSubscriptionSchema,
-  ...trailSchema,
-  ...userFollowerSchema,
+  ...auth,
+  ...category,
+  ...comment,
+  ...commentVote,
+  ...content,
+  ...contribution,
+  ...feedbackResponse,
+  ...feedback,
+  ...file,
+  ...pomodoroSessions,
+  ...pomodoroSettings,
+  ...publicationMedia,
+  ...publication,
+  ...report,
+  ...todos,
+  ...topic,
+  ...trailSubscription,
+  ...trail,
+  ...userFollower,
 };

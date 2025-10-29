@@ -1,45 +1,16 @@
-const REPORT_REASON = {
-  notSafeForWork: 'not_safe_for_work',
-  hateSpeech: 'hate_speech',
-  harassmentOrBullying: 'harassment_or_bullying',
-  spamOrUnsolicitedCommercialContent: 'spam_or_unsolicited_commercial_content',
-  copyrightViolation: 'copyright_violation',
-  falseOrMisleadingInformation: 'false_or_misleading_information',
-  fraudulentOrSuspiciousActivity: 'fraudulent_or_suspicious_activity',
-  dangerousOrThreateningBehavior: 'dangerous_or_threatening_behavior',
-  privacyInvasion: 'privacy_invasion',
-  violentOrGraphicContent: 'violent_or_graphic_content',
-  useOfFakeAccountOrBot: 'use_of_fake_account_or_bot',
-  platformPolicyViolation: 'platform_policy_violation',
-} as const;
-
-export const REPORT_REASONS = Object.values(REPORT_REASON);
-
-export const isValidReportReason = (reason: string): reason is ReportReason =>
-  REPORT_REASONS.includes(reason as any);
-
-export type ReportReason = (typeof REPORT_REASON)[keyof typeof REPORT_REASON];
+import { ReportReason } from '@/modules/database/schema/report';
 
 export const REPORT_REASON_LABELS: Record<ReportReason, string> = {
-  not_safe_for_work: 'Conteúdo não seguro para o trabalho',
-  hate_speech: 'Discurso de ódio',
-  harassment_or_bullying: 'Assédio ou bullying',
-  spam_or_unsolicited_commercial_content:
-    'Spam ou conteúdo comercial não solicitado',
-  copyright_violation: 'Violação de direitos autorais',
-  dangerous_or_threatening_behavior: 'Comportamento perigoso ou ameaçador',
-  false_or_misleading_information: 'Informação falsa ou enganosa',
-  fraudulent_or_suspicious_activity: 'Atividade fraudulenta ou suspeita',
-  platform_policy_violation: 'Violação de política da plataforma',
-  privacy_invasion: 'Invasão de privacidade',
-  use_of_fake_account_or_bot: 'Uso de conta falsa ou bot',
-  violent_or_graphic_content: 'Conteúdo violento ou gráfico',
+  [ReportReason.NOT_SAFE_FOR_WORK]: 'Conteúdo não seguro para o trabalho',
+  [ReportReason.HATE_SPEECH]: 'Discurso de ódio',
+  [ReportReason.HARASSMENT_OR_BULLYING]: 'Assédio ou bullying',
+  [ReportReason.SPAM_OR_UNSOLICITED_COMMERCIAL_CONTENT]: 'Spam ou conteúdo comercial não solicitado',
+  [ReportReason.COPYRIGHT_VIOLATION]: 'Violação de direitos autorais',
+  [ReportReason.FALSE_OR_MISLEADING_INFORMATION]: 'Informação falsa ou enganosa',
+  [ReportReason.FRAUDULENT_OR_SUSPICIOUS_ACTIVITY]: 'Atividade fraudulenta ou suspeita',
+  [ReportReason.DANGEROUS_OR_THREATENING_BEHAVIOR]: 'Comportamento perigoso ou ameaçador',
+  [ReportReason.PRIVACY_INVASION]: 'Invasão de privacidade',
+  [ReportReason.VIOLENT_OR_GRAPHIC_CONTENT]: 'Conteúdo violento ou gráfico',
+  [ReportReason.USE_OF_FAKE_ACCOUNT_OR_BOT]: 'Uso de conta falsa ou bot',
+  [ReportReason.PLATFORM_POLICY_VIOLATION]: 'Violação de política da plataforma',
 };
-
-const REPORT_ENTITY_TYPE = [
-  'trail',
-  'topic',
-  'content',
-  'publication',
-] as const;
-type ReportEntityType = (typeof REPORT_ENTITY_TYPE)[number];

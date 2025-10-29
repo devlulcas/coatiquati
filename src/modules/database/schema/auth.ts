@@ -1,3 +1,4 @@
+import { relations } from 'drizzle-orm';
 import {
   boolean,
   integer,
@@ -5,6 +6,22 @@ import {
   text,
   timestamp,
 } from 'drizzle-orm/pg-core';
+import { comments } from './comment';
+import { votes } from './comment-vote';
+import { contents } from './content';
+import { contributions } from './contribution';
+import { feedbacks } from './feedback';
+import { feedbackResponses } from './feedback-response';
+import { files } from './file';
+import { pomodoroSessions } from './pomodoro-sessions';
+import { pomodoroSettings } from './pomodoro-settings';
+import { publications } from './publication';
+import { reports } from './report';
+import { todos } from './todos';
+import { topics } from './topic';
+import { trails } from './trail';
+import { trailSubscriptions } from './trail-subscription';
+import { userFollowers } from './user-follower';
 
 export type SelectUser = typeof user.$inferSelect;
 export type InsertUser = typeof user.$inferInsert;
@@ -110,3 +127,43 @@ export const passkey = pgTable('passkey', {
   createdAt: timestamp('created_at'),
   aaguid: text('aaguid'),
 });
+
+export const userRelations = relations(user, ({ many, one }) => ({
+  sessions: many(session),
+  accounts: many(account),
+  verifications: many(verification),
+  twoFactor: many(twoFactor),
+  passkeys: many(passkey),
+
+  // User followers and following
+  followers: many(userFollowers),
+  following: many(userFollowers),
+
+  // User authored content
+  authoredTrails: many(trails),
+  authoredTopics: many(topics),
+  authoredContents: many(contents),
+  files: many(files),
+
+  // Personal content
+  authoredPublications: many(publications),
+
+  // Social interactions
+  authoredComments: many(comments),
+  authoredVotes: many(votes),
+  authoredReports: many(reports),
+  contributions: many(contributions),
+  trailSubscriptions: many(trailSubscriptions),
+
+  // Personal productivity
+  authoredTodos: many(todos),
+  authoredPomodoroSessions: many(pomodoroSessions),
+  pomodoroSettings: one(pomodoroSettings, {
+    fields: [user.id],
+    references: [pomodoroSettings.userId],
+  }),
+
+  // Feedback and contributions
+  feedbacks: many(feedbacks),
+  feedbackResponses: many(feedbackResponses),
+}));
