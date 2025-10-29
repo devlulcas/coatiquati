@@ -46,7 +46,7 @@ export async function updateUserMutation(params: UpdateUserSchema): Promise<Resu
       verifiedAt: isChangingEmail ? null : currentUserResult.value.verifiedAt,
     });
 
-    revalidatePath('/profile/' + user.username);
+    revalidatePath(`/profile/${user.username}`);
 
     return ok('Usuário atualizado com sucesso');
   } catch (error) {

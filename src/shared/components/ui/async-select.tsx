@@ -150,7 +150,7 @@ export function AsyncSelect<T>({
 
     // TODO: FIX THIS
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetcher, debouncedSearchTerm, mounted, preload, filterFn]);
+  }, [fetcher, debouncedSearchTerm, mounted, preload, filterFn, originalOptions]);
 
   const handleSelect = useCallback(
     (currentValue: string) => {

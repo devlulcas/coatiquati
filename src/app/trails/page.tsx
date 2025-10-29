@@ -49,7 +49,7 @@ export default async function Page(props: PageProps) {
         </div>
       )}
 
-      {trailsGroupedByCategory.map(([category, trails]) => (
+      {trailsGroupedByCategory.map(([category, _trails]) => (
         <section className="mb-8" key={category}>
           <h2 className="text-2xl font-bold">{category}</h2>
           <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 xl:grid-cols-5">

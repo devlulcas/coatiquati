@@ -1,8 +1,8 @@
+import path from 'node:path';
 import Database from 'better-sqlite3';
 import { config } from 'dotenv';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
-import path from 'path';
 import { schema } from './schema';
 
 config({ path: '.env.local' });

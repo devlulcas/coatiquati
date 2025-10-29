@@ -1,4 +1,4 @@
-import { fail } from 'assert';
+import { fail } from 'node:assert';
 import { createMiddleware } from 'hono/factory';
 import { HTTPException } from 'hono/http-exception';
 import type { CustomContext } from '@/modules/http/types/context';

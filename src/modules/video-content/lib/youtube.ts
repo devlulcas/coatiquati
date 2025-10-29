@@ -1,6 +1,5 @@
 const YOUTUBE_REGEX =
   /^(https?:\/\/)?(www\.|music\.)?(youtube\.com|youtu\.be|youtube-nocookie\.com)\/(?!channel\/)(?!@)(.+)?$/;
-const YOUTUBE_REGEX_GLOBAL = /^(https?:\/\/)?(www\.|music\.)?(youtube\.com|youtu\.be)\/(?!channel\/)(?!@)(.+)?$/g;
 
 const isValidYoutubeUrl = (url: string) => {
   return url.match(YOUTUBE_REGEX);

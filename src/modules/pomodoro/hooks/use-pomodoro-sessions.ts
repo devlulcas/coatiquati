@@ -1,28 +1,22 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSession } from '@/modules/auth/hooks/use-session';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { PomodoroSession } from '../../database/schema/pomodoro-sessions';
-import { createPomodoroSession, fetchPomodoroSessions } from '../lib/fetchers';
-import { addLocalSession, getLocalSessions, setLocalSessions } from '../lib/local-storage';
+import { createPomodoroSession } from '../lib/fetchers';
+import {
+  addLocalSession,
+  getLocalSessions,
+  setLocalSessions,
+} from '../lib/local-storage';
 import type { PomodoroSessionInput } from '../types/pomodoro';
 
 const POMODORO_SESSIONS_QUERY_KEY = 'POMODORO_SESSIONS_QUERY_KEY';
-
-function usePomodoroSessions() {
-  const { data: session } = useSession();
-
-  return useQuery<PomodoroSession[], Error>({
-    queryKey: [POMODORO_SESSIONS_QUERY_KEY],
-    queryFn: session.data ? fetchPomodoroSessions : getLocalSessions,
-    enabled: true,
-  });
-}
 
 export function useCreatePomodoroSession() {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
 
   return useMutation<PomodoroSession, Error, PomodoroSessionInput>({
-    mutationFn: async sessionInput => {
+    mutationFn: async (sessionInput) => {
       if (session.data) {
         return createPomodoroSession(sessionInput);
       } else {
@@ -38,7 +32,9 @@ export function useCreatePomodoroSession() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [POMODORO_SESSIONS_QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [POMODORO_SESSIONS_QUERY_KEY],
+      });
     },
   });
 }
@@ -56,7 +52,7 @@ export function useSyncLocalSessions() {
 
       // Sync each local session to the server
       await Promise.all(
-        localSessions.map(session =>
+        localSessions.map((session) =>
           createPomodoroSession({
             startTime: session.startTime,
             endTime: session.endTime,
@@ -71,7 +67,9 @@ export function useSyncLocalSessions() {
       setLocalSessions([]);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [POMODORO_SESSIONS_QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [POMODORO_SESSIONS_QUERY_KEY],
+      });
     },
   });
 }

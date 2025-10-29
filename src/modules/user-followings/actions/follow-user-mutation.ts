@@ -57,7 +57,7 @@ export async function followUserMutation(userId: string): Promise<Result<string>
     log.error('Erro ao seguir usuário', error);
     return fail('Erro ao seguir usuário');
   } finally {
-    revalidatePath('/profile/' + userToFollowResult.value.username);
-    revalidatePath('/profile/' + user.username);
+    revalidatePath(`/profile/${userToFollowResult.value.username}`);
+    revalidatePath(`/profile/${user.username}`);
   }
 }

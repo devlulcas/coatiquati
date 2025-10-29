@@ -30,14 +30,14 @@ function InnerCircularProgress({ max = 100, value = 50, className, size = 34, wi
       className={className}
       style={{ transform: 'rotate(-90deg)' }}
     >
-      <circle r={r} cx={c} cy={c} fill="transparent" stroke="rgb(250 250 249)" stroke-width={width + 'px'}></circle>
+      <circle r={r} cx={c} cy={c} fill="transparent" stroke="rgb(250 250 249)" stroke-width={`${width}px`}></circle>
       <circle
         r={r}
         cx={c}
         cy={c}
         fill="transparent"
         stroke={getProgressColor(progress)}
-        stroke-width={width - 2 + 'px'}
+        stroke-width={`${width - 2}px`}
         strokeDasharray={circumference}
         strokeDashoffset={offset}
         strokeLinecap="round"

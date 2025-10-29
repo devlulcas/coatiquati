@@ -88,7 +88,7 @@ export function useServerActionMutation<I, O>({
         setState({ state: 'idle', isPending: false, error: null, serverActionResult: null });
       }
     },
-    [serverAction, onSuccessfulAction, onFailedAction, shouldRefresh, startTransition, router],
+    [serverAction, onSuccessfulAction, onFailedAction, shouldRefresh, router],
   );
 
   return { ...state, mutate, isTransitionStarted };

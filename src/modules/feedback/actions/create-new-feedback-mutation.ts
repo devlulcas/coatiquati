@@ -1,8 +1,8 @@
 'use server';
 
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { revalidatePath } from 'next/cache';
-import path from 'path';
 import { z } from 'zod';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';

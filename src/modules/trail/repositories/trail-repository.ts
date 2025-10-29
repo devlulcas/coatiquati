@@ -156,7 +156,7 @@ export class TrailRepository {
       await db.update(trailTable).set({ status: contentStatus.DRAFT }).where(eq(trailTable.id, id)).execute();
     } catch (error) {
       console.clear();
-      log.error('Erro ao omitir trilha ' + (error instanceof Error ? error.message : ''), { error, id });
+      log.error(`Erro ao omitir trilha ${error instanceof Error ? error.message : ''}`, { error, id });
       throw new Error('Erro ao omitir trilha');
     }
   }
@@ -166,7 +166,7 @@ export class TrailRepository {
       await db.update(trailTable).set({ status: contentStatus.PUBLISHED }).where(eq(trailTable.id, id)).execute();
     } catch (error) {
       console.clear();
-      log.error('Erro ao habilitar trilha ' + (error instanceof Error ? error.message : ''), { error, id });
+      log.error(`Erro ao habilitar trilha ${error instanceof Error ? error.message : ''}`, { error, id });
       throw new Error('Erro ao habilitar trilha');
     }
   }

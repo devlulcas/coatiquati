@@ -45,7 +45,7 @@ export async function createVerificationToken(userId: string, database = db): Pr
 
     return verificationToken ? verificationToken : null;
   } catch (error) {
-    log.error('createVerificationToken:' + (error instanceof Error ? error.message : String(error)));
+    log.error(`createVerificationToken:${error instanceof Error ? error.message : String(error)}`);
     return null;
   }
 }

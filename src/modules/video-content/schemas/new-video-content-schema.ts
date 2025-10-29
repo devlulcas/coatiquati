@@ -1,12 +1,12 @@
-import { z } from 'zod';
 import { newContentSchema } from '@/modules/content/schemas/new-content-schema';
+import { z } from 'zod';
 
 export const newVideoContentSchema = newContentSchema.merge(
   z.object({
     src: z
       .string()
       .url()
-      .refine(url => {
+      .refine((url) => {
         try {
           const urlObject = new URL(url);
 
@@ -14,6 +14,7 @@ export const newVideoContentSchema = newContentSchema.merge(
 
           return validHostnames.includes(urlObject.hostname);
         } catch (error) {
+          console.error(error);
           return false;
         }
       }),

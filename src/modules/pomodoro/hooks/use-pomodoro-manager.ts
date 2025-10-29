@@ -13,7 +13,7 @@ export function usePomodoroManager() {
 
   const alarmSound = useMemo(() => {
     if (typeof window === 'undefined') return null;
-    return new window.Audio(env.NEXT_PUBLIC_WEBSITE + '/audio/alarm-clock.wav');
+    return new window.Audio(`${env.NEXT_PUBLIC_WEBSITE}/audio/alarm-clock.wav`);
   }, []);
 
   const [timerState, setTimerState] = useState<PomodoroTimerState>({

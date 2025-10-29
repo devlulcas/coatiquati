@@ -94,7 +94,7 @@ export function ImageUploadArea({
       fileRejections.forEach(fileRejection => {
         toast({
           variant: 'destructive',
-          title: 'Arquivo inválido: ' + fileRejection.file.name,
+          title: `Arquivo inválido: ${fileRejection.file.name}`,
           description: listFormat.format(fileRejection.errors.map(error => error.message)),
         });
       });

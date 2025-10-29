@@ -53,7 +53,7 @@ function useImageFileData(file: File) {
   const [image, setImage] = useState({ width: 0, height: 0, src: '' });
 
   const fromBytesToKB = (bytes: number) => {
-    return (bytes / 1024).toFixed(2) + ' KB';
+    return `${(bytes / 1024).toFixed(2)} KB`;
   };
 
   useEffect(() => {

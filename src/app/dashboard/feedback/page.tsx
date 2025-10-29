@@ -19,7 +19,7 @@ type PageProps = {
 
 export default async function FeedbackPage(props: PageProps) {
   const searchParams = await props.searchParams;
-  const page = searchParams.page ? parseInt(searchParams.page) : 1;
+  const page = searchParams.page ? parseInt(searchParams.page, 10) : 1;
   const type = searchParams.type;
 
   const feedbackResult = await getFeedbackListQuery(page, type);

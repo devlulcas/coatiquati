@@ -15,7 +15,8 @@ const REPORT_REASON = {
 
 export const REPORT_REASONS = Object.values(REPORT_REASON);
 
-export const isValidReportReason = (reason: string): reason is ReportReason => REPORT_REASONS.includes(reason as any);
+export const isValidReportReason = (reason: string): reason is ReportReason =>
+  REPORT_REASONS.includes(reason as any);
 
 export type ReportReason = (typeof REPORT_REASON)[keyof typeof REPORT_REASON];
 
@@ -23,7 +24,8 @@ export const REPORT_REASON_LABELS: Record<ReportReason, string> = {
   not_safe_for_work: 'Conteúdo não seguro para o trabalho',
   hate_speech: 'Discurso de ódio',
   harassment_or_bullying: 'Assédio ou bullying',
-  spam_or_unsolicited_commercial_content: 'Spam ou conteúdo comercial não solicitado',
+  spam_or_unsolicited_commercial_content:
+    'Spam ou conteúdo comercial não solicitado',
   copyright_violation: 'Violação de direitos autorais',
   dangerous_or_threatening_behavior: 'Comportamento perigoso ou ameaçador',
   false_or_misleading_information: 'Informação falsa ou enganosa',
@@ -34,11 +36,10 @@ export const REPORT_REASON_LABELS: Record<ReportReason, string> = {
   violent_or_graphic_content: 'Conteúdo violento ou gráfico',
 };
 
-const REPORT_ENTITY_TYPE = ['trail', 'topic', 'content', 'publication'] as const;
+const REPORT_ENTITY_TYPE = [
+  'trail',
+  'topic',
+  'content',
+  'publication',
+] as const;
 type ReportEntityType = (typeof REPORT_ENTITY_TYPE)[number];
-const REPORT_ENTITY_TYPE_LABELS: Record<ReportEntityType, string> = {
-  trail: 'Trilha',
-  topic: 'Tópico',
-  content: 'Conteúdo',
-  publication: 'Publicação',
-};

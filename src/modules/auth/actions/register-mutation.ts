@@ -49,7 +49,7 @@ export async function registerMutation(_: any, formData: FormData): Promise<Resu
         username,
         passwordHash: passwordHash,
         role: roles.USER,
-        avatar: '/avatars/' + avatars[Math.floor(Math.random() * avatars.length)],
+        avatar: `/avatars/${avatars[Math.floor(Math.random() * avatars.length)]}`,
         bannedAt: null,
         verifiedAt: null,
         deletedAt: null,

@@ -28,7 +28,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       description: trailResult.value.description,
       images: [
         {
-          url: env.NEXT_PUBLIC_WEBSITE + '/og.png',
+          url: `${env.NEXT_PUBLIC_WEBSITE}/og.png`,
           width: 1200,
           height: 630,
           alt: 'CoatiQuati',

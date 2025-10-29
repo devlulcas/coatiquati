@@ -57,10 +57,10 @@ export const deleteFileCommand: DeleteFileByKeyFn = async (key: string) => {
   );
 
   if (isFail(deleteObjectResult)) {
-    return fail('Falha ao remover arquivo com chave: ' + key);
+    return fail(`Falha ao remover arquivo com chave: ${key}`);
   }
 
-  return ok('Arquivo com chave ' + key + ' foi deletado com sucesso');
+  return ok(`Arquivo com chave ${key} foi deletado com sucesso`);
 };
 
 export const headFileCommand: HeadFileByKeyFn = async (key: string) => {

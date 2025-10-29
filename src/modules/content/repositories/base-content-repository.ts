@@ -80,7 +80,7 @@ export class BaseContentRepository {
 
     if (isFail(result) || !result.value) {
       log.error('Erro ao buscar autor do conteúdo', { contentId });
-      return fail('Erro ao buscar autor do conteúdo com id = ' + contentId);
+      return fail(`Erro ao buscar autor do conteúdo com id = ${contentId}`);
     }
 
     return ok(result.value.authorId);

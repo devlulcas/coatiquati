@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     description: 'CoatiQuati é uma plataforma de estudos para tudo e todos.',
     images: [
       {
-        url: env.NEXT_PUBLIC_WEBSITE + '/og.png',
+        url: `${env.NEXT_PUBLIC_WEBSITE}/og.png`,
         width: 1200,
         height: 630,
         alt: 'CoatiQuati',

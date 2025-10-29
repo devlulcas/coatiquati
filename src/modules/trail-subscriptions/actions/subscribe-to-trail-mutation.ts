@@ -26,9 +26,9 @@ export async function subscribeToTrailMutation(trailId: TrailId): Promise<Result
     await db.insert(trailSubscriptionTable).values({ trailId, userId: user.id }).execute();
   }
 
-  revalidatePath('/profile/' + user.username);
-  revalidatePath('/trails/' + trailId);
-  revalidatePath('/dashboard/trails/' + trailId);
+  revalidatePath(`/profile/${user.username}`);
+  revalidatePath(`/trails/${trailId}`);
+  revalidatePath(`/dashboard/trails/${trailId}`);
 
   return ok('Inscrição alterada com sucesso.');
 }

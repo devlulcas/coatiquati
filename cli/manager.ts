@@ -245,7 +245,7 @@ async function main() {
   }
 
   const avatars = ['grape.png', 'mint.png', 'original.png', 'peach.png'];
-  const avatar = '/avatars/' + avatars[Math.floor(Math.random() * avatars.length)];
+  const avatar = `/avatars/${avatars[Math.floor(Math.random() * avatars.length)]}`;
 
   await withLoading(registerUser({ username, email, password, avatar }, role), {
     start: 'Criando usuário...',
