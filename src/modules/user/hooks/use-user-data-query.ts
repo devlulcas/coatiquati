@@ -1,34 +1,23 @@
+import { authClient } from '@/modules/auth/lib/auth-client';
 import { useQuery } from '@tanstack/react-query';
-import type { User } from '../types/user';
 
 const CURRENT_USER_DATA_QUERY_KEY = 'CURRENT_USER_DATA_QUERY_KEY';
 
-async function fetchCurrentUser(): Promise<unknown> {
-  try {
-    const response = await fetch('/api/users/me');
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    throw new Error(`Failed to fetch current user: ${message}`);
-  }
-}
-
 export function useCurrentUserDataQuery() {
-  return useQuery<User, Error>({
+  return useQuery({
     queryKey: [CURRENT_USER_DATA_QUERY_KEY],
     queryFn: async () => {
-      const data = await fetchCurrentUser();
+      const session = await authClient.getSession();
 
-      const isUserData = (data: any): data is User => {
-        return typeof data === 'object' && data !== null && 'id' in data;
-      };
-
-      if (!isUserData(data)) {
-        throw new Error('Invalid user data');
+      if (session.error) {
+        throw new Error(session.error.message);
       }
 
-      return data;
+      if (!session.data?.user) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      return session.data.user;
     },
   });
 }

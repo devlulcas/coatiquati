@@ -1,46 +1,63 @@
 'use client';
 
+import { Button } from '@/shared/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form';
+import { Input } from '@/shared/components/ui/input';
+import { RadioGroup } from '@/shared/components/ui/radio-group';
+import { useToast } from '@/shared/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import type { z } from 'zod';
-import { Button } from '@/shared/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { RadioGroup } from '@/shared/components/ui/radio-group';
-import { useToast } from '@/shared/components/ui/use-toast';
 import { updateUserMutation } from '../../actions/update-user-mutation';
 import { AVATARS } from '../../constants/avatars';
 import { updateUserSchema } from '../../schemas/update-user-schema';
-import type { User } from '../../types/user';
+import type { PublicUser } from '../../types/user';
 
 const editUserFormSchema = updateUserSchema;
 
 type EditUserFormValues = z.infer<typeof editUserFormSchema>;
 
 type EditUserDialogTriggerProps = {
-  user: User;
+  user: PublicUser;
   children: React.ReactNode;
 };
 
-export function EditUserDialogTrigger({ user, children }: EditUserDialogTriggerProps) {
+export function EditUserDialogTrigger({
+  user,
+  children,
+}: EditUserDialogTriggerProps) {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<EditUserFormValues>({
     resolver: zodResolver(editUserFormSchema),
     defaultValues: {
-      email: user.email,
-      username: user.username,
+      name: user.name,
+      avatar: user.image,
     },
   });
 
   const onSubmit = async (data: EditUserFormValues) => {
     try {
       await updateUserMutation(data);
-      toast({ title: `Usuário ${data.username} alterado com sucesso` });
+      toast({ title: `Usuário ${data.name} alterado com sucesso` });
       setIsOpen(false);
     } catch (error) {
       toast({
@@ -57,31 +74,24 @@ export function EditUserDialogTrigger({ user, children }: EditUserDialogTriggerP
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mb-4">Editar {user.username}</DialogTitle>
+          <DialogTitle className="mb-4">
+            Editar <span className="text-brand-500">@</span>
+            {user.username}
+          </DialogTitle>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
-                name="username"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome de usuário</FormLabel>
+                    <FormLabel>Nome</FormLabel>
+                    <FormDescription>
+                      Você pode usar seu nome social. O importante é que seus
+                      pares possam reconhecer você.
+                    </FormDescription>
                     <FormControl>
-                      <Input placeholder="@exemplo" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>E-mail</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="email@exemplo.com" {...field} />
+                      <Input placeholder="Seu nome" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -100,7 +110,7 @@ export function EditUserDialogTrigger({ user, children }: EditUserDialogTriggerP
                         defaultValue={field.value}
                         className="flex flex-row space-x-2"
                       >
-                        {AVATARS.map(avatar => (
+                        {AVATARS.map((avatar) => (
                           <label key={avatar} htmlFor={avatar}>
                             <input
                               className="peer sr-only"

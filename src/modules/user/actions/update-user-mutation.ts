@@ -1,56 +1,43 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
-import { validateRequest } from '@/modules/auth/services/next';
-import { isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
-import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
-import { getUserById, updateUser } from '../repositories/user-repository';
-import { type UpdateUserSchema, updateUserSchema } from '../schemas/update-user-schema';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
+import { db } from '@/modules/database/db';
+import { user as userTable } from '@/modules/database/schema/auth';
+import { fail, ok, type Result } from '@/shared/lib/result';
+import { eq } from 'drizzle-orm';
+import { DEFAULT_AVATAR } from '../constants/avatars';
+import {
+  type UpdateUserSchema,
+  updateUserSchema,
+} from '../schemas/update-user-schema';
 
-export async function updateUserMutation(params: UpdateUserSchema): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+export async function updateUserMutation(
+  params: UpdateUserSchema
+): Promise<Result<string>> {
+  const user = await getCurrentUser();
+  assertAuthenticated(user);
 
-  if (!user) {
-    return fail('Você precisa estar logado para editar suas informações.');
-  }
+  const parsed = updateUserSchema.safeParse(params);
 
-  const currentUserResult = await wrapAsyncInResult(getUserById(user.id));
-
-  if (currentUserResult.type === 'fail' || currentUserResult.value === null) {
-    log.warn('Usuário não encontrado', {
-      userId: user.id,
-      username: user.username,
-    });
-
-    return fail('Usuário não encontrado');
-  }
-
-  const isChangingEmail = params.email && params.email !== currentUserResult.value.email;
-
-  if (isChangingEmail && isHighPrivilegeAdmin(user.role)) {
-    return fail('Peça para um administrador de servidor para alterar diretamente as permissões do seu usuário.');
-  }
-
-  const validatedParams = updateUserSchema.safeParse(params);
-
-  if (!validatedParams.success) {
-    return fail('Parâmetros inválidos');
+  if (!parsed.success) {
+    return fail(parsed.error.message);
   }
 
   try {
-    await updateUser(user.id, {
-      avatar: validatedParams.data.avatar,
-      username: validatedParams.data.username,
-      email: validatedParams.data.email,
-      verifiedAt: isChangingEmail ? null : currentUserResult.value.verifiedAt,
-    });
-
-    revalidatePath(`/profile/${user.username}`);
+    await db
+      .update(userTable)
+      .set({
+        name: parsed.data.name ?? user.name,
+        image: parsed.data.avatar ?? user.image ?? DEFAULT_AVATAR,
+      })
+      .where(eq(userTable.id, user.id));
 
     return ok('Usuário atualizado com sucesso');
   } catch (error) {
-    log.error('Erro ao atualizar usuário', error);
+    console.error(error);
     return fail('Erro ao atualizar usuário');
   }
 }

@@ -1,21 +1,62 @@
-import type { AuthUserTable } from '@/modules/database/schema/user';
-import type { Trail } from '@/modules/trail/types/trail';
+import { getRole, type Role } from '@/modules/auth/lib/auth-client';
+import type { SelectUser } from '@/modules/database/schema/auth';
 
-export type Contributor = Pick<AuthUserTable, 'id' | 'username' | 'avatar'>;
+export const CONTRIBUTOR_COLUMNS = {
+  id: true,
+  name: true,
+  image: true,
+  username: true,
+} satisfies Partial<Record<keyof SelectUser, true>>;
 
-export type User = AuthUserTable;
-
-export type UserProfile = User & {
-  authoredTrails: Trail[];
-  followers: { avatar: string; username: string }[];
-  following: { avatar: string; username: string }[];
+export type Contributor = {
+  id: string;
+  name: string;
+  image: string;
+  username: string;
 };
 
-export type UpdateUser = Partial<Pick<User, 'username' | 'avatar' | 'email' | 'role' | 'verifiedAt' | 'bannedAt'>>;
+// Parece inútil, mas limita a quantidade de campos passados adiante
+export function mapToContributor(
+  data: Pick<SelectUser, keyof typeof CONTRIBUTOR_COLUMNS>
+): Contributor {
+  return {
+    id: data.id,
+    name: data.name,
+    image: data.image,
+    username: data.username,
+  };
+}
 
-export type UserId = AuthUserTable['id'];
+export const PUBLIC_USER_COLUMNS = {
+  id: true,
+  username: true,
+  name: true,
+  image: true,
+  banned: true,
+  createdAt: true,
+  role: true,
+} satisfies Partial<Record<keyof SelectUser, true>>;
 
-export type PublicUser = Pick<
-  User,
-  'id' | 'username' | 'avatar' | 'role' | 'bannedAt' | 'createdAt' | 'updatedAt' | 'email' | 'verifiedAt'
->;
+export type PublicUser = {
+  id: string;
+  username: string;
+  name: string;
+  image: string;
+  banned: boolean;
+  createdAt: Date;
+  role: Role;
+};
+
+export function mapToPublicUser(
+  data: Pick<SelectUser, keyof typeof PUBLIC_USER_COLUMNS>
+): PublicUser {
+  return {
+    id: data.id,
+    username: data.username,
+    name: data.name,
+    image: data.image,
+    banned: Boolean(data.banned),
+    createdAt: data.createdAt,
+    role: getRole(data.role),
+  };
+}

@@ -1,12 +1,19 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
-import type { User } from '../../types/user';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/shared/components/ui/avatar';
 
-type UserAvatarProps = Pick<User, 'avatar' | 'username'>;
-
-export function UserAvatar({ avatar, username }: UserAvatarProps) {
+export function UserAvatar({
+  avatar,
+  username,
+}: {
+  avatar: string | null | undefined;
+  username: string;
+}) {
   return (
     <Avatar className="mx-auto">
-      <AvatarImage src={avatar} alt={username} />
+      <AvatarImage src={avatar ?? undefined} alt={username} />
       <AvatarFallback>{username[0].toUpperCase()}</AvatarFallback>
     </Avatar>
   );

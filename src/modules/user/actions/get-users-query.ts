@@ -1,28 +1,38 @@
 'use server';
 
-import type { z } from 'zod';
-import { createPaginationSchemaWithSearch } from '@/modules/database/types/pagination';
-import { log } from '@/modules/logging/lib/pino';
+import { db } from '@/modules/database/db';
 import { fail, ok, type Result } from '@/shared/lib/result';
-import { getUsers } from '../repositories/user-repository';
-import type { User } from '../types/user';
+import { paginationSchema } from '@/shared/schemas/pagination';
+import { z } from 'zod';
+import {
+  mapToPublicUser,
+  PUBLIC_USER_COLUMNS,
+  type PublicUser,
+} from '../types/user';
 
-const getUsersUseCaseSchema = createPaginationSchemaWithSearch(20, 0);
+const getUsersQuerySchema = paginationSchema.extend({
+  search: z.string().optional(),
+});
 
-type GetUsersUseCaseSchema = Partial<z.infer<typeof getUsersUseCaseSchema>>;
+export async function getUsersQuery(
+  params?: z.infer<typeof getUsersQuerySchema>
+): Promise<Result<PublicUser[]>> {
+  const parsed = getUsersQuerySchema.safeParse(params);
 
-export async function getUsersQuery(params: GetUsersUseCaseSchema = {}): Promise<Result<User[]>> {
-  const validatedParams = getUsersUseCaseSchema.safeParse(params);
-
-  if (!validatedParams.success) {
-    return fail('Parâmetros inválidos para busca de usuários');
+  if (!parsed.success) {
+    return fail(parsed.error.message);
   }
 
-  try {
-    const users = await getUsers(validatedParams.data);
-    return ok(users);
-  } catch (error) {
-    log.error('Erro ao buscar usuários', error);
-    return fail('Erro ao buscar usuários');
-  }
+  const users = await db.query.user.findMany({
+    limit: parsed.data.take,
+    offset: parsed.data.skip,
+    columns: PUBLIC_USER_COLUMNS,
+    where: (fields, operators) => {
+      return operators.or(
+        operators.ilike(fields.username, `%${parsed.data.search}%`)
+      );
+    },
+  });
+
+  return ok(users.map(mapToPublicUser));
 }

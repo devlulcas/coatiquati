@@ -1,5 +1,4 @@
-import { RatIcon, SquirrelIcon } from 'lucide-react';
-import { roles } from '@/modules/auth/constants/roles';
+import { BoltIcon, HammerIcon, UserIcon } from 'lucide-react';
 
 type RoleVisualIdentifier = {
   label: string;
@@ -8,20 +7,20 @@ type RoleVisualIdentifier = {
 
 export function getRoleVisualIdentifier(role: string): RoleVisualIdentifier {
   switch (role) {
-    case roles.HIGH_PRIVILEGE_ADMIN:
+    case 'highPrivilegeAdmin':
       return {
         label: 'Administrador de alto privilégio',
-        icon: <SquirrelIcon size={16} />,
+        icon: <HammerIcon size={16} />,
       };
-    case roles.ADMIN:
+    case 'admin':
       return {
         label: 'Administrador',
-        icon: <SquirrelIcon size={16} />,
+        icon: <BoltIcon size={16} />,
       };
     default:
       return {
         label: 'Usuário',
-        icon: <RatIcon size={16} />,
+        icon: <UserIcon size={16} />,
       };
   }
 }
