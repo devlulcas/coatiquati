@@ -1,13 +1,24 @@
 'use client';
 
+import { authClient } from '@/modules/auth/lib/auth-client';
+import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { isAdminOrAbove } from '@/modules/auth/utils/is';
-import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { createTrailUrl } from '../../lib/create-trail-url';
 
 export function VisualizeTrailAsAdmin({ trailId }: { trailId: number }) {
-  const currentUserDataQuery = useCurrentUserDataQuery();
+  const canViewAllTrails = useQuery({
+    queryKey: ['canViewAllTrails'],
+    queryFn: async () => {
+      const result = await authClient.admin.hasPermission({
+        permission: {
+          trail: ['view_all'],
+        },
+      });
+
+      return result.data?.success;
+    },
+  });
 
   const pathname = usePathname();
 
@@ -15,12 +26,15 @@ export function VisualizeTrailAsAdmin({ trailId }: { trailId: number }) {
     return null;
   }
 
-  if (!currentUserDataQuery.data || !isAdminOrAbove(currentUserDataQuery.data.role)) {
+  if (!canViewAllTrails.data) {
     return null;
   }
 
   return (
-    <Link href={createTrailUrl(trailId, true)} className="flex items-center gap-2 text-sm text-brand-300">
+    <Link
+      href={createTrailUrl(trailId, true)}
+      className="flex items-center gap-2 text-sm text-brand-300"
+    >
       Visualizar trilha como administrador
     </Link>
   );

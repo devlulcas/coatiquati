@@ -1,11 +1,18 @@
 'use client';
 
-import { useTransition } from 'react';
-import { ContentStatusBadge } from '@/modules/content/components/content-status-badge';
-import { Button } from '@/shared/components/ui/button';
+import { ContentStatus } from '@/modules/database/schema/content';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { contentStatus } from '@/shared/constants/content-status';
-import { toggleTrailStatusMutation } from '../../actions/toggle-trail-status-mutation';
+import { Loader2Icon } from 'lucide-react';
+import { useTransition } from 'react';
+import { changeTrailContentStatusMutation } from '../../actions/toggle-trail-status-mutation';
 import type { Trail } from '../../types/trail';
 
 type ToggleTrailStatusFormProps = {
@@ -16,11 +23,13 @@ export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
   const [isLoading, startTransition] = useTransition();
   const { toast } = useToast();
 
-  const onSubmit = () => {
+  const setStatus = (status: ContentStatus) => {
     startTransition(async () => {
       try {
-        await toggleTrailStatusMutation(trail);
-        toast({ title: `${trail.title} teve seu estado de publicação invertido` });
+        await changeTrailContentStatusMutation({ id: trail.id, status });
+        toast({
+          title: `${trail.title} teve seu estado de publicação invertido`,
+        });
       } catch (error) {
         toast({
           title: 'Erro ao alterar estado de publicação da trilha',
@@ -31,18 +40,38 @@ export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
     });
   };
 
+  const statusOptions = [
+    { value: ContentStatus.DRAFT, label: 'Rascunho' },
+    { value: ContentStatus.PUBLISHED, label: 'Publicado' },
+    { value: ContentStatus.ARCHIVED, label: 'Arquivado' },
+  ];
+
   return (
-    <div className="flex items-center gap-2">
-      <Button
-        variant="ghost"
-        type="button"
-        isLoading={isLoading}
-        className="flex items-center gap-2"
-        onClick={onSubmit}
-      >
-        <ContentStatusBadge status={trail.status} />
-        {trail.status === contentStatus.PUBLISHED ? 'Omitir' : 'Publicar'}
-      </Button>
-    </div>
+    <Select
+      value={trail.status.toString()}
+      onValueChange={(value) => setStatus(Number(value))}
+      disabled={isLoading}
+    >
+      <SelectTrigger className="w-[180px]" disabled={isLoading}>
+        {isLoading ? (
+          <Loader2Icon className="size-4 animate-spin text-muted-foreground" />
+        ) : (
+          <SelectValue placeholder="Selecione o status" />
+        )}
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {statusOptions.map((option) => (
+            <SelectItem
+              key={option.value}
+              value={option.value.toString()}
+              disabled={isLoading || trail.status === option.value}
+            >
+              {option.label}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 }

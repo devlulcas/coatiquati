@@ -1,10 +1,9 @@
+import { ContentStatus } from '@/modules/database/schema/content';
 import { z } from 'zod';
 
 export const trailWithIdSchema = z.object({
-  id: z.number({
-    required_error: 'O ID da trilha é obrigatório.',
-    invalid_type_error: 'O ID da trilha é um número',
-  }),
+  id: z.number(),
+  status: z.enum(ContentStatus),
 });
 
 export type TrailWithIdSchema = z.infer<typeof trailWithIdSchema>;

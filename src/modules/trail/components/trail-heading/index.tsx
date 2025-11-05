@@ -1,17 +1,16 @@
-import type { ClassValue } from 'clsx';
-import { EllipsisIcon } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { validateRequest } from '@/modules/auth/services/next';
+import { getCurrentUser } from '@/modules/auth/services/next';
 import { currentUserIsAlreadySubscribedQuery } from '@/modules/trail-subscriptions/actions/current-user-is-already-subscribed-query';
 import { FollowTrailButton } from '@/modules/trail-subscriptions/components/follow-trail-button';
-import { ContributorList } from '@/modules/user/components/contributor-list';
-import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
 import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
+import { ContributorList } from '@/modules/user/components/contributor-list';
 import { UpdatedAt } from '@/shared/components/common/updated-at';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/cn';
+import type { ClassValue } from 'clsx';
+import { EllipsisIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 import type { Trail } from '../../types/trail';
 import { VisualizeTrailAsAdmin } from './visualize-trail-as-admin';
 
@@ -21,32 +20,40 @@ type TrailHeadingProps = {
 };
 
 export async function TrailHeading({ trail, className }: TrailHeadingProps) {
-  const allContributors = trail.contributors.map(contributor => contributor.user);
-
-  const { data: user } = await validateRequest();
+  const currentUser = await getCurrentUser();
 
   const checkIfUserIsAlreadySubscribed = async () => {
-    if (user === null) return false;
-    const result = await currentUserIsAlreadySubscribedQuery(trail.id, user.id);
+    if (currentUser === null) return false;
+    const result = await currentUserIsAlreadySubscribedQuery(
+      trail.id,
+      currentUser.id
+    );
     return result.value;
   };
 
   const isAlreadyFollowing = await checkIfUserIsAlreadySubscribed();
 
   return (
-    <div className={cn('relative flex min-h-80 w-full flex-col gap-4 lg:flex-row', className)}>
+    <div
+      className={cn(
+        'relative flex min-h-80 w-full flex-col gap-4 lg:flex-row',
+        className
+      )}
+    >
       <Link
         className="group absolute left-4 top-4 flex items-center gap-2"
-        href={createProfileUrl(trail.author.username)}
+        href={`/profile/${trail.author.username}`}
       >
         <UserAvatar className="z-10" user={trail.author} />
 
         <span className="-translate-x-full rounded bg-brand-500 px-2 text-sm opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100">
-          {trail.author.username}
+          {trail.author.name}
         </span>
       </Link>
 
-      <ReportFormDialogTrigger origin={{ id: trail.id, type: 'trail' }} user={trail.author.id}>
+      <ReportFormDialogTrigger
+        params={{ trailId: trail.id, userId: trail.author.id }}
+      >
         <button
           type="button"
           aria-label="Mais opções"
@@ -68,7 +75,9 @@ export async function TrailHeading({ trail, className }: TrailHeadingProps) {
       <div
         className={cn(
           'relative z-0 h-fit overflow-hidden rounded-md p-[1px]',
-          isAlreadyFollowing ? 'bg-gradient-to-tr from-brand-500 to-brand-600' : 'bg-border',
+          isAlreadyFollowing
+            ? 'bg-gradient-to-tr from-brand-500 to-brand-600'
+            : 'bg-border'
         )}
       >
         <Image
@@ -86,17 +95,22 @@ export async function TrailHeading({ trail, className }: TrailHeadingProps) {
         <p className="break-all text-lg">{trail.description}</p>
 
         <section className="flex flex-col gap-2">
-          <h2 className="flex items-center gap-2 text-xl font-bold">{trail.contributors.length} contribuidores</h2>
-          <ContributorList contributors={allContributors} />
+          <h2 className="flex items-center gap-2 text-xl font-bold">
+            {trail.contributors.length} contribuidores
+          </h2>
+          <ContributorList contributors={trail.contributors} />
         </section>
 
         <UpdatedAt updatedAt={trail.updatedAt} />
 
         <VisualizeTrailAsAdmin trailId={trail.id} />
 
-        {user !== null ? (
+        {currentUser !== null ? (
           <div className="mt-auto">
-            <FollowTrailButton trailId={trail.id} isAlreadyFollowing={isAlreadyFollowing} />
+            <FollowTrailButton
+              trailId={trail.id}
+              isAlreadyFollowing={isAlreadyFollowing}
+            />
           </div>
         ) : (
           <Button asChild className="mt-auto">

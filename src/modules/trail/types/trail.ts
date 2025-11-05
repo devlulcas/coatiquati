@@ -1,35 +1,89 @@
-import type {
-  InsertCategory,
-  SelectCategory,
-} from '@/modules/database/schema/category';
-import type {
-  NewTrailTable,
-  TrailTable,
-} from '@/modules/database/schema/trail';
-import type { Creatable, Updatable } from '@/modules/database/types/utils';
-import type { Topic } from '@/modules/topic/types/topic';
-import type { Contributor } from '@/modules/user/types/user';
+import type { db } from '@/modules/database/db';
+import type { SelectCategory } from '@/modules/database/schema/category';
+import type { ContentStatus } from '@/modules/database/schema/content';
+import type { SelectTrail } from '@/modules/database/schema/trail';
+import {
+  CONTRIBUTOR_COLUMNS,
+  type Contributor,
+} from '@/modules/user/types/user';
 
-type Category = Omit<SelectCategory, 'authorId'>;
+type Category = {
+  id: number;
+  name: string;
+};
 
-type NewCategory = Creatable<InsertCategory>;
+export const CATEGORY_COLUMNS = {
+  id: true,
+  name: true,
+} satisfies Partial<Record<keyof SelectCategory, true>>;
 
-type UpdateCategory = Updatable<InsertCategory>;
+export type Trail = {
+  id: number;
+  title: string;
+  description: string;
+  thumbnail: string;
+  status: ContentStatus;
+  createdAt: Date;
+  updatedAt: Date;
 
-export type Trail = Omit<TrailTable, 'authorId' | 'category'> & {
   author: Contributor;
-  contributors: { user: Contributor }[];
+  contributors: Contributor[];
   category: Category | null;
 };
 
-export type TrailWithTopicArray = Trail & {
-  topics: Topic[];
-};
+export const TRAIL_COLUMNS = {
+  id: true,
+  title: true,
+  description: true,
+  thumbnail: true,
+  status: true,
+  createdAt: true,
+  updatedAt: true,
+} satisfies Partial<Record<keyof SelectTrail, true>>;
 
-export type UpdateTrail = Omit<Updatable<TrailTable>, 'authorId'> & {
-  contributorId: TrailTable['authorId'];
-};
+export const TRAIL_QUERY = {
+  columns: TRAIL_COLUMNS,
+  with: {
+    author: {
+      columns: CONTRIBUTOR_COLUMNS,
+    },
+    contributions: {
+      columns: {},
+      where: (fields, operators) => {
+        return operators.isNotNull(fields.deletedAt);
+      },
+      with: {
+        user: {
+          columns: CONTRIBUTOR_COLUMNS,
+        },
+      },
+    },
+    category: {
+      columns: CATEGORY_COLUMNS,
+    },
+  },
+} satisfies Parameters<typeof db.query.trails.findFirst>[0];
 
-export type NewTrail = Creatable<NewTrailTable>;
+export function mapToTrail(
+  trail: Pick<Trail, keyof typeof TRAIL_COLUMNS> & {
+    author: Contributor;
+    contributions: {
+      user: Contributor;
+    }[];
+    category: Category | null;
+  }
+): Trail {
+  return {
+    id: trail.id,
+    title: trail.title,
+    description: trail.description,
+    thumbnail: trail.thumbnail,
+    status: trail.status,
+    createdAt: trail.createdAt,
+    updatedAt: trail.updatedAt,
 
-export type TrailId = TrailTable['id'];
+    author: trail.author,
+    contributors: trail.contributions.map((contribution) => contribution.user),
+    category: trail.category,
+  };
+}

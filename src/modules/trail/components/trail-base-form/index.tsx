@@ -1,32 +1,45 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import type { ClassValue } from 'clsx';
-import { type SubmitHandler, useForm } from 'react-hook-form';
 import { CategoriesAsyncSelect } from '@/modules/category/components/categories-async-select';
 import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { Button } from '@/shared/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { cn } from '@/shared/utils/cn';
-import { type NewTrailSchema, newTrailSchema } from '../../schemas/new-trail-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { ClassValue } from 'clsx';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import {
+  type UpsertTrailSchema,
+  upsertTrailSchema,
+} from '../../schemas/new-trail-schema';
 import type { Trail } from '../../types/trail';
 
 type TrailBaseFormProps = {
   defaultValues?: Trail;
-  onSubmit: SubmitHandler<NewTrailSchema>;
+  onSubmit: SubmitHandler<UpsertTrailSchema>;
   className?: ClassValue;
 };
 
-export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseFormProps) {
-  const form = useForm<NewTrailSchema>({
-    resolver: zodResolver(newTrailSchema),
+export function TrailBaseForm({
+  defaultValues,
+  onSubmit,
+  className,
+}: TrailBaseFormProps) {
+  const form = useForm<UpsertTrailSchema>({
+    resolver: zodResolver(upsertTrailSchema),
     defaultValues: {
-      category: defaultValues?.category?.name,
-      description: defaultValues?.description,
-      status: defaultValues?.status,
-      thumbnail: defaultValues?.thumbnail,
-      title: defaultValues?.title,
+      description: defaultValues?.description ?? '',
+      thumbnail: defaultValues?.thumbnail ?? '',
+      title: defaultValues?.title ?? '',
+      categoryId: defaultValues?.category?.id,
     },
   });
 
@@ -53,19 +66,27 @@ export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseF
 
         <FormField
           control={form.control}
-          name="category"
-          render={() => (
-            <FormItem className="flex flex-col gap-2">
-              <FormLabel>Descrição</FormLabel>
-              <FormControl>
-                <CategoriesAsyncSelect
-                  selectedCategory={{ name: form.watch('category') || '' }}
-                  setSelectedCategory={category => form.setValue('category', category.name)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          name="categoryId"
+          render={() => {
+            const categoryId = form.watch('categoryId');
+
+            return (
+              <FormItem className="flex flex-col gap-2">
+                <FormLabel>Descrição</FormLabel>
+                <FormControl>
+                  <CategoriesAsyncSelect
+                    selectedCategory={
+                      categoryId ? { id: categoryId } : undefined
+                    }
+                    setSelectedCategory={(category) => {
+                      form.setValue('categoryId', category.id);
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
 
         <FormField
@@ -91,10 +112,10 @@ export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseF
               <FormControl>
                 <ImageUploadArea
                   defaultValue={{ src: field.value }}
-                  onFailedUpload={error => {
+                  onFailedUpload={(error) => {
                     form.setError('thumbnail', error);
                   }}
-                  onSuccessfulUpload={data => {
+                  onSuccessfulUpload={(data) => {
                     form.setValue('thumbnail', data.url);
                   }}
                 />
@@ -104,7 +125,11 @@ export function TrailBaseForm({ defaultValues, onSubmit, className }: TrailBaseF
           )}
         />
 
-        <Button className="w-full" type="submit" isLoading={form.formState.isSubmitting}>
+        <Button
+          className="w-full"
+          type="submit"
+          isLoading={form.formState.isSubmitting}
+        >
           Salvar
         </Button>
       </form>

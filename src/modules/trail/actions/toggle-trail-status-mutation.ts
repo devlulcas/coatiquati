@@ -1,50 +1,71 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
-import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import { auth } from '@/modules/auth/lib/auth';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
+import { db } from '@/modules/database/db';
+import { trails } from '@/modules/database/schema/trail';
+import { fail, ok, type Result } from '@/shared/lib/result';
+import { eq } from 'drizzle-orm';
 import { revalidateTrails } from '../lib/revalidate-trail';
-import { TrailRepository } from '../repositories/trail-repository';
-import { type TrailWithIdSchema, trailWithIdSchema } from '../schemas/trail-with-id-schema';
+import {
+  type TrailWithIdSchema,
+  trailWithIdSchema,
+} from '../schemas/trail-with-id-schema';
 
-export async function toggleTrailStatusMutation(params: TrailWithIdSchema): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+export async function changeTrailContentStatusMutation(
+  params: TrailWithIdSchema
+): Promise<Result<string>> {
+  const currentUser = await getCurrentUser();
+  assertAuthenticated(currentUser);
 
-  if (!isAuthenticated(user)) {
-    return fail('Usuário não autenticado.');
+  const can = await auth.api.userHasPermission({
+    body: {
+      userId: currentUser.id,
+      permission: { trail: ['change_publication_status'] },
+    },
+  });
+
+  if (!can.success) {
+    return fail('Você não tem permissão para manipular uma trilha.');
   }
 
-  if (!isAdminOrAbove(user.role)) {
-    return fail('Somente administradores podem editar trilhas.');
-  }
+  const parsed = trailWithIdSchema.safeParse(params);
 
-  const validatedParams = trailWithIdSchema.safeParse(params);
-
-  if (!validatedParams.success) {
+  if (!parsed.success) {
     return fail('Parâmetros inválidos para editar trilha.');
   }
 
-  const trailRepository = new TrailRepository();
+  const trail = await db.query.trails.findFirst({
+    columns: { id: true, status: true },
+    where: (fields, { eq }) => eq(fields.id, parsed.data.id),
+  });
 
-  const trailResult = await wrapAsyncInResult(trailRepository.getTrailById(validatedParams.data.id));
-
-  if (isFail(trailResult)) {
+  if (!trail) {
     return fail('Trilha não encontrada.');
   }
 
-  const trail = trailResult.value;
-
-  if (trail.status === 'PUBLISHED') {
-    trailRepository.omitTrail(validatedParams.data.id);
-    revalidateTrails({ username: user.username, trailId: trail.id });
-    return ok('Trilha omitida com sucesso.');
+  if (trail.status === parsed.data.status) {
+    return fail('Trilha já está no status desejado.');
   }
 
-  if (trail.status === 'DRAFT') {
-    trailRepository.enableTrail(validatedParams.data.id);
-    revalidateTrails({ username: user.username, trailId: trail.id });
-    return ok('Trilha publicada com sucesso.');
+  const updatedTrail = await db
+    .update(trails)
+    .set({ status: parsed.data.status })
+    .where(eq(trails.id, parsed.data.id))
+    .returning({ id: trails.id })
+    .then((result) => result.at(0));
+
+  if (!updatedTrail) {
+    return fail('Erro ao atualizar status da trilha.');
   }
 
-  return fail('Status de trilha inválido.');
+  revalidateTrails({
+    username: currentUser.username,
+    trailId: updatedTrail.id,
+  });
+
+  return ok('Status da trilha atualizado com sucesso.');
 }
