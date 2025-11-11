@@ -1,3 +1,4 @@
+import { PomodoroSessionType } from '@/modules/database/schema/pomodoro-sessions';
 import { z } from 'zod';
 
 export const pomodoroSettingsSchema = z.object({
@@ -9,8 +10,8 @@ export const pomodoroSettingsSchema = z.object({
 });
 
 export const pomodoroSessionSchema = z.object({
-  startTime: z.number(),
-  endTime: z.number(),
-  type: z.enum(['pomodoro', 'short_break', 'long_break']),
+  startTime: z.date(),
+  endTime: z.date(),
+  type: z.enum(PomodoroSessionType),
   completed: z.boolean(),
 });

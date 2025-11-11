@@ -1,6 +1,5 @@
 'use client';
 
-import { BirdIcon, SkullIcon } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,44 +13,53 @@ import {
 } from '@/shared/components/ui/alert-dialog';
 import { Button } from '@/shared/components/ui/button';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
+import { unwrap } from '@/shared/lib/result';
+import { useMutation } from '@tanstack/react-query';
+import { BirdIcon, SkullIcon } from 'lucide-react';
 import { banUserMutation } from '../actions/ban-user-mutation';
 import { unbanUserMutation } from '../actions/unban-user-mutation';
 
 type BanActionConfirmationDialogProps = {
   reportId: number;
   user: {
-    username: string;
-    bannedAt: Date | null;
+    id: string;
+    banned: boolean;
   };
 };
 
-export function BanActionConfirmationDialog({ reportId, user }: BanActionConfirmationDialogProps) {
+export function BanActionConfirmationDialog({
+  reportId,
+  user,
+}: BanActionConfirmationDialogProps) {
   const { toast } = useToast();
 
-  const banMutation = useServerActionMutation({
-    serverAction: banUserMutation,
-    onSuccessfulAction: () => {
-      toast({ title: `Usuário ${user.username} banido` });
+  const banMutation = useMutation({
+    mutationFn: async () => {
+      return unwrap(await banUserMutation({ reportId }));
     },
-    onFailedAction: error => {
+    onSuccess: () => {
+      toast({ title: `Usuário banido` });
+    },
+    onError: (error) => {
       toast({
         title: 'Erro ao banir usuário',
-        description: error instanceof Error ? error.message : String(error),
+        description: error.message,
         variant: 'destructive',
       });
     },
   });
 
-  const unbanMutation = useServerActionMutation({
-    serverAction: unbanUserMutation,
-    onSuccessfulAction: () => {
-      toast({ title: `Banimento de ${user.username} removido` });
+  const unbanMutation = useMutation({
+    mutationFn: async () => {
+      return unwrap(await unbanUserMutation(user.id));
     },
-    onFailedAction: error => {
+    onSuccess: () => {
+      toast({ title: `Banimento removido` });
+    },
+    onError: (error) => {
       toast({
         title: 'Erro ao remover banimento',
-        description: error instanceof Error ? error.message : String(error),
+        description: error.message,
         variant: 'destructive',
       });
     },
@@ -61,7 +69,7 @@ export function BanActionConfirmationDialog({ reportId, user }: BanActionConfirm
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button type="button" className="items-center space-x-2" size="sm">
-          {user.bannedAt ? (
+          {user.banned ? (
             <>
               Remover ban <BirdIcon className="h-4 w-4" />
             </>
@@ -77,20 +85,22 @@ export function BanActionConfirmationDialog({ reportId, user }: BanActionConfirm
         <AlertDialogHeader>
           <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
           <AlertDialogDescription>
-            {user.bannedAt
-              ? `Você deseja remover o banimento de ${user.username}?`
-              : `Você deseja banir ${user.username}?`}
+            {user.banned
+              ? `Você deseja remover o banimento do usuário?`
+              : `Você deseja banir o usuário?`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
 
-          {user.bannedAt ? (
-            <AlertDialogAction onClick={() => unbanMutation.mutate({ username: user.username })}>
+          {user.banned ? (
+            <AlertDialogAction onClick={() => unbanMutation.mutate()}>
               Remover ban
             </AlertDialogAction>
           ) : (
-            <AlertDialogAction onClick={() => banMutation.mutate({ reportId })}>Banir</AlertDialogAction>
+            <AlertDialogAction onClick={() => banMutation.mutate()}>
+              Banir
+            </AlertDialogAction>
           )}
         </AlertDialogFooter>
       </AlertDialogContent>

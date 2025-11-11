@@ -1,6 +1,6 @@
-export function toMilliseconds(
+export function toMS(
   n: number,
-  t: 'secs' | 'mins' | 'hours' | 'days' | 'months',
+  t: 'secs' | 'mins' | 'hours' | 'days' | 'months'
 ): number {
   const conversions: Record<string, number> = {
     secs: 1000,

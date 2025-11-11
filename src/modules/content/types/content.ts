@@ -1,39 +1,36 @@
-import type { SelectContent } from '@/modules/database/schema/content';
-import type { Creatable, Updatable } from '@/modules/database/types/utils';
-import type { Contributor } from '@/modules/user/types/user';
 import type {
-  ImageContentJSON,
-  RichTextContentJSON,
-  VideoContentJSON,
-} from './content-json-field';
+  ContentStatus,
+  SelectImageContent,
+  SelectRichTextContent,
+  SelectVideoContent,
+} from '@/modules/database/schema/content';
+import type { Contributor } from '@/modules/user/types/user';
 
-type RawBaseContent = SelectContent;
-
-export type BaseContent = Omit<
-  SelectContent,
-  'authorId' | 'contentType' | 'topicId'
-> & {
+export type BaseContent = {
+  id: number;
+  title: string;
+  description: string | null;
+  status: ContentStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date | null;
   author: Contributor;
-  contributors: { user: Contributor }[];
+  contributors: Contributor[];
+
+  // pode ser qualquer um dos tipos abaixo
+  imageContent?: Omit<SelectImageContent, 'contentId'>;
+  richTextContent?: Omit<SelectRichTextContent, 'contentId'>;
+  videoContent?: Omit<SelectVideoContent, 'contentId'>;
 };
 
-export type ImageContent = BaseContent & {
-  contentType: 'image';
-  content: ImageContentJSON;
-};
+export type ImageContent = MakeRequired<BaseContent, 'imageContent'>;
+export type RichTextContent = MakeRequired<BaseContent, 'richTextContent'>;
+export type VideoContent = MakeRequired<BaseContent, 'videoContent'>;
 
-export type RichTextContent = BaseContent & {
-  contentType: 'richText';
-  content: RichTextContentJSON;
-};
-
-export type VideoContent = BaseContent & {
-  contentType: 'video';
-  content: VideoContentJSON;
-};
-
-export type Content = ImageContent | RichTextContent | VideoContent;
-type NewContent = Creatable<Content>;
-type UpdateContent = Omit<Updatable<Content>, 'author' | 'contentType'> & {
-  contributorId: Content['author']['id'];
-};
+type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
+export function isRequired<T, K extends keyof T>(
+  input: T,
+  key: K
+): input is MakeRequired<T, K> {
+  return input[key] !== null && input[key] !== undefined;
+}

@@ -1,77 +1,67 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAuthenticated } from '@/modules/auth/utils/is';
-import { db } from '@/modules/database/db';
-import type { InsertComment } from '@/modules/database/schema/comment';
-import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
-import { CommentRepository } from '../repositories/comment-repository';
 import {
-  type NewCommentSchema,
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
+import { db } from '@/modules/database/db';
+import {
+  comments,
+  type InsertComment,
+} from '@/modules/database/schema/comment';
+import { toMS } from '@/shared/lib/date';
+import { fail, ok, type Result } from '@/shared/lib/result';
+import {
   newCommentSchema,
+  type NewCommentSchema,
 } from '../schemas/new-comment-schema';
 
 export async function commentOnContentMutation(
   params: NewCommentSchema
 ): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+  const user = await getCurrentUser();
+  assertAuthenticated(user);
 
-  if (!isAuthenticated(user)) {
-    return fail('Somente usuários logados podem comentar.');
-  }
+  const parsed = newCommentSchema.safeParse(params);
 
-  const validatedParams = newCommentSchema.safeParse(params);
-
-  if (!validatedParams.success) {
+  if (!parsed.success) {
     return fail('Parâmetros inválidos para criar um comentário.');
   }
 
-  const SIXTY_SECONDS = 60000;
+  const TIMEOUT = toMS(60, 'secs');
 
-  const lastCommentResult = await wrapAsyncInResult(
-    db.query.commentTable.findFirst({
-      where: (fields, operators) => {
-        return operators.and(
-          operators.eq(fields.authorId, user.id),
-          operators.gt(fields.createdAt, new Date(Date.now() - SIXTY_SECONDS))
-        );
-      },
-    })
-  );
+  const lastCommentResult = await db.query.comments.findFirst({
+    where: (fields, operators) => {
+      return operators.and(
+        operators.eq(fields.userId, user.id),
+        operators.gt(fields.createdAt, new Date(Date.now() - TIMEOUT))
+      );
+    },
+  });
 
-  if (lastCommentResult.type === 'ok' && lastCommentResult.value) {
-    log.warn('Tentativa de comentar muito rápido', { userId: user.id });
-    return fail('Espere 60 segundos para comentar novamente');
+  if (lastCommentResult) {
+    return fail('Você deve esperar 60 segundos para comentar novamente');
   }
 
-  const newComment: InsertComment = {
-    authorId: user.id,
-    contentId: params.contentId,
+  const comment: InsertComment = {
+    userId: user.id,
     content: params.content,
     parentCommentId: params.parentCommentId,
+    trailId: params.trailId,
+    topicId: params.topicId,
+    contentId: params.contentId,
+    publicationId: params.publicationId,
   };
 
-  const commentRepository = new CommentRepository();
+  const newComment = await db
+    .insert(comments)
+    .values(comment)
+    .returning({ id: comments.id })
+    .then((result) => result.at(0));
 
-  try {
-    await commentRepository.addCommentInContent(newComment);
-
-    log.info('Comentário criado', {
-      authorId: user.id,
-      on: 'content',
-      contentId: params.contentId,
-    });
-
-    return ok('Comentário criado com sucesso');
-  } catch (error) {
-    log.error('Erro ao criar comentário', {
-      authorId: user.id,
-      on: 'content',
-      contentId: params.contentId,
-      error,
-    });
-
+  if (!newComment) {
     return fail('Erro ao criar comentário');
   }
+
+  return ok('Comentário criado com sucesso');
 }

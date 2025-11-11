@@ -1,14 +1,21 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import {
+  fail,
+  isFail,
+  ok,
+  type Result,
+  wrapAsyncInResult,
+} from '@/shared/lib/result';
 import { revalidateTopics } from '../lib/revalidate-topic';
 import { TopicRepository } from '../repositories/topic-repository';
 
-export async function toggleTopicStatusMutation(topicId: number): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+export async function toggleTopicStatusMutation(
+  topicId: number
+): Promise<Result<string>> {
+  const user = await getCurrentUser();
 
   if (!isAuthenticated(user)) {
     return fail('Usuário não autenticado.');
@@ -20,7 +27,9 @@ export async function toggleTopicStatusMutation(topicId: number): Promise<Result
 
   const topicRepository = new TopicRepository();
 
-  const topicResult = await wrapAsyncInResult(topicRepository.getTopicById(topicId, true));
+  const topicResult = await wrapAsyncInResult(
+    topicRepository.getTopicById(topicId, true)
+  );
 
   if (isFail(topicResult)) {
     log.error('Falha ao buscar tópico.', topicResult.fail);

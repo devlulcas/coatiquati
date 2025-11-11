@@ -1,78 +1,90 @@
 'use server';
 
-import { formatDistanceToNow } from 'date-fns';
-import { desc, eq } from 'drizzle-orm';
-import { validateRequest } from '@/modules/auth/services/next';
+import { getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { type ReportInsert, reportTable } from '@/modules/database/schema/report';
-import { log } from '@/modules/logging/lib/pino';
-import { toMilliseconds } from '@/shared/lib/date';
-import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
-import type { ReportReason } from '../constants/report';
-import { type CreateReportSchema, createReportSchema } from '../schemas/create-report';
+import { reports, ReportStatus } from '@/modules/database/schema/report';
+import { fail, ok, type Result } from '@/shared/lib/result';
+import { formatDistanceToNow, isBefore, sub } from 'date-fns';
+import {
+  createReportSchema,
+  type CreateReportSchema,
+} from '../schemas/create-report';
 
-export async function reportUserMutation(params: CreateReportSchema): Promise<Result<string>> {
-  const validatedParams = createReportSchema.safeParse(params);
+export async function reportUserMutation(
+  params: CreateReportSchema
+): Promise<Result<string>> {
+  const parsed = createReportSchema.safeParse(params);
 
-  if (!validatedParams.success) {
-    return fail(validatedParams.error.errors[0].message);
+  if (!parsed.success) {
+    return fail(parsed.error.message);
   }
 
-  const { data: user } = await validateRequest();
+  const currentUser = await getCurrentUser();
 
-  if (!user) {
-    return fail('Entre para reportar um usuário');
+  if (!currentUser) {
+    return fail('Faça login para reportar um usuário');
   }
 
-  if (user.bannedAt) {
+  if (currentUser.banned) {
     return fail('Você está banido e não pode reportar usuários');
   }
 
-  if (user.id === validatedParams.data.userId) {
-    return fail('Você não pode reportar você mesmo');
+  if (currentUser.id === parsed.data.userId) {
+    return fail('Você não pode reportar a si mesmo');
   }
 
-  const lastReportFromUserResult = await wrapAsyncInResult(
-    db
-      .select()
-      .from(reportTable)
-      .where(eq(reportTable.reportedById, user.id))
-      .orderBy(desc(reportTable.createdAt))
-      .limit(1),
-  );
+  const lastReportFromUser = await db.query.reports.findFirst({
+    columns: {
+      id: true,
+      createdAt: true,
+      status: true,
+    },
+    where: (fields, operators) => {
+      return operators.and(operators.eq(fields.reportedById, currentUser.id));
+    },
+    orderBy: (fields, operators) => operators.desc(fields.createdAt),
+  });
 
-  if (isFail(lastReportFromUserResult)) {
-    return fail('Erro ao buscar reportes do usuário');
+  const now = new Date();
+  const timeout = { minutes: 15 };
+  const timeoutDate = sub(now, timeout);
+
+  if (
+    lastReportFromUser &&
+    isBefore(lastReportFromUser.createdAt, timeoutDate)
+  ) {
+    const distance = formatDistanceToNow(timeoutDate, {
+      addSuffix: true,
+    });
+
+    return fail(`Aguarde ${distance} antes de fazer outro reporte`);
   }
-
-  const lastReportFromUser = lastReportFromUserResult.value[0];
-
-  const mins = toMilliseconds(15, 'mins');
-
-  const timeSinceLastReport = lastReportFromUser ? Date.now() - lastReportFromUser.createdAt.getTime() : mins;
-
-  if (timeSinceLastReport < mins) {
-    return fail(
-      `Aguarde ${formatDistanceToNow(lastReportFromUser.createdAt, { addSuffix: true })} antes de fazer outro reporte`,
-    );
-  }
-
-  // Salva o reporte
-  const data: ReportInsert = {
-    description: validatedParams.data.description,
-    reportedById: user.id,
-    reportedEntityId: validatedParams.data.reportedEntityId,
-    reportedEntityType: validatedParams.data.reportedEntityType,
-    type: validatedParams.data.type as ReportReason, // Já foi validado pelo zod
-    userId: validatedParams.data.userId,
-  };
 
   try {
-    await db.insert(reportTable).values(data).execute();
-    log.info(`Usuário ${user.id} reportou usuário ${data.userId} por ${data.type}`);
+    const [report] = await db
+      .insert(reports)
+      .values({
+        description: parsed.data.description,
+        reportedById: currentUser.id,
+        userId: parsed.data.userId,
+        status: ReportStatus.PENDING,
+        type: parsed.data.type,
+        // entidades relacionadas
+        commentId: parsed.data.commentId,
+        contentId: parsed.data.contentId,
+        publicationId: parsed.data.publicationId,
+        trailId: parsed.data.trailId,
+        topicId: parsed.data.topicId,
+      })
+      .returning({ id: reports.id });
+
+    if (!report) {
+      return fail('Erro ao reportar usuário');
+    }
+
     return ok('Usuário reportado');
   } catch (error) {
-    log.error(`Erro ao reportar usuário ${data.userId} por ${data.type}`, error);
-    return fail('Erro ao reportar usuário');
+    console.error(error);
+    return fail('Erro ao reportar usuário. Tente novamente mais tarde.');
   }
 }

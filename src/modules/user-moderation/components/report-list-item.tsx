@@ -1,4 +1,8 @@
-import { REPORT_REASON_LABELS, type ReportReason } from '@/modules/user-moderation/constants/report';
+import {
+  ReportStatus,
+  type ReportReason,
+} from '@/modules/database/schema/report';
+import { REPORT_REASON_LABELS } from '@/modules/user-moderation/constants/report';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import type { Report } from '../types/report';
 import { BanActionConfirmationDialog } from './ban-action-confirmation-dialog';
@@ -12,23 +16,36 @@ export default async function ReportListItem({ report }: ReportListItemProps) {
   return (
     <li className="flex flex-col gap-2 border-l-2 border-destructive bg-background/75 py-4 pl-4">
       <div className="flex items-center space-x-2">
-        <UserAvatar user={report.reportedBy} />
+        <UserAvatar
+          user={{
+            username: report.reportedBy.username,
+            avatar: report.reportedBy.image,
+          }}
+        />
 
         <p className="flex flex-wrap items-center gap-[.5ch]">
           {report.reportedBy.username} reportou{' '}
           <span className="rounded bg-destructive/75 px-2 text-sm text-destructive-foreground">
-            {report.user.username}
+            {report.reportedUser.username}
           </span>
           por
           <ReportReasonLabel reason={report.type} />
-          {report.deletedAt === null && report.status === 'resolved' && (
-            <span className="rounded bg-green-500/75 px-2 text-sm text-green-50">resolvido</span>
-          )}
-          {report.deletedAt === null && report.status === 'pending' && (
-            <span className="rounded bg-yellow-700/75 px-2 text-sm text-yellow-50">pendente</span>
-          )}
+          {report.deletedAt === null &&
+            report.status === ReportStatus.RESOLVED && (
+              <span className="rounded bg-green-500/75 px-2 text-sm text-green-50">
+                resolvido
+              </span>
+            )}
+          {report.deletedAt === null &&
+            report.status === ReportStatus.PENDING && (
+              <span className="rounded bg-yellow-700/75 px-2 text-sm text-yellow-50">
+                pendente
+              </span>
+            )}
           {report.deletedAt !== null && (
-            <span className="rounded bg-gray-700/75 px-2 text-sm text-gray-50">ignorado</span>
+            <span className="rounded bg-gray-700/75 px-2 text-sm text-gray-50">
+              ignorado
+            </span>
           )}
         </p>
       </div>
@@ -38,8 +55,8 @@ export default async function ReportListItem({ report }: ReportListItemProps) {
         <BanActionConfirmationDialog
           reportId={report.id}
           user={{
-            username: report.user.username,
-            bannedAt: report.user.bannedAt,
+            id: report.reportedUser.id,
+            banned: report.reportedUser.banned,
           }}
         />
 

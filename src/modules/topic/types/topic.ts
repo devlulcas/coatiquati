@@ -1,19 +1,7 @@
-import type { Content } from '@/modules/content/types/content';
-import type { NewTopicTable, TopicTable } from '@/modules/database/schema/topic';
-import type { Creatable, Updatable } from '@/modules/database/types/utils';
+import type { SelectTopic } from '@/modules/database/schema/topic';
 import type { Contributor } from '@/modules/user/types/user';
 
-export type Topic = Omit<TopicTable, 'authorId'> & {
-  contributors: { user: Contributor }[];
+export type Topic = Omit<SelectTopic, 'authorId'> & {
+  contributors: Contributor[];
   author: Contributor;
-};
-
-export type NewTopic = Creatable<NewTopicTable>;
-
-export type UpdateTopic = Omit<Updatable<TopicTable>, 'authorId'> & {
-  contributorId: TopicTable['authorId'];
-};
-
-export type TopicWithContentArray = Topic & {
-  contents: Content[];
 };

@@ -11,8 +11,14 @@ export async function getRecentTrailsQuery(): Promise<Result<Trail[]>> {
   const result = await db.query.trails.findMany({
     ...TRAIL_QUERY,
     limit: quantity,
-    where: (fields, operators) => {
-      return operators.eq(fields.status, ContentStatus.PUBLISHED);
+    where: (fields, { eq, and, isNull }) => {
+      return and(
+        eq(fields.status, ContentStatus.PUBLISHED),
+        isNull(fields.deletedAt)
+      );
+    },
+    orderBy: (fields, { desc }) => {
+      return desc(fields.createdAt);
     },
   });
 

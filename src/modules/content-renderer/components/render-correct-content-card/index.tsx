@@ -1,17 +1,20 @@
-import type { Content } from '@/modules/content/types/content';
+import { isRequired, type BaseContent } from '@/modules/content/types/content';
 import { RenderImageContentCard } from '../render-image-content-card';
 import { RenderRichTextContentCard } from '../render-rich-text-content-card';
 import { RenderVideoContentCard } from '../render-video-content-card';
 
-export function RenderCorrectContentCard({ data }: { data: Content }) {
-  switch (data.contentType) {
-    case 'image':
-      return <RenderImageContentCard data={data} />;
-    case 'video':
-      return <RenderVideoContentCard data={data} />;
-    case 'richText':
-      return <RenderRichTextContentCard data={data} />;
-    default:
-      throw new Error('Tipo de conteúdo inválido');
+export function RenderCorrectContentCard({ data }: { data: BaseContent }) {
+  if (isRequired(data, 'imageContent')) {
+    return <RenderImageContentCard data={data} />;
   }
+
+  if (isRequired(data, 'richTextContent')) {
+    return <RenderRichTextContentCard data={data} />;
+  }
+
+  if (isRequired(data, 'videoContent')) {
+    return <RenderVideoContentCard data={data} />;
+  }
+
+  return <div>Conteúdo inválido</div>;
 }

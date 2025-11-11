@@ -18,22 +18,14 @@ const onlyOneTargetCheck = sql`(
 export const contributions = t.pgTable(
   'contribution',
   {
+    id: t.serial('id').primaryKey().notNull(),
     userId: t
       .text('user_id')
       .references(() => user.id)
       .notNull(),
-    trailId: t
-      .integer('trail_id')
-      .references(() => trails.id)
-      .notNull(),
-    topicId: t
-      .integer('topic_id')
-      .references(() => topics.id)
-      .notNull(),
-    contentId: t
-      .integer('content_id')
-      .references(() => contents.id)
-      .notNull(),
+    trailId: t.integer('trail_id').references(() => trails.id),
+    topicId: t.integer('topic_id').references(() => topics.id),
+    contentId: t.integer('content_id').references(() => contents.id),
     ...tableTimestampColumns,
   },
   () => [t.check('only_one_target_check', onlyOneTargetCheck)]

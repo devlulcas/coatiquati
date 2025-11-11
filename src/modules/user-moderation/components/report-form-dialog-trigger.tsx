@@ -1,40 +1,79 @@
 'use client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import type { z } from 'zod';
+
 import { Button } from '@/shared/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
+import { unwrap } from '@/shared/lib/result';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import type { z } from 'zod';
 import { reportUserMutation } from '../actions/report-user-mutation';
-import { REPORT_REASON_LABELS, REPORT_REASONS } from '../constants/report';
-import { createReportSchema } from '../schemas/create-report';
+import { REPORT_REASON_LABELS } from '../constants/report';
+import {
+  createReportSchema,
+  type CreateReportSchema,
+} from '../schemas/create-report';
 
 type ReportFormDialogTriggerProps = {
   children: React.ReactNode;
-  origin: {
-    type: 'trail' | 'topic' | 'content' | 'publication';
-    id: number;
-  };
-  user: string;
+  params: Pick<
+    CreateReportSchema,
+    | 'trailId'
+    | 'topicId'
+    | 'contentId'
+    | 'publicationId'
+    | 'commentId'
+    | 'userId'
+  >;
 };
 
-export function ReportFormDialogTrigger({ children, origin, user }: ReportFormDialogTriggerProps) {
+export function ReportFormDialogTrigger({
+  children,
+  params,
+}: ReportFormDialogTriggerProps) {
   const { toast } = useToast();
 
-  const mutation = useServerActionMutation({
-    serverAction: reportUserMutation,
-    onFailedAction: error => {
+  const mutation = useMutation({
+    mutationFn: async (formData: ReportFormSchema) => {
+      const result = await reportUserMutation({
+        description: formData.description,
+        type: formData.type,
+
+        trailId: params.trailId,
+        topicId: params.topicId,
+        contentId: params.contentId,
+        publicationId: params.publicationId,
+        commentId: params.commentId,
+        userId: params.userId,
+      });
+
+      return unwrap(result);
+    },
+    onError: (error) => {
       toast({
         title: 'Erro ao reportar usuário',
         description: error.message,
         variant: 'destructive',
       });
     },
-    onSuccessfulAction: () => {
+    onSuccess: () => {
       toast({
         title: 'Usuário reportado com sucesso',
         variant: 'success',
@@ -50,14 +89,8 @@ export function ReportFormDialogTrigger({ children, origin, user }: ReportFormDi
           <DialogTitle>Reportando um usuário</DialogTitle>
         </DialogHeader>
         <ReportForm
-          onSubmit={data => {
-            mutation.mutate({
-              description: data.description,
-              type: data.type,
-              reportedEntityId: origin.id,
-              reportedEntityType: origin.type,
-              userId: user,
-            });
+          onSubmit={(data) => {
+            return mutation.mutateAsync(data);
           }}
         />
       </DialogContent>
@@ -65,16 +98,29 @@ export function ReportFormDialogTrigger({ children, origin, user }: ReportFormDi
   );
 }
 
-const formSchema = createReportSchema.pick({ description: true, type: true });
-type FormSchema = z.infer<typeof formSchema>;
-function ReportForm({ onSubmit }: { onSubmit: (data: FormSchema) => void }) {
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
+const reportFormSchema = createReportSchema.pick({
+  description: true,
+  type: true,
+});
+
+type ReportFormSchema = z.infer<typeof reportFormSchema>;
+
+type ReportFormProps = {
+  onSubmit: SubmitHandler<ReportFormSchema>;
+};
+
+function ReportForm({ onSubmit }: ReportFormProps) {
+  const form = useForm<ReportFormSchema>({
+    resolver: zodResolver(reportFormSchema),
   });
 
   return (
     <Form {...form}>
-      <form method="POST" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-3">
+      <form
+        method="POST"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-3"
+      >
         <FormField
           control={form.control}
           name="description"
@@ -82,12 +128,16 @@ function ReportForm({ onSubmit }: { onSubmit: (data: FormSchema) => void }) {
             <FormItem>
               <FormLabel>Porque está reportando este usuário?</FormLabel>
               <FormControl>
-                <Input placeholder="A postagem contém dados falsos" {...field} />
+                <Input
+                  placeholder="A postagem contém dados falsos"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="type"
@@ -97,17 +147,22 @@ function ReportForm({ onSubmit }: { onSubmit: (data: FormSchema) => void }) {
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={field.value.toString()}
                   className="flex flex-col space-y-1"
                 >
-                  {REPORT_REASONS.map(reason => (
-                    <FormItem key={reason} className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value={reason} />
-                      </FormControl>
-                      <FormLabel className="font-normal">{REPORT_REASON_LABELS[reason]}</FormLabel>
-                    </FormItem>
-                  ))}
+                  {Object.entries(REPORT_REASON_LABELS).map(
+                    ([reason, label]) => (
+                      <FormItem
+                        key={reason}
+                        className="flex items-center space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <RadioGroupItem value={reason} />
+                        </FormControl>
+                        <FormLabel className="font-normal">{label}</FormLabel>
+                      </FormItem>
+                    )
+                  )}
                 </RadioGroup>
               </FormControl>
               <FormMessage />

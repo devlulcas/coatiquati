@@ -1,13 +1,23 @@
 'use client';
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { TrailCard } from '@/modules/trail/components/trail-card';
 import type { Trail } from '@/modules/trail/types/trail';
-import { Carousel, type CarouselApi, CarouselContent, CarouselItem } from '@/shared/components/ui/carousel';
+import {
+  Carousel,
+  type CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from '@/shared/components/ui/carousel';
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-type TrailCardCarouselSectionProps = { trails: Trail[] } & React.HTMLAttributes<HTMLDivElement>;
+type TrailCardCarouselSectionProps = {
+  trails: Trail[];
+} & React.HTMLAttributes<HTMLDivElement>;
 
-export function TrailCardCarouselSection({ trails, ...rest }: TrailCardCarouselSectionProps) {
+export function TrailCardCarouselSection({
+  trails,
+  ...rest
+}: TrailCardCarouselSectionProps) {
   const [api, setApi] = useState<CarouselApi>();
 
   useEffect(() => {
@@ -23,12 +33,14 @@ export function TrailCardCarouselSection({ trails, ...rest }: TrailCardCarouselS
 
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={() => api?.scrollPrev()}
             className="flex h-8 w-8 items-center justify-center rounded-full border bg-card text-card-foreground"
           >
             <ArrowLeftIcon size={16} />
           </button>
           <button
+            type="button"
             onClick={() => api?.scrollNext()}
             className="flex h-8 w-8 items-center justify-center rounded-full border bg-card text-card-foreground"
           >
@@ -38,7 +50,7 @@ export function TrailCardCarouselSection({ trails, ...rest }: TrailCardCarouselS
       </div>
       <Carousel setApi={setApi}>
         <CarouselContent>
-          {trails.map(trail => (
+          {trails.map((trail) => (
             <CarouselItem key={trail.id} className="basis-[75%] lg:basis-1/5">
               <div className="w-fit min-w-60">
                 <TrailCard trail={trail} />

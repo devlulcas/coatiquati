@@ -5,6 +5,7 @@ import { user } from './auth';
 import { comments } from './comment';
 import { votes } from './comment-vote';
 import { ContentStatus, contents } from './content';
+import { contributions } from './contribution';
 import { reports } from './report';
 import { trails } from './trail';
 
@@ -28,10 +29,13 @@ export const topics = t.pgTable('topic', {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
-  userId: t.text('user_id').references(() => user.id, {
-    onDelete: 'no action',
-    onUpdate: 'cascade',
-  }),
+  userId: t
+    .text('user_id')
+    .notNull()
+    .references(() => user.id, {
+      onDelete: 'no action',
+      onUpdate: 'cascade',
+    }),
   ...tableTimestampColumns,
 });
 
@@ -48,4 +52,5 @@ export const topicsRelations = relations(topics, ({ one, many }) => ({
   comments: many(comments),
   votes: many(votes),
   reports: many(reports),
+  contributions: many(contributions),
 }));

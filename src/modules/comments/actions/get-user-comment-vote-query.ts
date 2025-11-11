@@ -1,42 +1,26 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAuthenticated } from '@/modules/auth/utils/is';
+import { getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { commentVotes } from '@/modules/database/schema/comment';
-import {
-  isFail,
-  ok,
-  type Result,
-  wrapAsyncInResult,
-} from '@/shared/lib/result';
-import { and, eq } from 'drizzle-orm';
+import { ok, type Result } from '@/shared/lib/result';
 
-export async function getuserCommentVoteQuery(
+export async function getUserCommentVoteQuery(
   commentId: number
 ): Promise<Result<number>> {
-  const { data: user } = await validateRequest();
+  const user = await getCurrentUser();
 
-  if (!isAuthenticated(user)) {
+  if (!user) {
     return ok(0);
   }
 
-  const voteResult = await wrapAsyncInResult(
-    db
-      .select({ vote: commentVotes.value })
-      .from(commentVotes)
-      .where(
-        and(
-          eq(commentVotes.commentId, commentId),
-          eq(commentVotes.userId, user.id)
-        )
-      )
-      .get()
-  );
+  const vote = await db.query.votes.findFirst({
+    where: (fields, operators) => {
+      return operators.and(
+        operators.eq(fields.commentId, commentId),
+        operators.eq(fields.userId, user.id)
+      );
+    },
+  });
 
-  if (isFail(voteResult)) {
-    return ok(0);
-  }
-
-  return ok(voteResult.value?.vote ?? 0);
+  return ok(vote?.value ?? 0);
 }

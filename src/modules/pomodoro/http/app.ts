@@ -1,139 +1,126 @@
-import { eq } from 'drizzle-orm';
-import { Hono } from 'hono';
 import { protectWithSessionMiddleware } from '@/modules/auth/middleware/protect-with-session';
 import { db } from '@/modules/database/db';
 import type { CustomContext } from '@/modules/http/types/context';
-import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, wrapAsyncInResult } from '@/shared/lib/result';
+import { fail, ok } from '@/shared/lib/result';
+import { eq } from 'drizzle-orm';
+import { Hono } from 'hono';
 import { pomodoroSessions } from '../../database/schema/pomodoro-sessions';
-import { type PomodoroSettingsInsert, pomodoroSettings } from '../../database/schema/pomodoro-settings';
-import { pomodoroSessionSchema, pomodoroSettingsSchema } from '../schemas/pomodoro-schema';
+import {
+  pomodoroSettings,
+  type InsertPomodoroSettings,
+} from '../../database/schema/pomodoro-settings';
+import {
+  pomodoroSessionSchema,
+  pomodoroSettingsSchema,
+} from '../schemas/pomodoro-schema';
 
-export const pomodoroApp = new Hono<CustomContext>();
+const pomodoroSettingsApp = new Hono<CustomContext>()
+  .get('/', async (c) => {
+    const user = c.get('currentUser');
 
-pomodoroApp.use('/*', protectWithSessionMiddleware);
+    const settings = await db
+      .select()
+      .from(pomodoroSettings)
+      .where(eq(pomodoroSettings.userId, user.id))
+      .limit(1)
+      .then((rows) => rows.at(0));
 
-// GET /pomodoro/settings
-pomodoroApp.get('/settings', async c => {
-  const user = c.get('currentUser');
+    if (!settings) {
+      const defaultSettings: InsertPomodoroSettings = {
+        userId: user.id,
+        pomodoroDuration: 25 * 60,
+        shortBreakDuration: 5 * 60,
+        longBreakDuration: 15 * 60,
+        autoStartBreaks: false,
+        autoStartPomodoros: false,
+      };
 
-  const settingsResult = await wrapAsyncInResult(
-    db.select().from(pomodoroSettings).where(eq(pomodoroSettings.userId, user.id)).get(),
-  );
+      const createResult = await db
+        .insert(pomodoroSettings)
+        .values(defaultSettings)
+        .returning()
+        .then((rows) => rows.at(0));
 
-  if (isFail(settingsResult)) {
-    log.error('Error fetching pomodoro settings', { error: settingsResult });
-    return c.json(fail('Error fetching pomodoro settings'), 500);
-  }
+      if (!createResult) {
+        return c.json(
+          fail('Erro ao criar configurações padrão de pomodoro'),
+          500
+        );
+      }
 
-  if (!settingsResult.value) {
-    // Create default settings if none exist
-    const defaultSettings: PomodoroSettingsInsert = {
-      userId: user.id,
-      pomodoroDuration: 25 * 60,
-      shortBreakDuration: 5 * 60,
-      longBreakDuration: 15 * 60,
-      autoStartBreaks: false,
-      autoStartPomodoros: false,
-    };
+      return c.json(ok(createResult));
+    }
+  })
+  .put('/', async (c) => {
+    const user = c.get('currentUser');
+    const body = await c.req.json();
+    const parsed = pomodoroSettingsSchema.safeParse(body);
 
-    const createResult = await wrapAsyncInResult(db.insert(pomodoroSettings).values(defaultSettings).returning().get());
-
-    if (isFail(createResult)) {
-      log.error('Error creating default pomodoro settings', { error: createResult });
-      return c.json(fail('Error creating default pomodoro settings'), 500);
+    if (!parsed.success) {
+      return c.json(fail('Dados de configurações inválidos'), 400);
     }
 
-    return c.json(ok(createResult.value));
-  }
-
-  return c.json(ok(settingsResult.value));
-});
-
-// POST /pomodoro/settings
-pomodoroApp.post('/settings', async c => {
-  const user = c.get('currentUser');
-
-  const body = await c.req.json();
-  const validatedBody = pomodoroSettingsSchema.safeParse(body);
-
-  if (!validatedBody.success) {
-    return c.json(fail('Invalid settings data'), 400);
-  }
-
-  const settingsResult = await wrapAsyncInResult(
-    db
+    const settings = await db
       .insert(pomodoroSettings)
       .values({
         userId: user.id,
-        ...validatedBody.data,
+        ...parsed.data,
       })
       .onConflictDoUpdate({
         target: pomodoroSettings.userId,
-        set: validatedBody.data,
+        set: parsed.data,
       })
       .returning()
-      .get(),
-  );
+      .then((rows) => rows.at(0));
 
-  if (isFail(settingsResult)) {
-    log.error('Error updating pomodoro settings', { error: settingsResult });
-    return c.json(fail('Error updating pomodoro settings'), 500);
-  }
+    if (!settings) {
+      return c.json(fail('Erro ao modificar configurações de pomodoro'), 500);
+    }
 
-  return c.json(ok(settingsResult.value));
-});
+    return c.json(ok(settings));
+  });
 
-// GET /pomodoro/sessions
-pomodoroApp.get('/sessions', async c => {
-  const user = c.get('currentUser');
+const pomodoroSessionsApp = new Hono<CustomContext>()
+  .get('/', async (c) => {
+    const user = c.get('currentUser');
 
-  const sessionsResult = await wrapAsyncInResult(
-    db
+    const sessions = await db
       .select()
       .from(pomodoroSessions)
       .where(eq(pomodoroSessions.userId, user.id))
-      .orderBy(pomodoroSessions.createdAt)
-      .all(),
-  );
+      .orderBy(pomodoroSessions.createdAt);
 
-  if (isFail(sessionsResult)) {
-    log.error('Error fetching pomodoro sessions', { error: sessionsResult });
-    return c.json(fail('Error fetching pomodoro sessions'), 500);
-  }
+    return c.json(ok(sessions));
+  })
+  .post('/', async (c) => {
+    const user = c.get('currentUser');
+    const body = await c.req.json();
+    const parsed = pomodoroSessionSchema.safeParse(body);
 
-  return c.json(ok(sessionsResult.value));
-});
+    if (!parsed.success) {
+      return c.json(fail('Dados de sessão inválidos'), 400);
+    }
 
-// POST /pomodoro/sessions
-pomodoroApp.post('/sessions', async c => {
-  const user = c.get('currentUser');
-
-  const body = await c.req.json();
-  const validatedBody = pomodoroSessionSchema.safeParse(body);
-
-  if (!validatedBody.success) {
-    return c.json(fail('Invalid session data'), 400);
-  }
-
-  const sessionResult = await wrapAsyncInResult(
-    db
+    const session = await db
       .insert(pomodoroSessions)
       .values({
+        startTime: parsed.data.startTime,
+        endTime: parsed.data.endTime,
+        type: parsed.data.type,
+        completed: parsed.data.completed,
         userId: user.id,
-        startTime: new Date(validatedBody.data.startTime),
-        endTime: new Date(validatedBody.data.endTime),
-        type: validatedBody.data.type,
-        completed: validatedBody.data.completed,
       })
       .returning()
-      .get(),
-  );
+      .then((rows) => rows.at(0));
 
-  if (isFail(sessionResult)) {
-    log.error('Error creating pomodoro session', { error: sessionResult });
-    return c.json(fail('Error creating pomodoro session'), 500);
-  }
+    if (!session) {
+      return c.json(fail('Erro ao criar sessão de pomodoro'), 500);
+    }
 
-  return c.json(ok(sessionResult.value));
-});
+    return c.json(ok(session));
+  });
+
+export const pomodoroApp = new Hono<CustomContext>()
+  .use('/*', protectWithSessionMiddleware)
+  .route('/settings', pomodoroSettingsApp)
+  .route('/sessions', pomodoroSessionsApp);

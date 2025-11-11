@@ -1,9 +1,9 @@
-import type { User } from '@/modules/user/types/user';
+import type { PublicUser } from '@/modules/user/types/user';
 import { isFail } from '@/shared/lib/result';
 import { getPublicationsByUserIdQuery } from '../actions/get-publications-by-user-id-query';
 import { PublicationCard } from './publication-card';
 
-export async function UserPublicationList({ user }: { user: User }) {
+export async function UserPublicationList({ user }: { user: PublicUser }) {
   const pubsResult = await getPublicationsByUserIdQuery(user.id);
 
   if (isFail(pubsResult)) {
@@ -21,7 +21,15 @@ export async function UserPublicationList({ user }: { user: User }) {
           <PublicationCard
             publication={pub}
             author={user}
-            variant={arr.length === 1 ? 'single' : index === 0 ? 'top' : index === arr.length - 1 ? 'bottom' : 'middle'}
+            variant={
+              arr.length === 1
+                ? 'single'
+                : index === 0
+                ? 'top'
+                : index === arr.length - 1
+                ? 'bottom'
+                : 'middle'
+            }
           />
         </li>
       ))}

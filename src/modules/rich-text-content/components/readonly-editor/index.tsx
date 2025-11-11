@@ -1,8 +1,8 @@
 'use client';
 
-import type { Content } from '@tiptap/core';
 import { EditorContent } from '@/modules/rich-text-content/components/editor-content';
 import { useRichTextEditor } from '@/modules/rich-text-content/hooks/use-rich-text-editor';
+import type { Content } from '@tiptap/core';
 
 type ReadonlyEditorProps = {
   content: Content;

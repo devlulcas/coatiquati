@@ -1,12 +1,18 @@
 'use server';
 
+import { isAuthenticated } from '@/modules/auth/utils/is';
+import {
+  fail,
+  isFail,
+  ok,
+  type Result,
+  wrapAsyncInResult,
+  wrapInResult,
+} from '@/shared/lib/result';
+import { revalidatePath } from 'next/cache';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAuthenticated } from '@/modules/auth/utils/is';
-import { fail, isFail, ok, type Result, wrapAsyncInResult, wrapInResult } from '@/shared/lib/result';
 import type { NewFeedbackFormValues } from '../components/new-feedback-form';
 import { FeedbackRepository } from '../repositories/feedback-repository';
 
@@ -14,8 +20,10 @@ const packageJsonSchema = z.object({
   version: z.string(),
 });
 
-export async function createNewFeedbackMutation(feedback: NewFeedbackFormValues): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+export async function createNewFeedbackMutation(
+  feedback: NewFeedbackFormValues
+): Promise<Result<string>> {
+  const user = await getCurrentUser();
 
   if (!isAuthenticated(user)) {
     return fail('Você precisa estar logado para criar uma nova trilha.');
@@ -35,9 +43,12 @@ export async function createNewFeedbackMutation(feedback: NewFeedbackFormValues)
     feedbackRepository.createFeedback({
       content: feedback.text,
       type: feedback.type,
-      softwareVersion: currentVersionResult.type === 'ok' ? currentVersionResult.value : 'unknown',
+      softwareVersion:
+        currentVersionResult.type === 'ok'
+          ? currentVersionResult.value
+          : 'unknown',
       userId: user.id,
-    }),
+    })
   );
 
   if (isFail(feedbackResult)) {

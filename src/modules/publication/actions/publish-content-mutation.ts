@@ -1,17 +1,21 @@
 'use server';
 
-import { desc, eq } from 'drizzle-orm';
-import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { publicationTable } from '@/modules/database/schema/publication';
 import { publicationMediaTable } from '@/modules/database/schema/publication-media';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result } from '@/shared/lib/result';
-import { type CreatePublicationSchema, createPublicationSchema } from '../schemas/create-publication';
+import { desc, eq } from 'drizzle-orm';
+import {
+  type CreatePublicationSchema,
+  createPublicationSchema,
+} from '../schemas/create-publication';
 
-export async function publishContentMutation(params: CreatePublicationSchema): Promise<Result<number>> {
-  const { data: user } = await validateRequest();
+export async function publishContentMutation(
+  params: CreatePublicationSchema
+): Promise<Result<number>> {
+  const user = await getCurrentUser();
 
   if (!isAuthenticated(user)) {
     return fail('Somente um usuário autenticado pode fazer publicações!');
@@ -37,7 +41,9 @@ export async function publishContentMutation(params: CreatePublicationSchema): P
 
   const SIXTY_SECONDS = 60000;
 
-  const timeSinceLastPublication = lastPublication ? Date.now() - lastPublication.at.getTime() : SIXTY_SECONDS;
+  const timeSinceLastPublication = lastPublication
+    ? Date.now() - lastPublication.at.getTime()
+    : SIXTY_SECONDS;
 
   if (timeSinceLastPublication < SIXTY_SECONDS) {
     return fail('Aguarde um minuto antes de fazer outra publicação');
@@ -45,7 +51,7 @@ export async function publishContentMutation(params: CreatePublicationSchema): P
 
   // Salva a publicação e suas mídias
   try {
-    const pubId = await db.transaction(async tx => {
+    const pubId = await db.transaction(async (tx) => {
       try {
         const pub = await tx
           .insert(publicationTable)
@@ -53,7 +59,7 @@ export async function publishContentMutation(params: CreatePublicationSchema): P
           .returning({ id: publicationTable.id })
           .get();
 
-        validatedParams.data.medias.forEach(async media => {
+        validatedParams.data.medias.forEach(async (media) => {
           await tx.insert(publicationMediaTable).values({
             publicationId: pub.id,
             description: media.description,

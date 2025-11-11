@@ -1,4 +1,4 @@
-import type { User } from '@/modules/user/types/user';
+import type { User } from '@/modules/auth/lib/auth-client';
 
 export type CustomContext = {
   Variables: {

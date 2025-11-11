@@ -1,10 +1,19 @@
-import { DeleteObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { env } from '@/env';
-import type { CreatePresignedURLFn, DeleteFileByKeyFn, HeadFileByKeyFn } from '@/modules/file/lib/storage';
+import type {
+  CreatePresignedURLFn,
+  DeleteFileByKeyFn,
+  HeadFileByKeyFn,
+} from '@/modules/file/lib/storage';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, isFail, ok, wrapAsyncInResult } from '@/shared/lib/result';
 import { nanoid } from '@/shared/utils/nanoid';
+import {
+  DeleteObjectCommand,
+  HeadObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 const s3Client = new S3Client({
   region: env.AWS_REGION,
@@ -16,7 +25,7 @@ const s3Client = new S3Client({
 
 export const createPresignedURLCommand: CreatePresignedURLFn = async (
   { fileType, fileSize, checksum, filename },
-  userMetadata,
+  userMetadata
 ) => {
   const key = nanoid(32);
 
@@ -52,8 +61,8 @@ export const deleteFileCommand: DeleteFileByKeyFn = async (key: string) => {
       new DeleteObjectCommand({
         Bucket: env.BUCKET,
         Key: key,
-      }),
-    ),
+      })
+    )
   );
 
   if (isFail(deleteObjectResult)) {
@@ -93,5 +102,5 @@ export const headFileCommand: HeadFileByKeyFn = async (key: string) => {
 };
 
 export function getURL(key: string) {
-  return `https://${env.BUCKET}.s3.amazonaws.com/${key}`;
+  return `${env.IMAGES_BASE_URL}/${key}`;
 }

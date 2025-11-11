@@ -1,38 +1,85 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAuthenticated } from '@/modules/auth/utils/is';
-import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
-import { VOTES } from '../constants/votes';
-import { CommentVoteRepository } from '../repositories/comment-vote-repository';
+import { getCurrentUser } from '@/modules/auth/services/next';
+import { db } from '@/modules/database/db';
+import { votes, VoteValue } from '@/modules/database/schema/comment-vote';
+import { fail, ok, type Result } from '@/shared/lib/result';
+import { and, eq } from 'drizzle-orm';
 
-export async function upvoteCommentMutation(commentId: number): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+export async function upvoteCommentMutation(
+  commentId: number
+): Promise<Result<string>> {
+  const user = await getCurrentUser();
 
-  if (!isAuthenticated(user)) {
-    log.warn('Tentativa de votar em comentário sem usuário logado.', { commentId });
+  if (!user) {
     return fail('Somente usuários logados podem votar em comentários.');
   }
 
-  const commentVoteRepository = new CommentVoteRepository();
+  try {
+    await db
+      .insert(votes)
+      .values({
+        userId: user.id,
+        commentId,
+        value: VoteValue.UPVOTE,
+      })
+      .onConflictDoNothing({
+        target: [votes.commentId, votes.userId],
+      });
 
-  const currentUserVote = await wrapAsyncInResult(commentVoteRepository.getUserVote(commentId, user.id));
+    return ok('Voto computado.');
+  } catch (error) {
+    console.error(error);
+    return fail('Erro ao votar em comentário.');
+  }
+}
 
-  if (isFail(currentUserVote)) {
-    return fail('Erro ao buscar voto do usuário.');
+export async function downvoteCommentMutation(
+  commentId: number
+): Promise<Result<string>> {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return fail('Somente usuários logados podem votar em comentários.');
   }
 
   try {
-    if (currentUserVote.value === VOTES.UPVOTE) {
-      await commentVoteRepository.removeVote(commentId, user.id);
-      return ok('Voto removido.');
-    }
+    await db
+      .insert(votes)
+      .values({
+        userId: user.id,
+        commentId,
+        value: VoteValue.DOWNVOTE,
+      })
+      .onConflictDoNothing({
+        target: [votes.commentId, votes.userId],
+      });
 
-    await commentVoteRepository.upvote(commentId, user.id);
     return ok('Voto computado.');
   } catch (error) {
-    log.error('Erro ao votar em comentário.', { commentId, userId: user.id, error });
+    console.error(error);
     return fail('Erro ao votar em comentário.');
+  }
+}
+
+export async function removeVoteCommentMutation(
+  commentId: number
+): Promise<Result<string>> {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return fail('Somente usuários logados podem votar em comentários.');
+  }
+
+  try {
+    await db
+      .update(votes)
+      .set({ value: null })
+      .where(and(eq(votes.commentId, commentId), eq(votes.userId, user.id)));
+
+    return ok('Voto removido.');
+  } catch (error) {
+    console.error(error);
+    return fail('Erro ao remover voto em comentário.');
   }
 }

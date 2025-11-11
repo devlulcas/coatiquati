@@ -1,22 +1,7 @@
-import type { ReportSelect } from '@/modules/database/schema/report';
+import type { SelectReport } from '@/modules/database/schema/report';
+import type { PublicUser } from '@/modules/user/types/user';
 
-export type Report = ReportSelect & {
-  reportedBy: {
-    id: string;
-    username: string;
-    avatar: string;
-    email: string;
-    bannedAt: Date | null;
-  };
-  reportedEntity: {
-    id: number;
-    type: 'trail' | 'topic' | 'content' | 'publication';
-  };
-  user: {
-    id: string;
-    username: string;
-    avatar: string;
-    email: string;
-    bannedAt: Date | null;
-  };
+export type Report = SelectReport & {
+  reportedBy: PublicUser;
+  reportedUser: PublicUser;
 };

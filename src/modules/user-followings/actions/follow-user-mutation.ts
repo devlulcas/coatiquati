@@ -1,10 +1,11 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAuthenticated } from '@/modules/auth/utils/is';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
 import { userFollowers } from '@/modules/database/schema/user-follower';
-import { log } from '@/modules/logging/lib/pino';
 import {
   fail,
   isFail,
@@ -19,11 +20,8 @@ import { currentUserIsFollowingQuery } from './current-user-is-following-query';
 export async function followUserMutation(
   userId: string
 ): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
-
-  if (!isAuthenticated(user)) {
-    return fail('Você precisa estar logado para seguir um usuário');
-  }
+  const user = await getCurrentUser();
+  assertAuthenticated(user);
 
   const userToFollowResult = await wrapAsyncInResult(
     db.query.user.findFirst({
@@ -47,7 +45,6 @@ export async function followUserMutation(
       .insert(userFollowers)
       .values({ userId, followerId: user.id })
       .execute();
-    log.info('Seguiu usuário', user.id, userId);
   };
 
   const unfollow = async () => {
@@ -60,8 +57,6 @@ export async function followUserMutation(
         )
       )
       .execute();
-
-    log.info('Deixou de seguir usuário', user.id, userId);
   };
 
   try {
@@ -73,7 +68,7 @@ export async function followUserMutation(
     await follow();
     return ok('Seguiu usuário');
   } catch (error) {
-    log.error('Erro ao seguir usuário', error);
+    console.error(error);
     return fail('Erro ao seguir usuário');
   } finally {
     revalidatePath(`/profile/${userToFollowResult.value.username}`);

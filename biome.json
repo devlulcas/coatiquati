@@ -37,6 +37,15 @@
   },
   "assist": {
     "enabled": true,
-    "actions": { "source": { "organizeImports": "on" } }
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "options": {
+            "groups": [{ "type": false }],
+            "identifierOrder": "lexicographic"
+          }
+        }
+      }
+    }
   }
 }

@@ -7,7 +7,7 @@ import { fail, ok, type Result } from '@/shared/lib/result';
 import { paginationSchema } from '@/shared/schemas/pagination';
 import type { SQL } from 'drizzle-orm';
 import { z } from 'zod';
-import { canViewAllTrails } from '../lib/can-view-any-contribution';
+import { canViewAllTrails } from '../lib/can-view-all';
 import { mapToTrail, TRAIL_QUERY, type Trail } from '../types/trail';
 
 const trailSearchSchema = z

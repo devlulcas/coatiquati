@@ -1,39 +1,51 @@
 'use server';
 
-import type { SQL } from 'drizzle-orm';
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAdminOrAbove } from '@/modules/auth/utils/is';
+import { getRole } from '@/modules/auth/lib/auth-client';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { fail, ok, type Result } from '@/shared/lib/result';
+import { ok, type Result } from '@/shared/lib/result';
+import type { SQL } from 'drizzle-orm';
 import type { ReportSearchSchema } from '../schemas/report-search';
 import type { Report } from '../types/report';
 
-export async function getReportsQuery(params: ReportSearchSchema = { skip: 0, take: 30 }): Promise<Result<Report[]>> {
-  const { data: user } = await validateRequest();
+export async function getReportsQuery(
+  params: ReportSearchSchema
+): Promise<Result<Report[]>> {
+  const currentUser = await getCurrentUser();
+  assertAuthenticated(currentUser);
 
-  if (!user || !isAdminOrAbove(user.role)) {
-    return fail('Você não tem permissão para ver os reports');
-  }
-
-  const reports = await db.query.reportTable.findMany({
+  const reports = await db.query.reports.findMany({
     limit: params.take,
     offset: params.skip,
     with: {
       reportedUser: {
         columns: {
-          avatar: true,
+          image: true,
           email: true,
           id: true,
-          bannedAt: true,
+          banned: true,
+          name: true,
+          banExpires: true,
+          banReason: true,
+          createdAt: true,
+          role: true,
           username: true,
         },
       },
       reportedBy: {
         columns: {
-          avatar: true,
+          image: true,
           email: true,
           id: true,
-          bannedAt: true,
+          banned: true,
+          name: true,
+          banExpires: true,
+          banReason: true,
+          createdAt: true,
+          role: true,
           username: true,
         },
       },
@@ -41,51 +53,42 @@ export async function getReportsQuery(params: ReportSearchSchema = { skip: 0, ta
     where: (fields, operators) => {
       const filters: SQL[] = [];
 
-      for (const [field, value] of Object.entries(params)) {
-        if (field === 'status' && typeof value !== 'undefined') {
-          const filter = {
-            pending: operators.eq(fields.status, 'pending'),
-            resolved: operators.eq(fields.status, 'resolved'),
-            rejected: operators.isNull(fields.deletedAt),
-          };
-
-          filters.push(filter[value as keyof typeof filter]);
-        }
-
-        if (value && Object.hasOwn(fields, field)) {
-          const databaseField = fields[field as keyof typeof fields];
-
-          if (Object.hasOwn(databaseField, 'columnType')) {
-            filters.push(operators.eq(databaseField, value));
-          }
-        }
-      }
+      params.search &&
+        filters.push(operators.like(fields.description, `%${params.search}%`));
+      params.reportedById &&
+        filters.push(operators.eq(fields.reportedById, params.reportedById));
+      params.reportedEntityId &&
+        filters.push(
+          operators.eq(fields.reportedById, params.reportedEntityId)
+        );
+      params.type && filters.push(operators.eq(fields.type, params.type));
+      params.status && filters.push(operators.eq(fields.status, params.status));
 
       return operators.and(...filters);
     },
   });
 
   return ok(
-    reports.map(report => ({
+    reports.map(({ reportedBy, reportedUser, ...report }) => ({
       ...report,
       reportedBy: {
-        avatar: report.reportedBy.avatar,
-        email: report.reportedBy.email,
-        id: report.reportedBy.id,
-        bannedAt: report.reportedBy.bannedAt,
-        username: report.reportedBy.username,
+        id: reportedBy.id,
+        name: reportedBy.name,
+        username: reportedBy.username,
+        image: reportedBy.image,
+        banned: Boolean(reportedBy.banned),
+        createdAt: reportedBy.createdAt,
+        role: getRole(reportedBy.role),
       },
-      reportedEntity: {
-        id: report.reportedEntityId,
-        type: report.reportedEntityType,
+      reportedUser: {
+        id: reportedUser.id,
+        name: reportedUser.name,
+        username: reportedUser.username,
+        image: reportedUser.image,
+        banned: Boolean(reportedUser.banned),
+        createdAt: reportedUser.createdAt,
+        role: getRole(reportedUser.role),
       },
-      user: {
-        avatar: report.reportedUser.avatar,
-        email: report.reportedUser.email,
-        id: report.reportedUser.id,
-        bannedAt: report.reportedUser.bannedAt,
-        username: report.reportedUser.username,
-      },
-    })),
+    }))
   );
 }

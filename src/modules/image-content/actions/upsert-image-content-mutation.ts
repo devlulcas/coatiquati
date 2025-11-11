@@ -1,18 +1,25 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
 import { isAuthenticated } from '@/modules/auth/utils/is';
-import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/upsert-content';
 import { ContentType } from '@/modules/content/types/content-json-field';
 import {
   type NewImageContentSchema,
   newImageContentSchema,
 } from '@/modules/image-content/schemas/new-image-content-schema';
 import { log } from '@/modules/logging/lib/pino';
-import { fail, isFail, isOk, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import {
+  fail,
+  isFail,
+  isOk,
+  type Result,
+  wrapAsyncInResult,
+} from '@/shared/lib/result';
 
-export async function upsertImageContentMutation(params: NewImageContentSchema): Promise<Result<number>> {
-  const { data: user } = await validateRequest();
+export async function upsertImageContentMutation(
+  params: NewImageContentSchema
+): Promise<Result<number>> {
+  const user = await getCurrentUser();
 
   if (!isAuthenticated(user)) {
     return fail('Usuário não autenticado');
@@ -21,13 +28,18 @@ export async function upsertImageContentMutation(params: NewImageContentSchema):
   const validated = newImageContentSchema.safeParse(params);
 
   if (!validated.success) {
-    log.error('Falha ao validar parâmetros.', { params, errors: validated.error });
+    log.error('Falha ao validar parâmetros.', {
+      params,
+      errors: validated.error,
+    });
     return fail(validated.error.message);
   }
 
   const repo = new BaseContentRepository();
 
-  const author = validated.data.id ? await repo.getAuthorId(validated.data.id) : null;
+  const author = validated.data.id
+    ? await repo.getAuthorId(validated.data.id)
+    : null;
 
   const newAuthorId = author && isOk(author) ? author.value : user.id;
 
@@ -39,7 +51,7 @@ export async function upsertImageContentMutation(params: NewImageContentSchema):
       topicId: params.topicId,
       authorId: newAuthorId,
       content: { description: params.description, src: params.src },
-    }),
+    })
   );
 
   if (isFail(newContentId)) {

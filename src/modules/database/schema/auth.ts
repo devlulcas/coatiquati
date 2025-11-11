@@ -1,3 +1,4 @@
+import { DEFAULT_AVATAR } from '@/modules/user/constants/avatars';
 import { relations } from 'drizzle-orm';
 import {
   boolean,
@@ -30,14 +31,13 @@ export const user = pgTable('user', {
   name: text('name').notNull(),
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').default(false).notNull(),
-  image: text('image'),
+  image: text('image').notNull().default(DEFAULT_AVATAR),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-  username: text('username').unique(),
-  displayUsername: text('display_username'),
+  username: text('username').notNull().unique(),
   twoFactorEnabled: boolean('two_factor_enabled').default(false),
   role: text('role'),
   banned: boolean('banned').default(false),

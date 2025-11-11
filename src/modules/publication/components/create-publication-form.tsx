@@ -1,14 +1,15 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ImageUpIcon, VideoOffIcon, XIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
 import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
-import { getEmbedIDFromYoutubeUrl } from '@/modules/video-content/lib/youtube';
+import { getEmbedIDFromYouTubeUrl } from '@/modules/video-content/lib/youtube';
 import { Button } from '@/shared/components/ui/button';
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/shared/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -19,15 +20,30 @@ import {
   FormMessage,
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/shared/components/ui/tabs';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
 import { cn } from '@/shared/utils/cn';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ImageUpIcon, VideoOffIcon, XIcon } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { publishContentMutation } from '../actions/publish-content-mutation';
-import { type CreatePublicationSchema, createPublicationSchema } from '../schemas/create-publication';
+import {
+  type CreatePublicationSchema,
+  createPublicationSchema,
+} from '../schemas/create-publication';
 import type { PublicationMedia } from '../types/publication';
-import { PublicationImageEmbed, PublicationVideoEmbed } from './publication-media-grid';
+import {
+  PublicationImageEmbed,
+  PublicationVideoEmbed,
+} from './publication-media-grid';
 
 export function CreatePublicationForm() {
   const { toast } = useToast();
@@ -43,7 +59,7 @@ export function CreatePublicationForm() {
 
   const mutation = useServerActionMutation({
     serverAction: publishContentMutation,
-    onFailedAction: error => {
+    onFailedAction: (error) => {
       toast({
         title: 'Erro ao criar publicação',
         description: error.message,
@@ -86,7 +102,9 @@ export function CreatePublicationForm() {
               <FormControl>
                 <Textarea {...field} />
               </FormControl>
-              <FormDescription>O conteúdo deve ter no máximo 1000 caracteres</FormDescription>
+              <FormDescription>
+                O conteúdo deve ter no máximo 1000 caracteres
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -94,7 +112,10 @@ export function CreatePublicationForm() {
 
         <div className="flex flex-wrap items-center gap-1">
           {mediaFieldArray.fields.map((field, index) => (
-            <div key={field.url} className="relative flex h-32 w-32 flex-col overflow-hidden rounded bg-secondary">
+            <div
+              key={field.url}
+              className="relative flex h-32 w-32 flex-col overflow-hidden rounded bg-secondary"
+            >
               <Button
                 size="icon"
                 variant="destructive"
@@ -105,7 +126,11 @@ export function CreatePublicationForm() {
               </Button>
 
               <div className="relative my-auto">
-                {field.type === 'image' ? <PublicationImageEmbed {...field} /> : <PublicationVideoEmbed {...field} />}
+                {field.type === 'image' ? (
+                  <PublicationImageEmbed {...field} />
+                ) : (
+                  <PublicationVideoEmbed {...field} />
+                )}
               </div>
             </div>
           ))}
@@ -113,8 +138,10 @@ export function CreatePublicationForm() {
           {mediaFieldArray.fields.length <= 3 && (
             <AddMediaDialog
               index={mediaFieldArray.fields.length}
-              onSubmit={data => {
-                if (mediaFieldArray.fields.some(field => field.url === data.url)) {
+              onSubmit={(data) => {
+                if (
+                  mediaFieldArray.fields.some((field) => field.url === data.url)
+                ) {
                   toast({
                     title: 'Mídia duplicada',
                     description: 'Você já adicionou essa mídia',
@@ -130,7 +157,11 @@ export function CreatePublicationForm() {
           )}
         </div>
 
-        <Button className="mt-4 w-full" type="submit" isLoading={form.formState.isSubmitting}>
+        <Button
+          className="mt-4 w-full"
+          type="submit"
+          isLoading={form.formState.isSubmitting}
+        >
           Enviar
         </Button>
       </form>
@@ -148,14 +179,18 @@ function AddMediaDialog({
   index: number;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [type, setType] = useState<PublicationMedia['type']>(defaultValues?.type ?? 'image');
+  const [type, setType] = useState<PublicationMedia['type']>(
+    defaultValues?.type ?? 'image'
+  );
   const [url, setUrl] = useState(defaultValues?.url ?? '');
-  const [description, setDescription] = useState(defaultValues?.description ?? '');
+  const [description, setDescription] = useState(
+    defaultValues?.description ?? ''
+  );
 
   const { toast } = useToast();
 
   const youtubeId = useMemo(() => {
-    return getEmbedIDFromYoutubeUrl(url);
+    return getEmbedIDFromYouTubeUrl(url);
   }, [url]);
 
   const save = () => {
@@ -210,7 +245,10 @@ function AddMediaDialog({
       <DialogContent>
         <DialogTitle>Adicionar mídia</DialogTitle>
 
-        <Tabs defaultValue="image" onValueChange={value => setType(value as PublicationMedia['type'])}>
+        <Tabs
+          defaultValue="image"
+          onValueChange={(value) => setType(value as PublicationMedia['type'])}
+        >
           <TabsList>
             <TabsTrigger value="image">Imagem</TabsTrigger>
             <TabsTrigger value="video">Vídeo</TabsTrigger>
@@ -222,14 +260,14 @@ function AddMediaDialog({
           >
             <div className="py-2">
               <ImageUploadArea
-                onFailedUpload={error => {
+                onFailedUpload={(error) => {
                   toast({
                     title: 'Erro ao realizar upload',
                     description: error.message,
                     variant: 'destructive',
                   });
                 }}
-                onSuccessfulUpload={data => {
+                onSuccessfulUpload={(data) => {
                   setUrl(data.url);
                 }}
               />
@@ -243,7 +281,7 @@ function AddMediaDialog({
             <div
               className={cn(
                 'aspect-video w-full overflow-hidden rounded-lg',
-                youtubeId ? 'bg-black' : 'bg-neutral-900',
+                youtubeId ? 'bg-black' : 'bg-neutral-900'
               )}
             >
               {youtubeId ? (
@@ -262,12 +300,17 @@ function AddMediaDialog({
               required
               minLength={8}
               value={url}
-              onChange={e => setUrl(e.target.value)}
+              onChange={(e) => setUrl(e.target.value)}
             />
           </TabsContent>
         </Tabs>
 
-        <Input type="text" placeholder="Descrição" value={description} onChange={e => setDescription(e.target.value)} />
+        <Input
+          type="text"
+          placeholder="Descrição"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
 
         <Button className="mt-4 w-full" onClick={save} disabled={!url}>
           Adicionar

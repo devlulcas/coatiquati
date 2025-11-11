@@ -1,11 +1,9 @@
-import type { PomodoroSession } from '../../database/schema/pomodoro-sessions';
-import type { PomodoroSettings } from '../../database/schema/pomodoro-settings';
 import type {
   PomodoroSessionInput,
   PomodoroSettingsInput,
 } from '../types/pomodoro';
 
-export async function fetchPomodoroSettings(): Promise<PomodoroSettings> {
+export async function fetchPomodoroSettings(): Promise<PomodoroSettingsInput> {
   const response = await fetch('/api/pomodoro/settings');
   const data = await response.json();
 
@@ -17,7 +15,7 @@ export async function fetchPomodoroSettings(): Promise<PomodoroSettings> {
 }
 
 export async function updatePomodoroSettings(
-  settings: PomodoroSettingsInput,
+  settings: PomodoroSettingsInput
 ): Promise<PomodoroSettings> {
   const response = await fetch('/api/pomodoro/settings', {
     method: 'POST',
@@ -37,7 +35,7 @@ export async function updatePomodoroSettings(
 }
 
 export async function createPomodoroSession(
-  session: PomodoroSessionInput,
+  session: PomodoroSessionInput
 ): Promise<PomodoroSession> {
   const response = await fetch('/api/pomodoro/sessions', {
     method: 'POST',

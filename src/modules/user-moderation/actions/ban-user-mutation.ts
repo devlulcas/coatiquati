@@ -1,23 +1,45 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAdminOrAbove, isHighPrivilegeAdmin } from '@/modules/auth/utils/is';
+import { auth } from '@/modules/auth/lib/auth';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { reportTable } from '@/modules/database/schema/report';
-import { log } from '@/modules/logging/lib/pino';
+import { reports, ReportStatus } from '@/modules/database/schema/report';
+import { toMS } from '@/shared/lib/date';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
+import z from 'zod';
 
-export async function banUserMutation(params: {
-  reportId: number;
-}): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+const banUserMutationSchema = z.object({
+  reportId: z.number(),
+});
 
-  if (!user) {
-    return fail('Você não está autenticado');
+type BanUserMutationParams = z.infer<typeof banUserMutationSchema>;
+
+export async function banUserMutation(
+  params: BanUserMutationParams
+): Promise<Result<string>> {
+  const parsed = banUserMutationSchema.safeParse(params);
+
+  if (!parsed.success) {
+    return fail(parsed.error.message);
   }
 
-  if (!isAdminOrAbove(user.role)) {
+  const currentUser = await getCurrentUser();
+  assertAuthenticated(currentUser);
+
+  const can = await auth.api.userHasPermission({
+    body: {
+      userId: currentUser.id,
+      permission: {
+        user: ['ban'],
+      },
+    },
+  });
+
+  if (!can.success) {
     return fail('Você não tem permissão para banir usuários');
   }
 
@@ -25,8 +47,15 @@ export async function banUserMutation(params: {
     return fail('ID do report é obrigatório');
   }
 
-  const report = await db.query.reportTable.findFirst({
-    where: (fields, op) => op.eq(fields.id, params.reportId),
+  const report = await db.query.reports.findFirst({
+    where: (fields, operators) => {
+      return operators.and(
+        operators.eq(fields.id, params.reportId),
+        operators.eq(fields.status, ReportStatus.PENDING),
+        operators.isNull(fields.deletedAt),
+        operators.ne(fields.userId, currentUser.id)
+      );
+    },
     with: {
       reportedUser: {
         columns: {
@@ -38,39 +67,38 @@ export async function banUserMutation(params: {
   });
 
   if (!report) {
-    return fail('Report não encontrado');
+    return fail(
+      'Não foi possível banir o usuário. Denúncia não encontrada ou já foi processada.'
+    );
   }
 
-  if (report.reportedUser.id === user.id) {
-    return fail('Você não pode banir a si mesmo');
+  if (report.reportedUser.role === 'superAdmin') {
+    return fail('Você não pode banir um super administrador');
   }
 
-  if (isHighPrivilegeAdmin(report.reportedUser.role)) {
-    return fail('Você não pode banir um administrador de alto privilégio');
-  }
-
-  return db.transaction(async (db) => {
+  return db.transaction(async (tx) => {
     try {
-      await db
-        .update(reportTable)
-        .set({ status: 'resolved', moderatorId: user.id })
-        .where(eq(reportTable.id, params.reportId))
+      await tx
+        .update(reports)
+        .set({ status: ReportStatus.RESOLVED, moderatorId: currentUser.id })
+        .where(eq(reports.id, params.reportId))
         .execute();
 
-      await db
-        .update(user)
-        .set({ bannedAt: new Date() })
-        .where(eq(user.id, report.reportedUser.id))
-        .execute();
-
-      log.info(
-        `Usuário banido: ${report.reportedUser.id} por ${user.id} via reporte ${params.reportId}`
-      );
+      await auth.api.banUser({
+        body: {
+          userId: report.reportedUser.id,
+          banReason: report.description,
+          banExpiresIn: toMS(1, 'months'),
+        },
+      });
 
       return ok('Usuário banido');
     } catch (error) {
-      log.error(`Erro ao banir usuário`, String(error));
-      return fail('Erro ao banir usuário');
+      console.error(error);
+      tx.rollback();
+      return fail(
+        'Não foi possível banir o usuário. Erro ao processar a denúncia.'
+      );
     }
   });
 }

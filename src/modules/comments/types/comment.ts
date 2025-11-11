@@ -1,6 +1,24 @@
-import type { SelectComment as CommentTable } from '@/modules/database/schema/comment';
-import type { Contributor } from '@/modules/user/types/user';
+export type Comment = {
+  id: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
 
-export type Comment = CommentTable & {
-  author: Contributor;
+  parentCommentId: number | null;
+  trailId: number | null;
+  topicId: number | null;
+  publicationId: number | null;
+  contentId: number | null;
+
+  user: {
+    id: string;
+    name: string | null;
+    username: string | null;
+    avatar: string | null;
+  };
+  repliesCount: number;
+  votes: {
+    up: number;
+    down: number;
+  };
 };

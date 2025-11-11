@@ -1,10 +1,6 @@
 'use client';
 
-import { ZoomInIcon } from 'lucide-react';
-import Link from 'next/link';
-import Zoom from 'react-medium-image-zoom';
-import type { ImageContent } from '@/modules/content/types/content';
-import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
+import type { ImageContent } from '@/modules/image-content/types/image-content';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -16,9 +12,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/shared/components/ui/resizable';
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '@/shared/components/ui/resizable';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
 import { useMediaQuery } from '@/shared/hooks/use-media-query';
+import { ZoomInIcon } from 'lucide-react';
+import Link from 'next/link';
+import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 
 type ZoomedImageProps = {
@@ -42,14 +45,24 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
       <DialogContent className="max-h-[95dvh] lg:max-w-[45vw]">
         <DialogHeader>
           <DialogTitle>{meta.title}</DialogTitle>
-          <DialogDescription className="text-md text-muted-foreground">{data.description}</DialogDescription>
+          <DialogDescription className="text-md text-muted-foreground">
+            {data.description}
+          </DialogDescription>
         </DialogHeader>
 
-        <ResizablePanelGroup className="min-h-[75dvh]" direction={isDesktop ? 'horizontal' : 'vertical'}>
+        <ResizablePanelGroup
+          className="min-h-[75dvh]"
+          direction={isDesktop ? 'horizontal' : 'vertical'}
+        >
           <ResizablePanel className="max-h-[75dvh]">
             <Zoom>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt={data.description} src={data.src} width={1240} height={1080} />
+              {/** biome-ignore lint/performance/noImgElement: <This is an raw image to be zoomed> */}
+              <img
+                alt={data.description}
+                src={data.src}
+                width={1240}
+                height={1080}
+              />
             </Zoom>
           </ResizablePanel>
           <ResizableHandle withHandle className="mx-2" />
@@ -64,7 +77,7 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
 
               <p className="whitespace-break-spaces">
                 <span className="text-muted-foreground">Autor: </span>
-                <span className="truncate">{meta.author.username}</span>
+                <span className="truncate">{meta.author.displayUsername}</span>
               </p>
 
               <p className="whitespace-break-spaces">
@@ -78,14 +91,17 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
               </p>
 
               <ul>
-                {meta.contributors.map(contributor => (
+                {meta.contributors.map((contributor) => (
                   <li
                     key={contributor.user.id}
                     className="flex items-center gap-2 overflow-x-clip rounded border border-primary/20 p-1"
                   >
                     <UserAvatar user={contributor.user} className="rounded" />
-                    <Link className="truncate" href={createProfileUrl(contributor.user.username)}>
-                      {contributor.user.username}
+                    <Link
+                      className="truncate"
+                      href={`/profile/${contributor.user.username}`}
+                    >
+                      {contributor.user.displayUsername}
                     </Link>
                   </li>
                 ))}
@@ -95,7 +111,11 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
         </ResizablePanelGroup>
 
         <DialogFooter>
-          {meta.author && <span className="text-md text-muted-foreground">Por {meta.author.username}</span>}
+          {meta.author && (
+            <span className="text-md text-muted-foreground">
+              Por {meta.author.displayUsername}
+            </span>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -1,5 +1,5 @@
 import { env } from '@/env';
-import { toMilliseconds } from '@/shared/lib/date';
+import { toMS } from '@/shared/lib/date';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { admin, twoFactor, username } from 'better-auth/plugins';
@@ -31,7 +31,9 @@ export const auth = betterAuth({
       defaultRole: 'superAdmin',
       adminRoles: ['admin', 'superAdmin'],
       userRoles: ['user'],
-      impersonationSessionDuration: toMilliseconds(1, 'days'),
+      impersonationSessionDuration: toMS(1, 'days'),
     }),
   ],
 });
+
+export type Auth = typeof auth;

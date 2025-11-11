@@ -1,42 +1,62 @@
 'use server';
 
-import { eq } from 'drizzle-orm';
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAdminOrAbove } from '@/modules/auth/utils/is';
+import { auth } from '@/modules/auth/lib/auth';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { reportTable } from '@/modules/database/schema/report';
-import { log } from '@/modules/logging/lib/pino';
+import { reports, ReportStatus } from '@/modules/database/schema/report';
 import { fail, ok, type Result } from '@/shared/lib/result';
+import { eq } from 'drizzle-orm';
 
-export async function ignoreReportMutation(reportId: number): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+export async function ignoreReportMutation(
+  reportId: number
+): Promise<Result<string>> {
+  const currentUser = await getCurrentUser();
+  assertAuthenticated(currentUser);
 
-  if (!user) {
-    return fail('Entre para ignorar um reporte');
+  const can = await auth.api.userHasPermission({
+    body: {
+      userId: currentUser.id,
+      permission: {
+        user: ['ban'],
+      },
+    },
+  });
+
+  if (!can.success) {
+    return fail('Você não tem permissão para fazer isso!');
   }
 
-  if (!isAdminOrAbove(user.role)) {
-    return fail('Você não tem permissão para ignorar reportes');
-  }
-
-  const report = await db.query.reportTable.findFirst({
-    where: (fields, op) => op.eq(fields.id, reportId),
+  const report = await db.query.reports.findFirst({
+    where: (fields, operators) =>
+      operators.and(
+        operators.eq(fields.id, reportId),
+        operators.eq(fields.status, ReportStatus.PENDING),
+        operators.isNull(fields.deletedAt),
+        operators.ne(fields.userId, currentUser.id)
+      ),
   });
 
   if (!report) {
-    return fail('Reporte não encontrado');
-  }
-
-  if (report.userId === user.id) {
-    return fail('Você não pode ignorar um reporte seu');
+    return fail('Denúncia não encontrada ou já foi processada');
   }
 
   try {
-    await db.update(reportTable).set({ deletedAt: new Date() }).where(eq(reportTable.id, reportId)).execute();
-    log.info('Reporte ignorado com sucesso', { reportId, userId: user.id });
-    return ok('Reporte ignorado com sucesso');
+    const [result] = await db
+      .update(reports)
+      .set({ status: ReportStatus.REJECTED, moderatorId: currentUser.id })
+      .where(eq(reports.id, reportId))
+      .returning({ id: reports.id });
+
+    if (!result) {
+      return fail('Erro ao ignorar denúncia');
+    }
+
+    return ok('Denúncia ignorada com sucesso');
   } catch (error) {
-    log.error('Erro ao ignorar reporte', { error });
-    return fail('Erro ao ignorar reporte');
+    console.error(error);
+    return fail('Erro ao ignorar denúncia');
   }
 }

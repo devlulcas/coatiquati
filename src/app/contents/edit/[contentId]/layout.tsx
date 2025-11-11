@@ -1,7 +1,7 @@
-import { redirect } from 'next/navigation';
 import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove } from '@/modules/auth/utils/is';
-import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
+import { BaseContentRepository } from '@/modules/content/repositories/upsert-content';
+import { redirect } from 'next/navigation';
 
 type EditContentLayoutProps = {
   children: React.ReactNode;
@@ -23,7 +23,9 @@ export default async function EditContentLayout(props: EditContentLayoutProps) {
   const baseContentRepository = new BaseContentRepository();
   const baseContentData = await baseContentRepository.getBaseContent(contentId);
 
-  const canEdit = isAdminOrAbove(session.data.role) || baseContentData.author.id === session.data.id;
+  const canEdit =
+    isAdminOrAbove(session.data.role) ||
+    baseContentData.author.id === session.data.id;
   if (!canEdit) redirect('/');
 
   return <div className="container py-8">{children}</div>;

@@ -26,7 +26,9 @@ export function ditherImage(imageId: string): void {
     const strategy = Math.random() > 0.5 ? 'gray' : 'color';
 
     const getColoredPixel = (pixel: number) =>
-      pixel > 128 ? randomIntFromInterval(128, 255) : randomIntFromInterval(0, 128);
+      pixel > 128
+        ? randomIntFromInterval(128, 255)
+        : randomIntFromInterval(0, 128);
 
     const pixelPickStrategy = (oldPixel: number[]) => {
       if (strategy === 'gray') {
@@ -35,7 +37,11 @@ export function ditherImage(imageId: string): void {
         return [newPixel, newPixel, newPixel];
       }
 
-      return [getColoredPixel(oldPixel[0]), getColoredPixel(oldPixel[1]), getColoredPixel(oldPixel[2])];
+      return [
+        getColoredPixel(oldPixel[0]),
+        getColoredPixel(oldPixel[1]),
+        getColoredPixel(oldPixel[2]),
+      ];
     };
 
     // Floyd-Steinberg dithering
@@ -68,16 +74,24 @@ export function ditherImage(imageId: string): void {
           { x: 1, y: 1, factor: 1 / 16 },
         ];
 
-        errorDistribution.forEach(err => {
+        errorDistribution.forEach((err) => {
           const newX = x + err.x;
           const newY = y + err.y;
 
-          if (newX >= 0 && newX < canvas.width && newY >= 0 && newY < canvas.height) {
+          if (
+            newX >= 0 &&
+            newX < canvas.width &&
+            newY >= 0 &&
+            newY < canvas.height
+          ) {
             const newPixelIndex = (newY * canvas.width + newX) * 4;
 
             for (let i = 0; i < 3; i++) {
               const errorValue = quantError[i] * err.factor;
-              data[newPixelIndex + i] = Math.min(255, Math.max(0, data[newPixelIndex + i] + errorValue));
+              data[newPixelIndex + i] = Math.min(
+                255,
+                Math.max(0, data[newPixelIndex + i] + errorValue)
+              );
             }
           }
         });

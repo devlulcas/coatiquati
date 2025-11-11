@@ -1,3 +1,4 @@
+import { AVATARS } from '@/modules/user/constants/avatars';
 import * as p from '@clack/prompts';
 import { intro, outro } from '@clack/prompts';
 import { hash } from 'argon2';
@@ -261,10 +262,7 @@ async function main() {
     process.exit(0);
   }
 
-  const avatars = ['grape.png', 'mint.png', 'original.png', 'peach.png'];
-  const avatar = `/avatars/${
-    avatars[Math.floor(Math.random() * avatars.length)]
-  }`;
+  const avatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
 
   await withLoading(registerUser({ username, email, password, avatar }, role), {
     start: 'Criando usuário...',

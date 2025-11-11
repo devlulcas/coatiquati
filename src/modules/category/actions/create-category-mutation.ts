@@ -1,50 +1,49 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
+import { auth } from '@/modules/auth/lib/auth';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, type Result } from '@/shared/lib/result';
-import { newTrailCategorySchema } from '../schemas/new-trail-category-schema';
+import {
+  categories,
+  type InsertCategory,
+} from '@/modules/database/schema/category';
+import { fail, ok } from '@/shared/lib/result';
 
-export async function createCategoryMutation(
-  name: string
-): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+export async function createCategoryMutation(params: InsertCategory) {
+  const user = await getCurrentUser();
+  assertAuthenticated(user);
 
-  if (!isAuthenticated(user)) {
-    return fail(
-      'Falha ao criar categoria. Você precisa estar logado para criar uma categoria.'
-    );
-  }
-
-  if (!isAdminOrAbove(user.role)) {
-    return fail(
-      'Falha ao criar categoria. Você precisa ser um administrador para criar uma categoria.'
-    );
-  }
-
-  const validatedParams = newTrailCategorySchema.safeParse({
-    name,
-    authorId: user.id,
+  const data = await auth.api.userHasPermission({
+    body: {
+      userId: user.id,
+      permission: { category: ['create'] },
+    },
   });
 
-  if (!validatedParams.success) {
-    return fail('Falha ao criar categoria.');
+  if (data.error || !data.success) {
+    return fail(
+      'Falha ao criar categoria. Você não tem permissão para criar uma categoria.'
+    );
   }
 
   try {
-    const category = validatedParams.data;
+    const category = await db
+      .insert(categories)
+      .values(params)
+      .onConflictDoUpdate({ target: [categories.name], set: params })
+      .returning()
+      .then((result) => result.at(0));
 
-    await db
-      .insert(category)
-      .values({ name: category.name, authorId: category.authorId })
-      .onConflictDoNothing()
-      .execute();
+    if (!category) {
+      return fail('Erro ao criar categoria.');
+    }
 
-    return ok('Categoria criada com sucesso.');
+    return ok(category);
   } catch (error) {
-    log.error('Erro ao criar categoria.', { name, userId: user.id, error });
+    console.error(error);
     return fail('Erro ao criar categoria.');
   }
 }

@@ -1,22 +1,25 @@
-import { and, eq } from 'drizzle-orm';
-import { validateRequest } from '@/modules/auth/services/next';
+import { getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { fileTable } from '@/modules/database/schema/file';
+import { files } from '@/modules/database/schema/file';
 import { storage } from '@/modules/file/lib/storage';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, isFail, ok, wrapAsyncInResult } from '@/shared/lib/result';
+import { and, eq } from 'drizzle-orm';
 
 // Salva os metadados de uma imagem que foi salva no serviço de armazenamento
 export async function updateUploadedFileHandler(request: Request) {
-  const { data: user } = await validateRequest();
+  const user = await getCurrentUser();
 
   if (!user) {
-    return Response.json(fail('Somente usuários logados podem fazer upload de arquivos'), {
-      status: 401,
-      headers: {
-        'Content-type': 'application/json',
-      },
-    });
+    return Response.json(
+      fail('Somente usuários logados podem fazer upload de arquivos'),
+      {
+        status: 401,
+        headers: {
+          'Content-type': 'application/json',
+        },
+      }
+    );
   }
 
   const json = await request.json();
@@ -30,10 +33,14 @@ export async function updateUploadedFileHandler(request: Request) {
     });
   }
 
-  const updated = await db.transaction(async tx => {
-    const condition = and(eq(fileTable.userId, user.id), eq(fileTable.key, json.key));
+  const updated = await db.transaction(async (tx) => {
+    const condition = and(eq(files.userId, user.id), eq(files.key, json.key));
 
-    const file = await tx.select().from(fileTable).where(condition).get();
+    const file = await tx
+      .select()
+      .from(files)
+      .where(condition)
+      .then((result) => result.at(0));
 
     if (!file) {
       log.error('Arquivo não encontrado', json.key, user.id);
@@ -50,14 +57,19 @@ export async function updateUploadedFileHandler(request: Request) {
     const fileExists = await storage.headFileByKey(json.key);
 
     if (isFail(fileExists) || !fileExists.value) {
-      const message = 'Arquivo existe localmente, mas não esta presente no bucket';
+      const message =
+        'Arquivo existe localmente, mas não esta presente no bucket';
       log.error(message);
-      await tx.delete(fileTable).where(condition);
+      await tx.delete(files).where(condition);
       return fail(message);
     }
 
     const updated = await wrapAsyncInResult(
-      tx.update(fileTable).set({ uploadedAt: new Date() }).where(condition).returning(),
+      tx
+        .update(files)
+        .set({ uploadedAt: new Date() })
+        .where(condition)
+        .returning()
     );
 
     if (isFail(updated)) {

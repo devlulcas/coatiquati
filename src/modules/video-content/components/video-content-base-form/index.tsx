@@ -1,17 +1,24 @@
 'use client';
 
+import { newVideoContentSchema } from '@/modules/video-content/schemas/new-video-content-schema';
+import { Button } from '@/shared/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form';
+import { Input } from '@/shared/components/ui/input';
+import { cn } from '@/shared/utils/cn';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { ClassValue } from 'clsx';
 import { VideoOffIcon } from 'lucide-react';
 import { useMemo } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import type { z } from 'zod';
-import { newVideoContentSchema } from '@/modules/video-content/schemas/new-video-content-schema';
-import { Button } from '@/shared/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { cn } from '@/shared/utils/cn';
-import { getEmbedIDFromYoutubeUrl } from '../../lib/youtube';
+import { getEmbedIDFromYouTubeUrl } from '../../lib/youtube';
 import { YouTubeEmbed } from '../youtube-embed';
 
 const videoContentFormSchema = newVideoContentSchema;
@@ -24,7 +31,11 @@ type VideoContentBaseFormProps = {
   className?: ClassValue;
 };
 
-export function VideoContentBaseForm({ onSubmit, className, defaultValues }: VideoContentBaseFormProps) {
+export function VideoContentBaseForm({
+  onSubmit,
+  className,
+  defaultValues,
+}: VideoContentBaseFormProps) {
   const form = useForm<VideoContentBaseFormSchema>({
     resolver: zodResolver(videoContentFormSchema),
     defaultValues: defaultValues,
@@ -33,8 +44,10 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
   const url = form.watch('src') ?? '';
 
   const youtubeId = useMemo(() => {
-    return getEmbedIDFromYoutubeUrl(url);
+    return getEmbedIDFromYouTubeUrl(url);
   }, [url]);
+
+  const disabled = form.formState.isSubmitting;
 
   return (
     <Form {...form}>
@@ -43,7 +56,13 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
         onSubmit={form.handleSubmit(onSubmit)}
         className={cn('flex h-full flex-col gap-4', className)}
       >
-        <div className={cn('aspect-video h-80 overflow-hidden rounded-lg', youtubeId ? 'bg-black' : 'bg-neutral-900')}>
+        <div
+          className={cn(
+            'aspect-video h-80 overflow-hidden rounded-lg',
+            youtubeId ? 'bg-black' : 'bg-neutral-900',
+            disabled && 'opacity-50'
+          )}
+        >
           {youtubeId ? (
             <YouTubeEmbed id={youtubeId} title={form.watch('title')} />
           ) : (
@@ -61,21 +80,12 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
             <FormItem>
               <FormLabel>URL do vídeo no Youtube</FormLabel>
               <FormControl>
-                <Input type="url" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="alt"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Texto alternativo</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="Rick roll" {...field} />
+                <Input
+                  type="url"
+                  placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                  disabled={disabled}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -89,7 +99,12 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
             <FormItem>
               <FormLabel>Título</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="Gato" {...field} />
+                <Input
+                  type="text"
+                  placeholder="Um vídeo sobre..."
+                  disabled={disabled}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -103,14 +118,24 @@ export function VideoContentBaseForm({ onSubmit, className, defaultValues }: Vid
             <FormItem>
               <FormLabel>Descrição</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="O vídeo fala sobre..." {...field} />
+                <Input
+                  type="text"
+                  placeholder="Descrição do vídeo"
+                  disabled={disabled}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button className="mt-auto w-full" type="submit">
+        <Button
+          className="mt-auto w-full"
+          type="submit"
+          disabled={disabled}
+          isLoading={form.formState.isSubmitting}
+        >
           Salvar vídeo
         </Button>
       </form>

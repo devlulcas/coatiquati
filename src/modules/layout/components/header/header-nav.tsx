@@ -1,15 +1,20 @@
+import { SignOutForm } from '@/modules/auth/components/sign-out-form';
+import {
+  ConfigDropdown,
+  ConfigListing,
+} from '@/modules/theme/components/config-dropdown';
+import type { PublicUser } from '@/modules/user/types/user';
+import { Button } from '@/shared/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from '@/shared/components/ui/sheet';
 import { MenuIcon } from 'lucide-react';
 import Link from 'next/link';
-import { SignOutForm } from '@/modules/auth/components/sign-out-form';
-import { isAdminOrAbove } from '@/modules/auth/utils/is';
-import { ConfigDropdown, ConfigListing } from '@/modules/theme/components/config-dropdown';
-import { createProfileUrl } from '@/modules/user/lib/create-profile-url';
-import type { User } from '@/modules/user/types/user';
-import { Button } from '@/shared/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/shared/components/ui/sheet';
 
 type HeaderNavProps = {
-  user: Pick<User, 'role' | 'username'> | null;
+  user: PublicUser | null;
 };
 
 export async function HeaderNav({ user }: HeaderNavProps) {
@@ -68,8 +73,9 @@ export async function HeaderNav({ user }: HeaderNavProps) {
   );
 }
 
-function NavItems({ user }: { user: Pick<User, 'role' | 'username'> | null }) {
-  const hasAdminAccess = user && isAdminOrAbove(user.role);
+function NavItems({ user }: { user: PublicUser | null }) {
+  const hasAdminAccess =
+    user && (user.role === 'admin' || user.role === 'superAdmin');
 
   if (user !== null) {
     return (
@@ -81,13 +87,15 @@ function NavItems({ user }: { user: Pick<User, 'role' | 'username'> | null }) {
         )}
 
         <Button className="w-full" variant="ghost" asChild>
-          <Link href={createProfileUrl(user.username)}>Perfil</Link>
+          <Link href={`/profile/${user.username}`}>Perfil</Link>
         </Button>
 
-        <Button className="w-full bg-destructive md:bg-transparent md:text-red-500" variant="ghost" asChild>
-          <SignOutForm className="w-full" formClassName="w-full">
-            Sair
-          </SignOutForm>
+        <Button
+          className="w-full bg-destructive md:bg-transparent md:text-red-500"
+          variant="ghost"
+          asChild
+        >
+          <SignOutForm>Sair</SignOutForm>
         </Button>
       </>
     );

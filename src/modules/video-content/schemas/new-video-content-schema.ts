@@ -1,26 +1,24 @@
-import { newContentSchema } from '@/modules/content/schemas/new-content-schema';
+import { upsertBaseContentSchema } from '@/modules/content/schemas/base-content';
 import { z } from 'zod';
 
-export const newVideoContentSchema = newContentSchema.merge(
-  z.object({
-    src: z
-      .string()
-      .url()
-      .refine((url) => {
-        try {
-          const urlObject = new URL(url);
+export const VALID_VIDEO_HOSTNAMES = [
+  'www.youtube.com',
+  'youtube.com',
+  'youtu.be',
+];
 
-          const validHostnames = ['www.youtube.com', 'youtube.com', 'youtu.be'];
+const videoUrlSchema = z.url().refine((url) => {
+  if (!URL.canParse(url)) {
+    return false;
+  }
 
-          return validHostnames.includes(urlObject.hostname);
-        } catch (error) {
-          console.error(error);
-          return false;
-        }
-      }),
-    alt: z.string(),
-    description: z.string(),
-  }),
-);
+  const urlObject = new URL(url);
+
+  return VALID_VIDEO_HOSTNAMES.includes(urlObject.hostname);
+});
+
+export const newVideoContentSchema = z
+  .object({ src: videoUrlSchema })
+  .extend(upsertBaseContentSchema.shape);
 
 export type NewVideoContentSchema = z.infer<typeof newVideoContentSchema>;

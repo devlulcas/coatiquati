@@ -1,46 +1,52 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
-import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
-import { ContentType } from '@/modules/content/types/content-json-field';
-import { log } from '@/modules/logging/lib/pino';
+import { auth } from '@/modules/auth/lib/auth';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
+import { upsertContent } from '@/modules/content/repositories/upsert-content';
+import { db } from '@/modules/database/db';
 import {
   type NewVideoContentSchema,
   newVideoContentSchema,
 } from '@/modules/video-content/schemas/new-video-content-schema';
-import { fail, isOk, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import { fail, ok, type Result } from '@/shared/lib/result';
 
-export async function upsertVideoContentMutation(params: NewVideoContentSchema): Promise<Result<number>> {
-  const { data: user } = await validateRequest();
+export async function upsertVideoContentMutation(
+  params: NewVideoContentSchema
+): Promise<Result<number>> {
+  const user = await getCurrentUser();
+  assertAuthenticated(user);
 
-  if (!user) {
-    return fail('Você precisa estar logado para criar um conteúdo de vídeo.');
+  await auth.api.userHasPermission({
+    body: {
+      userId: user.id,
+      permission: { content: ['create'] },
+    },
+  });
+
+  const parsed = newVideoContentSchema.safeParse(params);
+
+  if (!parsed.success) {
+    return fail(parsed.error.message);
   }
 
-  const validated = newVideoContentSchema.safeParse(params);
-
-  if (!validated.success) {
-    return fail('Parâmetros inválidos para cadastro de conteúdo de vídeo.');
-  }
-
-  const repo = new BaseContentRepository();
-
-  const author = validated.data.id ? await repo.getAuthorId(validated.data.id) : null;
-
-  const newAuthorId = author && isOk(author) ? author.value : user.id;
-
-  const newContentId = await wrapAsyncInResult(
-    repo.upsertBaseContent({
-      contentType: ContentType.Video,
-      id: validated.data.id,
+  const contentId = await db.transaction(async (tx) => {
+    const base = await upsertContent.base(tx, {
+      id: parsed.data.id,
       title: params.title,
       topicId: params.topicId,
-      authorId: newAuthorId,
-      content: { description: params.description, src: params.src },
-    }),
-  );
+      userId: user.id,
+    });
 
-  log.info('Conteúdo de vídeo criado com sucesso', { newContentId, userId: user.id });
+    await upsertContent.video(tx, {
+      contentId: base.contentId,
+      src: params.src,
+    });
 
-  return newContentId;
+    return base.contentId;
+  });
+
+  return ok(contentId);
 }

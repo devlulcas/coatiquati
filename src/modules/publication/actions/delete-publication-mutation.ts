@@ -1,16 +1,17 @@
 'use server';
 
-import { eq } from 'drizzle-orm';
-import { validateRequest } from '@/modules/auth/services/next';
 import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
 import { db } from '@/modules/database/db';
 import { publicationTable } from '@/modules/database/schema/publication';
 import { publicationMediaTable } from '@/modules/database/schema/publication-media';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import { eq } from 'drizzle-orm';
 
-export async function deletePublicationMutation(pubId: number): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+export async function deletePublicationMutation(
+  pubId: number
+): Promise<Result<string>> {
+  const user = await getCurrentUser();
 
   if (!isAuthenticated(user)) {
     return fail('Somente um usuário autenticado pode deletar publicações!');
@@ -19,17 +20,21 @@ export async function deletePublicationMutation(pubId: number): Promise<Result<s
   const publicationResult = await wrapAsyncInResult(
     db.query.publicationTable.findFirst({
       columns: { authorId: true },
-      where: (fields, op) => op.and(op.eq(fields.id, pubId), op.isNull(fields.deletedAt)),
+      where: (fields, op) =>
+        op.and(op.eq(fields.id, pubId), op.isNull(fields.deletedAt)),
       with: {
         medias: {
           columns: { id: true },
           where: (fields, op) => op.isNull(fields.deletedAt),
         },
       },
-    }),
+    })
   );
 
-  if (publicationResult.type === 'fail' || typeof publicationResult.value === 'undefined') {
+  if (
+    publicationResult.type === 'fail' ||
+    typeof publicationResult.value === 'undefined'
+  ) {
     return fail('Publicação não encontrada');
   }
 
@@ -45,18 +50,22 @@ export async function deletePublicationMutation(pubId: number): Promise<Result<s
     log.info('Moderador deletando publicação', { pubId, moderatorId: user.id });
   }
 
-  const result = await db.transaction(async tx => {
+  const result = await db.transaction(async (tx) => {
     try {
-      await tx.update(publicationTable).set({ deletedAt: new Date() }).where(eq(publicationTable.id, pubId)).execute();
+      await tx
+        .update(publicationTable)
+        .set({ deletedAt: new Date() })
+        .where(eq(publicationTable.id, pubId))
+        .execute();
 
       await Promise.all(
-        publication.medias.map(async media =>
+        publication.medias.map(async (media) =>
           tx
             .update(publicationMediaTable)
             .set({ deletedAt: new Date() })
             .where(eq(publicationMediaTable.id, media.id))
-            .execute(),
-        ),
+            .execute()
+        )
       );
 
       return ok('Publicação deletada com sucesso');

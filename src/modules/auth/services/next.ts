@@ -1,59 +1,33 @@
-import { cookies } from 'next/headers';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { cache } from 'react';
-import { SESSION_COOKIE_NAME } from '../constants/cookies';
-import type { PublicSession } from '../types/session';
-import { toPublicSession, validateSessionToken } from './auth';
+import { auth } from '../lib/auth';
+import type { Session, SessionData, User } from '../lib/auth-client';
 
-async function getSessionTokenCookie(): Promise<string | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value ?? null;
-  return token;
-}
+export const validateRequest = cache(
+  async (): Promise<{ data: SessionData; user: User } | null> => {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
-export async function setSessionTokenCookie(token: string, expiresAt: Date): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE_NAME, token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    expires: expiresAt,
-    path: '/',
-  });
-}
+    if (session === null) return null;
 
-export async function deleteSessionTokenCookie(): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE_NAME, '', {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 0,
-    path: '/',
-  });
-}
-
-export const validateRequest = cache(async (): Promise<PublicSession> => {
-  const token = await getSessionTokenCookie();
-
-  const emptySession: PublicSession = {
-    data: null,
-    status: 'unauthenticated',
-  };
-
-  if (!token) {
-    return emptySession;
+    return {
+      data: session.session,
+      user: session.user,
+    };
   }
+);
 
-  const result = await validateSessionToken(token);
-
-  // next.js throws when you attempt to set cookie when rendering page
-  try {
-    if (result.session) {
-      return toPublicSession(result.user);
-    } else {
-      await deleteSessionTokenCookie();
-    }
-  } catch {}
-
-  return emptySession;
+export const getCurrentUser = cache(async (): Promise<User | null> => {
+  const session = await validateRequest();
+  return session?.user ?? null;
 });
+
+export function assertAuthenticated<
+  T extends Session | SessionData | User | null
+>(data: T): asserts data is NonNullable<T> {
+  if (data === null) {
+    redirect('/sign-in?reason=unauthorized');
+  }
+}

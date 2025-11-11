@@ -1,22 +1,24 @@
-import { validateRequest } from '@/modules/auth/services/next';
+import { getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { fileTable } from '@/modules/database/schema/file';
+import { files } from '@/modules/database/schema/file';
 import { storage } from '@/modules/file/lib/storage';
 import { presignedURLRequestSchema } from '@/modules/file/schemas/presigned-url-request-schema';
 import { log } from '@/modules/logging/lib/pino';
 import { fail, isFail, wrapAsyncInResult } from '@/shared/lib/result';
 
-// Gera a URL pré assinada
 export async function createPresignedURLHandler(request: Request) {
-  const { data: user } = await validateRequest();
+  const user = await getCurrentUser();
 
   if (!user) {
-    return Response.json(fail('Somente usuários logados podem fazer upload de arquivos'), {
-      status: 401,
-      headers: {
-        'Content-type': 'application/json',
-      },
-    });
+    return Response.json(
+      fail('Somente usuários logados podem fazer upload de arquivos'),
+      {
+        status: 401,
+        headers: {
+          'Content-type': 'application/json',
+        },
+      }
+    );
   }
 
   const json = await request.json();
@@ -36,8 +38,7 @@ export async function createPresignedURLHandler(request: Request) {
     });
   }
 
-  // Gerar URL pré assinada
-  const result = await db.transaction(async tx => {
+  const result = await db.transaction(async (tx) => {
     const result = await storage.createPresignedURL(validated.data, user);
 
     if (isFail(result)) {
@@ -47,7 +48,7 @@ export async function createPresignedURLHandler(request: Request) {
     }
 
     const inserted = await wrapAsyncInResult(
-      tx.insert(fileTable).values({
+      tx.insert(files).values({
         userId: user.id,
         checksum: validated.data.checksum,
         fileSize: validated.data.fileSize,
@@ -55,7 +56,7 @@ export async function createPresignedURLHandler(request: Request) {
         filename: validated.data.filename,
         uploadedAt: null,
         key: result.value.key,
-      }),
+      })
     );
 
     if (isFail(inserted)) {

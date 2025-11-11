@@ -1,53 +1,44 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAuthenticated } from '@/modules/auth/utils/is';
-import { BaseContentRepository } from '@/modules/content/repositories/base-content-repository';
-import { ContentType } from '@/modules/content/types/content-json-field';
-import { log } from '@/modules/logging/lib/pino';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
+import { upsertContent } from '@/modules/content/repositories/upsert-content';
+import { db } from '@/modules/database/db';
 import {
   type NewRichTextContentSchema,
   newRichTextContentSchema,
 } from '@/modules/rich-text-content/schemas/new-rich-text-content-schema';
-import { fail, isFail, isOk, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import { fail, ok, type Result } from '@/shared/lib/result';
 
-export async function upsertRichTextContentMutation(params: NewRichTextContentSchema): Promise<Result<number>> {
-  const { data: user } = await validateRequest();
+export async function upsertRichTextContentMutation(
+  params: NewRichTextContentSchema
+): Promise<Result<{ contentId: number; richTextId: number }>> {
+  const user = await getCurrentUser();
+  assertAuthenticated(user);
 
-  if (!isAuthenticated(user)) {
-    return fail('Usuário não autenticado');
+  const parsed = newRichTextContentSchema.safeParse(params);
+
+  if (!parsed.success) {
+    return fail(parsed.error.message);
   }
 
-  const validated = newRichTextContentSchema.safeParse(params);
-
-  if (!validated.success) {
-    log.error('Falha ao validar parâmetros.', { params, errors: validated.error });
-    return fail(validated.error.message);
-  }
-
-  const repo = new BaseContentRepository();
-
-  const author = validated.data.id ? await repo.getAuthorId(validated.data.id) : null;
-
-  const newAuthorId = author && isOk(author) ? author.value : user.id;
-
-  const newContentId = await wrapAsyncInResult(
-    repo.upsertBaseContent({
-      contentType: ContentType.RichText,
-      id: validated.data.id,
+  const [contentId, richTextId] = await db.transaction(async (tx) => {
+    const base = await upsertContent.base(tx, {
+      id: parsed.data.id,
       title: params.title,
       topicId: params.topicId,
-      authorId: newAuthorId,
-      content: validated.data.content,
-    }),
-  );
+      userId: user.id,
+    });
 
-  if (isFail(newContentId)) {
-    log.error('Falha ao alterar conteúdo de texto rico', newContentId.fail);
-    return fail('Falha ao alterar textual');
-  }
+    const richText = await upsertContent.richText(tx, {
+      contentId: base.contentId,
+      jsonContent: parsed.data.content,
+    });
 
-  log.info('Conteúdo de rich text alterado com sucesso.', newContentId.value);
+    return [base.contentId, richText];
+  });
 
-  return newContentId;
+  return ok({ contentId, richTextId });
 }

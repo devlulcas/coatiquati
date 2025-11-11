@@ -1,15 +1,19 @@
 import { createAccessControl } from 'better-auth/plugins/access';
-import { adminAc, defaultStatements, userAc } from 'better-auth/plugins/admin/access';
+import {
+  adminAc,
+  defaultStatements,
+  userAc,
+} from 'better-auth/plugins/admin/access';
 
 /**
  * Trails are groups of topics.
  */
 const TRAIL_ACTIONS = {
+  VIEW_ALL: 'view_all',
   CREATE: 'create',
   DELETE: 'delete', // soft delete
   CHANGE_PUBLICATION_STATUS: 'change_publication_status', // draft to published and vice versa
   EDIT: 'edit', // edit content
-  VIEW: 'view', // view content
   REPORT: 'report', // report content
   COMMENT: 'comment', // comment on content
   VOTE: 'vote', // vote on content
@@ -24,7 +28,7 @@ const TOPIC_ACTIONS = {
   DELETE: 'delete', // soft delete
   CHANGE_PUBLICATION_STATUS: 'change_publication_status', // draft to published and vice versa
   EDIT: 'edit', // edit content
-  VIEW: 'view', // view content
+  VIEW_ALL: 'view_all',
   REPORT: 'report', // report content
   COMMENT: 'comment', // comment on content
   VOTE: 'vote', // vote on content
@@ -38,7 +42,7 @@ const CONTENT_ACTIONS = {
   DELETE: 'delete', // soft delete
   CHANGE_PUBLICATION_STATUS: 'change_publication_status', // draft to published and vice versa
   EDIT: 'edit', // edit content
-  VIEW: 'view', // view content
+  VIEW_ALL: 'view_all',
   REPORT: 'report', // report content
   COMMENT: 'comment', // comment on content
   VOTE: 'vote', // vote on content
@@ -51,7 +55,7 @@ const COMMENT_ACTIONS = {
   CREATE: 'create',
   DELETE: 'delete',
   EDIT: 'edit',
-  VIEW: 'view',
+  VIEW_ALL: 'view_all',
   REPORT: 'report',
   VOTE: 'vote',
 } as const;
@@ -63,7 +67,7 @@ const CATEGORY_ACTIONS = {
   CREATE: 'create',
   DELETE: 'delete',
   EDIT: 'edit',
-  VIEW: 'view',
+  VIEW_ALL: 'view_all',
 } as const;
 
 /**
@@ -74,7 +78,7 @@ const PUBLICATION_ACTIONS = {
   DELETE: 'delete', // soft delete
   CHANGE_PUBLICATION_STATUS: 'change_publication_status', // draft to published and vice versa
   EDIT: 'edit', // edit content
-  VIEW: 'view', // view content
+  VIEW_ALL: 'view_all',
   REPORT: 'report', // report content
   COMMENT: 'comment', // comment on content
   VOTE: 'vote', // vote on content
@@ -93,13 +97,18 @@ const statement = {
 const ac = createAccessControl(statement);
 
 const superAdmin = ac.newRole({
-  category: [CATEGORY_ACTIONS.CREATE, CATEGORY_ACTIONS.DELETE, CATEGORY_ACTIONS.EDIT, CATEGORY_ACTIONS.VIEW],
+  category: [
+    CATEGORY_ACTIONS.CREATE,
+    CATEGORY_ACTIONS.DELETE,
+    CATEGORY_ACTIONS.EDIT,
+    CATEGORY_ACTIONS.VIEW_ALL,
+  ],
   trail: [
     TRAIL_ACTIONS.CREATE,
     TRAIL_ACTIONS.DELETE,
     TRAIL_ACTIONS.CHANGE_PUBLICATION_STATUS,
     TRAIL_ACTIONS.EDIT,
-    TRAIL_ACTIONS.VIEW,
+    TRAIL_ACTIONS.VIEW_ALL,
     TRAIL_ACTIONS.REPORT,
     TRAIL_ACTIONS.COMMENT,
     TRAIL_ACTIONS.VOTE,
@@ -110,7 +119,7 @@ const superAdmin = ac.newRole({
     TOPIC_ACTIONS.DELETE,
     TOPIC_ACTIONS.CHANGE_PUBLICATION_STATUS,
     TOPIC_ACTIONS.EDIT,
-    TOPIC_ACTIONS.VIEW,
+    TOPIC_ACTIONS.VIEW_ALL,
     TOPIC_ACTIONS.REPORT,
     TOPIC_ACTIONS.COMMENT,
     TOPIC_ACTIONS.VOTE,
@@ -120,7 +129,7 @@ const superAdmin = ac.newRole({
     CONTENT_ACTIONS.DELETE,
     CONTENT_ACTIONS.CHANGE_PUBLICATION_STATUS,
     CONTENT_ACTIONS.EDIT,
-    CONTENT_ACTIONS.VIEW,
+    CONTENT_ACTIONS.VIEW_ALL,
     CONTENT_ACTIONS.REPORT,
     CONTENT_ACTIONS.COMMENT,
     CONTENT_ACTIONS.VOTE,
@@ -129,7 +138,7 @@ const superAdmin = ac.newRole({
     COMMENT_ACTIONS.CREATE,
     COMMENT_ACTIONS.DELETE,
     COMMENT_ACTIONS.EDIT,
-    COMMENT_ACTIONS.VIEW,
+    COMMENT_ACTIONS.VIEW_ALL,
     COMMENT_ACTIONS.REPORT,
     COMMENT_ACTIONS.VOTE,
   ],
@@ -138,7 +147,7 @@ const superAdmin = ac.newRole({
     PUBLICATION_ACTIONS.DELETE,
     PUBLICATION_ACTIONS.CHANGE_PUBLICATION_STATUS,
     PUBLICATION_ACTIONS.EDIT,
-    PUBLICATION_ACTIONS.VIEW,
+    PUBLICATION_ACTIONS.VIEW_ALL,
     PUBLICATION_ACTIONS.REPORT,
     PUBLICATION_ACTIONS.COMMENT,
     PUBLICATION_ACTIONS.VOTE,
@@ -147,13 +156,18 @@ const superAdmin = ac.newRole({
 });
 
 const admin = ac.newRole({
-  category: [CATEGORY_ACTIONS.CREATE, CATEGORY_ACTIONS.DELETE, CATEGORY_ACTIONS.EDIT, CATEGORY_ACTIONS.VIEW],
+  category: [
+    CATEGORY_ACTIONS.CREATE,
+    CATEGORY_ACTIONS.DELETE,
+    CATEGORY_ACTIONS.EDIT,
+    CATEGORY_ACTIONS.VIEW_ALL,
+  ],
   trail: [
     TRAIL_ACTIONS.CREATE,
     TRAIL_ACTIONS.DELETE,
     TRAIL_ACTIONS.CHANGE_PUBLICATION_STATUS,
     TRAIL_ACTIONS.EDIT,
-    TRAIL_ACTIONS.VIEW,
+    TRAIL_ACTIONS.VIEW_ALL,
     TRAIL_ACTIONS.REPORT,
     TRAIL_ACTIONS.COMMENT,
     TRAIL_ACTIONS.VOTE,
@@ -164,7 +178,7 @@ const admin = ac.newRole({
     TOPIC_ACTIONS.DELETE,
     TOPIC_ACTIONS.CHANGE_PUBLICATION_STATUS,
     TOPIC_ACTIONS.EDIT,
-    TOPIC_ACTIONS.VIEW,
+    TOPIC_ACTIONS.VIEW_ALL,
     TOPIC_ACTIONS.REPORT,
     TOPIC_ACTIONS.COMMENT,
     TOPIC_ACTIONS.VOTE,
@@ -174,7 +188,7 @@ const admin = ac.newRole({
     CONTENT_ACTIONS.DELETE,
     CONTENT_ACTIONS.CHANGE_PUBLICATION_STATUS,
     CONTENT_ACTIONS.EDIT,
-    CONTENT_ACTIONS.VIEW,
+    CONTENT_ACTIONS.VIEW_ALL,
     CONTENT_ACTIONS.REPORT,
     CONTENT_ACTIONS.COMMENT,
     CONTENT_ACTIONS.VOTE,
@@ -183,7 +197,7 @@ const admin = ac.newRole({
     COMMENT_ACTIONS.CREATE,
     COMMENT_ACTIONS.DELETE,
     COMMENT_ACTIONS.EDIT,
-    COMMENT_ACTIONS.VIEW,
+    COMMENT_ACTIONS.VIEW_ALL,
     COMMENT_ACTIONS.REPORT,
     COMMENT_ACTIONS.VOTE,
   ],
@@ -192,7 +206,7 @@ const admin = ac.newRole({
     PUBLICATION_ACTIONS.DELETE,
     PUBLICATION_ACTIONS.CHANGE_PUBLICATION_STATUS,
     PUBLICATION_ACTIONS.EDIT,
-    PUBLICATION_ACTIONS.VIEW,
+    PUBLICATION_ACTIONS.VIEW_ALL,
     PUBLICATION_ACTIONS.REPORT,
     PUBLICATION_ACTIONS.COMMENT,
     PUBLICATION_ACTIONS.VOTE,
@@ -201,13 +215,18 @@ const admin = ac.newRole({
 });
 
 const user = ac.newRole({
-  category: [CATEGORY_ACTIONS.CREATE, CATEGORY_ACTIONS.DELETE, CATEGORY_ACTIONS.EDIT, CATEGORY_ACTIONS.VIEW],
+  category: [
+    CATEGORY_ACTIONS.CREATE,
+    CATEGORY_ACTIONS.DELETE,
+    CATEGORY_ACTIONS.EDIT,
+    CATEGORY_ACTIONS.VIEW_ALL,
+  ],
   trail: [
     TRAIL_ACTIONS.CREATE,
     TRAIL_ACTIONS.DELETE,
     TRAIL_ACTIONS.CHANGE_PUBLICATION_STATUS,
     TRAIL_ACTIONS.EDIT,
-    TRAIL_ACTIONS.VIEW,
+    TRAIL_ACTIONS.VIEW_ALL,
     TRAIL_ACTIONS.REPORT,
     TRAIL_ACTIONS.COMMENT,
     TRAIL_ACTIONS.VOTE,
@@ -218,7 +237,7 @@ const user = ac.newRole({
     TOPIC_ACTIONS.DELETE,
     TOPIC_ACTIONS.CHANGE_PUBLICATION_STATUS,
     TOPIC_ACTIONS.EDIT,
-    TOPIC_ACTIONS.VIEW,
+    TOPIC_ACTIONS.VIEW_ALL,
     TOPIC_ACTIONS.REPORT,
     TOPIC_ACTIONS.COMMENT,
     TOPIC_ACTIONS.VOTE,
@@ -228,7 +247,7 @@ const user = ac.newRole({
     CONTENT_ACTIONS.DELETE,
     CONTENT_ACTIONS.CHANGE_PUBLICATION_STATUS,
     CONTENT_ACTIONS.EDIT,
-    CONTENT_ACTIONS.VIEW,
+    CONTENT_ACTIONS.VIEW_ALL,
     CONTENT_ACTIONS.REPORT,
     CONTENT_ACTIONS.COMMENT,
     CONTENT_ACTIONS.VOTE,
@@ -237,7 +256,7 @@ const user = ac.newRole({
     COMMENT_ACTIONS.CREATE,
     COMMENT_ACTIONS.DELETE,
     COMMENT_ACTIONS.EDIT,
-    COMMENT_ACTIONS.VIEW,
+    COMMENT_ACTIONS.VIEW_ALL,
     COMMENT_ACTIONS.REPORT,
     COMMENT_ACTIONS.VOTE,
   ],
@@ -246,7 +265,7 @@ const user = ac.newRole({
     PUBLICATION_ACTIONS.DELETE,
     PUBLICATION_ACTIONS.CHANGE_PUBLICATION_STATUS,
     PUBLICATION_ACTIONS.EDIT,
-    PUBLICATION_ACTIONS.VIEW,
+    PUBLICATION_ACTIONS.VIEW_ALL,
     PUBLICATION_ACTIONS.REPORT,
     PUBLICATION_ACTIONS.COMMENT,
     PUBLICATION_ACTIONS.VOTE,

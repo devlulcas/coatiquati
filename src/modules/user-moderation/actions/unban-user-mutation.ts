@@ -1,60 +1,55 @@
 'use server';
 
-import { validateRequest } from '@/modules/auth/services/next';
-import { isAdminOrAbove } from '@/modules/auth/utils/is';
-import { db } from '@/modules/database/db';
-import { log } from '@/modules/logging/lib/pino';
+import { auth } from '@/modules/auth/lib/auth';
 import {
-  fail,
-  isFail,
-  ok,
-  type Result,
-  wrapAsyncInResult,
-} from '@/shared/lib/result';
-import { eq } from 'drizzle-orm';
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
+import { db } from '@/modules/database/db';
+import { fail, ok, type Result } from '@/shared/lib/result';
 
-export async function unbanUserMutation(params: {
-  username: string;
-}): Promise<Result<string>> {
-  const { data: user } = await validateRequest();
+export async function unbanUserMutation(
+  userId: string
+): Promise<Result<string>> {
+  const currentUser = await getCurrentUser();
+  assertAuthenticated(currentUser);
 
-  if (!user) {
-    return fail('Você não está autenticado');
-  }
+  const can = await auth.api.userHasPermission({
+    body: {
+      userId: currentUser.id,
+      permission: {
+        user: ['ban'],
+      },
+    },
+  });
 
-  if (!isAdminOrAbove(user.role)) {
+  if (!can.success) {
     return fail('Você não tem permissão para remover ban de usuários');
   }
 
-  if (!params.username) {
-    return fail('Nome do usuário é obrigatório');
-  }
+  const bannedUser = await db.query.user.findFirst({
+    where: (fields, operators) => {
+      return operators.and(
+        operators.eq(fields.id, userId),
+        operators.eq(fields.banned, true)
+      );
+    },
+  });
 
-  if (user.username === params.username) {
-    return fail('Você não pode remover o ban de si mesmo');
-  }
-
-  const userResult = await wrapAsyncInResult(
-    db.query.user.findFirst({
-      columns: { id: true, bannedAt: true },
-      where: (fields, op) => op.eq(fields.username, params.username),
-    })
-  );
-
-  if (isFail(userResult) || !userResult.value) {
-    return fail('Erro ao buscar usuário');
+  if (!bannedUser) {
+    return fail('Usuário não encontrado ou não banido');
   }
 
   try {
-    await db
-      .update(user)
-      .set({ bannedAt: null })
-      .where(eq(user.id, user.id))
-      .execute();
-    log.info(`Banimento removido: ${user.id} por ${user.id}`);
+    await auth.api.unbanUser({
+      body: {
+        userId,
+      },
+    });
+
     return ok('Banimento removido com sucesso');
   } catch (error) {
-    log.error('Erro ao remover banimento', { error });
+    console.error(error);
     return fail('Erro ao remover banimento');
   }
 }

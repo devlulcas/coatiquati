@@ -1,8 +1,7 @@
 'use client';
 
-import Link from 'next/link';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
-import { getEmbedIDFromYoutubeUrl } from '@/modules/video-content/lib/youtube';
+import { getEmbedIDFromYouTubeUrl } from '@/modules/video-content/lib/youtube';
 import {
   Dialog,
   DialogContent,
@@ -12,10 +11,15 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui/dialog';
 import { cn } from '@/shared/utils/cn';
+import Link from 'next/link';
 import 'react-medium-image-zoom/dist/styles.css';
 import type { PublicationMedia } from '../types/publication';
 
-export function PublicationMediaGrid({ medias }: { medias: PublicationMedia[] }) {
+export function PublicationMediaGrid({
+  medias,
+}: {
+  medias: PublicationMedia[];
+}) {
   const length = medias.length;
 
   return (
@@ -25,10 +29,14 @@ export function PublicationMediaGrid({ medias }: { medias: PublicationMedia[] })
           key={media.id}
           className={cn(
             'aspect-w-16 aspect-h-9 relative min-h-40 w-full overflow-hidden rounded bg-secondary',
-            length === 3 && index === 2 ? 'col-span-2 row-span-1' : '',
+            length === 3 && index === 2 ? 'col-span-2 row-span-1' : ''
           )}
         >
-          {media.type === 'image' ? <PublicationImageEmbed {...media} /> : <PublicationVideoEmbed {...media} />}
+          {media.type === 'image' ? (
+            <PublicationImageEmbed {...media} />
+          ) : (
+            <PublicationVideoEmbed {...media} />
+          )}
 
           <DescriptionAlertDialog description={media.description} />
         </div>
@@ -37,7 +45,10 @@ export function PublicationMediaGrid({ medias }: { medias: PublicationMedia[] })
   );
 }
 
-export function PublicationImageEmbed({ description, url }: Pick<PublicationMedia, 'description' | 'url'>) {
+export function PublicationImageEmbed({
+  description,
+  url,
+}: Pick<PublicationMedia, 'description' | 'url'>) {
   return (
     <Link
       href={url}
@@ -50,8 +61,11 @@ export function PublicationImageEmbed({ description, url }: Pick<PublicationMedi
   );
 }
 
-export function PublicationVideoEmbed({ description, url }: Pick<PublicationMedia, 'description' | 'url'>) {
-  const videoId = getEmbedIDFromYoutubeUrl(url);
+export function PublicationVideoEmbed({
+  description,
+  url,
+}: Pick<PublicationMedia, 'description' | 'url'>) {
+  const videoId = getEmbedIDFromYouTubeUrl(url);
 
   if (!videoId) {
     return 'Vídeo inválido';

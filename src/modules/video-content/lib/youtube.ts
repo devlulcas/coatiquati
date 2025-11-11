@@ -1,12 +1,8 @@
 const YOUTUBE_REGEX =
   /^(https?:\/\/)?(www\.|music\.)?(youtube\.com|youtu\.be|youtube-nocookie\.com)\/(?!channel\/)(?!@)(.+)?$/;
 
-const isValidYoutubeUrl = (url: string) => {
-  return url.match(YOUTUBE_REGEX);
-};
-
-export const getEmbedIDFromYoutubeUrl = (url: string) => {
-  if (!url || !isValidYoutubeUrl(url)) {
+export function getEmbedIDFromYouTubeUrl(url: string) {
+  if (!url || !YOUTUBE_REGEX.test(url)) {
     return null;
   }
 
@@ -26,4 +22,4 @@ export const getEmbedIDFromYoutubeUrl = (url: string) => {
   }
 
   return matches[1];
-};
+}

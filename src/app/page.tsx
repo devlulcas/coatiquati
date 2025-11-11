@@ -1,15 +1,15 @@
-import { ArrowUpRightIcon } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
 import { Marquee } from '@/modules/home/components/marquee';
 import { TrailCardCarouselSection } from '@/modules/home/components/trail-card-carousel-section';
 import { getRecentTrailsQuery } from '@/modules/trail/actions/get-recent-trails-by-id';
 import blobImage from '@/shared/assets/images/blob-hq.png';
 import { AppFeedbackCard } from '@/shared/components/common/app-feedback-card';
+import { isFail } from '@/shared/lib/result';
+import { ArrowUpRightIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Suspense } from 'react';
 
 export default async function Page() {
-  const trailsResult = await getRecentTrailsQuery();
-
   return (
     <div className="flex h-[--view-height] flex-col justify-between pt-12">
       <div className="container flex h-full flex-col">
@@ -18,9 +18,13 @@ export default async function Page() {
         </h1>
 
         <p className="mt-3 max-w-md text-pretty pl-1 font-medium leading-6">
-          Descubra a Coati, a <em className="font-semibold not-italic">plataforma interativa</em> onde o conhecimento
-          flui livremente, permitindo que você{' '}
-          <em className="font-semibold not-italic">explore e compartilhe sabedoria</em> sem fronteiras.
+          Descubra a Coati, a{' '}
+          <em className="font-semibold not-italic">plataforma interativa</em>{' '}
+          onde o conhecimento flui livremente, permitindo que você{' '}
+          <em className="font-semibold not-italic">
+            explore e compartilhe sabedoria
+          </em>{' '}
+          sem fronteiras.
         </p>
 
         <Link
@@ -34,19 +38,9 @@ export default async function Page() {
           </span>
         </Link>
 
-        {trailsResult.type === 'ok' ? (
-          trailsResult.value.length > 0 ? (
-            <TrailCardCarouselSection trails={trailsResult.value} className="mb-auto mt-auto" />
-          ) : (
-            <AppFeedbackCard variant="warning" className="mb-auto mt-auto flex h-[50vh]">
-              Ainda não há nenhuma trilha
-            </AppFeedbackCard>
-          )
-        ) : (
-          <AppFeedbackCard variant="warning" className="mb-auto mt-auto flex h-[50vh]">
-            Não foi possível carregar as trilhas recentes.
-          </AppFeedbackCard>
-        )}
+        <Suspense fallback={<RecentTrailsSectionFallback />}>
+          <RecentTrailsSection />
+        </Suspense>
 
         <div className="absolute inset-0 z-[-1] h-[--view-height] overflow-hidden">
           <Image
@@ -87,5 +81,46 @@ export default async function Page() {
         ]}
       />
     </div>
+  );
+}
+
+async function RecentTrailsSection() {
+  const trailsResult = await getRecentTrailsQuery();
+
+  if (isFail(trailsResult)) {
+    return (
+      <AppFeedbackCard
+        variant="warning"
+        className="mb-auto mt-auto flex h-[50vh]"
+      >
+        Não foi possível carregar as trilhas recentes.
+      </AppFeedbackCard>
+    );
+  }
+
+  if (trailsResult.value.length === 0) {
+    return (
+      <AppFeedbackCard
+        variant="warning"
+        className="mb-auto mt-auto flex h-[50vh]"
+      >
+        Ainda não há nenhuma trilha
+      </AppFeedbackCard>
+    );
+  }
+
+  return (
+    <TrailCardCarouselSection
+      trails={trailsResult.value}
+      className="mb-auto mt-auto"
+    />
+  );
+}
+
+function RecentTrailsSectionFallback() {
+  return (
+    <AppFeedbackCard variant="info" className="mb-auto mt-auto flex h-[50vh]">
+      Carregando...
+    </AppFeedbackCard>
   );
 }

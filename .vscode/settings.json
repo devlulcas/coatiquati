@@ -1,12 +1,28 @@
 {
   "cSpell.words": [
     "clsx",
+    "ditter",
     "esnext",
     "fkey",
+    "ilike",
     "pomodoro",
     "pomodoros",
     "sqlite",
+    "Steinberg",
+    "unban",
     "upvote",
-    "Upvote"
-  ]
+    "Upvote",
+    "youtu",
+    "youtube",
+    "YOUTUBE"
+  ],
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "always",
+    "source.organizeImports.biome": "explicit"
+  },
+  "[typescript, typescriptreact, javascript, css, json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }

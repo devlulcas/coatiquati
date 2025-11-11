@@ -1,21 +1,16 @@
+import type { JSONContent } from '@tiptap/core';
 import { relations } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
-import type { ContentJSON } from '../../../modules/content/types/content-json-field';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 import { comments } from './comment';
 import { votes } from './comment-vote';
+import { contributions } from './contribution';
 import { reports } from './report';
 import { topics } from './topic';
 
 export type SelectContent = typeof contents.$inferSelect;
 export type InsertContent = typeof contents.$inferInsert;
-
-export enum ContentType {
-  IMAGE = 1,
-  RICH_TEXT = 2,
-  VIDEO = 3,
-}
 
 export enum ContentStatus {
   DRAFT = 1,
@@ -23,15 +18,21 @@ export enum ContentStatus {
   ARCHIVED = 3,
 }
 
+export enum ContentType {
+  Image = 1,
+  RichText = 2,
+  Video = 3,
+}
+
 export const contents = t.pgTable('content', {
   id: t.serial('id').primaryKey().notNull(),
   title: t.text('title').notNull(),
-  contentType: t.smallint('content_type').$type<ContentType>().notNull(),
+  description: t.text('description'),
   status: t
     .smallint('status')
     .$type<ContentStatus>()
+    .notNull()
     .default(ContentStatus.DRAFT),
-  content: t.jsonb('content').$type<ContentJSON>().notNull(),
   topicId: t.integer('topic_id').references(() => topics.id, {
     onDelete: 'cascade',
     onUpdate: 'cascade',
@@ -58,4 +59,57 @@ export const contentsRelations = relations(contents, ({ one, many }) => ({
   comments: many(comments),
   votes: many(votes),
   reports: many(reports),
+  richTextContent: one(richTextContents, {
+    fields: [contents.id],
+    references: [richTextContents.contentId],
+  }),
+  imageContent: one(imageContents, {
+    fields: [contents.id],
+    references: [imageContents.contentId],
+  }),
+  videoContent: one(videoContents, {
+    fields: [contents.id],
+    references: [videoContents.contentId],
+  }),
+  contributions: many(contributions),
 }));
+
+// rich text content
+export type SelectRichTextContent = typeof richTextContents.$inferSelect;
+export type InsertRichTextContent = typeof richTextContents.$inferInsert;
+export const richTextContents = t.pgTable('rich_text_content', {
+  id: t.serial('id').primaryKey().notNull(),
+  contentId: t
+    .integer('content_id')
+    .references(() => contents.id)
+    .notNull(),
+  jsonContent: t.jsonb('json_content').$type<JSONContent>().notNull(),
+  ...tableTimestampColumns,
+});
+
+// image content
+export type SelectImageContent = typeof imageContents.$inferSelect;
+export type InsertImageContent = typeof imageContents.$inferInsert;
+export const imageContents = t.pgTable('image_content', {
+  id: t.serial('id').primaryKey().notNull(),
+  contentId: t
+    .integer('content_id')
+    .references(() => contents.id)
+    .notNull(),
+  src: t.text('src').notNull(),
+  alt: t.text('alt').notNull(),
+  ...tableTimestampColumns,
+});
+
+// video content
+export type SelectVideoContent = typeof videoContents.$inferSelect;
+export type InsertVideoContent = typeof videoContents.$inferInsert;
+export const videoContents = t.pgTable('video_content', {
+  id: t.serial('id').primaryKey().notNull(),
+  contentId: t
+    .integer('content_id')
+    .references(() => contents.id)
+    .notNull(),
+  src: t.text('src').notNull(),
+  ...tableTimestampColumns,
+});
