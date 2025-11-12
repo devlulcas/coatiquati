@@ -1,36 +1,31 @@
 'use server';
 
 import { db } from '@/modules/database/db';
-import { log } from '@/modules/logging/lib/pino';
-import {
-  isFail,
-  ok,
-  type Result,
-  wrapAsyncInResult,
-} from '@/shared/lib/result';
+import { fail, type Result, wrapAsyncInResult } from '@/shared/lib/result';
 import type { Publication } from '../types/publication';
 
 export async function getPublicationsByUserIdQuery(
   userId: string
 ): Promise<Result<Publication[]>> {
   const user = await db.query.user.findFirst({
-    where: (fields, op) => op.eq(fields.id, userId),
+    where: (fields, { eq, and }) =>
+      and(eq(fields.id, userId), eq(fields.banned, false)),
   });
 
-  if (!user || user.bannedAt) {
-    log.warn('Usuário não encontrado ou banido', { userId });
-    return ok([]);
+  if (!user) {
+    return fail('Usuário não encontrado ou banido');
   }
 
   const pubs: Result<Publication[]> = await wrapAsyncInResult(
-    db.query.publicationTable.findMany({
-      where: (fields, op) =>
-        op.and(op.eq(fields.authorId, userId), op.isNull(fields.deletedAt)),
-      orderBy: (fields, op) => op.desc(fields.createdAt),
+    db.query.publications.findMany({
+      where: (fields, { eq, isNull, and }) => {
+        return and(eq(fields.userId, userId), isNull(fields.deletedAt));
+      },
+      orderBy: (fields, { desc }) => desc(fields.createdAt),
       with: {
         medias: {
-          where: (fields, op) => op.isNull(fields.deletedAt),
-          orderBy: (fields, op) => op.asc(fields.id),
+          where: (fields, { isNull }) => isNull(fields.deletedAt),
+          orderBy: (fields, { asc }) => asc(fields.id),
           columns: {
             id: true,
             description: true,
@@ -41,11 +36,6 @@ export async function getPublicationsByUserIdQuery(
       },
     })
   );
-
-  if (isFail(pubs)) {
-    log.error('Falha ao buscar publicações', { userId });
-    return pubs;
-  }
 
   return pubs;
 }

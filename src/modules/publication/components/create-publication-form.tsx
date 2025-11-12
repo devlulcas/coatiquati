@@ -1,5 +1,6 @@
 'use client';
 
+import { PublicationMediaType } from '@/modules/database/schema/publication-media';
 import { ImageUploadArea } from '@/modules/file/components/image-upload-area';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { getEmbedIDFromYouTubeUrl } from '@/modules/video-content/lib/youtube';
@@ -126,7 +127,7 @@ export function CreatePublicationForm() {
               </Button>
 
               <div className="relative my-auto">
-                {field.type === 'image' ? (
+                {field.type === PublicationMediaType.IMAGE ? (
                   <PublicationImageEmbed {...field} />
                 ) : (
                   <PublicationVideoEmbed {...field} />
@@ -179,9 +180,15 @@ function AddMediaDialog({
   index: number;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [type, setType] = useState<PublicationMedia['type']>(
-    defaultValues?.type ?? 'image'
+
+  const [type, setType] = useState(
+    defaultValues?.type ?? PublicationMediaType.IMAGE
   );
+
+  const handleTypeChange = (value: string) => {
+    setType(Number(value));
+  };
+
   const [url, setUrl] = useState(defaultValues?.url ?? '');
   const [description, setDescription] = useState(
     defaultValues?.description ?? ''
@@ -204,7 +211,7 @@ function AddMediaDialog({
       return;
     }
 
-    if (type === 'video' && !youtubeId) {
+    if (type === PublicationMediaType.VIDEO && !youtubeId) {
       toast({
         title: 'URL inválida',
         description: 'A URL do vídeo é inválida',
@@ -246,17 +253,22 @@ function AddMediaDialog({
         <DialogTitle>Adicionar mídia</DialogTitle>
 
         <Tabs
-          defaultValue="image"
-          onValueChange={(value) => setType(value as PublicationMedia['type'])}
+          defaultValue={PublicationMediaType.IMAGE.toString()}
+          value={type.toString()}
+          onValueChange={handleTypeChange}
         >
           <TabsList>
-            <TabsTrigger value="image">Imagem</TabsTrigger>
-            <TabsTrigger value="video">Vídeo</TabsTrigger>
+            <TabsTrigger value={PublicationMediaType.IMAGE.toString()}>
+              Imagem
+            </TabsTrigger>
+            <TabsTrigger value={PublicationMediaType.VIDEO.toString()}>
+              Vídeo
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent
             className="flex h-80 flex-col items-center justify-center gap-2 data-[state=inactive]:hidden data-[state=inactive]:h-0"
-            value="image"
+            value={PublicationMediaType.IMAGE.toString()}
           >
             <div className="py-2">
               <ImageUploadArea
@@ -276,7 +288,7 @@ function AddMediaDialog({
 
           <TabsContent
             className="flex h-72 flex-col items-center justify-center gap-2 data-[state=inactive]:hidden data-[state=inactive]:h-0"
-            value="video"
+            value={PublicationMediaType.VIDEO.toString()}
           >
             <div
               className={cn(

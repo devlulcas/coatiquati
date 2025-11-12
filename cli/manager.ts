@@ -1,25 +1,10 @@
+import { authClient } from '@/modules/auth/lib/auth-client';
 import { AVATARS } from '@/modules/user/constants/avatars';
 import * as p from '@clack/prompts';
 import { intro, outro } from '@clack/prompts';
-import { hash } from 'argon2';
-import Database from 'better-sqlite3';
 import { config } from 'dotenv';
-import { eq } from 'drizzle-orm';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { type Role, roles } from '../src/modules/auth/constants/roles';
-import { schema } from '../src/modules/database/schema';
-import { user } from '../src/modules/database/schema/user';
 
 config({ path: '.env.local' });
-
-const DATABASE_URL = process.env.DATABASE_URL;
-if (!DATABASE_URL) {
-  throw new Error('DATABASE_URL is not defined');
-}
-
-const sqlite = new Database(DATABASE_URL);
-
-const db = drizzle(sqlite, { schema });
 
 type User = {
   username: string;
@@ -28,48 +13,31 @@ type User = {
   avatar: string;
 };
 
+type Role = 'admin' | 'user' | 'superAdmin';
+
 async function registerUser(user: User, role: Role) {
-  const passwordHash = await hash(user.password, {
-    memoryCost: 19456,
-    timeCost: 2,
-    hashLength: 32,
-    parallelism: 1,
-  });
-
-  const userId = crypto.randomUUID();
-
-  const data = {
-    id: userId,
-    role: role,
-    username: user.username,
-    passwordHash: passwordHash,
-    avatar: user.avatar,
+  const { data, error } = await authClient.signUp.email({
     email: user.email,
-    bannedAt: null,
-    verifiedAt: null,
-    deletedAt: null,
-  };
-
-  return db.insert(user).values(data).onConflictDoUpdate({
-    target: user.email,
-    set: data,
+    password: user.password,
+    username: user.username,
+    name: user.username,
+    image: user.avatar,
   });
-}
 
-async function updateUser(username: string, role: Role) {
-  return db
-    .update(user)
-    .set({ role: role })
-    .where(eq(user.username, username))
-    .run();
-}
+  if (error) {
+    throw new Error(error.message);
+  }
 
-async function findUserByUsername(username: string) {
-  return db.select().from(user).where(eq(user.username, username)).get();
-}
+  const { error: roleError } = await authClient.admin.setRole({
+    userId: data.user.id,
+    role: role,
+  });
 
-async function findUserByEmail(email: string) {
-  return db.select().from(user).where(eq(user.email, email)).get();
+  if (roleError) {
+    throw new Error(roleError.message);
+  }
+
+  return data;
 }
 
 async function withLoading<T>(
@@ -142,7 +110,23 @@ async function promptUsername(): Promise<string> {
     process.exit(0);
   }
 
-  const usernameAlreadyTaken = await withLoading(findUserByUsername(username), {
+  const promise = authClient.admin
+    .listUsers({
+      query: {
+        filterField: 'username',
+        filterValue: username,
+        filterOperator: 'eq',
+      },
+    })
+    .then((res) => {
+      if (res.error) {
+        throw new Error(res.error.message);
+      }
+
+      return res.data.users.length > 0;
+    });
+
+  const usernameAlreadyTaken = await withLoading(promise, {
     start: 'Buscando nome de usuário...',
     stop: 'Finalizada a busca',
     error: 'Erro ao buscar nome de usuário',
@@ -172,11 +156,11 @@ async function promptUserRole() {
     message: 'Selecione o grau de permissão do usuário:',
     options: [
       {
-        value: roles.HIGH_PRIVILEGE_ADMIN,
+        value: 'superAdmin',
         label: 'Administrador de alta permissão - Poder ilimitado',
       },
-      { value: roles.ADMIN, label: 'Administrador - Poder limitado' },
-      { value: roles.USER, label: 'Usuário comum - Poder mínimo' },
+      { value: 'admin', label: 'Administrador - Poder limitado' },
+      { value: 'user', label: 'Usuário comum - Poder mínimo' },
     ],
   });
 
@@ -221,7 +205,27 @@ async function main() {
 
   const email = await promptUserEmail();
 
-  const emailAlreadyTaken = await withLoading(findUserByEmail(email), {
+  const promise = authClient.admin
+    .listUsers({
+      query: {
+        filterField: 'email',
+        filterValue: email,
+        filterOperator: 'eq',
+      },
+    })
+    .then((res) => {
+      if (res.error) {
+        throw new Error(res.error.message);
+      }
+
+      if (res.data.users.length === 0) {
+        return null;
+      }
+
+      return res.data.users[0];
+    });
+
+  const emailAlreadyTaken = await withLoading(promise, {
     start: 'Buscando usuário...',
     stop: 'Finalizada a busca',
     error: 'Erro ao buscar usuário',
@@ -230,7 +234,7 @@ async function main() {
 
   if (emailAlreadyTaken) {
     const confirm = await promptBasicConfirm(
-      `Usuário encontrado: ${emailAlreadyTaken.username} (${emailAlreadyTaken.email}). Deseja atualizar o usuário?`
+      `Usuário encontrado: ${emailAlreadyTaken.name} (${emailAlreadyTaken.email}). Deseja atualizar o usuário?`
     );
 
     if (!confirm) {
@@ -240,19 +244,40 @@ async function main() {
 
     const role = await promptUserRole();
 
-    await withLoading(updateUser(emailAlreadyTaken.username, role), {
+    const updateUserPromise = authClient.admin.updateUser({
+      userId: emailAlreadyTaken.id,
+      data: {
+        email: email,
+        name: emailAlreadyTaken.name,
+      },
+    });
+
+    await withLoading(updateUserPromise, {
       start: 'Atualizando usuário...',
       stop: 'Usuário atualizado',
       error: 'Erro ao atualizar usuário',
       exit: true,
     });
 
-    outro(`Usuário ${emailAlreadyTaken.username} atualizado com sucesso!`);
+    const setRolePromise = authClient.admin.setRole({
+      userId: emailAlreadyTaken.id,
+      role: role,
+    });
+
+    await withLoading(setRolePromise, {
+      start: 'Definindo permissão do usuário...',
+      stop: 'Permissão definida',
+      error: 'Erro ao definir permissão do usuário',
+      exit: true,
+    });
+
+    outro(`Usuário ${emailAlreadyTaken.name} atualizado com sucesso!`);
   }
 
   const username = await promptUsername();
   const password = await promptUserPassword();
   const role = await promptUserRole();
+
   const confirm = await promptBasicConfirm(
     `Criar usuário ${username} (${email}) com permissão ${role}?`
   );

@@ -1,26 +1,33 @@
 'use server';
 
-import { and, eq } from 'drizzle-orm';
 import { db } from '@/modules/database/db';
-import { trailSubscriptionTable } from '@/modules/database/schema/trail-subscription';
-import { log } from '@/modules/logging/lib/pino';
+import { trailSubscriptions } from '@/modules/database/schema/trail-subscription';
 import { isFail, type Ok, ok, wrapAsyncInResult } from '@/shared/lib/result';
+import { and, eq } from 'drizzle-orm';
 
-export async function currentUserIsAlreadySubscribedQuery(trailId: number, userId: string): Promise<Ok<boolean>> {
+export async function currentUserIsAlreadySubscribedQuery(
+  trailId: number,
+  userId: string
+): Promise<Ok<boolean>> {
   if (!userId) return ok(false);
 
   const isAlreadyFollowing = await wrapAsyncInResult(
     db
       .select()
-      .from(trailSubscriptionTable)
-      .where(and(eq(trailSubscriptionTable.userId, userId), eq(trailSubscriptionTable.trailId, trailId)))
-      .get(),
+      .from(trailSubscriptions)
+      .where(
+        and(
+          eq(trailSubscriptions.userId, userId),
+          eq(trailSubscriptions.trailId, trailId)
+        )
+      )
+      .then((result) => result.at(0) !== undefined)
   );
 
   if (isFail(isAlreadyFollowing)) {
-    log.error('Falha ao buscar inscrição de trilha.', isAlreadyFollowing.fail);
+    console.error(isAlreadyFollowing.fail);
     return ok(false);
   }
 
-  return ok(Boolean(isAlreadyFollowing.value));
+  return ok(isAlreadyFollowing.value);
 }

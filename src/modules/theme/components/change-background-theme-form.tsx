@@ -1,12 +1,20 @@
 'use client';
 
-import { useTransition } from 'react';
 import { Label } from '@/shared/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
+import { useTransition } from 'react';
 import { setBackgroundMutation } from '../actions/change-background-mutation';
-import { type Background, BackgroundConfig, VALID_BACKGROUNDS } from '../constants/theme-keys';
+import {
+  type Background,
+  BackgroundConfig,
+  VALID_BACKGROUNDS,
+} from '../constants/theme-keys';
 
-export function ChangeBackgroundThemeForm({ initialBackground }: { initialBackground: Background }) {
+export function ChangeBackgroundThemeForm({
+  initialBackground,
+}: {
+  initialBackground: Background;
+}) {
   const [_, startTransition] = useTransition();
 
   return (
@@ -25,10 +33,12 @@ export function ChangeBackgroundThemeForm({ initialBackground }: { initialBackgr
         });
       }}
     >
-      {VALID_BACKGROUNDS.map(background => (
+      {VALID_BACKGROUNDS.map((background) => (
         <div key={background} className="flex items-center space-x-2">
           <RadioGroupItem value={background} id={background} />
-          <Label htmlFor={background}>{BackgroundConfig[background].label} </Label>
+          <Label htmlFor={background}>
+            {BackgroundConfig[background].label}{' '}
+          </Label>
         </div>
       ))}
     </RadioGroup>

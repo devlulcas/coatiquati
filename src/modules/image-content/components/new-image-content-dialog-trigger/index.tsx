@@ -1,10 +1,15 @@
 'use client';
 
-import { useState } from 'react';
 import { ImageContentBaseForm } from '@/modules/image-content/components/image-content-base-form';
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 import { upsertImageContentMutation } from '../../actions/upsert-image-content-mutation';
 import type { NewImageContentSchema } from '../../schemas/new-image-content-schema';
 
@@ -13,22 +18,29 @@ type NewImageContentDialogTriggerProps = {
   defaultValues?: Partial<NewImageContentSchema>;
 };
 
-export function NewImageContentDialogTrigger({ defaultValues, children }: NewImageContentDialogTriggerProps) {
+export function NewImageContentDialogTrigger({
+  defaultValues,
+  children,
+}: NewImageContentDialogTriggerProps) {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
 
-  const mutation = useServerActionMutation({
-    shouldRefresh: true,
-    serverAction: upsertImageContentMutation,
-    onFailedAction: error => {
+  const mutation = useMutation({
+    mutationFn: upsertImageContentMutation,
+    onError: (error) => {
       toast({
-        title: `Erro lidando com a imagem do conteúdo: ${error instanceof Error ? error.message : String(error)}`,
+        title: `Erro lidando com a imagem do conteúdo: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
         description: error instanceof Error ? error.message : String(error),
         variant: 'destructive',
       });
     },
-    onSuccessfulAction: () => {
-      toast({ title: 'Ação bem sucedida' });
+    onSuccess: () => {
+      toast({
+        title: 'Imagem do conteúdo criada com sucesso',
+        variant: 'success',
+      });
       setIsOpen(false);
     },
   });
@@ -39,7 +51,10 @@ export function NewImageContentDialogTrigger({ defaultValues, children }: NewIma
 
       <DialogContent className="min-w-fit">
         <DialogHeader>
-          <ImageContentBaseForm defaultValues={defaultValues} onSubmit={mutation.mutate} />
+          <ImageContentBaseForm
+            defaultValues={defaultValues}
+            onSubmit={mutation.mutate}
+          />
         </DialogHeader>
       </DialogContent>
     </Dialog>

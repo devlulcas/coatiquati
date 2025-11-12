@@ -1,12 +1,12 @@
+import { upsertBaseContentSchema } from '@/modules/content/schemas/base-content';
 import { z } from 'zod';
-import { newContentSchema } from '@/modules/content/schemas/new-content-schema';
 
-export const newImageContentSchema = newContentSchema.merge(
-  z.object({
-    src: z.string().url(),
+export const newImageContentSchema = z
+  .object({
+    src: z.url(),
     alt: z.string(),
     description: z.string(),
-  }),
-);
+  })
+  .extend(upsertBaseContentSchema.shape);
 
 export type NewImageContentSchema = z.infer<typeof newImageContentSchema>;

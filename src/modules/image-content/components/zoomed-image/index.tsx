@@ -1,6 +1,5 @@
 'use client';
-
-import type { ImageContent } from '@/modules/image-content/types/image-content';
+import type { ImageContent } from '@/modules/content/types/content';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -29,8 +28,6 @@ type ZoomedImageProps = {
 };
 
 export function ZoomedImage({ content }: ZoomedImageProps) {
-  const { content: data, ...meta } = content;
-
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   return (
@@ -44,10 +41,12 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
 
       <DialogContent className="max-h-[95dvh] lg:max-w-[45vw]">
         <DialogHeader>
-          <DialogTitle>{meta.title}</DialogTitle>
-          <DialogDescription className="text-md text-muted-foreground">
-            {data.description}
-          </DialogDescription>
+          <DialogTitle>{content.title}</DialogTitle>
+          {content.description && (
+            <DialogDescription className="text-md text-muted-foreground">
+              {content.description}
+            </DialogDescription>
+          )}
         </DialogHeader>
 
         <ResizablePanelGroup
@@ -58,8 +57,8 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
             <Zoom>
               {/** biome-ignore lint/performance/noImgElement: <This is an raw image to be zoomed> */}
               <img
-                alt={data.description}
-                src={data.src}
+                alt={content.imageContent.alt}
+                src={content.imageContent.src}
                 width={1240}
                 height={1080}
               />
@@ -68,40 +67,42 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
           <ResizableHandle withHandle className="mx-2" />
           <ResizablePanel>
             <aside className="flex w-full flex-col gap-2 rounded border bg-secondary p-4 text-secondary-foreground">
-              <h4 className="text-md font-bold">{meta.title}</h4>
+              <h4 className="text-md font-bold">{content.title}</h4>
 
-              <ScrollArea className="h-1/2 py-2">
-                <span className="text-muted-foreground">Descrição: </span>
-                {data.description}
-              </ScrollArea>
+              {content.description && (
+                <ScrollArea className="h-1/2 py-2">
+                  <span className="text-muted-foreground">Descrição: </span>
+                  {content.description}
+                </ScrollArea>
+              )}
 
               <p className="whitespace-break-spaces">
                 <span className="text-muted-foreground">Autor: </span>
-                <span className="truncate">{meta.author.displayUsername}</span>
+                <span className="truncate">{content.author.name}</span>
               </p>
 
               <p className="whitespace-break-spaces">
                 <span className="text-muted-foreground">Criado em: </span>
-                {new Date(meta.createdAt).toLocaleDateString()}
+                {new Date(content.createdAt).toLocaleDateString()}
               </p>
 
               <p className="whitespace-break-spaces">
                 <span className="text-muted-foreground">Modificado em: </span>
-                {new Date(meta.updatedAt).toLocaleDateString()}
+                {new Date(content.updatedAt).toLocaleDateString()}
               </p>
 
               <ul>
-                {meta.contributors.map((contributor) => (
+                {content.contributors.map((contributor) => (
                   <li
-                    key={contributor.user.id}
+                    key={contributor.id}
                     className="flex items-center gap-2 overflow-x-clip rounded border border-primary/20 p-1"
                   >
-                    <UserAvatar user={contributor.user} className="rounded" />
+                    <UserAvatar user={contributor} className="rounded" />
                     <Link
                       className="truncate"
-                      href={`/profile/${contributor.user.username}`}
+                      href={`/profile/${contributor.username}`}
                     >
-                      {contributor.user.displayUsername}
+                      {contributor.name}
                     </Link>
                   </li>
                 ))}
@@ -111,9 +112,9 @@ export function ZoomedImage({ content }: ZoomedImageProps) {
         </ResizablePanelGroup>
 
         <DialogFooter>
-          {meta.author && (
+          {content.author && (
             <span className="text-md text-muted-foreground">
-              Por {meta.author.displayUsername}
+              Por {content.author.name}
             </span>
           )}
         </DialogFooter>

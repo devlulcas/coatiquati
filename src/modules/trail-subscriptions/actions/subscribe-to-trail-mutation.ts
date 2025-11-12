@@ -1,20 +1,21 @@
 'use server';
 
-import { isAuthenticated } from '@/modules/auth/utils/is';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { trailSubscriptionTable } from '@/modules/database/schema/trail-subscription';
-import type { TrailId } from '@/modules/trail/types/trail';
-import { fail, ok, type Result } from '@/shared/lib/result';
+import { trailSubscriptions } from '@/modules/database/schema/trail-subscription';
+import { ok, type Result } from '@/shared/lib/result';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { currentUserIsAlreadySubscribedQuery } from './current-user-is-already-subscribed-query';
 
 export async function subscribeToTrailMutation(
-  trailId: TrailId
+  trailId: number
 ): Promise<Result<string>> {
   const user = await getCurrentUser();
-
-  if (!isAuthenticated(user?.role)) return fail('Usuário não autenticado');
+  assertAuthenticated(user);
 
   const isAlreadyFollowing = await currentUserIsAlreadySubscribedQuery(
     trailId,
@@ -23,17 +24,17 @@ export async function subscribeToTrailMutation(
 
   if (isAlreadyFollowing.value) {
     await db
-      .delete(trailSubscriptionTable)
+      .delete(trailSubscriptions)
       .where(
         and(
-          eq(trailSubscriptionTable.userId, user.id),
-          eq(trailSubscriptionTable.trailId, trailId)
+          eq(trailSubscriptions.userId, user.id),
+          eq(trailSubscriptions.trailId, trailId)
         )
       )
       .execute();
   } else {
     await db
-      .insert(trailSubscriptionTable)
+      .insert(trailSubscriptions)
       .values({ trailId, userId: user.id })
       .execute();
   }

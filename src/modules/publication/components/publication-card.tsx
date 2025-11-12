@@ -1,5 +1,5 @@
 import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
-import type { PublicUser } from '@/modules/user/types/user';
+import type { Contributor } from '@/modules/user/types/user';
 import { cn } from '@/shared/utils/cn';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { CheckCircle2Icon, DotIcon, EllipsisIcon } from 'lucide-react';
@@ -9,7 +9,7 @@ import type { Publication } from '../types/publication';
 import { PublicationMediaGrid } from './publication-media-grid';
 
 type PublicationCardProps = {
-  author: Pick<PublicUser, 'avatar' | 'username' | 'verifiedAt'>;
+  author: Contributor;
   publication: Publication;
 };
 
@@ -36,7 +36,7 @@ export function PublicationCard({
     <article className={cn(publicationCardVariant({ variant }))}>
       <Link href={`/profile/${author.username}`}>
         <Image
-          src={author.avatar}
+          src={author.image}
           alt={author.username}
           width={40}
           height={40}

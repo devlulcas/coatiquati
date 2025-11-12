@@ -1,9 +1,6 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { FeedbackType } from '@/modules/database/schema/feedback';
 import { Editor } from '@/modules/rich-text-content/components/editor';
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -15,14 +12,25 @@ import {
   FormLabel,
   FormMessage,
 } from '@/shared/components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui/select';
 import { Separator } from '@/shared/components/ui/separator';
 import { useToast } from '@/shared/components/ui/use-toast';
-import { useServerActionMutation } from '@/shared/hooks/use-server-action-mutation';
+import { unwrap } from '@/shared/lib/result';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { createNewFeedbackMutation } from '../../actions/create-new-feedback-mutation';
 
 const formSchema = z.object({
-  type: z.union([z.literal('bug'), z.literal('feature'), z.literal('improvement')]),
+  type: z.enum(FeedbackType),
   text: z.any(),
 });
 
@@ -36,26 +44,30 @@ export function NewFeedbackForm() {
     resolver: zodResolver(formSchema),
   });
 
-  const createNewFeedbackMutationState = useServerActionMutation({
-    serverAction: createNewFeedbackMutation,
-    onFailedAction: error => {
+  const createNewFeedbackMutationState = useMutation({
+    mutationFn: async (data: NewFeedbackFormValues) => {
+      const result = await createNewFeedbackMutation(data);
+      return unwrap(result);
+    },
+    onError: (error) => {
       toast({
         title: 'Erro ao criar feedback',
         description: error.message,
         variant: 'destructive',
       });
     },
-    onSuccessfulAction: () => {
+    onSuccess: () => {
       router.push('/feedback/thanks');
     },
-    shouldRefresh: false,
   });
 
   return (
     <Form {...form}>
       <form
         method="POST"
-        onSubmit={form.handleSubmit(createNewFeedbackMutationState.mutate)}
+        onSubmit={form.handleSubmit((data) =>
+          createNewFeedbackMutationState.mutateAsync(data)
+        )}
         className="flex h-fit min-w-[400px] max-w-6xl flex-col gap-4 rounded-md border bg-card px-4 py-6 shadow-md"
         action="/api/sign-up"
       >
@@ -67,19 +79,30 @@ export function NewFeedbackForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tipo de feedback</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value.toString()}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione um tipo de feedback" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="bug">Bug</SelectItem>
-                  <SelectItem value="feature">Feature</SelectItem>
-                  <SelectItem value="improvement">Melhoria</SelectItem>
+                  <SelectItem value={FeedbackType.BUG.toString()}>
+                    Bug
+                  </SelectItem>
+                  <SelectItem value={FeedbackType.FEATURE.toString()}>
+                    Feature
+                  </SelectItem>
+                  <SelectItem value={FeedbackType.IMPROVEMENT.toString()}>
+                    Melhoria
+                  </SelectItem>
                 </SelectContent>
               </Select>
-              <FormDescription>Selecione o tipo de feedback que você deseja enviar.</FormDescription>
+              <FormDescription>
+                Selecione o tipo de feedback que você deseja enviar.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -88,12 +111,16 @@ export function NewFeedbackForm() {
         <Separator className="my-4" />
 
         <Editor
-          onDelayedChange={editor => {
+          onDelayedChange={(editor) => {
             form.setValue('text', JSON.parse(JSON.stringify(editor.getJSON())));
           }}
         />
 
-        <Button className="mt-4 w-full" type="submit" isLoading={form.formState.isSubmitting}>
+        <Button
+          className="mt-4 w-full"
+          type="submit"
+          isLoading={form.formState.isSubmitting}
+        >
           Enviar
         </Button>
       </form>

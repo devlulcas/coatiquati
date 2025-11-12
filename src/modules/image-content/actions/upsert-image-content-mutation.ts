@@ -1,65 +1,48 @@
 'use server';
 
-import { isAuthenticated } from '@/modules/auth/utils/is';
-import { BaseContentRepository } from '@/modules/content/repositories/upsert-content';
-import { ContentType } from '@/modules/content/types/content-json-field';
 import {
-  type NewImageContentSchema,
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
+import { upsertContent } from '@/modules/content/repositories/upsert-content';
+import { db } from '@/modules/database/db';
+import {
   newImageContentSchema,
+  type NewImageContentSchema,
 } from '@/modules/image-content/schemas/new-image-content-schema';
-import { log } from '@/modules/logging/lib/pino';
-import {
-  fail,
-  isFail,
-  isOk,
-  type Result,
-  wrapAsyncInResult,
-} from '@/shared/lib/result';
+import { fail, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 
 export async function upsertImageContentMutation(
   params: NewImageContentSchema
 ): Promise<Result<number>> {
   const user = await getCurrentUser();
+  assertAuthenticated(user);
 
-  if (!isAuthenticated(user)) {
-    return fail('Usuário não autenticado');
+  const parsed = newImageContentSchema.safeParse(params);
+
+  if (!parsed.success) {
+    return fail(parsed.error.message);
   }
 
-  const validated = newImageContentSchema.safeParse(params);
+  const contentId = await wrapAsyncInResult(
+    db.transaction(async (tx) => {
+      const base = await upsertContent.base(tx, {
+        title: params.title,
+        userId: user.id,
+        id: parsed.data.id,
+        topicId: params.topicId,
+        description: params.description,
+      });
 
-  if (!validated.success) {
-    log.error('Falha ao validar parâmetros.', {
-      params,
-      errors: validated.error,
-    });
-    return fail(validated.error.message);
-  }
+      await upsertContent.image(tx, {
+        contentId: base.contentId,
+        src: params.src,
+        alt: params.alt,
+      });
 
-  const repo = new BaseContentRepository();
-
-  const author = validated.data.id
-    ? await repo.getAuthorId(validated.data.id)
-    : null;
-
-  const newAuthorId = author && isOk(author) ? author.value : user.id;
-
-  const newContentId = await wrapAsyncInResult(
-    repo.upsertBaseContent({
-      contentType: ContentType.Image,
-      id: validated.data.id,
-      title: params.title,
-      topicId: params.topicId,
-      authorId: newAuthorId,
-      content: { description: params.description, src: params.src },
+      return base.contentId;
     })
   );
 
-  if (isFail(newContentId)) {
-    log.error('Falha ao alterar conteúdo de imagem.', newContentId.fail);
-    return fail('Falha ao alterar conteúdo de imagem.');
-  }
-
-  log.info('Conteúdo de imagem alterado com sucesso.', newContentId.value);
-
-  return newContentId;
+  return contentId;
 }

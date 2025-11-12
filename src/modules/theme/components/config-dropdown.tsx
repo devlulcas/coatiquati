@@ -1,11 +1,15 @@
-import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
-import { SettingsIcon } from 'lucide-react';
 import { getFontQuery } from '@/modules/theme/actions/change-font-mutation';
 import { getThemeQuery } from '@/modules/theme/actions/change-theme-mutation';
 import { ChangeColorThemeForm } from '@/modules/theme/components/change-color-theme-form';
 import { ChangeFontThemeForm } from '@/modules/theme/components/change-font-theme-form';
 import { Button } from '@/shared/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem } from '@/shared/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/shared/components/ui/dropdown-menu';
+import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
+import { SettingsIcon } from 'lucide-react';
 import { getBackgroundQuery } from '../actions/change-background-mutation';
 import { ChangeBackgroundThemeForm } from './change-background-theme-form';
 
@@ -16,11 +20,11 @@ export async function ConfigDropdown() {
 
   return (
     <DropdownMenu>
-      <Button variant="ghost" asChild>
-        <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost">
           <span>Configurações</span> <SettingsIcon />
-        </DropdownMenuTrigger>
-      </Button>
+        </Button>
+      </DropdownMenuTrigger>
 
       <DropdownMenuContent>
         <DropdownMenuItem className="flex items-center justify-between gap-5">
@@ -47,21 +51,33 @@ export async function ConfigListing() {
 
   return (
     <>
-      <Button asChild className="flex w-full items-center justify-between" variant="outline">
+      <Button
+        asChild
+        className="flex w-full items-center justify-between"
+        variant="outline"
+      >
         <div>
           <s>Tema de cor</s>
           <ChangeColorThemeForm initialTheme={theme.value} />
         </div>
       </Button>
 
-      <Button asChild className="flex w-full items-center justify-between" variant="outline">
+      <Button
+        asChild
+        className="flex w-full items-center justify-between"
+        variant="outline"
+      >
         <div>
           Fonte de texto
           <ChangeFontThemeForm initialFont={font.value} />
         </div>
       </Button>
 
-      <Button asChild className="flex w-full items-center justify-between" variant="outline">
+      <Button
+        asChild
+        className="flex w-full items-center justify-between"
+        variant="outline"
+      >
         <div>
           Fundo
           <ChangeBackgroundThemeForm initialBackground={background.value} />

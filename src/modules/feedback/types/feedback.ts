@@ -1,8 +1,5 @@
-import type { FeedbackSelect } from '@/modules/database/schema/feedback';
+import type { SelectFeedback } from '@/modules/database/schema/feedback';
 import type { PublicUser } from '@/modules/user/types/user';
 import type { With } from '@/shared/utils/with';
 
-export const FEEDBACK_TYPES = ['bug', 'feature', 'improvement'] as const;
-export type FeedbackType = (typeof FEEDBACK_TYPES)[number];
-
-export type Feedback = With<FeedbackSelect, 'user', PublicUser>;
+export type Feedback = With<SelectFeedback, 'user', PublicUser>;

@@ -4,3 +4,5 @@ export const todoSchema = z.object({
   text: z.string().min(1).max(500),
   completed: z.boolean(),
 });
+
+export type TodoSchema = z.infer<typeof todoSchema>;

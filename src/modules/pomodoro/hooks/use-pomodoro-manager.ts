@@ -1,9 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import { env } from '@/env';
+import { PomodoroSessionType } from '@/modules/database/schema/pomodoro-sessions';
 import { useCreatePomodoroSession } from '@/modules/pomodoro/hooks/use-pomodoro-sessions';
-import { usePomodoroSettings, useUpdatePomodoroSettings } from '@/modules/pomodoro/hooks/use-pomodoro-settings';
-import type { PomodoroTimerState, PomodoroTimerType } from '@/modules/pomodoro/types/pomodoro';
+import {
+  usePomodoroSettings,
+  useUpdatePomodoroSettings,
+} from '@/modules/pomodoro/hooks/use-pomodoro-settings';
+import type { PomodoroTimerState } from '@/modules/pomodoro/types/pomodoro';
 import { useToast } from '@/shared/components/ui/use-toast';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DEFAULT_POMODORO_CONFIG } from '../lib/local-storage';
 
 export function usePomodoroManager() {
@@ -17,15 +21,15 @@ export function usePomodoroManager() {
   }, []);
 
   const [timerState, setTimerState] = useState<PomodoroTimerState>({
-    previousType: 'pomodoro',
-    type: 'pomodoro',
+    previousType: PomodoroSessionType.POMODORO,
+    type: PomodoroSessionType.POMODORO,
     timeRemaining: DEFAULT_POMODORO_CONFIG.pomodoroDuration,
     state: 'idle',
   });
 
   const { data: settings, isLoading: isLoadingSettings } = usePomodoroSettings({
-    onSuccess: data => {
-      setTimerState(prev => ({
+    onSuccess: (data) => {
+      setTimerState((prev) => ({
         ...prev,
         timeRemaining: data.pomodoroDuration,
       }));
@@ -33,30 +37,36 @@ export function usePomodoroManager() {
   });
 
   const startNextTimer = useCallback(() => {
-    let nextType: PomodoroTimerType;
+    let nextType: PomodoroSessionType;
     let nextDuration: number;
 
     // POMODORO -> SHORT_BREAK -> POMODORO -> LONG_BREAK -> POMODORO -> SHORT_BREAK -> POMODORO -> ...
 
-    if (timerState.type === 'pomodoro') {
-      if (timerState.previousType === 'short_break') {
-        nextType = 'long_break';
+    if (timerState.type === PomodoroSessionType.POMODORO) {
+      if (timerState.previousType === PomodoroSessionType.SHORT_BREAK) {
+        nextType = PomodoroSessionType.LONG_BREAK;
         nextDuration = settings.longBreakDuration;
       }
 
-      if (timerState.previousType === 'long_break' || timerState.previousType === 'pomodoro') {
-        nextType = 'short_break';
+      if (
+        timerState.previousType === PomodoroSessionType.LONG_BREAK ||
+        timerState.previousType === PomodoroSessionType.POMODORO
+      ) {
+        nextType = PomodoroSessionType.SHORT_BREAK;
         nextDuration = settings.shortBreakDuration;
       }
     }
 
     // Depois de um break, sempre volta para o pomodoro
-    if (timerState.type === 'short_break' || timerState.type === 'long_break') {
-      nextType = 'pomodoro';
+    if (
+      timerState.type === PomodoroSessionType.SHORT_BREAK ||
+      timerState.type === PomodoroSessionType.LONG_BREAK
+    ) {
+      nextType = PomodoroSessionType.POMODORO;
       nextDuration = settings.pomodoroDuration;
     }
 
-    setTimerState(prev => ({
+    setTimerState((prev) => ({
       previousType: prev.type,
       type: nextType,
       timeRemaining: nextDuration,
@@ -71,27 +81,26 @@ export function usePomodoroManager() {
   ]);
 
   const handleTimerComplete = useCallback(() => {
-    setTimerState(prev => ({ ...prev, state: 'completed' }));
+    setTimerState((prev) => ({ ...prev, state: 'completed' }));
     alarmSound?.play();
 
     createSession({
       startTime: new Date(Date.now() - settings.pomodoroDuration * 1000),
       endTime: new Date(),
-      type: timerState.type,
       completed: true,
-      deletedAt: null,
+      type: timerState.type,
     });
 
-    const descriptions: Record<PomodoroTimerType, string> = {
-      pomodoro: 'um pomodoro',
-      short_break: 'uma pausa curta',
-      long_break: 'uma pausa longa',
+    const descriptions: Record<PomodoroSessionType, string> = {
+      [PomodoroSessionType.POMODORO]: 'um pomodoro',
+      [PomodoroSessionType.SHORT_BREAK]: 'uma pausa curta',
+      [PomodoroSessionType.LONG_BREAK]: 'uma pausa longa',
     };
 
-    const titles: Record<PomodoroTimerType, string> = {
-      pomodoro: 'Pomodoro finalizado!',
-      short_break: 'Pausa curta finalizada!',
-      long_break: 'Pausa longa finalizada!',
+    const titles: Record<PomodoroSessionType, string> = {
+      [PomodoroSessionType.POMODORO]: 'Pomodoro finalizado!',
+      [PomodoroSessionType.SHORT_BREAK]: 'Pausa curta finalizada!',
+      [PomodoroSessionType.LONG_BREAK]: 'Pausa longa finalizada!',
     };
 
     toast({
@@ -103,7 +112,10 @@ export function usePomodoroManager() {
     // Auto-start next timer based on settings
     let timeout: NodeJS.Timeout;
 
-    if (settings.autoStartBreaks && timerState.type === 'pomodoro') {
+    if (
+      settings.autoStartBreaks &&
+      timerState.type === PomodoroSessionType.POMODORO
+    ) {
       timeout = setTimeout(() => {
         startNextTimer();
       }, 1000);
@@ -131,7 +143,7 @@ export function usePomodoroManager() {
     if (timerState.state === 'running') {
       if (timerState.timeRemaining > 0) {
         interval = setInterval(() => {
-          setTimerState(prev => ({
+          setTimerState((prev) => ({
             ...prev,
             timeRemaining: prev.timeRemaining - 1,
           }));
@@ -149,7 +161,7 @@ export function usePomodoroManager() {
   }, [handleTimerComplete, timerState.state, timerState.timeRemaining]);
 
   const toggleTimer = useCallback(() => {
-    setTimerState(prev => ({
+    setTimerState((prev) => ({
       ...prev,
       state: prev.state === 'running' ? 'paused' : 'running',
     }));
@@ -158,8 +170,8 @@ export function usePomodoroManager() {
   const resetTimer = useCallback(() => {
     setTimerState({
       timeRemaining: settings.pomodoroDuration,
-      type: 'pomodoro',
-      previousType: 'pomodoro',
+      type: PomodoroSessionType.POMODORO,
+      previousType: PomodoroSessionType.POMODORO,
       state: 'idle',
     });
   }, [settings.pomodoroDuration]);

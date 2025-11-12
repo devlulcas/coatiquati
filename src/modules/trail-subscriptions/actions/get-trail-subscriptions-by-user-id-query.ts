@@ -1,14 +1,20 @@
 'use server';
 
 import { db } from '@/modules/database/db';
-import { log } from '@/modules/logging/lib/pino';
 import type { Trail } from '@/modules/trail/types/trail';
-import type { UserId } from '@/modules/user/types/user';
-import { fail, isFail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import {
+  fail,
+  isFail,
+  ok,
+  type Result,
+  wrapAsyncInResult,
+} from '@/shared/lib/result';
 
-export async function getTrailSubscriptionsByUserIdQuery(userId: UserId): Promise<Result<Trail[]>> {
+export async function getTrailSubscriptionsByUserIdQuery(
+  userId: string
+): Promise<Result<Trail[]>> {
   const subscriptions = await wrapAsyncInResult(
-    db.query.trailSubscriptionTable.findMany({
+    db.query.trailSubscriptions.findMany({
       columns: {
         trailId: false,
         userId: false,
@@ -20,18 +26,25 @@ export async function getTrailSubscriptionsByUserIdQuery(userId: UserId): Promis
         trail: {
           with: {
             author: true,
-            contributors: { with: { user: true } },
+            contributions: { with: { user: true } },
             category: true,
           },
         },
       },
-    }),
+    })
   );
 
   if (isFail(subscriptions)) {
-    log.error('Falha ao buscar inscrições de trilha.', subscriptions.fail);
+    console.error(subscriptions.fail);
     return fail('Falha ao buscar inscrições de trilha.');
   }
 
-  return ok(subscriptions.value.flatMap(subscription => subscription.trail));
+  const trails: Trail[] = subscriptions.value.flatMap((subscription) => ({
+    ...subscription.trail,
+    contributors: subscription.trail.contributions.map(
+      (contribution) => contribution.user
+    ),
+  }));
+
+  return ok(trails);
 }

@@ -1,16 +1,30 @@
 'use client';
 
-import type { ClassValue } from 'clsx';
-import { createContext, forwardRef, type Ref, useContext, useEffect, useState } from 'react';
-import type { DropzoneState } from 'react-dropzone';
 import { cn } from '@/shared/utils/cn';
+import type { ClassValue } from 'clsx';
+import {
+  createContext,
+  forwardRef,
+  type Ref,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import type { DropzoneState } from 'react-dropzone';
 
 type FileDropZoneContext = { dropzoneState: DropzoneState };
 const FileDropZoneContext = createContext<FileDropZoneContext | null>(null);
 
-type FileDropZoneProps = { dropzoneState: DropzoneState; children: React.ReactNode };
+type FileDropZoneProps = {
+  dropzoneState: DropzoneState;
+  children: React.ReactNode;
+};
 function FileDropZone({ dropzoneState, children }: FileDropZoneProps) {
-  return <FileDropZoneContext.Provider value={{ dropzoneState }}>{children}</FileDropZoneContext.Provider>;
+  return (
+    <FileDropZoneContext.Provider value={{ dropzoneState }}>
+      {children}
+    </FileDropZoneContext.Provider>
+  );
 }
 
 const useFileDropZone = () => {
@@ -23,8 +37,14 @@ const useFileDropZone = () => {
   return context;
 };
 
-type FileDropZoneContainerProps = { children: React.ReactNode; className?: ClassValue };
-function FileDropZoneContainer({ children, className }: FileDropZoneContainerProps) {
+type FileDropZoneContainerProps = {
+  children: React.ReactNode;
+  className?: ClassValue;
+};
+function FileDropZoneContainer({
+  children,
+  className,
+}: FileDropZoneContainerProps) {
   const { dropzoneState } = useFileDropZone();
 
   return (
@@ -32,7 +52,7 @@ function FileDropZoneContainer({ children, className }: FileDropZoneContainerPro
       {...dropzoneState.getRootProps()}
       className={cn(
         'flex h-fit flex-1 cursor-pointer flex-col items-center justify-center rounded border border-dashed p-4',
-        className,
+        className
       )}
     >
       {children}
@@ -44,8 +64,12 @@ type FileDropZonePreviewProps = { className?: ClassValue };
 function FileDropZonePreview({ className }: FileDropZonePreviewProps) {
   const { dropzoneState } = useFileDropZone();
 
-  return dropzoneState.acceptedFiles.map((file, index) => (
-    <FileDropZonePreviewAcceptedUnit key={index} file={file} className={className} />
+  return dropzoneState.acceptedFiles.map((file) => (
+    <FileDropZonePreviewAcceptedUnit
+      key={file.name}
+      file={file}
+      className={className}
+    />
   ));
 }
 
@@ -86,7 +110,10 @@ type FileDropZonePreviewAcceptedUnitProps = {
   file: File;
   className?: ClassValue;
 };
-function FileDropZonePreviewAcceptedUnit({ file, className }: FileDropZonePreviewAcceptedUnitProps) {
+function FileDropZonePreviewAcceptedUnit({
+  file,
+  className,
+}: FileDropZonePreviewAcceptedUnitProps) {
   const image = useImageFileData(file);
 
   if (!image) {
@@ -110,8 +137,12 @@ function FileDropZonePreviewAcceptedUnit({ file, className }: FileDropZonePrevie
           {image.size}
         </p>
       </div>
-      <p className="w-full min-w-fit bg-muted px-2 py-1 text-center text-sm text-muted-foreground">{file.type}</p>
-      <p className="truncate rounded bg-muted px-2 py-1 text-sm text-muted-foreground">{file.name}</p>
+      <p className="w-full min-w-fit bg-muted px-2 py-1 text-center text-sm text-muted-foreground">
+        {file.type}
+      </p>
+      <p className="truncate rounded bg-muted px-2 py-1 text-sm text-muted-foreground">
+        {file.name}
+      </p>
     </div>
   );
 }
@@ -125,7 +156,13 @@ function FileDropZoneButton({ className }: FileDropZoneButtonProps) {
   }
 
   return (
-    <button type="button" className={cn('h-full min-h-28 w-full text-sm text-muted-foreground', className)}>
+    <button
+      type="button"
+      className={cn(
+        'h-full min-h-28 w-full text-sm text-muted-foreground',
+        className
+      )}
+    >
       {dropzoneState.isDragActive ? (
         <p>Solte o arquivo aqui ...</p>
       ) : (
@@ -136,11 +173,18 @@ function FileDropZoneButton({ className }: FileDropZoneButtonProps) {
 }
 
 type FileDropZoneInputProps = { className?: ClassValue };
-function InnerFileDropZoneInput({ className }: FileDropZoneInputProps, ref: Ref<HTMLInputElement>) {
+function InnerFileDropZoneInput(
+  { className }: FileDropZoneInputProps,
+  ref: Ref<HTMLInputElement>
+) {
   const { dropzoneState } = useFileDropZone();
 
   return (
-    <input ref={ref} {...dropzoneState.getInputProps()} className={cn('block h-full w-full lg:hidden', className)} />
+    <input
+      ref={ref}
+      {...dropzoneState.getInputProps()}
+      className={cn('block h-full w-full lg:hidden', className)}
+    />
   );
 }
 const FileDropZoneInput = forwardRef(InnerFileDropZoneInput);

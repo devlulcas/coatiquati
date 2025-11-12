@@ -1,25 +1,33 @@
+import { createImageFileSchema } from '@/modules/media/lib/create-image-file-schema';
+import { Button } from '@/shared/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/components/ui/form';
+import { Input } from '@/shared/components/ui/input';
+import { useToast } from '@/shared/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useId, useState } from 'react';
 import { type FileRejection, useDropzone } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { createImageFileSchema } from '@/modules/media/lib/create-image-file-schema';
-import { Button } from '@/shared/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/shared/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form';
-import { Input } from '@/shared/components/ui/input';
-import { useToast } from '@/shared/components/ui/use-toast';
 import { FileDropZone } from './file-drop-zone';
 
 const formSchema = z.object({
   image: createImageFileSchema().optional(),
   altText: z
-    .string({
-      required_error: 'Digite um texto alternativo',
-    })
-    .min(10, {
-      message: 'O texto alternativo tem que ter ao menos 10 caracteres',
-    }),
+    .string('Digite um texto alternativo')
+    .min(10, 'O texto alternativo tem que ter ao menos 10 caracteres'),
 });
 
 type ImageUploadFormValues = z.infer<typeof formSchema>;
@@ -64,19 +72,23 @@ export function ImageUploadDialogTrigger({
   const imageDropzone = useDropzone({
     onDrop: (acceptedFiles: File[], fileRejections: FileRejection[]) => {
       if (fileRejections.length > 0) {
-        fileRejections.forEach(fileRejection => {
+        fileRejections.forEach((fileRejection) => {
           toast({
             variant: 'destructive',
             title: `Arquivo inválido: ${fileRejection.file.name}`,
-            description: listFormat.format(fileRejection.errors.map(error => error.message)),
+            description: listFormat.format(
+              fileRejection.errors.map((error) => error.message)
+            ),
           });
         });
       } else {
         form.setValue('image', acceptedFiles);
       }
     },
-    validator: file => {
-      const parsed = formSchema.pick({ image: true }).safeParse({ image: [file] });
+    validator: (file) => {
+      const parsed = formSchema
+        .pick({ image: true })
+        .safeParse({ image: [file] });
 
       if (parsed.success) return null;
 
@@ -84,7 +96,7 @@ export function ImageUploadDialogTrigger({
 
       return {
         code: 'invalid-file',
-        message: listFormat.format(imageErrors.map(error => error)),
+        message: listFormat.format(imageErrors.map((error) => error)),
       };
     },
   });
@@ -108,7 +120,9 @@ export function ImageUploadDialogTrigger({
       onSuccessfulUpload(data);
       setIsOpen(false);
     } catch (error) {
-      onFailedUpload(error instanceof Error ? error : new Error('Unknown error'));
+      onFailedUpload(
+        error instanceof Error ? error : new Error('Unknown error')
+      );
     } finally {
       form.reset();
     }
@@ -124,7 +138,9 @@ export function ImageUploadDialogTrigger({
       {disabled ? (
         <DialogContent>
           <DialogHeader>Imagem</DialogHeader>
-          <p className="text-center text-muted-foreground">O upload de imagens está desativado</p>
+          <p className="text-center text-muted-foreground">
+            O upload de imagens está desativado
+          </p>
         </DialogContent>
       ) : (
         <DialogContent className="h-fit max-h-[90dvh]">
@@ -135,7 +151,7 @@ export function ImageUploadDialogTrigger({
               id={id}
               method="POST"
               className="h-full w-full space-y-3"
-              onSubmit={e => {
+              onSubmit={(e) => {
                 e.stopPropagation();
                 e.preventDefault();
                 return form.handleSubmit(onSubmit)(e);
@@ -168,7 +184,10 @@ export function ImageUploadDialogTrigger({
                   <FormItem>
                     <FormLabel>Descrição da imagem</FormLabel>
                     <FormControl>
-                      <Input placeholder="Imagem com fundo azul, pessoas correndo..." {...field} />
+                      <Input
+                        placeholder="Imagem com fundo azul, pessoas correndo..."
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

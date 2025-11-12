@@ -1,5 +1,10 @@
+import {
+  useCreateTodo,
+  useDeleteTodo,
+  useTodos,
+  useUpdateTodo,
+} from '@/modules/todo/hooks/use-todos';
 import { useCallback, useState } from 'react';
-import { useCreateTodo, useDeleteTodo, useTodos, useUpdateTodo } from '@/modules/todo/hooks/use-todos';
 
 export function useTodosManager() {
   const { data: todos, isLoading: isLoadingTodos } = useTodos();
@@ -20,24 +25,24 @@ export function useTodosManager() {
 
       setNewTodo('');
     },
-    [createTodo, newTodo],
+    [createTodo, newTodo]
   );
 
   const handleToggleTodo = useCallback(
     (id: number, completed: boolean) => {
       updateTodo({
         id,
-        todo: { text: todos?.find(t => t.id === id)?.text ?? '', completed },
+        todo: { text: todos?.find((t) => t.id === id)?.text ?? '', completed },
       });
     },
-    [todos, updateTodo],
+    [todos, updateTodo]
   );
 
   const handleDeleteTodo = useCallback(
     (id: number) => {
       deleteTodo(id);
     },
-    [deleteTodo],
+    [deleteTodo]
   );
 
   return {

@@ -1,8 +1,12 @@
 'use server';
 
-import { cookies } from 'next/headers';
 import { fail, type Ok, ok, type Result } from '@/shared/lib/result';
-import { THEME_COOKIE_NAME, type Theme, VALID_THEMES } from '../constants/theme-keys';
+import { cookies } from 'next/headers';
+import {
+  type Theme,
+  THEME_COOKIE_NAME,
+  VALID_THEMES,
+} from '../constants/theme-keys';
 
 export async function setThemeMutation(theme: Theme): Promise<Result<string>> {
   const isValidTheme = VALID_THEMES.includes(theme);

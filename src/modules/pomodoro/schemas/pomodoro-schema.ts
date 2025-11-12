@@ -9,9 +9,13 @@ export const pomodoroSettingsSchema = z.object({
   autoStartPomodoros: z.boolean(),
 });
 
+export type PomodoroSettingsSchema = z.infer<typeof pomodoroSettingsSchema>;
+
 export const pomodoroSessionSchema = z.object({
   startTime: z.date(),
   endTime: z.date(),
   type: z.enum(PomodoroSessionType),
   completed: z.boolean(),
 });
+
+export type PomodoroSessionSchema = z.infer<typeof pomodoroSessionSchema>;

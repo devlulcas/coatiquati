@@ -1,3 +1,4 @@
+import { getCurrentUser } from '@/modules/auth/services/next';
 import coatiSvg from '@/shared/assets/images/coati.svg';
 import Image from 'next/image';
 import Link from 'next/link';

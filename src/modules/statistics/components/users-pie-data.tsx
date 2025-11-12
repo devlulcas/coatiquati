@@ -3,9 +3,21 @@
 import { TrendingUp } from 'lucide-react';
 import { LabelList, Pie, PieChart } from 'recharts';
 
-import type { Role } from '@/modules/auth/constants/roles';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/shared/components/ui/card';
-import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/shared/components/ui/chart';
+import type { Role } from '@/modules/auth/lib/auth-client';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/shared/components/ui/card';
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/shared/components/ui/chart';
 
 type UsersPieChartData = {
   permission: Role;
@@ -45,14 +57,18 @@ export function UsersPieData({ data }: { data: UsersPieChartData[] }) {
           className="mx-auto aspect-square max-h-[250px] [&_.recharts-text]:fill-background"
         >
           <PieChart>
-            <ChartTooltip content={<ChartTooltipContent nameKey="count" hideLabel />} />
+            <ChartTooltip
+              content={<ChartTooltipContent nameKey="count" hideLabel />}
+            />
             <Pie data={data} dataKey="count">
               <LabelList
                 dataKey="permission"
                 className="fill-background"
                 stroke="none"
                 fontSize={12}
-                formatter={(value: keyof typeof chartConfig) => chartConfig[value]?.label}
+                formatter={(value: keyof typeof chartConfig) =>
+                  chartConfig[value]?.label
+                }
               />
             </Pie>
           </PieChart>

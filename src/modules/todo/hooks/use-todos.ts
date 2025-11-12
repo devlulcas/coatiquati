@@ -1,18 +1,29 @@
+import type { SelectTodo } from '@/modules/database/schema/todos';
+import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSession } from '@/modules/auth/hooks/use-session';
-import type { TodoSelect } from '@/modules/database/schema/todos';
-import { createTodo, deleteTodo, fetchTodos, updateTodo } from '../lib/fetchers';
-import { addLocalTodo, deleteLocalTodo, getLocalTodos, setLocalTodos, updateLocalTodo } from '../lib/local-storage';
-import type { TodoInput } from '../types/todo';
+import {
+  createTodo,
+  deleteTodo,
+  fetchTodos,
+  updateTodo,
+} from '../lib/fetchers';
+import {
+  addLocalTodo,
+  deleteLocalTodo,
+  getLocalTodos,
+  setLocalTodos,
+  updateLocalTodo,
+} from '../lib/local-storage';
+import type { TodoSchema } from '../schemas/todo-schema';
 
 const TODOS_QUERY_KEY = 'TODOS_QUERY_KEY';
 
 export function useTodos() {
-  const { data: session } = useSession();
+  const { data: user } = useCurrentUserDataQuery();
 
-  return useQuery<TodoSelect[], Error>({
+  return useQuery<SelectTodo[], Error>({
     queryKey: [TODOS_QUERY_KEY],
-    queryFn: session.data ? fetchTodos : getLocalTodos,
+    queryFn: user ? fetchTodos : getLocalTodos,
     enabled: true,
     refetchOnWindowFocus: false,
     retry: 1,
@@ -21,14 +32,14 @@ export function useTodos() {
 
 export function useCreateTodo() {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: user } = useCurrentUserDataQuery();
 
-  return useMutation<TodoSelect, Error, TodoInput>({
-    mutationFn: async todoInput => {
-      if (session.data) {
+  return useMutation<SelectTodo, Error, TodoSchema>({
+    mutationFn: async (todoInput) => {
+      if (user) {
         return createTodo(todoInput);
       } else {
-        const localTodo: TodoSelect = {
+        const localTodo: SelectTodo = {
           id: Date.now(),
           userId: '0',
           createdAt: new Date(),
@@ -49,14 +60,14 @@ export function useCreateTodo() {
 
 export function useUpdateTodo() {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: user } = useCurrentUserDataQuery();
 
-  return useMutation<TodoSelect, Error, { id: number; todo: TodoInput }>({
+  return useMutation<SelectTodo, Error, { id: number; todo: TodoSchema }>({
     mutationFn: async ({ id, todo }) => {
-      if (session.data) {
+      if (user) {
         return updateTodo(id, todo);
       } else {
-        const localTodo: TodoSelect = {
+        const localTodo: SelectTodo = {
           id: Date.now(),
           userId: '0',
           createdAt: new Date(),
@@ -77,11 +88,11 @@ export function useUpdateTodo() {
 
 export function useDeleteTodo() {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: user } = useCurrentUserDataQuery();
 
   return useMutation<void, Error, number>({
-    mutationFn: async id => {
-      if (session.data) {
+    mutationFn: async (id) => {
+      if (user) {
         return deleteTodo(id);
       } else {
         deleteLocalTodo(id);
@@ -94,24 +105,24 @@ export function useDeleteTodo() {
 }
 
 export function useSyncLocalTodos() {
-  const { data: session } = useSession();
+  const { data: user } = useCurrentUserDataQuery();
   const queryClient = useQueryClient();
 
   return useMutation<void, Error>({
     mutationFn: async () => {
-      if (!session) return;
+      if (!user) return;
 
       const localTodos = getLocalTodos();
       if (localTodos.length === 0) return;
 
       // Sync each local todo to the server
       await Promise.all(
-        localTodos.map(todo =>
+        localTodos.map((todo) =>
           createTodo({
             text: todo.text,
             completed: todo.completed,
-          }),
-        ),
+          })
+        )
       );
 
       // Clear local todos after successful sync

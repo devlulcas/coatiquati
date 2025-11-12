@@ -1,52 +1,31 @@
 'use server';
-
-import { isAuthenticated } from '@/modules/auth/utils/is';
+import packageJson from '@/../package.json';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
 import {
   fail,
   isFail,
   ok,
   type Result,
   wrapAsyncInResult,
-  wrapInResult,
 } from '@/shared/lib/result';
 import { revalidatePath } from 'next/cache';
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-import { z } from 'zod';
 import type { NewFeedbackFormValues } from '../components/new-feedback-form';
-import { FeedbackRepository } from '../repositories/feedback-repository';
-
-const packageJsonSchema = z.object({
-  version: z.string(),
-});
+import { createFeedback } from '../repositories/feedback-repository';
 
 export async function createNewFeedbackMutation(
   feedback: NewFeedbackFormValues
 ): Promise<Result<string>> {
   const user = await getCurrentUser();
-
-  if (!isAuthenticated(user)) {
-    return fail('Você precisa estar logado para criar uma nova trilha.');
-  }
-
-  const currentVersionResult = wrapInResult(() => {
-    const filePath = path.join(process.cwd(), 'package.json');
-    const file = readFileSync(filePath, 'utf8');
-    const json = JSON.parse(file) as unknown;
-    const parsed = packageJsonSchema.parse(json);
-    return parsed.version;
-  });
-
-  const feedbackRepository = new FeedbackRepository();
+  assertAuthenticated(user);
 
   const feedbackResult = await wrapAsyncInResult(
-    feedbackRepository.createFeedback({
+    createFeedback({
       content: feedback.text,
       type: feedback.type,
-      softwareVersion:
-        currentVersionResult.type === 'ok'
-          ? currentVersionResult.value
-          : 'unknown',
+      softwareVersion: packageJson.version,
       userId: user.id,
     })
   );

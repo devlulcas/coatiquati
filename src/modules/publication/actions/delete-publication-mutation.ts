@@ -1,25 +1,30 @@
 'use server';
 
-import { isAdminOrAbove, isAuthenticated } from '@/modules/auth/utils/is';
+import {
+  assertAuthenticated,
+  getCurrentUser,
+} from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { publicationTable } from '@/modules/database/schema/publication';
-import { publicationMediaTable } from '@/modules/database/schema/publication-media';
-import { log } from '@/modules/logging/lib/pino';
-import { fail, ok, type Result, wrapAsyncInResult } from '@/shared/lib/result';
+import { publications } from '@/modules/database/schema/publication';
+import { publicationMedias } from '@/modules/database/schema/publication-media';
+import {
+  fail,
+  ok,
+  type Result,
+  unwrapOr,
+  wrapAsyncInResult,
+} from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 
 export async function deletePublicationMutation(
   pubId: number
 ): Promise<Result<string>> {
   const user = await getCurrentUser();
-
-  if (!isAuthenticated(user)) {
-    return fail('Somente um usuário autenticado pode deletar publicações!');
-  }
+  assertAuthenticated(user);
 
   const publicationResult = await wrapAsyncInResult(
-    db.query.publicationTable.findFirst({
-      columns: { authorId: true },
+    db.query.publications.findFirst({
+      columns: { userId: true },
       where: (fields, op) =>
         op.and(op.eq(fields.id, pubId), op.isNull(fields.deletedAt)),
       with: {
@@ -31,47 +36,34 @@ export async function deletePublicationMutation(
     })
   );
 
-  if (
-    publicationResult.type === 'fail' ||
-    typeof publicationResult.value === 'undefined'
-  ) {
+  const publication = unwrapOr(publicationResult, undefined);
+
+  if (!publication) {
     return fail('Publicação não encontrada');
-  }
-
-  const publication = publicationResult.value;
-  const isAuthor = publication.authorId === user.id;
-  const isModerator = isAdminOrAbove(user.role);
-
-  if (!isAuthor && !isModerator) {
-    return fail('Você não tem permissão para deletar esta publicação');
-  }
-
-  if (isModerator) {
-    log.info('Moderador deletando publicação', { pubId, moderatorId: user.id });
   }
 
   const result = await db.transaction(async (tx) => {
     try {
       await tx
-        .update(publicationTable)
+        .update(publications)
         .set({ deletedAt: new Date() })
-        .where(eq(publicationTable.id, pubId))
+        .where(eq(publications.id, pubId))
         .execute();
 
       await Promise.all(
         publication.medias.map(async (media) =>
           tx
-            .update(publicationMediaTable)
+            .update(publicationMedias)
             .set({ deletedAt: new Date() })
-            .where(eq(publicationMediaTable.id, media.id))
+            .where(eq(publicationMedias.id, media.id))
             .execute()
         )
       );
 
       return ok('Publicação deletada com sucesso');
     } catch (error) {
+      console.error(error);
       tx.rollback();
-      log.error('Erro ao deletar publicação', String(error));
       return fail('Erro ao deletar publicação. Tente novamente mais tarde.');
     }
   });

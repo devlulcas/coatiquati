@@ -1,7 +1,7 @@
-import type { TodoSelect } from '@/modules/database/schema/todos';
-import type { TodoInput } from '../types/todo';
+import type { SelectTodo } from '@/modules/database/schema/todos';
+import type { TodoSchema } from '../schemas/todo-schema';
 
-export async function fetchTodos(): Promise<TodoSelect[]> {
+export async function fetchTodos(): Promise<SelectTodo[]> {
   const response = await fetch('/api/todos');
   const data = await response.json();
 
@@ -12,7 +12,7 @@ export async function fetchTodos(): Promise<TodoSelect[]> {
   return data.value;
 }
 
-export async function createTodo(todo: TodoInput): Promise<TodoSelect> {
+export async function createTodo(todo: TodoSchema): Promise<SelectTodo> {
   const response = await fetch('/api/todos', {
     method: 'POST',
     headers: {
@@ -30,7 +30,10 @@ export async function createTodo(todo: TodoInput): Promise<TodoSelect> {
   return data.value;
 }
 
-export async function updateTodo(id: number, todo: TodoInput): Promise<TodoSelect> {
+export async function updateTodo(
+  id: number,
+  todo: TodoSchema
+): Promise<SelectTodo> {
   const response = await fetch(`/api/todos/${id}`, {
     method: 'PUT',
     headers: {

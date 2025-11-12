@@ -1,9 +1,9 @@
 import { SignOutForm } from '@/modules/auth/components/sign-out-form';
+import type { User } from '@/modules/auth/lib/auth-client';
 import {
   ConfigDropdown,
   ConfigListing,
 } from '@/modules/theme/components/config-dropdown';
-import type { PublicUser } from '@/modules/user/types/user';
 import { Button } from '@/shared/components/ui/button';
 import {
   Sheet,
@@ -14,7 +14,7 @@ import { MenuIcon } from 'lucide-react';
 import Link from 'next/link';
 
 type HeaderNavProps = {
-  user: PublicUser | null;
+  user: User | null;
 };
 
 export async function HeaderNav({ user }: HeaderNavProps) {
@@ -73,7 +73,7 @@ export async function HeaderNav({ user }: HeaderNavProps) {
   );
 }
 
-function NavItems({ user }: { user: PublicUser | null }) {
+function NavItems({ user }: { user: User | null }) {
   const hasAdminAccess =
     user && (user.role === 'admin' || user.role === 'superAdmin');
 

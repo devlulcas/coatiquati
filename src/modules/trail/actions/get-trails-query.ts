@@ -7,7 +7,7 @@ import { fail, ok, type Result } from '@/shared/lib/result';
 import { paginationSchema } from '@/shared/schemas/pagination';
 import type { SQL } from 'drizzle-orm';
 import { z } from 'zod';
-import { canViewAllTrails } from '../lib/can-view-all';
+import { canViewAll } from '../lib/can-view-all';
 import { mapToTrail, TRAIL_QUERY, type Trail } from '../types/trail';
 
 const trailSearchSchema = z
@@ -31,7 +31,7 @@ export async function getTrailsQuery(
   }
 
   const currentUser = await getCurrentUser();
-  const canViewAll = await canViewAllTrails(currentUser);
+  const canViewTrails = await canViewAll(currentUser, 'trail');
 
   const result = await db.query.trails.findMany({
     ...TRAIL_QUERY,
@@ -42,7 +42,7 @@ export async function getTrailsQuery(
 
       const filters: SQL[] = [eq(fields.status, ContentStatus.PUBLISHED)];
 
-      if (canViewAll && parsed.data.status) {
+      if (canViewTrails && parsed.data.status) {
         filters.shift();
         filters.push(eq(fields.status, parsed.data.status));
       }

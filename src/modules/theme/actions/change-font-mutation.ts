@@ -1,8 +1,12 @@
 'use server';
 
-import { cookies } from 'next/headers';
 import { fail, type Ok, ok, type Result } from '@/shared/lib/result';
-import { FONT_COOKIE_NAME, type Font, VALID_FONTS } from '../constants/theme-keys';
+import { cookies } from 'next/headers';
+import {
+  type Font,
+  FONT_COOKIE_NAME,
+  VALID_FONTS,
+} from '../constants/theme-keys';
 
 export async function setFontMutation(font: Font): Promise<Result<string>> {
   const isValidFont = VALID_FONTS.includes(font);

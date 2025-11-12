@@ -1,12 +1,12 @@
-import type { PomodoroSession } from '../../database/schema/pomodoro-sessions';
-import type { PomodoroSettings } from '../../database/schema/pomodoro-settings';
+import type { SelectPomodoroSession } from '@/modules/database/schema/pomodoro-sessions';
+import type { SelectPomodoroSettings } from '@/modules/database/schema/pomodoro-settings';
 
 const STORAGE_KEYS = {
   SETTINGS: 'pomodoro_settings',
   SESSIONS: 'pomodoro_sessions',
 } as const;
 
-export const DEFAULT_POMODORO_CONFIG: PomodoroSettings = {
+export const DEFAULT_POMODORO_CONFIG: SelectPomodoroSettings = {
   id: 0,
   userId: '0',
   pomodoroDuration: 25 * 60,
@@ -19,25 +19,25 @@ export const DEFAULT_POMODORO_CONFIG: PomodoroSettings = {
   deletedAt: null,
 };
 
-export function getLocalSettings(): PomodoroSettings {
+export function getLocalSettings(): SelectPomodoroSettings {
   const stored = localStorage.getItem(STORAGE_KEYS.SETTINGS);
   return stored ? JSON.parse(stored) : DEFAULT_POMODORO_CONFIG;
 }
 
-export function setLocalSettings(settings: PomodoroSettings): void {
+export function setLocalSettings(settings: SelectPomodoroSettings): void {
   localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
 }
 
-export function getLocalSessions(): PomodoroSession[] {
+export function getLocalSessions(): SelectPomodoroSession[] {
   const stored = localStorage.getItem(STORAGE_KEYS.SESSIONS);
   return stored ? JSON.parse(stored) : [];
 }
 
-export function setLocalSessions(sessions: PomodoroSession[]): void {
+export function setLocalSessions(sessions: SelectPomodoroSession[]): void {
   localStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(sessions));
 }
 
-export function addLocalSession(session: PomodoroSession): void {
+export function addLocalSession(session: SelectPomodoroSession): void {
   const sessions = getLocalSessions();
   sessions.push(session);
   setLocalSessions(sessions);

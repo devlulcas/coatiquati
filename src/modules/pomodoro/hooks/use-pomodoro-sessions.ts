@@ -1,31 +1,32 @@
-import { useSession } from '@/modules/auth/hooks/use-session';
+import type { SelectPomodoroSession } from '@/modules/database/schema/pomodoro-sessions';
+import { useCurrentUserDataQuery } from '@/modules/user/hooks/use-user-data-query';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { PomodoroSession } from '../../database/schema/pomodoro-sessions';
 import { createPomodoroSession } from '../lib/fetchers';
 import {
   addLocalSession,
   getLocalSessions,
   setLocalSessions,
 } from '../lib/local-storage';
-import type { PomodoroSessionInput } from '../types/pomodoro';
+import type { PomodoroSessionSchema } from '../schemas/pomodoro-schema';
 
 const POMODORO_SESSIONS_QUERY_KEY = 'POMODORO_SESSIONS_QUERY_KEY';
 
 export function useCreatePomodoroSession() {
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: user } = useCurrentUserDataQuery();
 
-  return useMutation<PomodoroSession, Error, PomodoroSessionInput>({
+  return useMutation<SelectPomodoroSession, Error, PomodoroSessionSchema>({
     mutationFn: async (sessionInput) => {
-      if (session.data) {
+      if (user) {
         return createPomodoroSession(sessionInput);
       } else {
-        const localSession: PomodoroSession = {
+        const localSession: SelectPomodoroSession = {
           id: Date.now(),
-          userId: '0',
-          ...sessionInput,
+          userId: 'userId',
           createdAt: new Date(),
           updatedAt: new Date(),
+          deletedAt: null,
+          ...sessionInput,
         };
         addLocalSession(localSession);
         return localSession;
@@ -40,12 +41,12 @@ export function useCreatePomodoroSession() {
 }
 
 export function useSyncLocalSessions() {
-  const { data: session } = useSession();
+  const { data: user } = useCurrentUserDataQuery();
   const queryClient = useQueryClient();
 
   return useMutation<void, Error>({
     mutationFn: async () => {
-      if (!session) return;
+      if (!user) return;
 
       const localSessions = getLocalSessions();
       if (localSessions.length === 0) return;
@@ -58,9 +59,8 @@ export function useSyncLocalSessions() {
             endTime: session.endTime,
             type: session.type,
             completed: session.completed,
-            deletedAt: session.deletedAt,
-          }),
-        ),
+          })
+        )
       );
 
       // Clear local sessions after successful sync

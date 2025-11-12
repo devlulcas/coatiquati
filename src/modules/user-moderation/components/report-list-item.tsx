@@ -19,7 +19,7 @@ export default async function ReportListItem({ report }: ReportListItemProps) {
         <UserAvatar
           user={{
             username: report.reportedBy.username,
-            avatar: report.reportedBy.image,
+            image: report.reportedBy.image,
           }}
         />
 

@@ -24,4 +24,5 @@ export const BackgroundConfig = {
     label: 'Sólido',
   },
 } as const;
+
 export type Background = (typeof VALID_BACKGROUNDS)[number];
