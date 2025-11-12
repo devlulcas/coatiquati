@@ -1,5 +1,5 @@
 import { ContentStatus } from '@/modules/database/schema/content';
-import z from 'zod/v4';
+import { z } from 'zod';
 
 export const upsertBaseContentSchema = z.object({
   id: z.number().int().positive().optional(),

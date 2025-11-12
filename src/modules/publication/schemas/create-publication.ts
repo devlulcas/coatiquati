@@ -8,7 +8,6 @@ const publicationMediaSchema = z.object({
     .max(100, 'A descrição deve ter no máximo 100 caracteres'),
   url: z
     .url('A URL é obrigatória')
-    .min(1, 'A URL é obrigatória')
     .max(255, 'A URL deve ter no máximo 255 caracteres'),
   type: z.enum(PublicationMediaType, 'O tipo de mídia é obrigatório'),
 });
