@@ -79,7 +79,7 @@
     "framer-motion": "^12.6.3",
     "hono": "^4.7.5",
     "lucide-react": "^0.485.0",
-    "next": "15.2.4",
+    "next": "15.4.10",
     "nodemailer": "^6.10.0",
     "nuqs": "^2.4.1",
     "pino": "^9.6.0",
