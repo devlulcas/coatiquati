@@ -1,6 +1,7 @@
 import { relations } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
+import { type ReportReason, ReportStatus } from '../lib/report-enum';
 import { user } from './auth';
 import { comments } from './comment';
 import { contents } from './content';
@@ -10,27 +11,6 @@ import { trails } from './trail';
 
 export type SelectReport = typeof reports.$inferSelect;
 export type InsertReport = typeof reports.$inferInsert;
-
-export enum ReportStatus {
-  PENDING = 1,
-  RESOLVED = 2,
-  REJECTED = 3,
-}
-
-export enum ReportReason {
-  NOT_SAFE_FOR_WORK = 1,
-  HATE_SPEECH = 2,
-  HARASSMENT_OR_BULLYING = 3,
-  SPAM_OR_UNSOLICITED_COMMERCIAL_CONTENT = 4,
-  COPYRIGHT_VIOLATION = 5,
-  FALSE_OR_MISLEADING_INFORMATION = 6,
-  FRAUDULENT_OR_SUSPICIOUS_ACTIVITY = 7,
-  DANGEROUS_OR_THREATENING_BEHAVIOR = 8,
-  PRIVACY_INVASION = 9,
-  VIOLENT_OR_GRAPHIC_CONTENT = 10,
-  USE_OF_FAKE_ACCOUNT_OR_BOT = 11,
-  PLATFORM_POLICY_VIOLATION = 12,
-}
 
 export const reports = t.pgTable('report', {
   id: t.serial('id').primaryKey(),
@@ -43,11 +23,7 @@ export const reports = t.pgTable('report', {
     }),
   type: t.smallint('type').$type<ReportReason>().notNull(),
   description: t.text('description').notNull(),
-  status: t
-    .smallint('status')
-    .$type<ReportStatus>()
-    .notNull()
-    .default(ReportStatus.PENDING),
+  status: t.smallint('status').$type<ReportStatus>().notNull().default(ReportStatus.PENDING),
   moderatorId: t.text('moderator_id').references(() => user.id, {
     onDelete: 'cascade',
     onUpdate: 'cascade',

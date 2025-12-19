@@ -1,6 +1,7 @@
 import type { JSONContent } from '@tiptap/core';
 import { relations } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
+import { ContentStatus } from '../lib/content-enum';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 import { comments } from './comment';
@@ -12,27 +13,11 @@ import { topics } from './topic';
 export type SelectContent = typeof contents.$inferSelect;
 export type InsertContent = typeof contents.$inferInsert;
 
-export enum ContentStatus {
-  DRAFT = 1,
-  PUBLISHED = 2,
-  ARCHIVED = 3,
-}
-
-export enum ContentType {
-  Image = 1,
-  RichText = 2,
-  Video = 3,
-}
-
 export const contents = t.pgTable('content', {
   id: t.serial('id').primaryKey().notNull(),
   title: t.text('title').notNull(),
   description: t.text('description'),
-  status: t
-    .smallint('status')
-    .$type<ContentStatus>()
-    .notNull()
-    .default(ContentStatus.DRAFT),
+  status: t.smallint('status').$type<ContentStatus>().notNull().default(ContentStatus.DRAFT),
   topicId: t.integer('topic_id').references(() => topics.id, {
     onDelete: 'cascade',
     onUpdate: 'cascade',
@@ -77,6 +62,7 @@ export const contentsRelations = relations(contents, ({ one, many }) => ({
 // rich text content
 export type SelectRichTextContent = typeof richTextContents.$inferSelect;
 export type InsertRichTextContent = typeof richTextContents.$inferInsert;
+
 export const richTextContents = t.pgTable('rich_text_content', {
   id: t.serial('id').primaryKey().notNull(),
   contentId: t
@@ -90,6 +76,7 @@ export const richTextContents = t.pgTable('rich_text_content', {
 // image content
 export type SelectImageContent = typeof imageContents.$inferSelect;
 export type InsertImageContent = typeof imageContents.$inferInsert;
+
 export const imageContents = t.pgTable('image_content', {
   id: t.serial('id').primaryKey().notNull(),
   contentId: t
@@ -104,6 +91,7 @@ export const imageContents = t.pgTable('image_content', {
 // video content
 export type SelectVideoContent = typeof videoContents.$inferSelect;
 export type InsertVideoContent = typeof videoContents.$inferInsert;
+
 export const videoContents = t.pgTable('video_content', {
   id: t.serial('id').primaryKey().notNull(),
   contentId: t

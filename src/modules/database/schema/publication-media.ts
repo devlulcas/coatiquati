@@ -1,15 +1,11 @@
 import { relations } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
+import type { PublicationMediaType } from '../lib/publication-enum';
 import { publications } from './publication';
 
 export type SelectPublicationMedia = typeof publicationMedias.$inferSelect;
 export type InsertPublicationMedia = typeof publicationMedias.$inferInsert;
-
-export enum PublicationMediaType {
-  IMAGE = 1,
-  VIDEO = 2,
-}
 
 export const publicationMedias = t.pgTable('publication_media', {
   id: t.serial('id').primaryKey(),
@@ -26,12 +22,9 @@ export const publicationMedias = t.pgTable('publication_media', {
   ...tableTimestampColumns,
 });
 
-export const publicationMediasRelations = relations(
-  publicationMedias,
-  ({ one }) => ({
-    publication: one(publications, {
-      fields: [publicationMedias.publicationId],
-      references: [publications.id],
-    }),
-  })
-);
+export const publicationMediasRelations = relations(publicationMedias, ({ one }) => ({
+  publication: one(publications, {
+    fields: [publicationMedias.publicationId],
+    references: [publications.id],
+  }),
+}));

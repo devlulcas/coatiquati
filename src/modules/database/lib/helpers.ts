@@ -4,7 +4,7 @@ const createdAtColumn = timestamp('created_at').defaultNow().notNull();
 
 const updatedAtColumn = timestamp('updated_at')
   .defaultNow()
-  .$onUpdate(() => /* @__PURE__ */ new Date())
+  .$onUpdate(() => new Date())
   .notNull();
 
 const deletedAtColumn = timestamp('created_at');

@@ -1,12 +1,6 @@
 import { DEFAULT_AVATAR } from '@/modules/user/constants/avatars';
 import { relations } from 'drizzle-orm';
-import {
-  boolean,
-  integer,
-  pgTable,
-  text,
-  timestamp,
-} from 'drizzle-orm/pg-core';
+import { boolean, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { comments } from './comment';
 import { votes } from './comment-vote';
 import { contents } from './content';
@@ -26,6 +20,7 @@ import { userFollowers } from './user-follower';
 
 export type SelectUser = typeof user.$inferSelect;
 export type InsertUser = typeof user.$inferInsert;
+
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
@@ -35,7 +30,7 @@ export const user = pgTable('user', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .$onUpdate(() => new Date())
     .notNull(),
   username: text('username').notNull().unique(),
   twoFactorEnabled: boolean('two_factor_enabled').default(false),
@@ -47,13 +42,14 @@ export const user = pgTable('user', {
 
 export type SelectSession = typeof session.$inferSelect;
 export type InsertSession = typeof session.$inferInsert;
+
 export const session = pgTable('session', {
   id: text('id').primaryKey(),
   expiresAt: timestamp('expires_at').notNull(),
   token: text('token').notNull().unique(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
-    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .$onUpdate(() => new Date())
     .notNull(),
   ipAddress: text('ip_address'),
   userAgent: text('user_agent'),
@@ -65,6 +61,7 @@ export const session = pgTable('session', {
 
 export type SelectAccount = typeof account.$inferSelect;
 export type InsertAccount = typeof account.$inferInsert;
+
 export const account = pgTable('account', {
   id: text('id').primaryKey(),
   accountId: text('account_id').notNull(),
@@ -81,12 +78,13 @@ export const account = pgTable('account', {
   password: text('password'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
-    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .$onUpdate(() => new Date())
     .notNull(),
 });
 
 export type SelectVerification = typeof verification.$inferSelect;
 export type InsertVerification = typeof verification.$inferInsert;
+
 export const verification = pgTable('verification', {
   id: text('id').primaryKey(),
   identifier: text('identifier').notNull(),
@@ -95,12 +93,13 @@ export const verification = pgTable('verification', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
     .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .$onUpdate(() => new Date())
     .notNull(),
 });
 
 export type SelectTwoFactor = typeof twoFactor.$inferSelect;
 export type InsertTwoFactor = typeof twoFactor.$inferInsert;
+
 export const twoFactor = pgTable('two_factor', {
   id: text('id').primaryKey(),
   secret: text('secret').notNull(),
@@ -112,6 +111,7 @@ export const twoFactor = pgTable('two_factor', {
 
 export type SelectPasskey = typeof passkey.$inferSelect;
 export type InsertPasskey = typeof passkey.$inferInsert;
+
 export const passkey = pgTable('passkey', {
   id: text('id').primaryKey(),
   name: text('name'),

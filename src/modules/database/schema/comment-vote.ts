@@ -1,6 +1,7 @@
 import { relations, sql } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
+import { VoteValue } from '../lib/vote-value-enum';
 import { user } from './auth';
 import { comments } from './comment';
 import { contents } from './content';
@@ -10,11 +11,6 @@ import { trails } from './trail';
 
 export type SelectCommentVote = typeof votes.$inferSelect;
 export type InsertCommentVote = typeof votes.$inferInsert;
-
-export enum VoteValue {
-  UPVOTE = 1,
-  DOWNVOTE = -1,
-}
 
 const voteValueCheck = sql`value IS NULL OR value IN (${VoteValue.UPVOTE}, ${VoteValue.DOWNVOTE})`;
 
@@ -51,32 +47,23 @@ export const votes = t.pgTable(
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
-    publicationId: t
-      .integer('publication_id')
-      .references(() => publications.id, {
-        onDelete: 'cascade',
-        onUpdate: 'cascade',
-      }),
+    publicationId: t.integer('publication_id').references(() => publications.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
     commentId: t.integer('comment_id').references(() => comments.id, {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
     ...tableTimestampColumns,
   },
-  (table) => [
+  table => [
     t
       .uniqueIndex('user_vote_target_unique_idx')
-      .on(
-        table.userId,
-        table.trailId,
-        table.topicId,
-        table.contentId,
-        table.publicationId,
-        table.commentId
-      ),
+      .on(table.userId, table.trailId, table.topicId, table.contentId, table.publicationId, table.commentId),
     t.check('value_check', voteValueCheck),
     t.check('only_one_target_check', onlyOneTargetCheck),
-  ]
+  ],
 );
 
 export const commentVotesRelations = relations(votes, ({ one }) => ({

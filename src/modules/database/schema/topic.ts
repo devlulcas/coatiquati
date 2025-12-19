@@ -1,10 +1,11 @@
 import { relations } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
+import { ContentStatus } from '../lib/content-enum';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 import { comments } from './comment';
 import { votes } from './comment-vote';
-import { ContentStatus, contents } from './content';
+import { contents } from './content';
 import { contributions } from './contribution';
 import { reports } from './report';
 import { trails } from './trail';
@@ -17,11 +18,7 @@ export const topics = t.pgTable('topic', {
   title: t.text('title').notNull(),
   description: t.text('description').notNull(),
   thumbnail: t.text('thumbnail'),
-  status: t
-    .smallint('status')
-    .$type<ContentStatus>()
-    .notNull()
-    .default(ContentStatus.DRAFT),
+  status: t.smallint('status').$type<ContentStatus>().notNull().default(ContentStatus.DRAFT),
   trailId: t
     .integer('trail_id')
     .notNull()

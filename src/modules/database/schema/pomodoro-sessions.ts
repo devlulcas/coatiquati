@@ -1,16 +1,11 @@
 import { relations } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
+import type { PomodoroSessionType } from '../lib/pomodoro-enum';
 import { user } from './auth';
 
 export type SelectPomodoroSession = typeof pomodoroSessions.$inferSelect;
 export type InsertPomodoroSession = typeof pomodoroSessions.$inferInsert;
-
-export enum PomodoroSessionType {
-  POMODORO = 1,
-  SHORT_BREAK = 2,
-  LONG_BREAK = 3,
-}
 
 export const pomodoroSessions = t.pgTable('pomodoro_session', {
   id: t.serial('id').primaryKey(),
@@ -28,12 +23,9 @@ export const pomodoroSessions = t.pgTable('pomodoro_session', {
   ...tableTimestampColumns,
 });
 
-export const pomodoroSessionsRelations = relations(
-  pomodoroSessions,
-  ({ one }) => ({
-    user: one(user, {
-      fields: [pomodoroSessions.userId],
-      references: [user.id],
-    }),
-  })
-);
+export const pomodoroSessionsRelations = relations(pomodoroSessions, ({ one }) => ({
+  user: one(user, {
+    fields: [pomodoroSessions.userId],
+    references: [user.id],
+  }),
+}));
