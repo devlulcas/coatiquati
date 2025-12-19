@@ -2,12 +2,12 @@ import { relations, sql } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
-import { votes } from './comment-vote';
 import { contents } from './content';
 import { publications } from './publication';
 import { reports } from './report';
 import { topics } from './topic';
 import { trails } from './trail';
+import { votes } from './vote';
 
 export type SelectComment = typeof comments.$inferSelect;
 export type InsertComment = typeof comments.$inferInsert;
@@ -45,18 +45,16 @@ export const comments = t.pgTable(
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
-    publicationId: t
-      .integer('publication_id')
-      .references(() => publications.id, {
-        onDelete: 'cascade',
-        onUpdate: 'cascade',
-      }),
+    publicationId: t.integer('publication_id').references(() => publications.id, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
 
     // Metrics
     voteCount: t.integer('vote_count').notNull().default(0),
     ...tableTimestampColumns,
   },
-  (table) => [
+  table => [
     t.foreignKey({
       name: 'comment_parent_comment_id_fkey',
       columns: [table.parentCommentId],
@@ -64,15 +62,9 @@ export const comments = t.pgTable(
     }),
     t
       .uniqueIndex('user_comment_target_unique_idx')
-      .on(
-        table.userId,
-        table.trailId,
-        table.topicId,
-        table.contentId,
-        table.publicationId
-      ),
+      .on(table.userId, table.trailId, table.topicId, table.contentId, table.publicationId),
     t.check('only_one_target_check', onlyOneTargetCheck),
-  ]
+  ],
 );
 
 export const commentsRelations = relations(comments, ({ one, many }) => ({

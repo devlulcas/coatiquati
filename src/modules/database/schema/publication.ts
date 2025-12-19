@@ -3,9 +3,9 @@ import * as t from 'drizzle-orm/pg-core';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 import { comments } from './comment';
-import { votes } from './comment-vote';
 import { publicationMedias } from './publication-media';
 import { reports } from './report';
+import { votes } from './vote';
 
 export type SelectPublication = typeof publications.$inferSelect;
 export type InsertPublication = typeof publications.$inferInsert;
@@ -23,16 +23,13 @@ export const publications = t.pgTable('publication', {
   ...tableTimestampColumns,
 });
 
-export const publicationsRelations = relations(
-  publications,
-  ({ one, many }) => ({
-    user: one(user, {
-      fields: [publications.userId],
-      references: [user.id],
-    }),
-    medias: many(publicationMedias),
-    comments: many(comments),
-    votes: many(votes),
-    reports: many(reports),
-  })
-);
+export const publicationsRelations = relations(publications, ({ one, many }) => ({
+  user: one(user, {
+    fields: [publications.userId],
+    references: [user.id],
+  }),
+  medias: many(publicationMedias),
+  comments: many(comments),
+  votes: many(votes),
+  reports: many(reports),
+}));

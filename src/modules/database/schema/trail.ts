@@ -5,11 +5,11 @@ import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 import { categories } from './category';
 import { comments } from './comment';
-import { votes } from './comment-vote';
 import { contributions } from './contribution';
 import { reports } from './report';
 import { topics } from './topic';
 import { trailSubscriptions } from './trail-subscription';
+import { votes } from './vote';
 
 export type SelectTrail = typeof trails.$inferSelect;
 export type InsertTrail = typeof trails.$inferInsert;

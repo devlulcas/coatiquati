@@ -4,11 +4,11 @@ import { ContentStatus } from '../lib/content-enum';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 import { comments } from './comment';
-import { votes } from './comment-vote';
 import { contents } from './content';
 import { contributions } from './contribution';
 import { reports } from './report';
 import { trails } from './trail';
+import { votes } from './vote';
 
 export type SelectTopic = typeof topics.$inferSelect;
 export type InsertTopic = typeof topics.$inferInsert;

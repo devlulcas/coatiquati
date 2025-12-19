@@ -12,7 +12,7 @@ import { trails } from './trail';
 export type SelectCommentVote = typeof votes.$inferSelect;
 export type InsertCommentVote = typeof votes.$inferInsert;
 
-const voteValueCheck = sql`value IS NULL OR value IN (${VoteValue.UPVOTE}, ${VoteValue.DOWNVOTE})`;
+const voteValueCheck = sql.raw(`value IS NULL OR value IN (${VoteValue.UPVOTE}, ${VoteValue.DOWNVOTE})`);
 
 const onlyOneTargetCheck = sql`(
   (trail_id IS NOT NULL)::int +
@@ -66,7 +66,7 @@ export const votes = t.pgTable(
   ],
 );
 
-export const commentVotesRelations = relations(votes, ({ one }) => ({
+export const votesRelations = relations(votes, ({ one }) => ({
   user: one(user, {
     fields: [votes.userId],
     references: [user.id],

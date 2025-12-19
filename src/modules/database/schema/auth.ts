@@ -2,7 +2,6 @@ import { DEFAULT_AVATAR } from '@/modules/user/constants/avatars';
 import { relations } from 'drizzle-orm';
 import { boolean, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { comments } from './comment';
-import { votes } from './comment-vote';
 import { contents } from './content';
 import { contributions } from './contribution';
 import { feedbacks } from './feedback';
@@ -17,6 +16,7 @@ import { topics } from './topic';
 import { trails } from './trail';
 import { trailSubscriptions } from './trail-subscription';
 import { userFollowers } from './user-follower';
+import { votes } from './vote';
 
 export type SelectUser = typeof user.$inferSelect;
 export type InsertUser = typeof user.$inferInsert;

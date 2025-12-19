@@ -1,7 +1,6 @@
 import * as auth from './schema/auth';
 import * as category from './schema/category';
 import * as comment from './schema/comment';
-import * as commentVote from './schema/comment-vote';
 import * as content from './schema/content';
 import * as contribution from './schema/contribution';
 import * as feedback from './schema/feedback';
@@ -17,6 +16,7 @@ import * as topic from './schema/topic';
 import * as trail from './schema/trail';
 import * as trailSubscription from './schema/trail-subscription';
 import * as userFollower from './schema/user-follower';
+import * as commentVote from './schema/vote';
 
 export const schema = {
   ...auth,

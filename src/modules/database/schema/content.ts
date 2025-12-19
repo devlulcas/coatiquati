@@ -5,10 +5,10 @@ import { ContentStatus } from '../lib/content-enum';
 import { tableTimestampColumns } from '../lib/helpers';
 import { user } from './auth';
 import { comments } from './comment';
-import { votes } from './comment-vote';
 import { contributions } from './contribution';
 import { reports } from './report';
 import { topics } from './topic';
+import { votes } from './vote';
 
 export type SelectContent = typeof contents.$inferSelect;
 export type InsertContent = typeof contents.$inferInsert;
