@@ -3,7 +3,7 @@
 import { db } from '@/modules/database/db';
 import { user } from '@/modules/database/schema/auth';
 import { comments } from '@/modules/database/schema/comment';
-import { votes } from '@/modules/database/schema/comment-vote';
+import { votes } from '@/modules/database/schema/vote';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { and, desc, eq, isNotNull, isNull, type SQL } from 'drizzle-orm';
 import type { Comment } from '../types/comment';
@@ -15,9 +15,7 @@ interface GetCommentsOnContentParams {
   publicationId?: number | null | undefined;
 }
 
-export async function getCommentsOnContentQuery(
-  options: GetCommentsOnContentParams
-): Promise<Result<Comment[]>> {
+export async function getCommentsOnContentQuery(options: GetCommentsOnContentParams): Promise<Result<Comment[]>> {
   const targets: SQL[] = [];
   if (options.trailId) {
     targets.push(eq(comments.trailId, options.trailId));
@@ -53,30 +51,15 @@ export async function getCommentsOnContentQuery(
         username: user.username,
         avatar: user.image,
       },
-      repliesCount: db.$count(
-        comments,
-        and(
-          eq(comments.parentCommentId, comments.id),
-          isNull(comments.deletedAt)
-        )
-      ),
+      repliesCount: db.$count(comments, and(eq(comments.parentCommentId, comments.id), isNull(comments.deletedAt))),
       votes: {
-        up: db.$count(
-          votes,
-          and(eq(votes.commentId, comments.id), eq(votes.value, 1))
-        ),
-        down: db.$count(
-          votes,
-          and(eq(votes.commentId, comments.id), eq(votes.value, -1))
-        ),
+        up: db.$count(votes, and(eq(votes.commentId, comments.id), eq(votes.value, 1))),
+        down: db.$count(votes, and(eq(votes.commentId, comments.id), eq(votes.value, -1))),
       },
     })
     .from(comments)
     .innerJoin(user, and(eq(comments.userId, user.id), eq(user.banned, false)))
-    .leftJoin(
-      votes,
-      and(eq(comments.id, votes.commentId), isNotNull(votes.value))
-    )
+    .leftJoin(votes, and(eq(comments.id, votes.commentId), isNotNull(votes.value)))
     .where(and(...targets, isNull(comments.deletedAt)))
     .orderBy(desc(comments.createdAt))
     .groupBy(comments.id);

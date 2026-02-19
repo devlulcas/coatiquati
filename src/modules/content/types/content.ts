@@ -1,9 +1,5 @@
-import type {
-  ContentStatus,
-  SelectImageContent,
-  SelectRichTextContent,
-  SelectVideoContent,
-} from '@/modules/database/schema/content';
+import type { ContentStatus } from '@/modules/database/lib/content-enum';
+import type { SelectImageContent, SelectRichTextContent, SelectVideoContent } from '@/modules/database/schema/content';
 import type { Contributor } from '@/modules/user/types/user';
 
 export type BaseContent = {
@@ -28,9 +24,6 @@ export type RichTextContent = MakeRequired<BaseContent, 'richTextContent'>;
 export type VideoContent = MakeRequired<BaseContent, 'videoContent'>;
 
 type MakeRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] };
-export function isRequired<T, K extends keyof T>(
-  input: T,
-  key: K
-): input is MakeRequired<T, K> {
+export function isRequired<T, K extends keyof T>(input: T, key: K): input is MakeRequired<T, K> {
   return input[key] !== null && input[key] !== undefined;
 }

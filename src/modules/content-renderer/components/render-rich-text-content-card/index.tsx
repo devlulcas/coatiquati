@@ -1,26 +1,15 @@
 import type { RichTextContent } from '@/modules/content/types/content';
-import { ContentType } from '@/modules/database/schema/content';
+import { ContentType } from '@/modules/database/lib/content-enum';
 import { ReadonlyEditor } from '@/modules/rich-text-content/components/readonly-editor';
 import { ArrowRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import { RenderedContentWrapper } from '../rendered-content-wrapper';
 
-export async function RenderRichTextContentCard({
-  data,
-}: {
-  data: RichTextContent;
-}) {
+export async function RenderRichTextContentCard({ data }: { data: RichTextContent }) {
   return (
-    <RenderedContentWrapper
-      title={data.title}
-      by={data.author}
-      content={{ id: data.id, type: ContentType.RichText }}
-    >
+    <RenderedContentWrapper title={data.title} by={data.author} content={{ id: data.id, type: ContentType.RICH_TEXT }}>
       <ReadonlyEditor content={data.richTextContent.jsonContent} />
-      <Link
-        href={`/contents/${data.id}`}
-        className="text-md ml-1 flex items-center gap-2 text-muted-foreground"
-      >
+      <Link href={`/contents/${data.id}`} className="text-md ml-1 flex items-center gap-2 text-muted-foreground">
         Ler mais <ArrowRightIcon size={16} />
       </Link>
     </RenderedContentWrapper>

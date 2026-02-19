@@ -2,7 +2,7 @@
 
 import { getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { ContentStatus } from '@/modules/database/schema/content';
+import { ContentStatus } from '@/modules/database/lib/content-enum';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { paginationSchema } from '@/shared/schemas/pagination';
 import type { SQL } from 'drizzle-orm';
@@ -21,9 +21,7 @@ const trailSearchSchema = z
 
 export type TrailSearchSchema = z.infer<typeof trailSearchSchema>;
 
-export async function getTrailsQuery(
-  params?: TrailSearchSchema
-): Promise<Result<Trail[]>> {
+export async function getTrailsQuery(params?: TrailSearchSchema): Promise<Result<Trail[]>> {
   const parsed = trailSearchSchema.safeParse(params);
 
   if (!parsed.success) {
@@ -36,9 +34,7 @@ export async function getTrailsQuery(
   const result = await db.query.trails.findMany({
     ...TRAIL_QUERY,
     where: (fields, { eq, and, or, ilike }) => {
-      const authorFilter = currentUser
-        ? eq(fields.authorId, currentUser.id)
-        : undefined;
+      const authorFilter = currentUser ? eq(fields.authorId, currentUser.id) : undefined;
 
       const filters: SQL[] = [eq(fields.status, ContentStatus.PUBLISHED)];
 

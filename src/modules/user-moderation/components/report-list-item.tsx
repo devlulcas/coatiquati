@@ -1,7 +1,5 @@
-import {
-  ReportStatus,
-  type ReportReason,
-} from '@/modules/database/schema/report';
+import type { ReportReason } from '@/modules/database/lib/report-enum';
+import { ReportStatus } from '@/modules/database/lib/report-enum';
 import { REPORT_REASON_LABELS } from '@/modules/user-moderation/constants/report';
 import { UserAvatar } from '@/shared/components/common/user-avatar';
 import type { Report } from '../types/report';
@@ -30,22 +28,14 @@ export default async function ReportListItem({ report }: ReportListItemProps) {
           </span>
           por
           <ReportReasonLabel reason={report.type} />
-          {report.deletedAt === null &&
-            report.status === ReportStatus.RESOLVED && (
-              <span className="rounded bg-green-500/75 px-2 text-sm text-green-50">
-                resolvido
-              </span>
-            )}
-          {report.deletedAt === null &&
-            report.status === ReportStatus.PENDING && (
-              <span className="rounded bg-yellow-700/75 px-2 text-sm text-yellow-50">
-                pendente
-              </span>
-            )}
+          {report.deletedAt === null && report.status === ReportStatus.RESOLVED && (
+            <span className="rounded bg-green-500/75 px-2 text-sm text-green-50">resolvido</span>
+          )}
+          {report.deletedAt === null && report.status === ReportStatus.PENDING && (
+            <span className="rounded bg-yellow-700/75 px-2 text-sm text-yellow-50">pendente</span>
+          )}
           {report.deletedAt !== null && (
-            <span className="rounded bg-gray-700/75 px-2 text-sm text-gray-50">
-              ignorado
-            </span>
+            <span className="rounded bg-gray-700/75 px-2 text-sm text-gray-50">ignorado</span>
           )}
         </p>
       </div>

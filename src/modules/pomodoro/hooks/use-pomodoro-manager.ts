@@ -1,10 +1,7 @@
 import { env } from '@/env';
-import { PomodoroSessionType } from '@/modules/database/schema/pomodoro-sessions';
+import { PomodoroSessionType } from '@/modules/database/lib/pomodoro-enum';
 import { useCreatePomodoroSession } from '@/modules/pomodoro/hooks/use-pomodoro-sessions';
-import {
-  usePomodoroSettings,
-  useUpdatePomodoroSettings,
-} from '@/modules/pomodoro/hooks/use-pomodoro-settings';
+import { usePomodoroSettings, useUpdatePomodoroSettings } from '@/modules/pomodoro/hooks/use-pomodoro-settings';
 import type { PomodoroTimerState } from '@/modules/pomodoro/types/pomodoro';
 import { useToast } from '@/shared/components/ui/use-toast';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -28,8 +25,8 @@ export function usePomodoroManager() {
   });
 
   const { data: settings, isLoading: isLoadingSettings } = usePomodoroSettings({
-    onSuccess: (data) => {
-      setTimerState((prev) => ({
+    onSuccess: data => {
+      setTimerState(prev => ({
         ...prev,
         timeRemaining: data.pomodoroDuration,
       }));
@@ -58,15 +55,12 @@ export function usePomodoroManager() {
     }
 
     // Depois de um break, sempre volta para o pomodoro
-    if (
-      timerState.type === PomodoroSessionType.SHORT_BREAK ||
-      timerState.type === PomodoroSessionType.LONG_BREAK
-    ) {
+    if (timerState.type === PomodoroSessionType.SHORT_BREAK || timerState.type === PomodoroSessionType.LONG_BREAK) {
       nextType = PomodoroSessionType.POMODORO;
       nextDuration = settings.pomodoroDuration;
     }
 
-    setTimerState((prev) => ({
+    setTimerState(prev => ({
       previousType: prev.type,
       type: nextType,
       timeRemaining: nextDuration,
@@ -81,7 +75,7 @@ export function usePomodoroManager() {
   ]);
 
   const handleTimerComplete = useCallback(() => {
-    setTimerState((prev) => ({ ...prev, state: 'completed' }));
+    setTimerState(prev => ({ ...prev, state: 'completed' }));
     alarmSound?.play();
 
     createSession({
@@ -112,10 +106,7 @@ export function usePomodoroManager() {
     // Auto-start next timer based on settings
     let timeout: NodeJS.Timeout;
 
-    if (
-      settings.autoStartBreaks &&
-      timerState.type === PomodoroSessionType.POMODORO
-    ) {
+    if (settings.autoStartBreaks && timerState.type === PomodoroSessionType.POMODORO) {
       timeout = setTimeout(() => {
         startNextTimer();
       }, 1000);
@@ -143,7 +134,7 @@ export function usePomodoroManager() {
     if (timerState.state === 'running') {
       if (timerState.timeRemaining > 0) {
         interval = setInterval(() => {
-          setTimerState((prev) => ({
+          setTimerState(prev => ({
             ...prev,
             timeRemaining: prev.timeRemaining - 1,
           }));
@@ -161,7 +152,7 @@ export function usePomodoroManager() {
   }, [handleTimerComplete, timerState.state, timerState.timeRemaining]);
 
   const toggleTimer = useCallback(() => {
-    setTimerState((prev) => ({
+    setTimerState(prev => ({
       ...prev,
       state: prev.state === 'running' ? 'paused' : 'running',
     }));

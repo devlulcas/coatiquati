@@ -1,0 +1,24 @@
+.navItem {
+  position: relative;
+}
+
+.navItem::after {
+  --active-width: 0;
+  --active-color: hsl(var(--brand-500) / 50%);
+  display: none;
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--active-width);
+  height: 3px;
+  border-radius: 100vw;
+  background-color: var(--active-color);
+  transition: width 0.2s ease-in-out;
+}
+
+.navItem[data-active="true"]::after {
+  display: block;
+  --active-width: 100%;
+}

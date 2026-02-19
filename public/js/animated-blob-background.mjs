@@ -1,15 +1,24 @@
 import { MetaballsEffect } from './metaballs-effect.mjs';
 
+function* getRandomColor() {
+  const colors = ['#9333ea', '#22d3ee', '#c026d3', '#db2777', '#8b5cf6', '#3b82f6'];
+  let index = 0;
+  while (true) {
+    yield colors[index++ % colors.length];
+  }
+}
+
 /**
  * @param {HTMLCanvasElement} canvas
  * @param {CanvasRenderingContext2D} ctx
  */
 function paintGradient(canvas, ctx) {
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-  gradient.addColorStop(0, '#9333ea');
-  gradient.addColorStop(0.2, '#22d3ee');
-  gradient.addColorStop(0.5, '#c026d3');
-  gradient.addColorStop(1, '#db2777');
+  const colorGenerator = getRandomColor();
+  gradient.addColorStop(0, colorGenerator.next().value);
+  gradient.addColorStop(0.2, colorGenerator.next().value);
+  gradient.addColorStop(0.5, colorGenerator.next().value);
+  gradient.addColorStop(1, colorGenerator.next().value);
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }

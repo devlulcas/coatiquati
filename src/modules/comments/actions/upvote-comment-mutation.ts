@@ -2,13 +2,12 @@
 
 import { getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { votes, VoteValue } from '@/modules/database/schema/comment-vote';
+import { VoteValue } from '@/modules/database/lib/vote-value-enum';
+import { votes } from '@/modules/database/schema/vote';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { and, eq } from 'drizzle-orm';
 
-export async function upvoteCommentMutation(
-  commentId: number
-): Promise<Result<string>> {
+export async function upvoteCommentMutation(commentId: number): Promise<Result<string>> {
   const user = await getCurrentUser();
 
   if (!user) {
@@ -34,9 +33,7 @@ export async function upvoteCommentMutation(
   }
 }
 
-export async function downvoteCommentMutation(
-  commentId: number
-): Promise<Result<string>> {
+export async function downvoteCommentMutation(commentId: number): Promise<Result<string>> {
   const user = await getCurrentUser();
 
   if (!user) {
@@ -62,9 +59,7 @@ export async function downvoteCommentMutation(
   }
 }
 
-export async function removeVoteCommentMutation(
-  commentId: number
-): Promise<Result<string>> {
+export async function removeVoteCommentMutation(commentId: number): Promise<Result<string>> {
   const user = await getCurrentUser();
 
   if (!user) {

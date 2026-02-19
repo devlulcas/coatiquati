@@ -1,23 +1,15 @@
 'use server';
 
 import { auth } from '@/modules/auth/lib/auth';
-import {
-  assertAuthenticated,
-  getCurrentUser,
-} from '@/modules/auth/services/next';
+import { assertAuthenticated, getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
 import { trails } from '@/modules/database/schema/trail';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 import { revalidateTrails } from '../lib/revalidate-trail';
-import {
-  type TrailWithIdSchema,
-  trailWithIdSchema,
-} from '../schemas/trail-with-id-schema';
+import { type TrailWithIdSchema, trailWithIdSchema } from '../schemas/trail-with-id-schema';
 
-export async function changeTrailContentStatusMutation(
-  params: TrailWithIdSchema
-): Promise<Result<string>> {
+export async function changeTrailContentStatusMutation(params: TrailWithIdSchema): Promise<Result<string>> {
   const currentUser = await getCurrentUser();
   assertAuthenticated(currentUser);
 
@@ -56,7 +48,7 @@ export async function changeTrailContentStatusMutation(
     .set({ status: parsed.data.status })
     .where(eq(trails.id, parsed.data.id))
     .returning({ id: trails.id })
-    .then((result) => result.at(0));
+    .then(result => result.at(0));
 
   if (!updatedTrail) {
     return fail('Erro ao atualizar status da trilha.');

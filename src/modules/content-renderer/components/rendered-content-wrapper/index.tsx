@@ -1,7 +1,7 @@
 import { getCommentsOnContentQuery } from '@/modules/comments/actions/get-comments-on-content-query';
 import { AddNewCommentForm } from '@/modules/comments/components/add-new-comment-form';
 import { CommentBlock } from '@/modules/comments/components/comment-block';
-import type { ContentType } from '@/modules/database/schema/content';
+import type { ContentType } from '@/modules/database/lib/content-enum';
 import { ReportFormDialogTrigger } from '@/modules/user-moderation/components/report-form-dialog-trigger';
 import type { Contributor } from '@/modules/user/types/user';
 import { ErrorMessage } from '@/shared/components/common/error-message';
@@ -22,12 +22,7 @@ type RenderedContentWrapperProps = {
   };
 };
 
-export async function RenderedContentWrapper({
-  children,
-  title,
-  by,
-  content,
-}: RenderedContentWrapperProps) {
+export async function RenderedContentWrapper({ children, title, by, content }: RenderedContentWrapperProps) {
   const commentsResult = await getCommentsOnContentQuery({
     contentId: content.id,
   });
@@ -39,10 +34,7 @@ export async function RenderedContentWrapper({
   return (
     <section className="flex flex-col gap-2 rounded border bg-background/50">
       <header className="flex gap-2 border-b p-2">
-        <UserAvatar
-          className="h-8 w-8 rounded border border-secondary-foreground/25 text-xs"
-          user={by}
-        />
+        <UserAvatar className="h-8 w-8 rounded border border-secondary-foreground/25 text-xs" user={by} />
 
         <div className="flex w-full flex-col justify-between">
           <h5 className="text-lg font-bold">{title}</h5>
@@ -69,10 +61,7 @@ export async function RenderedContentWrapper({
           </div>
         </div>
 
-        <EditContentButton
-          by={by}
-          content={{ id: content.id, type: content.type }}
-        />
+        <EditContentButton by={by} content={{ id: content.id, type: content.type }} />
       </header>
 
       <div className="relative flex flex-col gap-3 p-2">{children}</div>
@@ -85,7 +74,7 @@ export async function RenderedContentWrapper({
         <Separator className="my-4" />
 
         <ul className="flex flex-col gap-2">
-          {commentsResult.value.map((comment) => (
+          {commentsResult.value.map(comment => (
             <CommentBlock key={comment.id} comment={comment} />
           ))}
         </ul>

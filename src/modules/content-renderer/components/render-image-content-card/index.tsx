@@ -1,16 +1,12 @@
 import type { ImageContent } from '@/modules/content/types/content';
-import { ContentType } from '@/modules/database/schema/content';
+import { ContentType } from '@/modules/database/lib/content-enum';
 import Image from 'next/image';
 import { ZoomedImage } from '../../../image-content/components/zoomed-image';
 import { RenderedContentWrapper } from '../rendered-content-wrapper';
 
 export async function RenderImageContentCard({ data }: { data: ImageContent }) {
   return (
-    <RenderedContentWrapper
-      title={data.title}
-      by={data.author}
-      content={{ id: data.id, type: ContentType.Image }}
-    >
+    <RenderedContentWrapper title={data.title} by={data.author} content={{ id: data.id, type: ContentType.IMAGE }}>
       <div className="absolute right-2 top-1 z-10">
         <ZoomedImage content={data} />
       </div>
@@ -24,9 +20,7 @@ export async function RenderImageContentCard({ data }: { data: ImageContent }) {
         height={1080}
       />
 
-      {data.description && (
-        <p className="text-md text-muted-foreground">{data.description}</p>
-      )}
+      {data.description && <p className="text-md text-muted-foreground">{data.description}</p>}
     </RenderedContentWrapper>
   );
 }

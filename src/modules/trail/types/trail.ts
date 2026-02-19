@@ -1,11 +1,8 @@
 import type { db } from '@/modules/database/db';
+import type { ContentStatus } from '@/modules/database/lib/content-enum';
 import type { SelectCategory } from '@/modules/database/schema/category';
-import type { ContentStatus } from '@/modules/database/schema/content';
 import type { SelectTrail } from '@/modules/database/schema/trail';
-import {
-  CONTRIBUTOR_COLUMNS,
-  type Contributor,
-} from '@/modules/user/types/user';
+import { CONTRIBUTOR_COLUMNS, type Contributor } from '@/modules/user/types/user';
 
 type Category = {
   id: number;
@@ -71,7 +68,7 @@ export function mapToTrail(
       user: Contributor;
     }[];
     category: Category | null;
-  }
+  },
 ): Trail {
   return {
     id: trail.id,
@@ -83,7 +80,7 @@ export function mapToTrail(
     updatedAt: trail.updatedAt,
 
     author: trail.author,
-    contributors: trail.contributions.map((contribution) => contribution.user),
+    contributors: trail.contributions.map(contribution => contribution.user),
     category: trail.category,
   };
 }

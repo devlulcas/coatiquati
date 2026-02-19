@@ -1,6 +1,6 @@
 'use client';
 
-import { ContentStatus } from '@/modules/database/schema/content';
+import { ContentStatus } from '@/modules/database/lib/content-enum';
 import {
   Select,
   SelectContent,
@@ -47,11 +47,7 @@ export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
   ];
 
   return (
-    <Select
-      value={trail.status.toString()}
-      onValueChange={(value) => setStatus(Number(value))}
-      disabled={isLoading}
-    >
+    <Select value={trail.status.toString()} onValueChange={value => setStatus(Number(value))} disabled={isLoading}>
       <SelectTrigger className="w-[180px]" disabled={isLoading}>
         {isLoading ? (
           <Loader2Icon className="size-4 animate-spin text-muted-foreground" />
@@ -59,9 +55,10 @@ export function ToggleTrailStatusForm({ trail }: ToggleTrailStatusFormProps) {
           <SelectValue placeholder="Selecione o status" />
         )}
       </SelectTrigger>
+
       <SelectContent>
         <SelectGroup>
-          {statusOptions.map((option) => (
+          {statusOptions.map(option => (
             <SelectItem
               key={option.value}
               value={option.value.toString()}

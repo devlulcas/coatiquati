@@ -1,12 +1,10 @@
 'use server';
 
 import { auth } from '@/modules/auth/lib/auth';
-import {
-  assertAuthenticated,
-  getCurrentUser,
-} from '@/modules/auth/services/next';
+import { assertAuthenticated, getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { reports, ReportStatus } from '@/modules/database/schema/report';
+import { ReportStatus } from '@/modules/database/lib/report-enum';
+import { reports } from '@/modules/database/schema/report';
 import { toMS } from '@/shared/lib/date';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
@@ -18,9 +16,7 @@ const banUserMutationSchema = z.object({
 
 type BanUserMutationParams = z.infer<typeof banUserMutationSchema>;
 
-export async function banUserMutation(
-  params: BanUserMutationParams
-): Promise<Result<string>> {
+export async function banUserMutation(params: BanUserMutationParams): Promise<Result<string>> {
   const parsed = banUserMutationSchema.safeParse(params);
 
   if (!parsed.success) {
@@ -53,7 +49,7 @@ export async function banUserMutation(
         operators.eq(fields.id, params.reportId),
         operators.eq(fields.status, ReportStatus.PENDING),
         operators.isNull(fields.deletedAt),
-        operators.ne(fields.userId, currentUser.id)
+        operators.ne(fields.userId, currentUser.id),
       );
     },
     with: {
@@ -67,16 +63,14 @@ export async function banUserMutation(
   });
 
   if (!report) {
-    return fail(
-      'Não foi possível banir o usuário. Denúncia não encontrada ou já foi processada.'
-    );
+    return fail('Não foi possível banir o usuário. Denúncia não encontrada ou já foi processada.');
   }
 
   if (report.reportedUser.role === 'superAdmin') {
     return fail('Você não pode banir um super administrador');
   }
 
-  return db.transaction(async (tx) => {
+  return db.transaction(async tx => {
     try {
       await tx
         .update(reports)
@@ -96,9 +90,7 @@ export async function banUserMutation(
     } catch (error) {
       console.error(error);
       tx.rollback();
-      return fail(
-        'Não foi possível banir o usuário. Erro ao processar a denúncia.'
-      );
+      return fail('Não foi possível banir o usuário. Erro ao processar a denúncia.');
     }
   });
 }

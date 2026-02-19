@@ -2,7 +2,7 @@
 
 import { getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { ContentStatus } from '@/modules/database/schema/content';
+import { ContentStatus } from '@/modules/database/lib/content-enum';
 import { ok, type Result } from '@/shared/lib/result';
 import { notFound } from 'next/navigation';
 import { canViewAll } from '../lib/can-view-all';
@@ -15,13 +15,9 @@ export async function getTrailByIdQuery(id: number): Promise<Result<Trail>> {
   const result = await db.query.trails.findFirst({
     ...TRAIL_QUERY,
     where: (fields, { eq, and, or }) => {
-      const statusFilter = canViewAllTrail
-        ? undefined
-        : eq(fields.status, ContentStatus.PUBLISHED);
+      const statusFilter = canViewAllTrail ? undefined : eq(fields.status, ContentStatus.PUBLISHED);
 
-      const authorFilter = currentUser
-        ? eq(fields.authorId, currentUser.id)
-        : undefined;
+      const authorFilter = currentUser ? eq(fields.authorId, currentUser.id) : undefined;
 
       return and(eq(fields.id, id), or(statusFilter, authorFilter));
     },

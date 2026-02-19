@@ -1,20 +1,13 @@
 import { ContentStatusBadge } from '@/modules/content/components/content-status-badge';
-import { ContentStatus } from '@/modules/database/schema/content';
+import { ContentStatus } from '@/modules/database/lib/content-enum';
 import { ContributorList } from '@/modules/user/components/contributor-list';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/shared/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/cn';
 import { ArrowRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  createTrailCategoryUrl,
-  createTrailUrl,
-} from '../../lib/create-trail-url';
+import { createTrailCategoryUrl, createTrailUrl } from '../../lib/create-trail-url';
 import type { Trail } from '../../types/trail';
 
 type TrailCardProps = {
@@ -34,21 +27,16 @@ export function TrailCard({ trail, forceVertical }: TrailCardProps) {
     <div
       className={cn(
         'coati-animated-line h-64 w-full rounded-xl bg-gradient-to-r from-brand-500 via-purple-600 to-brand-500 p-[1px] sm:h-fit',
-        forceVertical && 'h-fit'
+        forceVertical && 'h-fit',
       )}
     >
       <article
         className={cn(
           'flex h-full w-full items-center justify-center overflow-hidden rounded-xl bg-card text-card-foreground shadow-md transition-shadow duration-300 ease-in-out hover:shadow-lg sm:flex-col',
-          forceVertical && 'flex-col'
+          forceVertical && 'flex-col',
         )}
       >
-        <div
-          className={cn(
-            'relative h-full w-full overflow-clip sm:aspect-square',
-            forceVertical && 'aspect-square'
-          )}
-        >
+        <div className={cn('relative h-full w-full overflow-clip sm:aspect-square', forceVertical && 'aspect-square')}>
           <Link href={trailSlug} className="relative block h-full w-full">
             <Image
               width={128}
@@ -65,19 +53,12 @@ export function TrailCard({ trail, forceVertical }: TrailCardProps) {
               }}
             />
 
-            <Image
-              fill
-              alt={trail.title}
-              src={trail.thumbnail}
-              className="h-full w-full object-contain"
-            />
+            <Image fill alt={trail.title} src={trail.thumbnail} className="h-full w-full object-contain" />
 
             {trail.status === ContentStatus.DRAFT && (
               <div className="absolute left-2 top-2">
                 <ContentStatusBadge status={trail.status} />
-                <span className="h-fit rounded-md bg-amber-200 px-2 py-1 text-xs text-amber-700">
-                  Rascunho
-                </span>
+                <span className="h-fit rounded-md bg-amber-200 px-2 py-1 text-xs text-amber-700">Rascunho</span>
               </div>
             )}
           </Link>

@@ -1,6 +1,6 @@
 'use client';
 
-import { PublicationMediaType } from '@/modules/database/schema/publication-media';
+import { PublicationMediaType } from '@/modules/database/lib/publication-enum';
 import { YouTubeEmbed } from '@/modules/video-content/components/youtube-embed';
 import { getEmbedIDFromYouTubeUrl } from '@/modules/video-content/lib/youtube';
 import {
@@ -18,11 +18,7 @@ import Link from 'next/link';
 import 'react-medium-image-zoom/dist/styles.css';
 import type { PublicationMedia } from '../types/publication';
 
-export function PublicationMediaGrid({
-  medias,
-}: {
-  medias: PublicationMedia[];
-}) {
+export function PublicationMediaGrid({ medias }: { medias: PublicationMedia[] }) {
   const length = medias.length;
 
   return (
@@ -40,7 +36,7 @@ export function PublicationMediaGrid({
             key={media.id}
             className={cn(
               'aspect-w-16 aspect-h-9 relative min-h-40 w-full overflow-hidden rounded bg-secondary',
-              length === 3 && index === 2 ? 'col-span-2 row-span-1' : ''
+              length === 3 && index === 2 ? 'col-span-2 row-span-1' : '',
             )}
           >
             <MediaComponent {...media} />
@@ -53,10 +49,7 @@ export function PublicationMediaGrid({
   );
 }
 
-export function PublicationImageEmbed({
-  description,
-  url,
-}: Pick<PublicationMedia, 'description' | 'url'>) {
+export function PublicationImageEmbed({ description, url }: Pick<PublicationMedia, 'description' | 'url'>) {
   return (
     <Link
       href={url}
@@ -68,10 +61,7 @@ export function PublicationImageEmbed({
   );
 }
 
-export function PublicationVideoEmbed({
-  description,
-  url,
-}: Pick<PublicationMedia, 'description' | 'url'>) {
+export function PublicationVideoEmbed({ description, url }: Pick<PublicationMedia, 'description' | 'url'>) {
   const videoId = getEmbedIDFromYouTubeUrl(url);
 
   if (!videoId) {

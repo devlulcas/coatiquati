@@ -1,7 +1,7 @@
 'use client';
 
 import { CategoriesAsyncSelect } from '@/modules/category/components/categories-async-select';
-import { ContentStatus } from '@/modules/database/schema/content';
+import { ContentStatus } from '@/modules/database/lib/content-enum';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import {
@@ -36,7 +36,7 @@ export function DashboardTrailForm() {
     <form
       method="get"
       className="mb-8 flex flex-col space-y-4"
-      onSubmit={(e) => {
+      onSubmit={e => {
         e.preventDefault();
         setForm({ ...form, skip: '0', take: '30' });
       }}
@@ -44,24 +44,19 @@ export function DashboardTrailForm() {
       <div className="flex flex-col items-center gap-2 md:flex-row">
         <CategoriesAsyncSelect
           selectedCategory={{ id: Number(form.category) }}
-          setSelectedCategory={(category) =>
-            setForm({ ...form, category: category.id.toString() })
-          }
+          setSelectedCategory={category => setForm({ ...form, category: category.id.toString() })}
         />
         <Input type="text" name="search" placeholder="Buscar trilha" />
       </div>
 
       <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-        <Select
-          value={form.status.toString()}
-          onValueChange={(value) => setForm({ ...form, status: value })}
-        >
+        <Select value={form.status.toString()} onValueChange={value => setForm({ ...form, status: value })}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Selecione o status" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              {statusOptions.map((option) => (
+              {statusOptions.map(option => (
                 <SelectItem key={option.value} value={option.value.toString()}>
                   {option.label}
                 </SelectItem>

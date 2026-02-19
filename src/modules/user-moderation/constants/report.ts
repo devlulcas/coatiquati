@@ -1,4 +1,4 @@
-import { ReportReason } from '@/modules/database/schema/report';
+import { ReportReason } from '@/modules/database/lib/report-enum';
 
 export const REPORT_REASON_LABELS: Record<ReportReason, string> = {
   [ReportReason.NOT_SAFE_FOR_WORK]: 'Conteúdo não seguro para o trabalho',

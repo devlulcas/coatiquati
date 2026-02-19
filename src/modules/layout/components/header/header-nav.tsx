@@ -1,109 +1,101 @@
-import { SignOutForm } from '@/modules/auth/components/sign-out-form';
+'use client';
 import type { User } from '@/modules/auth/lib/auth-client';
-import {
-  ConfigDropdown,
-  ConfigListing,
-} from '@/modules/theme/components/config-dropdown';
-import { Button } from '@/shared/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from '@/shared/components/ui/sheet';
-import { MenuIcon } from 'lucide-react';
+import { cn } from '@/shared/utils/cn';
+import type { Icon } from '@phosphor-icons/react';
+import { BookIcon } from '@phosphor-icons/react/Book';
+import { HouseIcon } from '@phosphor-icons/react/House';
+import { SignInIcon } from '@phosphor-icons/react/SignIn';
+import { UserIcon } from '@phosphor-icons/react/User';
+import { WrenchIcon } from '@phosphor-icons/react/Wrench';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import css from './header-nav.module.css';
 
 type HeaderNavProps = {
   user: User | null;
 };
 
-export async function HeaderNav({ user }: HeaderNavProps) {
-  return (
-    <>
-      <Button variant="link" asChild className="lg:hidden">
-        <Link href="/trails">Trilhas</Link>
-      </Button>
+type NavItem = {
+  icon: Icon;
+  label: string;
+  href: string;
+};
 
-      <Sheet>
-        <SheetTrigger className="lg:hidden">
-          <MenuIcon />
-          <span className="sr-only">Abrir menu</span>
-        </SheetTrigger>
+const baseNavItems: NavItem[] = [
+  {
+    icon: HouseIcon,
+    label: 'Trilhas',
+    href: '/trails',
+  },
+  {
+    icon: BookIcon,
+    label: 'Sobre',
+    href: '/about',
+  },
+  {
+    icon: WrenchIcon,
+    label: 'Ferramentas',
+    href: '/tools',
+  },
+];
 
-        <SheetContent
-          title="Menu"
-          hideCloseButton
-          side="bottom"
-          className="flex flex-col gap-4 bg-background/75 backdrop-blur-md lg:hidden"
-        >
-          <div className="flex flex-col items-center justify-center gap-4 *:bg-secondary">
-            <Button className="w-full" variant="ghost" asChild>
-              <Link href="/trails">Trilhas</Link>
-            </Button>
+const adminNavItems: NavItem[] = [
+  {
+    icon: HouseIcon,
+    label: 'Dashboard',
+    href: '/dashboard',
+  },
+];
 
-            <Button className="w-full" variant="ghost" asChild>
-              <Link href="/about">Sobre</Link>
-            </Button>
+const userNavItems: NavItem[] = [
+  {
+    icon: UserIcon,
+    label: 'Perfil',
+    href: '/profile',
+  },
+];
 
-            <NavItems user={user} />
-          </div>
+const guestNavItems: NavItem[] = [
+  {
+    icon: SignInIcon,
+    label: 'Entrar',
+    href: '/sign-in',
+  },
+];
 
-          <ConfigListing />
-        </SheetContent>
-      </Sheet>
+function getNavItems(user: User | null) {
+  if (!user) return [...baseNavItems, ...guestNavItems];
 
-      <div className="hidden flex-row items-center gap-2 lg:flex">
-        <Button variant="ghost" asChild>
-          <Link href="/trails">Trilhas</Link>
-        </Button>
+  if (user.role === 'admin' || user.role === 'superAdmin') return [...baseNavItems, ...adminNavItems, ...userNavItems];
 
-        <Button variant="ghost" asChild>
-          <Link href="/about">Sobre</Link>
-        </Button>
-
-        <Button variant="ghost" asChild>
-          <Link href="/tools">Ferramentas</Link>
-        </Button>
-
-        <NavItems user={user} />
-
-        <ConfigDropdown />
-      </div>
-    </>
-  );
+  return [...baseNavItems, ...userNavItems];
 }
 
-function NavItems({ user }: { user: User | null }) {
-  const hasAdminAccess =
-    user && (user.role === 'admin' || user.role === 'superAdmin');
+export function HeaderNav({ user }: HeaderNavProps) {
+  const navItems = getNavItems(user);
 
-  if (user !== null) {
-    return (
-      <>
-        {hasAdminAccess && (
-          <Button className="w-full" variant="ghost" asChild>
-            <Link href="/dashboard">Dashboard</Link>
-          </Button>
-        )}
-
-        <Button className="w-full" variant="ghost" asChild>
-          <Link href={`/profile/${user.username}`}>Perfil</Link>
-        </Button>
-
-        <Button
-          className="w-full bg-destructive md:bg-transparent md:text-red-500"
-          variant="ghost"
-          asChild
-        >
-          <SignOutForm>Sair</SignOutForm>
-        </Button>
-      </>
-    );
-  }
+  const currentPath = usePathname();
 
   return (
-    <Button className="w-full" variant="secondary" asChild>
-      <Link href="/sign-in">Entrar</Link>
-    </Button>
+    <nav className="flex items-center justify-center gap-3 md:gap-4">
+      {navItems.map(item => {
+        const isActive = currentPath === item.href;
+        const Icon = item.icon;
+        return (
+          <Link
+            data-active={isActive}
+            key={item.href}
+            href={item.href}
+            className={cn(
+              'flex items-center gap-1 md:gap-2 md:h-10 md:aspect-square justify-center group',
+              css.navItem,
+            )}
+          >
+            <span className="text-xs md:text-sm font-medium transition-colors">{item.label}</span>
+            <Icon weight="duotone" size={18} className="flex-shrink-0 hidden md:inline-flex" />
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

@@ -1,5 +1,5 @@
 import { validateRequest } from '@/modules/auth/services/next';
-import { ContentStatus } from '@/modules/database/schema/content';
+import { ContentStatus } from '@/modules/database/lib/content-enum';
 import { CreatePublicationForm } from '@/modules/publication/components/create-publication-form';
 import { UserPublicationList } from '@/modules/publication/components/user-publication-list';
 import { getTrailSubscriptionsByUserIdQuery } from '@/modules/trail-subscriptions/actions/get-trail-subscriptions-by-user-id-query';
@@ -26,14 +26,10 @@ type PageProps = {
 
 export default async function Page(props: PageProps) {
   const params = await props.params;
-  const profileResult = await getUserProfileQuery(
-    decodeURIComponent(params.username)
-  );
+  const profileResult = await getUserProfileQuery(decodeURIComponent(params.username));
 
   if (isFail(profileResult)) {
-    return (
-      <ErrorMessage message={profileResult.fail} className="container my-4" />
-    );
+    return <ErrorMessage message={profileResult.fail} className="container my-4" />;
   }
 
   if (profileResult.value === null) {
@@ -45,12 +41,7 @@ export default async function Page(props: PageProps) {
   const session = await validateRequest();
   const isCurrentUser = session?.data.id === profile.id;
 
-  const [
-    authoredTrailsResult,
-    subscribedTrailsResult,
-    followersResult,
-    followingsResult,
-  ] = await Promise.all([
+  const [authoredTrailsResult, subscribedTrailsResult, followersResult, followingsResult] = await Promise.all([
     getTrailsQuery({
       authorId: profile.id,
       skip: 0,
@@ -79,8 +70,7 @@ export default async function Page(props: PageProps) {
             Curiosidade
             <StarsIcon size={18} className="fill-current" />
           </span>{' '}
-          A categoria mais interessante para {profile.username} é{' '}
-          <strong>{mostSubscribedCategory}</strong>.
+          A categoria mais interessante para {profile.username} é <strong>{mostSubscribedCategory}</strong>.
         </p>
       )}
 
@@ -97,17 +87,12 @@ export default async function Page(props: PageProps) {
       <section className="mt-8">
         <h2 className="text-xl font-bold">Seguidores</h2>
 
-        {followers.length === 0 && (
-          <p>Parece que {profile.username} ainda não tem seguidores.</p>
-        )}
+        {followers.length === 0 && <p>Parece que {profile.username} ainda não tem seguidores.</p>}
 
         <ul className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-          {followers.map((follower) => (
+          {followers.map(follower => (
             <li key={follower.username}>
-              <Link
-                href={`/profile/${follower.username}`}
-                className="flex items-center gap-2"
-              >
+              <Link href={`/profile/${follower.username}`} className="flex items-center gap-2">
                 <UserAvatar user={follower} /> {follower.username}
               </Link>
             </li>
@@ -118,17 +103,12 @@ export default async function Page(props: PageProps) {
       <section className="mt-4">
         <h2 className="text-xl font-bold">Seguindo</h2>
 
-        {followings.length === 0 && (
-          <p>{profile.username} ainda não segue ninguém.</p>
-        )}
+        {followings.length === 0 && <p>{profile.username} ainda não segue ninguém.</p>}
 
         <ul className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-          {followings.map((following) => (
+          {followings.map(following => (
             <li key={following.username}>
-              <Link
-                href={`/profile/${following.username}`}
-                className="flex items-center gap-2"
-              >
+              <Link href={`/profile/${following.username}`} className="flex items-center gap-2">
                 <UserAvatar user={following} /> {following.username}
               </Link>
             </li>
@@ -139,23 +119,15 @@ export default async function Page(props: PageProps) {
       <section className="mt-4">
         <h2 className="text-xl font-bold">Trilhas inscritas</h2>
 
-        {isFail(subscribedTrailsResult) && (
-          <ErrorMessage message={subscribedTrailsResult.fail} />
-        )}
+        {isFail(subscribedTrailsResult) && <ErrorMessage message={subscribedTrailsResult.fail} />}
 
         {subscribedTrails.length === 0 && (
-          <p>
-            Parece que {profile.username} ainda não se inscreveu em nenhuma
-            trilha.
-          </p>
+          <p>Parece que {profile.username} ainda não se inscreveu em nenhuma trilha.</p>
         )}
 
         <ul className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-          {subscribedTrails.map((trail) => (
-            <li
-              key={trail.id}
-              className="transition duration-500 ease-in-out hover:scale-105"
-            >
+          {subscribedTrails.map(trail => (
+            <li key={trail.id} className="transition duration-500 ease-in-out hover:scale-105">
               <TrailCard trail={trail} />
             </li>
           ))}
@@ -164,15 +136,10 @@ export default async function Page(props: PageProps) {
 
       {authoredTrails.length > 0 && (
         <section className="mt-8">
-          <h2 className="text-xl font-bold">
-            Trilhas criadas por {profile.username}
-          </h2>
+          <h2 className="text-xl font-bold">Trilhas criadas por {profile.username}</h2>
           <ul className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-            {authoredTrails.map((trail) => (
-              <li
-                key={trail.id}
-                className="transition duration-500 ease-in-out hover:scale-105"
-              >
+            {authoredTrails.map(trail => (
+              <li key={trail.id} className="transition duration-500 ease-in-out hover:scale-105">
                 <TrailCard trail={trail} />
               </li>
             ))}

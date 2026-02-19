@@ -1,4 +1,4 @@
-import { ContentStatus } from '@/modules/database/schema/content';
+import { ContentStatus } from '@/modules/database/lib/content-enum';
 import { z } from 'zod';
 
 export const upsertBaseContentSchema = z.object({

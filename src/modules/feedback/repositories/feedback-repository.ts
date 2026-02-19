@@ -1,30 +1,19 @@
 import { db } from '@/modules/database/db';
-import {
-  feedbacks,
-  type FeedbackType,
-  type InsertFeedback,
-} from '@/modules/database/schema/feedback';
+import type { FeedbackType } from '@/modules/database/lib/feedback-enum';
+import { feedbacks, type InsertFeedback } from '@/modules/database/schema/feedback';
 import { mapToPublicUser } from '@/modules/user/types/user';
-import {
-  fail,
-  isFail,
-  ok,
-  wrapAsyncInResult,
-  type Result,
-} from '@/shared/lib/result';
+import { fail, isFail, ok, wrapAsyncInResult, type Result } from '@/shared/lib/result';
 import type { PaginationSchema } from '@/shared/schemas/pagination';
 import type { SQL } from 'drizzle-orm';
 import type { Feedback } from '../types/feedback';
 
-export async function createFeedback(
-  feedback: InsertFeedback
-): Promise<Result<number>> {
+export async function createFeedback(feedback: InsertFeedback): Promise<Result<number>> {
   try {
     const result = await db
       .insert(feedbacks)
       .values(feedback)
       .returning({ id: feedbacks.id })
-      .then((result) => result.at(0));
+      .then(result => result.at(0));
 
     if (typeof result === 'undefined') {
       return fail('Feedback não criado');
@@ -37,10 +26,7 @@ export async function createFeedback(
   }
 }
 
-export async function getFeedbackList(
-  pagination: PaginationSchema,
-  type?: FeedbackType
-): Promise<Result<Feedback[]>> {
+export async function getFeedbackList(pagination: PaginationSchema, type?: FeedbackType): Promise<Result<Feedback[]>> {
   const result = await wrapAsyncInResult(
     db.query.feedbacks.findMany({
       where: (fields, { and, eq, isNotNull }) => {
@@ -59,14 +45,14 @@ export async function getFeedbackList(
       with: {
         user: true,
       },
-    })
+    }),
   );
 
   if (isFail(result)) {
     return result;
   }
 
-  const feedbacks = result.value.map<Feedback>((feedback) => ({
+  const feedbacks = result.value.map<Feedback>(feedback => ({
     ...feedback,
     user: mapToPublicUser(feedback.user),
   }));

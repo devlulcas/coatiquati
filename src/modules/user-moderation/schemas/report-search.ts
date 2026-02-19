@@ -1,4 +1,4 @@
-import { ReportReason, ReportStatus } from '@/modules/database/schema/report';
+import { ReportReason, ReportStatus } from '@/modules/database/lib/report-enum';
 import { z } from 'zod';
 
 const reportSearchSchema = z.object({

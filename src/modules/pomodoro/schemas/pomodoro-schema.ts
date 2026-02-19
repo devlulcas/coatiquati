@@ -1,4 +1,4 @@
-import { PomodoroSessionType } from '@/modules/database/schema/pomodoro-sessions';
+import { PomodoroSessionType } from '@/modules/database/lib/pomodoro-enum';
 import { z } from 'zod';
 
 export const pomodoroSettingsSchema = z.object({

@@ -1,18 +1,14 @@
 'use server';
 
 import { auth } from '@/modules/auth/lib/auth';
-import {
-  assertAuthenticated,
-  getCurrentUser,
-} from '@/modules/auth/services/next';
+import { assertAuthenticated, getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { reports, ReportStatus } from '@/modules/database/schema/report';
+import { ReportStatus } from '@/modules/database/lib/report-enum';
+import { reports } from '@/modules/database/schema/report';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
 
-export async function ignoreReportMutation(
-  reportId: number
-): Promise<Result<string>> {
+export async function ignoreReportMutation(reportId: number): Promise<Result<string>> {
   const currentUser = await getCurrentUser();
   assertAuthenticated(currentUser);
 
@@ -35,7 +31,7 @@ export async function ignoreReportMutation(
         operators.eq(fields.id, reportId),
         operators.eq(fields.status, ReportStatus.PENDING),
         operators.isNull(fields.deletedAt),
-        operators.ne(fields.userId, currentUser.id)
+        operators.ne(fields.userId, currentUser.id),
       ),
   });
 

@@ -1,4 +1,4 @@
-import { PublicationMediaType } from '@/modules/database/schema/publication-media';
+import { PublicationMediaType } from '@/modules/database/lib/publication-enum';
 import { z } from 'zod';
 
 const publicationMediaSchema = z.object({
@@ -6,9 +6,7 @@ const publicationMediaSchema = z.object({
     .string('A descrição é obrigatória')
     .min(1, 'A descrição é obrigatória')
     .max(100, 'A descrição deve ter no máximo 100 caracteres'),
-  url: z
-    .url('A URL é obrigatória')
-    .max(255, 'A URL deve ter no máximo 255 caracteres'),
+  url: z.url('A URL é obrigatória').max(255, 'A URL deve ter no máximo 255 caracteres'),
   type: z.enum(PublicationMediaType, 'O tipo de mídia é obrigatório'),
 });
 

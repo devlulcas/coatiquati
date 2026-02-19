@@ -1,20 +1,14 @@
 'use server';
 
 import { auth } from '@/modules/auth/lib/auth';
-import {
-  assertAuthenticated,
-  getCurrentUser,
-} from '@/modules/auth/services/next';
+import { assertAuthenticated, getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { ContentStatus } from '@/modules/database/schema/content';
+import { ContentStatus } from '@/modules/database/lib/content-enum';
 import { contributions } from '@/modules/database/schema/contribution';
 import { trails } from '@/modules/database/schema/trail';
 import { fail, ok } from '@/shared/lib/result';
 import { eq } from 'drizzle-orm';
-import {
-  upsertTrailSchema,
-  type UpsertTrailSchema,
-} from '../schemas/new-trail-schema';
+import { upsertTrailSchema, type UpsertTrailSchema } from '../schemas/new-trail-schema';
 
 export async function upsertTrailMutation(params: UpsertTrailSchema) {
   const user = await getCurrentUser();
@@ -50,11 +44,11 @@ export async function upsertTrailMutation(params: UpsertTrailSchema) {
       })
       .from(trails)
       .where(eq(trails.id, parsed.data.id))
-      .then((result) => result.at(0));
+      .then(result => result.at(0));
   };
 
   try {
-    const result = await db.transaction(async (tx) => {
+    const result = await db.transaction(async tx => {
       const existingTrail = await getExistingTrail();
 
       const savedTrail = await tx
@@ -70,7 +64,7 @@ export async function upsertTrailMutation(params: UpsertTrailSchema) {
         })
         .onConflictDoUpdate({ target: [trails.id], set: parsed.data })
         .returning({ id: trails.id })
-        .then((result) => result.at(0));
+        .then(result => result.at(0));
 
       if (!savedTrail) {
         throw new Error('Erro ao manipular trilha');
@@ -85,7 +79,7 @@ export async function upsertTrailMutation(params: UpsertTrailSchema) {
           contentId: null,
         })
         .returning({ id: contributions.id })
-        .then((result) => result.at(0));
+        .then(result => result.at(0));
 
       if (!savedContribution) {
         throw new Error('Erro ao manipular contribuição');

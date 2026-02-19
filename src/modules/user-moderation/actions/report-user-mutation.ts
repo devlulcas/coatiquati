@@ -2,17 +2,13 @@
 
 import { getCurrentUser } from '@/modules/auth/services/next';
 import { db } from '@/modules/database/db';
-import { reports, ReportStatus } from '@/modules/database/schema/report';
+import { ReportStatus } from '@/modules/database/lib/report-enum';
+import { reports } from '@/modules/database/schema/report';
 import { fail, ok, type Result } from '@/shared/lib/result';
 import { formatDistanceToNow, isBefore, sub } from 'date-fns';
-import {
-  createReportSchema,
-  type CreateReportSchema,
-} from '../schemas/create-report';
+import { createReportSchema, type CreateReportSchema } from '../schemas/create-report';
 
-export async function reportUserMutation(
-  params: CreateReportSchema
-): Promise<Result<string>> {
+export async function reportUserMutation(params: CreateReportSchema): Promise<Result<string>> {
   const parsed = createReportSchema.safeParse(params);
 
   if (!parsed.success) {
@@ -49,10 +45,7 @@ export async function reportUserMutation(
   const timeout = { minutes: 15 };
   const timeoutDate = sub(now, timeout);
 
-  if (
-    lastReportFromUser &&
-    isBefore(lastReportFromUser.createdAt, timeoutDate)
-  ) {
+  if (lastReportFromUser && isBefore(lastReportFromUser.createdAt, timeoutDate)) {
     const distance = formatDistanceToNow(timeoutDate, {
       addSuffix: true,
     });
