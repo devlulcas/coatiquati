@@ -55,13 +55,11 @@ export function SignUpForm() {
       <Form {...form}>
         <form
           className="flex h-fit min-w-[400px] flex-col gap-4 rounded-md border bg-card px-4 py-6 shadow-md"
-          onSubmit={form.handleSubmit((data) => action.mutateAsync(data))}
+          onSubmit={form.handleSubmit(data => action.mutateAsync(data))}
         >
           <h1 className="text-3xl font-bold">Cadastrar-se</h1>
 
-          {action.isError && (
-            <ErrorMessage className="my-3" message={action.error.message} />
-          )}
+          {action.isError && <ErrorMessage className="my-3" message={action.error.message} />}
 
           <FormField
             control={form.control}
@@ -70,8 +68,7 @@ export function SignUpForm() {
               <FormItem>
                 <FormLabel>Nome</FormLabel>
                 <FormDescription>
-                  Você pode usar seu nome social. O importante é que seus pares
-                  possam reconhecer você.
+                  Você pode usar seu nome social. O importante é que seus pares possam reconhecer você.
                 </FormDescription>
                 <FormControl>
                   <Input placeholder="Seu nome" {...field} />
@@ -86,10 +83,9 @@ export function SignUpForm() {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Login</FormLabel>
+                <FormLabel>Nome de usuário</FormLabel>
                 <FormDescription>
-                  Você poderá usar este login para fazer login em sua conta e
-                  ser encontrado por outros usuários.
+                  Você poderá usar este nome de usuário para ser encontrado por outros usuários.
                 </FormDescription>
                 <FormControl>
                   <Input placeholder="@exemplo" {...field} />
@@ -106,11 +102,7 @@ export function SignUpForm() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="email@exemplo.com"
-                    {...field}
-                  />
+                  <Input type="email" placeholder="email@exemplo.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
